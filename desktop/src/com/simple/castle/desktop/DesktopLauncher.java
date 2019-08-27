@@ -6,7 +6,12 @@ import com.simple.castle.Game;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
+//		System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
+
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.width = 600;
+		config.height = 800;
+		config.resizable = false;
 		new LwjglApplication(new Game(), config);
 	}
 }
