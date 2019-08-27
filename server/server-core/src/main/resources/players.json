@@ -1,0 +1,130 @@
+[
+  {
+    "playerName": "Player-1",
+    "unitType": "unit-type-1",
+    "paths": [
+      [
+        "area-1-1",
+        "area-1-1-1",
+        "area-2-3",
+        "area-2",
+        "area-2-1",
+        "area-2-1-1",
+        "area-3-3",
+        "area-3"
+      ],
+      [
+        "area-1-2",
+        "area-0",
+        "area-3-2",
+        "area-3"
+      ],
+      [
+        "area-1-3",
+        "area-4-1-1",
+        "area-4-1",
+        "area-4",
+        "area-4-3",
+        "area-3-1-1",
+        "area-3-1",
+        "area-3"
+      ]
+    ]
+  },
+  {
+    "playerName": "Player-2",
+    "unitType": "unit-type-2",
+    "paths": [
+      [
+        "area-2-3",
+        "area-1-1-1",
+        "area-1-1",
+        "area-1",
+        "area-1-3",
+        "area-4-1-1",
+        "area-4-1",
+        "area-4"
+      ],
+      [
+        "area-2-2",
+        "area-0",
+        "area-4-2",
+        "area-4"
+      ],
+      [
+        "area-2-1",
+        "area-2-1-1",
+        "area-3-3",
+        "area-3",
+        "area-3-1",
+        "area-3-1-1",
+        "area-4-3",
+        "area-4"
+      ]
+    ]
+  },
+  {
+    "playerName": "Player-3",
+    "unitType": "unit-type-3",
+    "paths": [
+      [
+        "area-3-3",
+        "area-2-1-1",
+        "area-2-1",
+        "area-2",
+        "area-2-3",
+        "area-1-1-1",
+        "area-1-1",
+        "area-1"
+      ],
+      [
+        "area-3-2",
+        "area-0",
+        "area-1-2",
+        "area-1"
+      ],
+      [
+        "area-3-1",
+        "area-3-1-1",
+        "area-4-3",
+        "area-4",
+        "area-4-1",
+        "area-4-1-1",
+        "area-1-3",
+        "area-1"
+      ]
+    ]
+  },
+  {
+    "playerName": "Player-4",
+    "unitType": "unit-type-4",
+    "paths": [
+      [
+        "area-4-3",
+        "area-3-1-1",
+        "area-3-1",
+        "area-3",
+        "area-3-3",
+        "area-2-1-1",
+        "area-2-1",
+        "area-2"
+      ],
+      [
+        "area-4-2",
+        "area-0",
+        "area-2-1",
+        "area-2"
+      ],
+      [
+        "area-4-1",
+        "area-4-1-1",
+        "area-1-3",
+        "area-1",
+        "area-1-1",
+        "area-1-1-1",
+        "area-2-3",
+        "area-2"
+      ]
+    ]
+  }
+]
