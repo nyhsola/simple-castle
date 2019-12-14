@@ -5,40 +5,44 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class Game extends ApplicationAdapter {
 
     private static final String DEFAULT_UI_SKIN = "ui/uiskin.json";
     private static final Color CLEAR_COLOR = new Color(0.376f, 0.4f, 0.4f, 1);
 
+    private Skin skin;
+
     private Stage stage;
-    private Label labelCurrentValue;
+    private Table table;
+
     private Slider slider;
+    private Label labelCurrentValue;
+    private Label labelCameraView;
 
     @Override
     public void create() {
-        Skin skin = new Skin(Gdx.files.internal(DEFAULT_UI_SKIN));
-
-        Label labelCameraView = new Label("Camera view", skin);
-        slider = new Slider(0, 555, 1, false, skin);
-
-        Table table = new Table();
-        table.top();
-
-        table.add(labelCameraView);
-        table.add(slider).expandX().fillX();
-
-        labelCurrentValue = new Label(Float.toString(slider.getValue()), skin);
-
-        table.row();
-        table.add(labelCurrentValue).fillX();
-
-        table.setFillParent(true);
+        skin = new Skin(Gdx.files.internal(DEFAULT_UI_SKIN));
 
         stage = new Stage();
-        stage.addActor(table);
+        table = new Table();
 
+        slider = new Slider(0, 555, 1, false, skin);
+        labelCameraView = new Label("Camera view", skin);
+        labelCurrentValue = new Label("", skin);
+
+        table.top();
+        table.setFillParent(true);
+
+        table.add(labelCameraView);
+        table.add(slider);
+        table.add(labelCurrentValue);
+
+        stage.addActor(table);
         Gdx.input.setInputProcessor(stage);
     }
 
