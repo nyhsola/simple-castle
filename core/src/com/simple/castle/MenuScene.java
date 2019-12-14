@@ -1,5 +1,6 @@
 package com.simple.castle;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -7,17 +8,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-public class Menu extends Stage {
+public class MenuScene extends ApplicationAdapter {
 
     private static final String DEFAULT_UI_SKIN = "ui/uiskin.json";
 
+    private Stage stage;
     private Skin skin;
     private Table optionsTable;
     private Slider slider;
     private Label labelCameraView;
     private Label labelCurrentValue;
 
-    public Menu() {
+    @Override
+    public void create() {
+        stage = new Stage();
+
         skin = new Skin(Gdx.files.internal(DEFAULT_UI_SKIN));
 
         optionsTable = new Table();
@@ -32,18 +37,19 @@ public class Menu extends Stage {
         optionsTable.add(slider);
         optionsTable.add(labelCurrentValue);
 
-        this.addActor(optionsTable);
+        stage.addActor(optionsTable);
     }
 
     @Override
-    public void draw() {
+    public void render() {
         labelCurrentValue.setText(Float.toString(slider.getValue()));
-        super.draw();
+        stage.draw();
     }
 
     @Override
     public void dispose() {
         skin.dispose();
-        super.dispose();
+        stage.dispose();
     }
+
 }
