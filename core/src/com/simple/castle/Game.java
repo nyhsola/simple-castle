@@ -4,45 +4,59 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class Game extends ApplicationAdapter {
 
     private static final String DEFAULT_UI_SKIN = "ui/uiskin.json";
     private static final Color CLEAR_COLOR = new Color(0.376f, 0.4f, 0.4f, 1);
 
-    private Skin skin;
-
     private Stage stage;
-    private Table table;
 
     private Slider slider;
     private Label labelCurrentValue;
-    private Label labelCameraView;
 
     @Override
     public void create() {
-        skin = new Skin(Gdx.files.internal(DEFAULT_UI_SKIN));
+        Skin skin = new Skin(Gdx.files.internal(DEFAULT_UI_SKIN));
 
         stage = new Stage();
-        table = new Table();
 
+        Table optionsTable = new Table();
         slider = new Slider(0, 555, 1, false, skin);
-        labelCameraView = new Label("Camera view", skin);
+        Label labelCameraView = new Label("Camera view", skin);
         labelCurrentValue = new Label("", skin);
 
-        table.top();
-        table.setFillParent(true);
+        optionsTable.top();
+        optionsTable.setFillParent(true);
 
-        table.add(labelCameraView);
-        table.add(slider);
-        table.add(labelCurrentValue);
+        optionsTable.add(labelCameraView);
+        optionsTable.add(slider);
+        optionsTable.add(labelCurrentValue);
 
-        stage.addActor(table);
+        Table exitTable = new Table();
+        TextButton exitButton = new TextButton("Exit", skin);
+
+        exitTable.bottom();
+        exitTable.setFillParent(true);
+        exitTable.add(exitButton);
+        exitButton.addListener(new EventListener() {
+            @Override
+            public boolean handle(Event event) {
+                return false;
+            }
+        });
+
+        stage.addActor(optionsTable);
+        stage.addActor(exitTable);
+
         Gdx.input.setInputProcessor(stage);
     }
 
