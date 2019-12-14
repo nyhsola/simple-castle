@@ -18,6 +18,11 @@ public class MenuScene extends ApplicationAdapter {
     private Slider slider;
     private Label labelCameraView;
     private Label labelCurrentValue;
+    private ChangeScene changeScene;
+
+    public MenuScene(ChangeScene changeScene) {
+        this.changeScene = changeScene;
+    }
 
     @Override
     public void create() {
