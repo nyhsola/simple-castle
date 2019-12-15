@@ -39,6 +39,7 @@ public class MenuBackgroundScene extends Scene {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 managerController.getChangeScene().changeScene(MainScene.MENU_SCENE);
+                managerController.getBlockScene().addBlockScene(MainScene.GAME_SCENE);
             }
         });
         this.setInputProcessor(stage);

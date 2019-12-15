@@ -63,6 +63,7 @@ public class MenuScene extends Scene {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 managerController.getChangeScene().changeScene(MainScene.MENU_BACKGROUND_SCENE);
+                managerController.getBlockScene().deleteBlockScene(MainScene.GAME_SCENE);
             }
         });
 
