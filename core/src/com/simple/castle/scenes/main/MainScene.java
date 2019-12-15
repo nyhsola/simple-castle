@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.simple.castle.manager.impl.Manager;
 import com.simple.castle.manager.impl.Scene;
-import com.simple.castle.scenes.game.GameScene;
+import com.simple.castle.scenes.main.game.GameScene;
 import com.simple.castle.scenes.main.menu.MenuBackgroundScene;
 import com.simple.castle.scenes.main.menu.MenuScene;
 

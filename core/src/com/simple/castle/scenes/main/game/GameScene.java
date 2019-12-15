@@ -1,4 +1,4 @@
-package com.simple.castle.scenes.game;
+package com.simple.castle.scenes.main.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -23,10 +23,6 @@ public class GameScene extends Scene {
     private ModelInstance instance;
     private CameraInputController camController;
     private Environment environment;
-
-    public GameScene() {
-
-    }
 
     @Override
     public void create() {

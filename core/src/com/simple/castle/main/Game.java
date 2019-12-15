@@ -2,7 +2,6 @@ package com.simple.castle.main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.simple.castle.manager.impl.Manager;
@@ -12,7 +11,7 @@ import com.simple.castle.scenes.main.MainScene;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Game extends ApplicationAdapter implements InputProcessor {
+public class Game extends ApplicationAdapter {
 
     public static final String MAIN_SCENE = "MainScene";
 
@@ -28,7 +27,7 @@ public class Game extends ApplicationAdapter implements InputProcessor {
         gameManager = new Manager(MAIN_SCENE, sceneMap);
         gameManager.create();
 
-        Gdx.input.setInputProcessor(this);
+        Gdx.input.setInputProcessor(gameManager);
     }
 
     @Override
@@ -59,43 +58,4 @@ public class Game extends ApplicationAdapter implements InputProcessor {
         gameManager.dispose();
     }
 
-    @Override
-    public boolean keyDown(int keycode) {
-        return gameManager.keyDown(keycode);
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return gameManager.keyUp(keycode);
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return gameManager.keyTyped(character);
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return gameManager.touchDown(screenX, screenY, pointer, button);
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return gameManager.touchUp(screenX, screenY, pointer, button);
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return gameManager.touchDragged(screenX, screenY, pointer);
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return gameManager.mouseMoved(screenX, screenY);
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return gameManager.scrolled(amount);
-    }
 }

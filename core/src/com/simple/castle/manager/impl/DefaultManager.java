@@ -1,6 +1,5 @@
 package com.simple.castle.manager.impl;
 
-import com.badlogic.gdx.InputProcessor;
 import com.simple.castle.manager.BlockScene;
 import com.simple.castle.manager.ChangeScene;
 import com.simple.castle.manager.ManagerController;
@@ -10,14 +9,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public abstract class DefaultManager extends Scene implements ManagerController, ChangeScene, BlockScene {
 
-    protected String startScene;
-    protected Map<String, Scene> sceneMap;
-    protected List<String> alwaysRender = new ArrayList<>();
-    protected List<String> blockInput = new ArrayList<>();
     private String currentScene;
+    private String startScene;
+    private Map<String, Scene> sceneMap;
+    private List<String> alwaysRender = new ArrayList<>();
+    private List<String> blockInput = new ArrayList<>();
 
     public DefaultManager(String startScene, Map<String, Scene> sceneMap) {
         this.startScene = startScene;
@@ -52,6 +52,7 @@ public abstract class DefaultManager extends Scene implements ManagerController,
         if (sceneMap.containsKey(currentScene)) {
             sceneMap.get(currentScene).render();
         }
+        forEachAlwaysRender(Scene::render);
     }
 
     @Override
@@ -66,6 +67,7 @@ public abstract class DefaultManager extends Scene implements ManagerController,
         if (sceneMap.containsKey(currentScene)) {
             sceneMap.get(currentScene).resize(width, height);
         }
+        forEachAlwaysRender(scene -> scene.resize(width, height));
     }
 
     @Override
@@ -73,6 +75,7 @@ public abstract class DefaultManager extends Scene implements ManagerController,
         if (sceneMap.containsKey(currentScene)) {
             sceneMap.get(currentScene).pause();
         }
+        forEachAlwaysRender(Scene::pause);
     }
 
     @Override
@@ -80,6 +83,7 @@ public abstract class DefaultManager extends Scene implements ManagerController,
         if (sceneMap.containsKey(currentScene)) {
             sceneMap.get(currentScene).resume();
         }
+        forEachAlwaysRender(Scene::resume);
     }
 
     @Override
@@ -87,6 +91,7 @@ public abstract class DefaultManager extends Scene implements ManagerController,
         if (sceneMap.containsKey(currentScene)) {
             sceneMap.get(currentScene).keyDown(keycode);
         }
+        forEachAlwaysRenderBlockInput(scene -> scene.keyDown(keycode));
         return super.keyDown(keycode);
     }
 
@@ -95,6 +100,7 @@ public abstract class DefaultManager extends Scene implements ManagerController,
         if (sceneMap.containsKey(currentScene)) {
             sceneMap.get(currentScene).keyUp(keycode);
         }
+        forEachAlwaysRenderBlockInput(scene -> scene.keyUp(keycode));
         return super.keyUp(keycode);
     }
 
@@ -103,6 +109,7 @@ public abstract class DefaultManager extends Scene implements ManagerController,
         if (sceneMap.containsKey(currentScene)) {
             sceneMap.get(currentScene).keyTyped(character);
         }
+        forEachAlwaysRenderBlockInput(scene -> scene.keyTyped(character));
         return super.keyTyped(character);
     }
 
@@ -111,6 +118,7 @@ public abstract class DefaultManager extends Scene implements ManagerController,
         if (sceneMap.containsKey(currentScene)) {
             sceneMap.get(currentScene).touchDown(screenX, screenY, pointer, button);
         }
+        forEachAlwaysRenderBlockInput(scene -> scene.touchDown(screenX, screenY, pointer, button));
         return super.touchDown(screenX, screenY, pointer, button);
     }
 
@@ -119,6 +127,7 @@ public abstract class DefaultManager extends Scene implements ManagerController,
         if (sceneMap.containsKey(currentScene)) {
             sceneMap.get(currentScene).touchUp(screenX, screenY, pointer, button);
         }
+        forEachAlwaysRenderBlockInput(scene -> scene.touchUp(screenX, screenY, pointer, button));
         return super.touchUp(screenX, screenY, pointer, button);
     }
 
@@ -127,6 +136,7 @@ public abstract class DefaultManager extends Scene implements ManagerController,
         if (sceneMap.containsKey(currentScene)) {
             sceneMap.get(currentScene).touchDragged(screenX, screenY, pointer);
         }
+        forEachAlwaysRenderBlockInput(scene -> scene.touchDragged(screenX, screenY, pointer));
         return super.touchDragged(screenX, screenY, pointer);
     }
 
@@ -135,6 +145,7 @@ public abstract class DefaultManager extends Scene implements ManagerController,
         if (sceneMap.containsKey(currentScene)) {
             sceneMap.get(currentScene).mouseMoved(screenX, screenY);
         }
+        forEachAlwaysRenderBlockInput(scene -> scene.mouseMoved(screenX, screenY));
         return super.mouseMoved(screenX, screenY);
     }
 
@@ -143,17 +154,8 @@ public abstract class DefaultManager extends Scene implements ManagerController,
         if (sceneMap.containsKey(currentScene)) {
             sceneMap.get(currentScene).scrolled(amount);
         }
+        forEachAlwaysRenderBlockInput(scene -> scene.scrolled(amount));
         return super.scrolled(amount);
-    }
-
-    @Override
-    public void setManagerController(ManagerController managerController) {
-        super.setManagerController(managerController);
-    }
-
-    @Override
-    protected void setInputProcessor(InputProcessor inputProcessor) {
-        super.setInputProcessor(inputProcessor);
     }
 
     @Override
@@ -184,4 +186,21 @@ public abstract class DefaultManager extends Scene implements ManagerController,
     public BlockScene getBlockScene() {
         return this;
     }
+
+    private void forEachAlwaysRenderBlockInput(Consumer<Scene> screenConsumer) {
+        for (String scene : alwaysRender) {
+            if (sceneMap.containsKey(scene) && !blockInput.contains(scene)) {
+                screenConsumer.accept(sceneMap.get(scene));
+            }
+        }
+    }
+
+    private void forEachAlwaysRender(Consumer<Scene> screenConsumer) {
+        for (String scene : alwaysRender) {
+            if (sceneMap.containsKey(scene)) {
+                screenConsumer.accept(sceneMap.get(scene));
+            }
+        }
+    }
+
 }
