@@ -1,4 +1,4 @@
-package com.simple.castle;
+package com.simple.castle.constants;
 
 public class Constants {
 

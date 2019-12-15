@@ -1,4 +1,4 @@
-package com.simple.castle.scenes;
+package com.simple.castle.scenes.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -17,11 +17,11 @@ import com.simple.castle.manager.impl.Scene;
 
 public class GameScene extends Scene {
 
-    public PerspectiveCamera cam;
-    public ModelBatch modelBatch;
-    public Model model;
-    public ModelInstance instance;
-    public CameraInputController camController;
+    private PerspectiveCamera cam;
+    private ModelBatch modelBatch;
+    private Model model;
+    private ModelInstance instance;
+    private CameraInputController camController;
     private Environment environment;
 
     public GameScene() {

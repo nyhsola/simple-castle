@@ -1,4 +1,4 @@
-package com.simple.castle.scenes;
+package com.simple.castle.scenes.main.menu;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.simple.castle.manager.impl.Scene;
+import com.simple.castle.scenes.main.MainScene;
 
 public class MenuBackgroundScene extends Scene {
 
