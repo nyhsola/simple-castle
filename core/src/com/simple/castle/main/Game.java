@@ -5,9 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.simple.castle.manager.Manager;
+import com.simple.castle.manager.impl.Manager;
+import com.simple.castle.manager.impl.Scene;
 import com.simple.castle.scenes.MainScene;
-import com.simple.castle.scenes.abs.Scene;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -8,13 +8,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import com.simple.castle.scenes.abs.Scene;
+import com.simple.castle.manager.impl.Scene;
 
 public class MenuBackgroundScene extends Scene {
 
     private final FileHandle skinFileHandle;
 
-    private ChangeScene changeScene;
     private Stage stage;
     private Skin skin;
     private Table table;
@@ -39,7 +38,7 @@ public class MenuBackgroundScene extends Scene {
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                changeScene.setScene(MainScene.MENU_SCENE);
+                managerController.getChangeScene().changeScene(MainScene.MENU_SCENE);
             }
         });
         this.setInputProcessor(stage);
@@ -54,11 +53,6 @@ public class MenuBackgroundScene extends Scene {
     public void dispose() {
         skin.dispose();
         stage.dispose();
-    }
-
-    @Override
-    public void setChangeScene(ChangeScene changeScene) {
-        this.changeScene = changeScene;
     }
 
 }

@@ -2,8 +2,8 @@ package com.simple.castle.scenes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.simple.castle.manager.Manager;
-import com.simple.castle.scenes.abs.Scene;
+import com.simple.castle.manager.impl.Manager;
+import com.simple.castle.manager.impl.Scene;
 
 import java.util.Collections;
 import java.util.HashMap;
