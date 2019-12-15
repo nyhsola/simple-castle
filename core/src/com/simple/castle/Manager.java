@@ -1,57 +1,53 @@
 package com.simple.castle;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.simple.castle.scenes.MainScene;
-import com.simple.castle.scenes.MenuScene;
 import com.simple.castle.scenes.Scene;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class Manager extends ApplicationAdapter implements ChangeScene {
+public class Manager extends Scene implements ChangeScene {
 
-    public static final String MAIN_SCENE = "MainScene";
-    public static final String MENU_SCENE = "MenuScene";
-
-    private static final String START_SCENE = MAIN_SCENE;
-
+    private String startScene;
     private String currentScene;
 
-    private Map<String, Scene> scenes = new HashMap<>();
+    private Map<String, Scene> sceneMap;
 
-    public Manager() {
-        scenes.put(MAIN_SCENE, new MainScene(this));
-        scenes.put(MENU_SCENE, new MenuScene(this));
+    public Manager(String startScene, Map<String, Scene> sceneMap) {
+        this.sceneMap = sceneMap;
+        this.startScene = startScene;
+
+        for (Scene scene : this.sceneMap.values()) {
+            scene.setChangeScene(this);
+        }
     }
 
     @Override
     public void create() {
-        this.setScene(START_SCENE);
+        this.setScene(startScene);
 
-        for (Scene scene : scenes.values()) {
+        for (Scene scene : sceneMap.values()) {
             scene.create();
         }
     }
 
     @Override
     public void render() {
-        if (scenes.containsKey(currentScene)) {
-            scenes.get(currentScene).render();
+        if (sceneMap.containsKey(currentScene)) {
+            sceneMap.get(currentScene).render();
         }
     }
 
     @Override
     public void dispose() {
-        for (Scene scene : scenes.values()) {
+        for (Scene scene : sceneMap.values()) {
             scene.dispose();
         }
     }
 
     @Override
     public void setScene(String scene) {
-        if (scenes.containsKey(scene)) {
-            Gdx.input.setInputProcessor(scenes.get(scene));
+        if (sceneMap.containsKey(scene)) {
+            Gdx.input.setInputProcessor(sceneMap.get(scene));
             currentScene = scene;
         }
     }

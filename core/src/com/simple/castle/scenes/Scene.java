@@ -2,6 +2,7 @@ package com.simple.castle.scenes;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.InputProcessor;
+import com.simple.castle.ChangeScene;
 
 public abstract class Scene implements ApplicationListener, InputProcessor {
 
@@ -73,6 +74,10 @@ public abstract class Scene implements ApplicationListener, InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+
+    public void setChangeScene(ChangeScene changeScene) {
+
     }
 
 }

@@ -1,99 +1,90 @@
 package com.simple.castle.scenes;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.files.FileHandle;
 import com.simple.castle.ChangeScene;
 import com.simple.castle.Manager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.simple.castle.Constants.DEFAULT_UI_SKIN;
 
 public class MainScene extends Scene {
 
-    private Stage stage;
-    private Skin skin;
-    private Table table;
-    private TextButton textButton;
+    public static final String MENU_SCENE = "MENU_SCENE";
+    public static final String MENU_BACKGROUND_SCENE = "MENU_BACKGROUND_SCENE";
 
     private ChangeScene changeScene;
 
-    public MainScene(ChangeScene changeScene) {
-        this.changeScene = changeScene;
-    }
+    private Manager manager;
 
     @Override
     public void create() {
-        stage = new Stage();
-        skin = new Skin(Gdx.files.internal(DEFAULT_UI_SKIN));
-        table = new Table();
-        textButton = new TextButton("Menu", skin);
+        FileHandle skinFileHandle = Gdx.files.internal(DEFAULT_UI_SKIN);
 
-        table.setFillParent(true);
-        table.top().align(Align.topLeft).add(textButton);
+        Map<String, Scene> sceneMap = new HashMap<>();
+        sceneMap.put(MENU_SCENE, new MenuScene(skinFileHandle));
+        sceneMap.put(MENU_BACKGROUND_SCENE, new MenuBackgroundScene(skinFileHandle));
 
-        stage.addActor(table);
-
-        textButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                changeScene.setScene(Manager.MENU_SCENE);
-            }
-        });
+        manager = new Manager(MENU_BACKGROUND_SCENE, sceneMap);
+        manager.create();
     }
 
     @Override
     public void render() {
-        stage.draw();
+        manager.render();
     }
 
     @Override
     public void dispose() {
-        stage.dispose();
-        skin.dispose();
+        manager.dispose();
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        return stage.keyDown(keycode);
+        return manager.keyDown(keycode);
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        return stage.keyUp(keycode);
+        return manager.keyUp(keycode);
     }
 
     @Override
     public boolean keyTyped(char character) {
-        return stage.keyTyped(character);
+        return manager.keyTyped(character);
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return stage.touchDown(screenX, screenY, pointer, button);
+        return manager.touchDown(screenX, screenY, pointer, button);
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return stage.touchUp(screenX, screenY, pointer, button);
+        return manager.touchUp(screenX, screenY, pointer, button);
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return stage.touchDragged(screenX, screenY, pointer);
+        return manager.touchDragged(screenX, screenY, pointer);
     }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        return stage.mouseMoved(screenX, screenY);
+        return manager.mouseMoved(screenX, screenY);
     }
 
     @Override
     public boolean scrolled(int amount) {
-        return stage.scrolled(amount);
+        return manager.scrolled(amount);
     }
+
+    @Override
+    public void setChangeScene(ChangeScene changeScene) {
+        this.changeScene = changeScene;
+    }
+
+
 }
