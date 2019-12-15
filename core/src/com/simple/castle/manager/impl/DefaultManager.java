@@ -1,7 +1,9 @@
 package com.simple.castle.manager.impl;
 
+import com.simple.castle.camera.CameraSettings;
 import com.simple.castle.manager.BlockScene;
 import com.simple.castle.manager.ChangeScene;
+import com.simple.castle.manager.GetCameraSettings;
 import com.simple.castle.manager.ManagerController;
 
 import java.util.ArrayList;
@@ -11,13 +13,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public abstract class DefaultManager extends Scene implements ManagerController, ChangeScene, BlockScene {
+public abstract class DefaultManager extends Scene implements ManagerController, ChangeScene, BlockScene, GetCameraSettings {
 
     private String currentScene;
     private String startScene;
     private Map<String, Scene> sceneMap;
     private List<String> alwaysRender = new ArrayList<>();
     private List<String> blockInput = new ArrayList<>();
+    private CameraSettings cameraSettings = new CameraSettings();
 
     public DefaultManager(String startScene, Map<String, Scene> sceneMap) {
         this.startScene = startScene;
@@ -45,6 +48,13 @@ public abstract class DefaultManager extends Scene implements ManagerController,
         }
 
         this.changeScene(startScene);
+    }
+
+    public void update() {
+        for (Scene scene : sceneMap.values()) {
+            scene.update();
+        }
+        forEachAlwaysRender(Scene::update);
     }
 
     @Override
@@ -178,6 +188,11 @@ public abstract class DefaultManager extends Scene implements ManagerController,
     }
 
     @Override
+    public CameraSettings getSettings() {
+        return cameraSettings;
+    }
+
+    @Override
     public ChangeScene getChangeScene() {
         return this;
     }
@@ -187,11 +202,14 @@ public abstract class DefaultManager extends Scene implements ManagerController,
         return this;
     }
 
+    @Override
+    public GetCameraSettings getCameraSettings() {
+        return this;
+    }
+
     private void forEachAlwaysRenderBlockInput(Consumer<Scene> screenConsumer) {
         for (String scene : alwaysRender) {
-            if (sceneMap.containsKey(scene) && !blockInput.contains(scene)) {
                 screenConsumer.accept(sceneMap.get(scene));
-            }
         }
     }
 

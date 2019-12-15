@@ -5,4 +5,6 @@ public interface ManagerController {
     ChangeScene getChangeScene();
     BlockScene getBlockScene();
 
+    GetCameraSettings getCameraSettings();
+
 }

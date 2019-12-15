@@ -38,6 +38,11 @@ public class MainScene extends Scene {
     }
 
     @Override
+    public void update() {
+        mainSceneManager.update();
+    }
+
+    @Override
     public void render() {
         mainSceneManager.render();
     }

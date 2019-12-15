@@ -40,6 +40,7 @@ public class MenuScene extends Scene {
         settingsTable = new Table();
 
         slider = new Slider(0, 555, 1, false, skin);
+        slider.setValue(67);
         labelCameraView = new Label("Camera view", skin);
         labelCurrentValue = new Label("", skin);
 
@@ -69,6 +70,11 @@ public class MenuScene extends Scene {
         });
 
         this.setInputProcessor(stage);
+    }
+
+    @Override
+    public void update() {
+        managerController.getCameraSettings().getSettings().setFieldOfView(slider.getValue());
     }
 
     @Override

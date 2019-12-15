@@ -20,6 +20,10 @@ public abstract class Scene implements ApplicationListener, InputProcessor {
 
     }
 
+    public void update() {
+
+    }
+
     @Override
     public void render() {
 

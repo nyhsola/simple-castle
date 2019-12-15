@@ -51,6 +51,11 @@ public class GameScene extends Scene {
     }
 
     @Override
+    public void update() {
+        cam.fieldOfView = managerController.getCameraSettings().getSettings().getFieldOfView();
+    }
+
+    @Override
     public void render() {
         camController.update();
 
