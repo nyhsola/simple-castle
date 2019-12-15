@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import com.simple.castle.ChangeScene;
+import com.simple.castle.scenes.abs.Scene;
 
 public class MenuScene extends Scene {
 
@@ -66,6 +66,8 @@ public class MenuScene extends Scene {
                 changeScene.setScene(MainScene.MENU_BACKGROUND_SCENE);
             }
         });
+
+        this.setInputProcessor(stage);
     }
 
     @Override
@@ -78,46 +80,6 @@ public class MenuScene extends Scene {
     public void dispose() {
         skin.dispose();
         stage.dispose();
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        return stage.keyDown(keycode);
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return stage.keyUp(keycode);
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return stage.keyTyped(character);
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return stage.touchDown(screenX, screenY, pointer, button);
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return stage.touchUp(screenX, screenY, pointer, button);
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return stage.touchDragged(screenX, screenY, pointer);
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return stage.mouseMoved(screenX, screenY);
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return stage.scrolled(amount);
     }
 
     @Override

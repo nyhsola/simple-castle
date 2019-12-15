@@ -1,10 +1,19 @@
-package com.simple.castle.scenes;
+package com.simple.castle.scenes.abs;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.InputProcessor;
-import com.simple.castle.ChangeScene;
+import com.simple.castle.scenes.ChangeScene;
 
 public abstract class Scene implements ApplicationListener, InputProcessor {
+
+    private InputProcessor inputProcessor;
+
+    public Scene() {
+    }
+
+    public Scene(InputProcessor inputProcessor) {
+        this.inputProcessor = inputProcessor;
+    }
 
     @Override
     public void create() {
@@ -38,46 +47,49 @@ public abstract class Scene implements ApplicationListener, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        return false;
+        return inputProcessor != null && inputProcessor.keyDown(keycode);
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        return false;
+        return inputProcessor != null && inputProcessor.keyUp(keycode);
     }
 
     @Override
     public boolean keyTyped(char character) {
-        return false;
+        return inputProcessor != null && inputProcessor.keyTyped(character);
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
+        return inputProcessor != null && inputProcessor.touchDown(screenX, screenY, pointer, button);
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
+        return inputProcessor != null && inputProcessor.touchUp(screenX, screenY, pointer, button);
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
+        return inputProcessor != null && inputProcessor.touchDragged(screenX, screenY, pointer);
     }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        return false;
+        return inputProcessor != null && inputProcessor.mouseMoved(screenX, screenY);
     }
 
     @Override
     public boolean scrolled(int amount) {
-        return false;
+        return inputProcessor != null && inputProcessor.scrolled(amount);
     }
 
     public void setChangeScene(ChangeScene changeScene) {
 
     }
 
+    protected void setInputProcessor(InputProcessor inputProcessor) {
+        this.inputProcessor = inputProcessor;
+    }
 }
