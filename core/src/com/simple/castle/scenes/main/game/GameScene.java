@@ -55,8 +55,8 @@ public class GameScene extends Scene {
     public void settingUpdated(String name, String value) {
         if (Settings.FIELD_OF_VIEW.equals(name)) {
             cam.fieldOfView = value == null ? 0.0f : Float.parseFloat(value);
+            cam.update();
         }
-        cam.update();
     }
 
     @Override
