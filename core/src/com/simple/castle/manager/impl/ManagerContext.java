@@ -5,15 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.simple.castle.camera.CameraSettings;
-
 public class ManagerContext {
+
+    private final Map<String, String> settings = new HashMap<>();
 
     private String currentScene = "NO_SCENE";
     private Map<String, Scene> sceneMap = new HashMap<>();
     private List<String> alwaysRender = new ArrayList<>();
     private List<String> blockInput = new ArrayList<>();
-    private CameraSettings cameraSettings = new CameraSettings();
 
     public String getCurrentScene() {
         return currentScene;
@@ -47,11 +46,7 @@ public class ManagerContext {
         this.blockInput = blockInput;
     }
 
-    public CameraSettings getCameraSettings() {
-        return cameraSettings;
-    }
-
-    public void setCameraSettings(CameraSettings cameraSettings) {
-        this.cameraSettings = cameraSettings;
+    public Map<String, String> getSettings() {
+        return settings;
     }
 }

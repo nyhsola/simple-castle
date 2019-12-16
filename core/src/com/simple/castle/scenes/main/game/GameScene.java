@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.simple.castle.constants.Settings;
 import com.simple.castle.manager.impl.Scene;
 
 public class GameScene extends Scene {
@@ -52,7 +53,9 @@ public class GameScene extends Scene {
 
     @Override
     public void update() {
-        cam.fieldOfView = getManagerContext().getCameraSettings().getFieldOfView();
+        cam.fieldOfView = getManagerContext().getSettings().get(Settings.FIELD_OF_VIEW) == null
+                ? 0.0f
+                : Float.parseFloat(getManagerContext().getSettings().get(Settings.FIELD_OF_VIEW));
     }
 
     @Override

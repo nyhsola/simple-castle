@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.simple.castle.constants.Settings;
 import com.simple.castle.manager.impl.Scene;
 import com.simple.castle.scenes.main.MainScene;
 
@@ -74,7 +75,7 @@ public class MenuScene extends Scene {
 
     @Override
     public void update() {
-        getManagerContext().getCameraSettings().setFieldOfView(slider.getValue());
+        getManagerContext().getSettings().put(Settings.FIELD_OF_VIEW, Float.toString(slider.getValue()));
     }
 
     @Override
