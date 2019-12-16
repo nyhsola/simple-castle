@@ -6,7 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 public abstract class Scene implements ApplicationListener, InputProcessor {
 
     private InputProcessor inputProcessor;
-    private ManagerContext managerContext = new ManagerContext();
+    private ManagerContext managerContext;
 
     @Override
     public void create() {
@@ -87,6 +87,9 @@ public abstract class Scene implements ApplicationListener, InputProcessor {
     }
 
     public ManagerContext getManagerContext() {
+        if (managerContext == null) {
+            throw new IllegalStateException("There is no context");
+        }
         return managerContext;
     }
 

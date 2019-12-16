@@ -1,32 +1,20 @@
 package com.simple.castle.manager.impl;
 
-import java.util.Collections;
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.InputProcessor;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.InputProcessor;
-
 public class Manager implements ApplicationListener, InputProcessor {
 
-    private final ManagerContext managerContext = new ManagerContext();
+    private final ManagerContext managerContext;
 
-    public Manager(String startScene, Map<String, Scene> sceneMap) {
-        managerContext.setCurrentScene(startScene);
-        managerContext.setSceneMap(Collections.unmodifiableMap(new HashMap<>(sceneMap)));
-    }
-
-    public Manager(String startScene, Map<String, Scene> sceneMap, List<String> alwaysRender) {
-        this(startScene, sceneMap);
-        managerContext.setAlwaysRender(alwaysRender);
-    }
-
-    public Manager(String startScene, Map<String, Scene> sceneMap, List<String> alwaysRender,
-                   List<String> blockInput) {
-        this(startScene, sceneMap, alwaysRender);
-        managerContext.setBlockInput(blockInput);
+    private Manager(ManagerBuilder managerBuilder) {
+        managerContext = new ManagerContext(managerBuilder.sceneMap, managerBuilder.alwaysRender, managerBuilder.blockInput);
     }
 
     @Override
@@ -44,8 +32,8 @@ public class Manager implements ApplicationListener, InputProcessor {
 
     @Override
     public void render() {
-        forCurrentScene(Scene::render);
         forEachAlwaysRender(Scene::render);
+        forCurrentScene(Scene::render);
     }
 
     @Override
@@ -150,6 +138,32 @@ public class Manager implements ApplicationListener, InputProcessor {
     private void forEachScene(Consumer<Scene> screenConsumer) {
         for (Scene scene : managerContext.getSceneMap().values()) {
             screenConsumer.accept(scene);
+        }
+    }
+
+    public static class ManagerBuilder {
+
+        private Map<String, Scene> sceneMap = new HashMap<>();
+        private List<String> alwaysRender = new ArrayList<>();
+        private List<String> blockInput = new ArrayList<>();
+
+        public ManagerBuilder addScene(String sceneName, Scene scene) {
+            sceneMap.put(sceneName, scene);
+            return this;
+        }
+
+        public ManagerBuilder addAlwaysRender(String sceneName) {
+            alwaysRender.add(sceneName);
+            return this;
+        }
+
+        public ManagerBuilder blockInput(String sceneName) {
+            blockInput.add(sceneName);
+            return this;
+        }
+
+        public Manager build() {
+            return new Manager(this);
         }
     }
 

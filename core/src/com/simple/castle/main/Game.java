@@ -5,11 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.simple.castle.manager.impl.Manager;
-import com.simple.castle.manager.impl.Scene;
 import com.simple.castle.scenes.main.MainScene;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Game extends ApplicationAdapter {
 
@@ -21,12 +17,11 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void create() {
-        Map<String, Scene> sceneMap = new HashMap<>();
-        sceneMap.put(MAIN_SCENE, new MainScene());
+        gameManager = new Manager.ManagerBuilder()
+                .addScene(MAIN_SCENE, new MainScene())
+                .build();
 
-        gameManager = new Manager(MAIN_SCENE, sceneMap);
         gameManager.create();
-
         Gdx.input.setInputProcessor(gameManager);
     }
 

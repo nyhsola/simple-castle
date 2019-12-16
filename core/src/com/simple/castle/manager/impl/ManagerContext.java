@@ -1,6 +1,5 @@
 package com.simple.castle.manager.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,10 +8,21 @@ public class ManagerContext {
 
     private final Map<String, String> settings = new HashMap<>();
 
-    private String currentScene = "NO_SCENE";
-    private Map<String, Scene> sceneMap = new HashMap<>();
-    private List<String> alwaysRender = new ArrayList<>();
-    private List<String> blockInput = new ArrayList<>();
+    private final Map<String, Scene> sceneMap;
+    private final List<String> alwaysRender;
+    private final List<String> blockInput;
+    private String currentScene;
+
+    public ManagerContext(Map<String, Scene> sceneMap, List<String> alwaysRender, List<String> blockInput) {
+        this.currentScene = sceneMap.keySet().stream().findFirst().orElse("NO_SCENE");
+        this.sceneMap = sceneMap;
+        this.alwaysRender = alwaysRender;
+        this.blockInput = blockInput;
+    }
+
+    public Map<String, String> getSettings() {
+        return settings;
+    }
 
     public String getCurrentScene() {
         return currentScene;
@@ -26,27 +36,11 @@ public class ManagerContext {
         return sceneMap;
     }
 
-    public void setSceneMap(Map<String, Scene> sceneMap) {
-        this.sceneMap = sceneMap;
-    }
-
     public List<String> getAlwaysRender() {
         return alwaysRender;
     }
 
-    public void setAlwaysRender(List<String> alwaysRender) {
-        this.alwaysRender = alwaysRender;
-    }
-
     public List<String> getBlockInput() {
         return blockInput;
-    }
-
-    public void setBlockInput(List<String> blockInput) {
-        this.blockInput = blockInput;
-    }
-
-    public Map<String, String> getSettings() {
-        return settings;
     }
 }

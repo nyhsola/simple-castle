@@ -8,10 +8,6 @@ import com.simple.castle.scenes.main.game.GameScene;
 import com.simple.castle.scenes.main.menu.MenuBackgroundScene;
 import com.simple.castle.scenes.main.menu.MenuScene;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import static com.simple.castle.constants.Constants.DEFAULT_UI_SKIN;
 
 public class MainScene extends Scene {
@@ -26,12 +22,12 @@ public class MainScene extends Scene {
     public void create() {
         FileHandle skinFileHandle = Gdx.files.internal(DEFAULT_UI_SKIN);
 
-        Map<String, Scene> sceneMap = new HashMap<>();
-        sceneMap.put(MENU_SCENE, new MenuScene(skinFileHandle));
-        sceneMap.put(MENU_BACKGROUND_SCENE, new MenuBackgroundScene(skinFileHandle));
-        sceneMap.put(GAME_SCENE, new GameScene());
-
-        mainSceneManager = new Manager(MENU_BACKGROUND_SCENE, sceneMap, Collections.singletonList(GAME_SCENE));
+        mainSceneManager = new Manager.ManagerBuilder()
+                .addScene(MENU_SCENE, new MenuScene(skinFileHandle))
+                .addScene(MENU_BACKGROUND_SCENE, new MenuBackgroundScene(skinFileHandle))
+                .addScene(GAME_SCENE, new GameScene())
+                .addAlwaysRender(GAME_SCENE)
+                .build();
         mainSceneManager.create();
 
         this.setInputProcessor(mainSceneManager);
