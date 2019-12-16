@@ -2,13 +2,11 @@ package com.simple.castle.manager.impl;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.InputProcessor;
-import com.simple.castle.manager.ManagerController;
-import com.simple.castle.manager.empty.EmptyManagerController;
 
 public abstract class Scene implements ApplicationListener, InputProcessor {
 
     private InputProcessor inputProcessor;
-    protected ManagerController managerController = new EmptyManagerController();
+    private ManagerContext managerContext = new ManagerContext();
 
     @Override
     public void create() {
@@ -84,11 +82,15 @@ public abstract class Scene implements ApplicationListener, InputProcessor {
         return inputProcessor != null && inputProcessor.scrolled(amount);
     }
 
-    public void setManagerController(ManagerController managerController) {
-        this.managerController = managerController;
-    }
-
     protected void setInputProcessor(InputProcessor inputProcessor) {
         this.inputProcessor = inputProcessor;
+    }
+
+    public ManagerContext getManagerContext() {
+        return managerContext;
+    }
+
+    public void setManagerContext(ManagerContext managerContext) {
+        this.managerContext = managerContext;
     }
 }

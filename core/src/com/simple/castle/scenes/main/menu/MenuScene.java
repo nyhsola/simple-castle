@@ -39,7 +39,7 @@ public class MenuScene extends Scene {
 
         settingsTable = new Table();
 
-        slider = new Slider(0, 555, 1, false, skin);
+        slider = new Slider(0, 180, 1, false, skin);
         slider.setValue(67);
         labelCameraView = new Label("Camera view", skin);
         labelCurrentValue = new Label("", skin);
@@ -64,8 +64,8 @@ public class MenuScene extends Scene {
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                managerController.getChangeScene().changeScene(MainScene.MENU_BACKGROUND_SCENE);
-                managerController.getBlockScene().deleteBlockScene(MainScene.GAME_SCENE);
+                getManagerContext().setCurrentScene(MainScene.MENU_BACKGROUND_SCENE);
+                getManagerContext().getBlockInput().remove(MainScene.GAME_SCENE);
             }
         });
 
@@ -74,7 +74,7 @@ public class MenuScene extends Scene {
 
     @Override
     public void update() {
-        managerController.getCameraSettings().getSettings().setFieldOfView(slider.getValue());
+        getManagerContext().getCameraSettings().setFieldOfView(slider.getValue());
     }
 
     @Override
