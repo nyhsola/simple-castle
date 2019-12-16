@@ -20,8 +20,9 @@ public class ManagerContext {
         this.blockInput = blockInput;
     }
 
-    public Map<String, String> getSettings() {
-        return settings;
+    public void putSettings(String name, String value) {
+        sceneMap.values().forEach(scene -> scene.settingUpdated(name, value));
+        settings.put(name, value);
     }
 
     public String getCurrentScene() {
@@ -43,4 +44,5 @@ public class ManagerContext {
     public List<String> getBlockInput() {
         return blockInput;
     }
+
 }

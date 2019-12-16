@@ -20,8 +20,8 @@ public class Manager implements ApplicationListener, InputProcessor {
     @Override
     public void create() {
         forEachScene(scene -> {
-            scene.create();
             scene.setManagerContext(managerContext);
+            scene.create();
         });
     }
 

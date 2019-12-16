@@ -1,7 +1,8 @@
-package com.simple.castle.scenes.main;
+package com.simple.castle.scenes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.simple.castle.constants.Scenes;
 import com.simple.castle.manager.impl.Manager;
 import com.simple.castle.manager.impl.Scene;
 import com.simple.castle.scenes.main.game.GameScene;
@@ -12,10 +13,6 @@ import static com.simple.castle.constants.Constants.DEFAULT_UI_SKIN;
 
 public class MainScene extends Scene {
 
-    public static final String GAME_SCENE = "GAME_SCENE";
-    public static final String MENU_SCENE = "MENU_SCENE";
-    public static final String MENU_BACKGROUND_SCENE = "MENU_BACKGROUND_SCENE";
-
     private Manager mainSceneManager;
 
     @Override
@@ -23,11 +20,12 @@ public class MainScene extends Scene {
         FileHandle skinFileHandle = Gdx.files.internal(DEFAULT_UI_SKIN);
 
         mainSceneManager = new Manager.ManagerBuilder()
-                .addScene(MENU_SCENE, new MenuScene(skinFileHandle))
-                .addScene(MENU_BACKGROUND_SCENE, new MenuBackgroundScene(skinFileHandle))
-                .addScene(GAME_SCENE, new GameScene())
-                .addAlwaysRender(GAME_SCENE)
+                .addScene(Scenes.MENU_SCENE, new MenuScene(skinFileHandle))
+                .addScene(Scenes.MENU_BACKGROUND_SCENE, new MenuBackgroundScene(skinFileHandle))
+                .addScene(Scenes.GAME_SCENE, new GameScene())
+                .addAlwaysRender(Scenes.GAME_SCENE)
                 .build();
+
         mainSceneManager.create();
 
         this.setInputProcessor(mainSceneManager);

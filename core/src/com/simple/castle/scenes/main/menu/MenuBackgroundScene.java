@@ -8,8 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.simple.castle.constants.Scenes;
 import com.simple.castle.manager.impl.Scene;
-import com.simple.castle.scenes.main.MainScene;
 
 public class MenuBackgroundScene extends Scene {
 
@@ -39,8 +39,8 @@ public class MenuBackgroundScene extends Scene {
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                getManagerContext().setCurrentScene(MainScene.MENU_SCENE);
-                getManagerContext().getBlockInput().add(MainScene.GAME_SCENE);
+                getManagerContext().setCurrentScene(Scenes.MENU_SCENE);
+                getManagerContext().getBlockInput().add(Scenes.GAME_SCENE);
             }
         });
         this.setInputProcessor(stage);

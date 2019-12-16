@@ -4,23 +4,20 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.simple.castle.constants.Scenes;
 import com.simple.castle.manager.impl.Manager;
-import com.simple.castle.scenes.main.MainScene;
+import com.simple.castle.scenes.MainScene;
 
 public class Game extends ApplicationAdapter {
 
-    public static final String MAIN_SCENE = "MainScene";
-
     private static final Color CLEAR_COLOR = new Color(0.376f, 0.4f, 0.4f, 1);
-
     private Manager gameManager;
 
     @Override
     public void create() {
         gameManager = new Manager.ManagerBuilder()
-                .addScene(MAIN_SCENE, new MainScene())
+                .addScene(Scenes.MAIN_SCENE, new MainScene())
                 .build();
-
         gameManager.create();
         Gdx.input.setInputProcessor(gameManager);
     }
@@ -28,10 +25,8 @@ public class Game extends ApplicationAdapter {
     @Override
     public void render() {
         gameManager.update();
-
         Gdx.gl.glClearColor(CLEAR_COLOR.r, CLEAR_COLOR.g, CLEAR_COLOR.b, CLEAR_COLOR.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
         gameManager.render();
     }
 

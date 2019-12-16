@@ -82,6 +82,10 @@ public abstract class Scene implements ApplicationListener, InputProcessor {
         return inputProcessor != null && inputProcessor.scrolled(amount);
     }
 
+    public void settingUpdated(String name, String value) {
+
+    }
+
     protected void setInputProcessor(InputProcessor inputProcessor) {
         this.inputProcessor = inputProcessor;
     }
@@ -96,4 +100,5 @@ public abstract class Scene implements ApplicationListener, InputProcessor {
     public void setManagerContext(ManagerContext managerContext) {
         this.managerContext = managerContext;
     }
+
 }

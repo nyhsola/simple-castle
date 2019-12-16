@@ -10,9 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.simple.castle.constants.Scenes;
 import com.simple.castle.constants.Settings;
 import com.simple.castle.manager.impl.Scene;
-import com.simple.castle.scenes.main.MainScene;
 
 public class MenuScene extends Scene {
 
@@ -65,8 +65,16 @@ public class MenuScene extends Scene {
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                getManagerContext().setCurrentScene(MainScene.MENU_BACKGROUND_SCENE);
-                getManagerContext().getBlockInput().remove(MainScene.GAME_SCENE);
+                getManagerContext().setCurrentScene(Scenes.MENU_BACKGROUND_SCENE);
+                getManagerContext().getBlockInput().remove(Scenes.GAME_SCENE);
+            }
+        });
+
+        getManagerContext().putSettings(Settings.FIELD_OF_VIEW, Float.toString(slider.getValue()));
+        slider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                getManagerContext().putSettings(Settings.FIELD_OF_VIEW, Float.toString(slider.getValue()));
             }
         });
 
@@ -75,7 +83,6 @@ public class MenuScene extends Scene {
 
     @Override
     public void update() {
-        getManagerContext().getSettings().put(Settings.FIELD_OF_VIEW, Float.toString(slider.getValue()));
     }
 
     @Override
