@@ -1,7 +1,4 @@
-package com.simple.castle.manager.impl;
-
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.InputProcessor;
+package com.simple.castle.manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class Manager implements ApplicationListener, InputProcessor {
+import com.simple.castle.drawable.ApplicationDrawable;
+import com.simple.castle.scene.Scene;
+
+public class Manager extends ApplicationDrawable {
 
     private final ManagerContext managerContext;
 

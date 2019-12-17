@@ -1,8 +1,10 @@
-package com.simple.castle.manager.impl;
+package com.simple.castle.manager;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.simple.castle.scene.Scene;
 
 public class ManagerContext {
 
@@ -21,8 +23,9 @@ public class ManagerContext {
     }
 
     public void putSettings(String name, String value) {
-        sceneMap.values().forEach(scene -> scene.settingUpdated(name, value));
         settings.put(name, value);
+        sceneMap.values().forEach(scene -> scene.settingUpdated(name, value));
+        sceneMap.values().forEach(scene -> scene.settingsUpdated(settings));
     }
 
     public String getCurrentScene() {

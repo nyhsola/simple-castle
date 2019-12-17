@@ -14,7 +14,7 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.simple.castle.constants.Settings;
-import com.simple.castle.manager.impl.Scene;
+import com.simple.castle.scene.Scene;
 
 public class GameScene extends Scene {
 

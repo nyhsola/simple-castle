@@ -1,46 +1,15 @@
-package com.simple.castle.manager.impl;
+package com.simple.castle.scene;
 
-import com.badlogic.gdx.ApplicationListener;
+import java.util.Map;
+
 import com.badlogic.gdx.InputProcessor;
+import com.simple.castle.drawable.ApplicationDrawable;
+import com.simple.castle.manager.ManagerContext;
 
-public abstract class Scene implements ApplicationListener, InputProcessor {
+public abstract class Scene extends ApplicationDrawable {
 
     private InputProcessor inputProcessor;
     private ManagerContext managerContext;
-
-    @Override
-    public void create() {
-
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    public void update() {
-
-    }
-
-    @Override
-    public void render() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void dispose() {
-
-    }
 
     @Override
     public boolean keyDown(int keycode) {
@@ -83,6 +52,10 @@ public abstract class Scene implements ApplicationListener, InputProcessor {
     }
 
     public void settingUpdated(String name, String value) {
+
+    }
+
+    public void settingsUpdated(Map<String, String> settings) {
 
     }
 

@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.simple.castle.constants.Scenes;
-import com.simple.castle.manager.impl.Manager;
+import com.simple.castle.manager.Manager;
 import com.simple.castle.scenes.MainScene;
 
 public class Game extends ApplicationAdapter {

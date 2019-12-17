@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.simple.castle.constants.Scenes;
 import com.simple.castle.constants.Settings;
-import com.simple.castle.manager.impl.Scene;
+import com.simple.castle.scene.Scene;
 
 public class MenuScene extends Scene {
 
