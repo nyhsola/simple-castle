@@ -24,8 +24,6 @@ public class ManagerContext {
 
     public void putSettings(String name, String value) {
         settings.put(name, value);
-        sceneMap.values().forEach(scene -> scene.settingUpdated(name, value));
-        sceneMap.values().forEach(scene -> scene.settingsUpdated(settings));
     }
 
     public String getCurrentScene() {

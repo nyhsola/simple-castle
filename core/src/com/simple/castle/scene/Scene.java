@@ -1,77 +1,90 @@
 package com.simple.castle.scene;
 
-import com.badlogic.gdx.InputProcessor;
 import com.simple.castle.drawable.ApplicationDrawable;
+import com.simple.castle.manager.Manager;
 import com.simple.castle.manager.ManagerContext;
-
-import java.util.Map;
 
 public abstract class Scene extends ApplicationDrawable {
 
-    private InputProcessor inputProcessor;
-    private ManagerContext managerContext;
+    protected Manager manager = new Manager.ManagerBuilder().build();
+
+    public ManagerContext getManagerContext() {
+        return manager.getManagerContext();
+    }
+
+    @Override
+    public void create() {
+        manager.create();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        manager.resize(width, height);
+    }
+
+    @Override
+    public void update() {
+        manager.update();
+    }
+
+    @Override
+    public void render() {
+        manager.render();
+    }
+
+    @Override
+    public void pause() {
+        manager.pause();
+    }
+
+    @Override
+    public void resume() {
+        manager.resume();
+    }
+
+    @Override
+    public void dispose() {
+        manager.dispose();
+    }
 
     @Override
     public boolean keyDown(int keycode) {
-        return inputProcessor != null && inputProcessor.keyDown(keycode);
+        return manager.keyDown(keycode);
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        return inputProcessor != null && inputProcessor.keyUp(keycode);
+        return manager.keyUp(keycode);
     }
 
     @Override
     public boolean keyTyped(char character) {
-        return inputProcessor != null && inputProcessor.keyTyped(character);
+        return manager.keyTyped(character);
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return inputProcessor != null && inputProcessor.touchDown(screenX, screenY, pointer, button);
+        return manager.touchDown(screenX, screenY, pointer, button);
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return inputProcessor != null && inputProcessor.touchUp(screenX, screenY, pointer, button);
+        return manager.touchUp(screenX, screenY, pointer, button);
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return inputProcessor != null && inputProcessor.touchDragged(screenX, screenY, pointer);
+        return manager.touchDragged(screenX, screenY, pointer);
     }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        return inputProcessor != null && inputProcessor.mouseMoved(screenX, screenY);
+        return manager.mouseMoved(screenX, screenY);
     }
 
     @Override
     public boolean scrolled(int amount) {
-        return inputProcessor != null && inputProcessor.scrolled(amount);
-    }
-
-    public void settingUpdated(String name, String value) {
-
-    }
-
-    public void settingsUpdated(Map<String, String> settings) {
-
-    }
-
-    protected void setInputProcessor(InputProcessor inputProcessor) {
-        this.inputProcessor = inputProcessor;
-    }
-
-    public ManagerContext getManagerContext() {
-        if (managerContext == null) {
-            throw new IllegalStateException("There is no context");
-        }
-        return managerContext;
-    }
-
-    public void setManagerContext(ManagerContext managerContext) {
-        this.managerContext = managerContext;
+        return manager.scrolled(amount);
     }
 
 }

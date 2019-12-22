@@ -17,12 +17,33 @@ public class Manager extends ApplicationDrawable {
         managerContext = new ManagerContext(managerBuilder.sceneMap, managerBuilder.alwaysRender, managerBuilder.blockInput, managerBuilder.currentScene);
     }
 
+    public Manager addScene(String sceneName, Scene scene) {
+        managerContext.getSceneMap().put(sceneName, scene);
+        return this;
+    }
+
+    public Manager addAlwaysRender(String sceneName) {
+        managerContext.getAlwaysRender().add(sceneName);
+        return this;
+    }
+
+    public Manager blockInput(String sceneName) {
+        managerContext.getBlockInput().add(sceneName);
+        return this;
+    }
+
+    public Manager currentScene(String currentScene) {
+        managerContext.setCurrentScene(currentScene);
+        return this;
+    }
+
+    public ManagerContext getManagerContext() {
+        return managerContext;
+    }
+
     @Override
     public void create() {
-        forEachScene(scene -> {
-            scene.setManagerContext(managerContext);
-            scene.create();
-        });
+        forEachScene(ApplicationDrawable::create);
     }
 
     public void update() {
