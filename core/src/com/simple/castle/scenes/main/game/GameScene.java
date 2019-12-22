@@ -1,14 +1,8 @@
 package com.simple.castle.scenes.main.game;
 
-import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -16,22 +10,24 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.utils.UBJsonReader;
+import com.badlogic.gdx.utils.JsonReader;
 import com.simple.castle.constants.Settings;
 import com.simple.castle.scene.Scene;
 
 public class GameScene extends Scene {
 
+    private static final String MODELS_PLANE_G_3_DJ = "models/plane.g3dj";
+
+    private G3dModelLoader modelLoader;
     private PerspectiveCamera cam;
     private ModelBatch modelBatch;
     private Model model;
-    private Model model1;
     private ModelInstance instance;
-    private ModelInstance instance1;
     private CameraInputController camController;
     private Environment environment;
-    private AssetManager assetManager;
+
+    public GameScene() {
+    }
 
     @Override
     public void create() {
@@ -50,21 +46,9 @@ public class GameScene extends Scene {
 
         camController = new CameraInputController(cam);
 
-        ModelBuilder modelBuilder = new ModelBuilder();
-        model = modelBuilder.createBox(5f, 5f, 5f,
-                new Material(ColorAttribute.createDiffuse(Color.GREEN)),
-                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
+        modelLoader = new G3dModelLoader(new JsonReader());
+        model = modelLoader.loadModel(Gdx.files.internal(MODELS_PLANE_G_3_DJ));
         instance = new ModelInstance(model);
-
-        UBJsonReader ubJsonReader = new UBJsonReader();
-        G3dModelLoader g3dModelLoader = new G3dModelLoader(ubJsonReader);
-
-        Gdx.app.log("", Gdx.files.internal("models/plane.g3dj").exists() ? "exists" : "does not exist");
-
-        FileHandle internal = Gdx.files.internal("models/plane.g3dj");
-        System.out.print(internal.file().getAbsolutePath());
-        model1 = g3dModelLoader.loadModel(internal);
-        instance1 = new ModelInstance(model1);
 
         this.setInputProcessor(camController);
     }
@@ -80,10 +64,8 @@ public class GameScene extends Scene {
     @Override
     public void render() {
         camController.update();
-
         modelBatch.begin(cam);
-//        modelBatch.render(instance, environment);
-        modelBatch.render(instance1, environment);
+        modelBatch.render(instance, environment);
         modelBatch.end();
     }
 
