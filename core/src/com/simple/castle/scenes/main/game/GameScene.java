@@ -16,7 +16,7 @@ import com.simple.castle.scene.Scene;
 
 public class GameScene extends Scene {
 
-    private static final String MODELS_PLANE_G_3_DJ = "models/plane.g3dj";
+    private static final String MODELS_PLANE_G_3_DJ = "models/surface.g3dj";
 
     private G3dModelLoader modelLoader;
     private PerspectiveCamera cam;

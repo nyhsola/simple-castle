@@ -1,10 +1,10 @@
 package com.simple.castle.scene;
 
-import java.util.Map;
-
 import com.badlogic.gdx.InputProcessor;
 import com.simple.castle.drawable.ApplicationDrawable;
 import com.simple.castle.manager.ManagerContext;
+
+import java.util.Map;
 
 public abstract class Scene extends ApplicationDrawable {
 

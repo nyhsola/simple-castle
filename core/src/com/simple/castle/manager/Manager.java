@@ -1,20 +1,20 @@
 package com.simple.castle.manager;
 
+import com.simple.castle.drawable.ApplicationDrawable;
+import com.simple.castle.scene.Scene;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import com.simple.castle.drawable.ApplicationDrawable;
-import com.simple.castle.scene.Scene;
-
 public class Manager extends ApplicationDrawable {
 
     private final ManagerContext managerContext;
 
     private Manager(ManagerBuilder managerBuilder) {
-        managerContext = new ManagerContext(managerBuilder.sceneMap, managerBuilder.alwaysRender, managerBuilder.blockInput);
+        managerContext = new ManagerContext(managerBuilder.sceneMap, managerBuilder.alwaysRender, managerBuilder.blockInput, managerBuilder.currentScene);
     }
 
     @Override
@@ -146,6 +146,7 @@ public class Manager extends ApplicationDrawable {
         private Map<String, Scene> sceneMap = new HashMap<>();
         private List<String> alwaysRender = new ArrayList<>();
         private List<String> blockInput = new ArrayList<>();
+        private String currentScene;
 
         public ManagerBuilder addScene(String sceneName, Scene scene) {
             sceneMap.put(sceneName, scene);
@@ -159,6 +160,11 @@ public class Manager extends ApplicationDrawable {
 
         public ManagerBuilder blockInput(String sceneName) {
             blockInput.add(sceneName);
+            return this;
+        }
+
+        public ManagerBuilder currentScene(String currentScene) {
+            this.currentScene = currentScene;
             return this;
         }
 

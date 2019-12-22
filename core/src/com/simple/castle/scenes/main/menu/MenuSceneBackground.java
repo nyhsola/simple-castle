@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.Align;
 import com.simple.castle.constants.Scenes;
 import com.simple.castle.scene.Scene;
 
-public class MenuBackgroundScene extends Scene {
+public class MenuSceneBackground extends Scene {
 
     private final FileHandle skinFileHandle;
 
@@ -20,7 +20,7 @@ public class MenuBackgroundScene extends Scene {
     private Table table;
     private TextButton menuButton;
 
-    public MenuBackgroundScene(FileHandle skinFileHandle) {
+    public MenuSceneBackground(FileHandle skinFileHandle) {
         this.skinFileHandle = skinFileHandle;
     }
 
@@ -39,8 +39,7 @@ public class MenuBackgroundScene extends Scene {
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                getManagerContext().setCurrentScene(Scenes.MENU_SCENE);
-                getManagerContext().getBlockInput().add(Scenes.GAME_SCENE);
+                getManagerContext().setCurrentScene(Scenes.MENU_SCENE_MENU);
             }
         });
         this.setInputProcessor(stage);

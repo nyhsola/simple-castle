@@ -1,10 +1,10 @@
 package com.simple.castle.manager;
 
+import com.simple.castle.scene.Scene;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.simple.castle.scene.Scene;
 
 public class ManagerContext {
 
@@ -15,8 +15,8 @@ public class ManagerContext {
     private final List<String> blockInput;
     private String currentScene;
 
-    public ManagerContext(Map<String, Scene> sceneMap, List<String> alwaysRender, List<String> blockInput) {
-        this.currentScene = sceneMap.keySet().stream().findFirst().orElse("NO_SCENE");
+    public ManagerContext(Map<String, Scene> sceneMap, List<String> alwaysRender, List<String> blockInput, String currentScene) {
+        this.currentScene = currentScene;
         this.sceneMap = sceneMap;
         this.alwaysRender = alwaysRender;
         this.blockInput = blockInput;

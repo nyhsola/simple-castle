@@ -17,6 +17,7 @@ public class Game extends ApplicationAdapter {
     public void create() {
         gameManager = new Manager.ManagerBuilder()
                 .addScene(Scenes.MAIN_SCENE, new MainScene())
+                .currentScene(Scenes.MAIN_SCENE)
                 .build();
         gameManager.create();
         Gdx.input.setInputProcessor(gameManager);
