@@ -118,7 +118,9 @@ public abstract class Scene extends ApplicationDrawable implements SceneEvent {
 
     @Override
     public boolean scrolled(int amount) {
-        return manager.scrolled(amount);
+        return inputProcessor != null
+                ? inputProcessor.scrolled(amount)
+                : manager.scrolled(amount);
     }
 
     /**
