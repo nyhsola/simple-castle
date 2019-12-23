@@ -14,8 +14,9 @@ public class Game extends Scene {
     @Override
     public void create() {
         Gdx.input.setInputProcessor(this);
-        manager.addScene(Scenes.MAIN_SCENE, new MainScene());
-        manager.currentScene(Scenes.MAIN_SCENE);
+        manager
+                .addScene(Scenes.MAIN_SCENE, new MainScene())
+                .setCurrentScene(Scenes.MAIN_SCENE);
         super.create();
     }
 

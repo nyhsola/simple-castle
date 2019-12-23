@@ -3,11 +3,10 @@ package com.simple.castle.scene;
 import com.badlogic.gdx.InputProcessor;
 import com.simple.castle.drawable.ApplicationDrawable;
 import com.simple.castle.manager.Manager;
-import com.simple.castle.manager.ManagerContext;
 
 public abstract class Scene extends ApplicationDrawable {
 
-    protected Manager manager = new Manager.ManagerBuilder().build();
+    protected Manager manager = new Manager();
     private InputProcessor inputProcessor;
 
     @Override
@@ -47,17 +46,23 @@ public abstract class Scene extends ApplicationDrawable {
 
     @Override
     public boolean keyDown(int keycode) {
-        return inputProcessor != null ? inputProcessor.keyDown(keycode) : manager.keyDown(keycode);
+        return inputProcessor != null
+                ? inputProcessor.keyDown(keycode)
+                : manager.keyDown(keycode);
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        return inputProcessor != null ? inputProcessor.keyUp(keycode) : manager.keyUp(keycode);
+        return inputProcessor != null
+                ? inputProcessor.keyUp(keycode)
+                : manager.keyUp(keycode);
     }
 
     @Override
     public boolean keyTyped(char character) {
-        return inputProcessor != null ? inputProcessor.keyTyped(character) : manager.keyTyped(character);
+        return inputProcessor != null
+                ? inputProcessor.keyTyped(character)
+                : manager.keyTyped(character);
     }
 
     @Override
@@ -91,10 +96,6 @@ public abstract class Scene extends ApplicationDrawable {
     @Override
     public boolean scrolled(int amount) {
         return manager.scrolled(amount);
-    }
-
-    public ManagerContext getManagerContext() {
-        return manager.getManagerContext();
     }
 
     /**

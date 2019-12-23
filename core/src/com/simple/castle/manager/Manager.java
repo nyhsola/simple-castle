@@ -1,44 +1,34 @@
 package com.simple.castle.manager;
 
-import com.simple.castle.drawable.ApplicationDrawable;
-import com.simple.castle.scene.Scene;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import com.simple.castle.drawable.ApplicationDrawable;
+import com.simple.castle.scene.Scene;
+
 public class Manager extends ApplicationDrawable {
 
-    private final ManagerContext managerContext;
-
-    private Manager(ManagerBuilder managerBuilder) {
-        managerContext = new ManagerContext(managerBuilder.sceneMap, managerBuilder.alwaysRender, managerBuilder.blockInput, managerBuilder.currentScene);
-    }
+    private final Map<String, Scene> sceneMap = new HashMap<>();
+    private final List<String> alwaysRender = new ArrayList<>();
+    private final List<String> blockInput = new ArrayList<>();
+    private String currentScene;
 
     public Manager addScene(String sceneName, Scene scene) {
-        managerContext.getSceneMap().put(sceneName, scene);
+        sceneMap.put(sceneName, scene);
         return this;
     }
 
     public Manager addAlwaysRender(String sceneName) {
-        managerContext.getAlwaysRender().add(sceneName);
+        alwaysRender.add(sceneName);
         return this;
     }
 
-    public Manager blockInput(String sceneName) {
-        managerContext.getBlockInput().add(sceneName);
+    public Manager setCurrentScene(String currentScene) {
+        this.currentScene = currentScene;
         return this;
-    }
-
-    public Manager currentScene(String currentScene) {
-        managerContext.setCurrentScene(currentScene);
-        return this;
-    }
-
-    public ManagerContext getManagerContext() {
-        return managerContext;
     }
 
     @Override
@@ -137,60 +127,28 @@ public class Manager extends ApplicationDrawable {
     }
 
     private void forEachAlwaysRenderBlockInput(Consumer<Scene> screenConsumer) {
-        for (String scene : managerContext.getAlwaysRender()) {
-            screenConsumer.accept(managerContext.getSceneMap().get(scene));
+        for (String scene : alwaysRender) {
+            screenConsumer.accept(sceneMap.get(scene));
         }
     }
 
     private void forEachAlwaysRender(Consumer<Scene> screenConsumer) {
-        for (String scene : managerContext.getAlwaysRender()) {
-            if (managerContext.getSceneMap().containsKey(scene)) {
-                screenConsumer.accept(managerContext.getSceneMap().get(scene));
+        for (String scene : alwaysRender) {
+            if (sceneMap.containsKey(scene)) {
+                screenConsumer.accept(sceneMap.get(scene));
             }
         }
     }
 
     private void forCurrentScene(Consumer<Scene> screenConsumer) {
-        if (managerContext.getSceneMap().containsKey(managerContext.getCurrentScene())) {
-            screenConsumer.accept(managerContext.getSceneMap().get(managerContext.getCurrentScene()));
+        if (sceneMap.containsKey(currentScene)) {
+            screenConsumer.accept(sceneMap.get(currentScene));
         }
     }
 
     private void forEachScene(Consumer<Scene> screenConsumer) {
-        for (Scene scene : managerContext.getSceneMap().values()) {
+        for (Scene scene : sceneMap.values()) {
             screenConsumer.accept(scene);
-        }
-    }
-
-    public static class ManagerBuilder {
-
-        private Map<String, Scene> sceneMap = new HashMap<>();
-        private List<String> alwaysRender = new ArrayList<>();
-        private List<String> blockInput = new ArrayList<>();
-        private String currentScene;
-
-        public ManagerBuilder addScene(String sceneName, Scene scene) {
-            sceneMap.put(sceneName, scene);
-            return this;
-        }
-
-        public ManagerBuilder addAlwaysRender(String sceneName) {
-            alwaysRender.add(sceneName);
-            return this;
-        }
-
-        public ManagerBuilder blockInput(String sceneName) {
-            blockInput.add(sceneName);
-            return this;
-        }
-
-        public ManagerBuilder currentScene(String currentScene) {
-            this.currentScene = currentScene;
-            return this;
-        }
-
-        public Manager build() {
-            return new Manager(this);
         }
     }
 

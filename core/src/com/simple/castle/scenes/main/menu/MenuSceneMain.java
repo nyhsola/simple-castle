@@ -65,15 +65,15 @@ public class MenuSceneMain extends Scene {
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                getManagerContext().setCurrentScene(Scenes.MENU_SCENE_BACKGROUND);
+//                getManagerContext().setCurrentScene(Scenes.MENU_SCENE_BACKGROUND);
             }
         });
 
-        getManagerContext().putSettings(Settings.FIELD_OF_VIEW, Float.toString(slider.getValue()));
+//        getManagerContext().putSettings(Settings.FIELD_OF_VIEW, Float.toString(slider.getValue()));
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                getManagerContext().putSettings(Settings.FIELD_OF_VIEW, Float.toString(slider.getValue()));
+//                getManagerContext().putSettings(Settings.FIELD_OF_VIEW, Float.toString(slider.getValue()));
             }
         });
 

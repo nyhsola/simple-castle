@@ -39,7 +39,7 @@ public class MenuSceneBackground extends Scene {
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                getManagerContext().setCurrentScene(Scenes.MENU_SCENE_MENU);
+//                getManagerContext().setCurrentScene(Scenes.MENU_SCENE_MENU);
             }
         });
 

@@ -12,10 +12,10 @@ public class MenuScene extends Scene {
     @Override
     public void create() {
         FileHandle skinFileHandle = Gdx.files.internal(DEFAULT_UI_SKIN);
-        this.manager
+        manager
                 .addScene(Scenes.MENU_SCENE_BACKGROUND, new MenuSceneBackground(skinFileHandle))
                 .addScene(Scenes.MENU_SCENE_MENU, new MenuSceneMain(skinFileHandle))
-                .currentScene(Scenes.MENU_SCENE_BACKGROUND);
+                .setCurrentScene(Scenes.MENU_SCENE_BACKGROUND);
         super.create();
     }
 
