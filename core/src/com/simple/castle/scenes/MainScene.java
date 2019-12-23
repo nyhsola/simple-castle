@@ -9,8 +9,7 @@ public class MainScene extends Scene {
 
     @Override
     public void create() {
-        this.manager
-                .addScene(Scenes.MENU_SCENE, new MenuScene())
+        manager.addScene(Scenes.MENU_SCENE, new MenuScene())
                 .addScene(Scenes.GAME_SCENE, new GameScene())
                 .addAlwaysRender(Scenes.GAME_SCENE)
                 .currentScene(Scenes.MENU_SCENE);

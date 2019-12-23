@@ -49,56 +49,17 @@ public class GameScene extends Scene {
         modelLoader = new G3dModelLoader(new JsonReader());
         model = modelLoader.loadModel(Gdx.files.internal(MODELS_PLANE_G_3_DJ));
         instance = new ModelInstance(model);
+
+        this.setInputProcessor(camController);
     }
 
-
-    @Override
-    public boolean keyDown(int keycode) {
-        return camController.keyDown(keycode);
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return camController.keyUp(keycode);
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return camController.keyTyped(character);
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return camController.touchDown(screenX, screenY, pointer, button);
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return camController.touchUp(screenX, screenY, pointer, button);
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return camController.touchDragged(screenX, screenY, pointer);
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return camController.mouseMoved(screenX, screenY);
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return camController.scrolled(amount);
-    }
-
-    @Override
-    public void settingUpdated(String name, String value) {
-        if (Settings.FIELD_OF_VIEW.equals(name)) {
-            cam.fieldOfView = value == null ? 0.0f : Float.parseFloat(value);
-            cam.update();
-        }
-    }
+//    @Override
+//    public void settingUpdated(String name, String value) {
+//        if (Settings.FIELD_OF_VIEW.equals(name)) {
+//            cam.fieldOfView = value == null ? 0.0f : Float.parseFloat(value);
+//            cam.update();
+//        }
+//    }
 
     @Override
     public void render() {

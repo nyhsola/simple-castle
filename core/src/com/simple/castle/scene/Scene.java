@@ -1,5 +1,6 @@
 package com.simple.castle.scene;
 
+import com.badlogic.gdx.InputProcessor;
 import com.simple.castle.drawable.ApplicationDrawable;
 import com.simple.castle.manager.Manager;
 import com.simple.castle.manager.ManagerContext;
@@ -7,10 +8,7 @@ import com.simple.castle.manager.ManagerContext;
 public abstract class Scene extends ApplicationDrawable {
 
     protected Manager manager = new Manager.ManagerBuilder().build();
-
-    public ManagerContext getManagerContext() {
-        return manager.getManagerContext();
-    }
+    private InputProcessor inputProcessor;
 
     @Override
     public void create() {
@@ -49,37 +47,45 @@ public abstract class Scene extends ApplicationDrawable {
 
     @Override
     public boolean keyDown(int keycode) {
-        return manager.keyDown(keycode);
+        return inputProcessor != null ? inputProcessor.keyDown(keycode) : manager.keyDown(keycode);
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        return manager.keyUp(keycode);
+        return inputProcessor != null ? inputProcessor.keyUp(keycode) : manager.keyUp(keycode);
     }
 
     @Override
     public boolean keyTyped(char character) {
-        return manager.keyTyped(character);
+        return inputProcessor != null ? inputProcessor.keyTyped(character) : manager.keyTyped(character);
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return manager.touchDown(screenX, screenY, pointer, button);
+        return inputProcessor != null
+                ? inputProcessor.touchDown(screenX, screenY, pointer, button)
+                : manager.touchDown(screenX, screenY, pointer, button);
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return manager.touchUp(screenX, screenY, pointer, button);
+        return inputProcessor != null
+                ? inputProcessor.touchUp(screenX, screenY, pointer, button)
+                : manager.touchUp(screenX, screenY, pointer, button);
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return manager.touchDragged(screenX, screenY, pointer);
+        return inputProcessor != null
+                ? inputProcessor.touchDragged(screenX, screenY, pointer)
+                : manager.touchDragged(screenX, screenY, pointer);
     }
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        return manager.mouseMoved(screenX, screenY);
+        return inputProcessor != null
+                ? inputProcessor.mouseMoved(screenX, screenY)
+                : manager.mouseMoved(screenX, screenY);
     }
 
     @Override
@@ -87,4 +93,15 @@ public abstract class Scene extends ApplicationDrawable {
         return manager.scrolled(amount);
     }
 
+    public ManagerContext getManagerContext() {
+        return manager.getManagerContext();
+    }
+
+    /**
+     * If you set this, parent scenes will be ignored
+     * @param inputProcessor
+     */
+    public void setInputProcessor(InputProcessor inputProcessor) {
+        this.inputProcessor = inputProcessor;
+    }
 }
