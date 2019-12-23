@@ -12,6 +12,13 @@ import com.simple.castle.scene.Scene;
 public class MenuScene extends Scene {
 
     public static final String TO_SCENE = "State";
+    public static final String TO_BLOCK = "Block";
+    public static final String TO_UNBLOCK = "Unblock";
+    public static final String CAMERA_FIELD_OF_VIEW = "CameraFieldOfView";
+
+    public MenuScene(Scene parent) {
+        super(parent);
+    }
 
     @Override
     public void create() {
@@ -24,9 +31,10 @@ public class MenuScene extends Scene {
     }
 
     @Override
-    public void childSceneEvent(Map<String, Object> map) {
+    public void triggerParent(Map<String, Object> map) {
         if (map.containsKey(TO_SCENE)) {
             manager.setCurrentScene((String) map.get(TO_SCENE));
         }
+        super.triggerParent(map);
     }
 }

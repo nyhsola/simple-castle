@@ -31,6 +31,22 @@ public class Manager extends ApplicationDrawable {
         return this;
     }
 
+    public Manager blockInput(String sceneName) {
+        blockInput.add(sceneName);
+        return this;
+    }
+
+    public Manager removeBlockInput(String sceneName) {
+        blockInput.remove(sceneName);
+        return this;
+    }
+
+    public void triggerChild(Map<String, Object> map) {
+        for (Scene scene : sceneMap.values()) {
+            scene.triggerChild(map);
+        }
+    }
+
     @Override
     public void create() {
         forEachScene(ApplicationDrawable::create);
@@ -129,7 +145,9 @@ public class Manager extends ApplicationDrawable {
 
     private void forEachAlwaysRenderBlockInput(Consumer<Scene> screenConsumer) {
         for (String scene : alwaysRender) {
-            screenConsumer.accept(sceneMap.get(scene));
+            if(!blockInput.contains(scene)) {
+                screenConsumer.accept(sceneMap.get(scene));
+            }
         }
     }
 

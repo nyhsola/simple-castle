@@ -1,5 +1,7 @@
 package com.simple.castle.scenes.main.game;
 
+import java.util.Map;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -11,8 +13,8 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.utils.JsonReader;
-import com.simple.castle.constants.Settings;
 import com.simple.castle.scene.Scene;
+import com.simple.castle.scenes.main.menu.MenuScene;
 
 public class GameScene extends Scene {
 
@@ -53,13 +55,13 @@ public class GameScene extends Scene {
         this.setInputProcessor(camController);
     }
 
-//    @Override
-//    public void settingUpdated(String name, String value) {
-//        if (Settings.FIELD_OF_VIEW.equals(name)) {
-//            cam.fieldOfView = value == null ? 0.0f : Float.parseFloat(value);
-//            cam.update();
-//        }
-//    }
+    @Override
+    public void triggerChild(Map<String, Object> map) {
+        if(map.containsKey(MenuScene.CAMERA_FIELD_OF_VIEW)){
+            cam.fieldOfView = (float) map.get(MenuScene.CAMERA_FIELD_OF_VIEW);
+            cam.update();
+        }
+    }
 
     @Override
     public void render() {

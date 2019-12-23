@@ -1,6 +1,8 @@
 package com.simple.castle.scenes.main.menu;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -13,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.simple.castle.constants.Scenes;
-import com.simple.castle.constants.Settings;
 import com.simple.castle.scene.Scene;
 
 public class MenuSceneMain extends Scene {
@@ -68,23 +69,22 @@ public class MenuSceneMain extends Scene {
         backButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                childSceneEvent(Collections.singletonMap(MenuScene.TO_SCENE, Scenes.MENU_SCENE_BACKGROUND));
+                Map<String, Object> map = new HashMap<>();
+                map.put(MenuScene.TO_SCENE, Scenes.MENU_SCENE_BACKGROUND);
+                map.put(MenuScene.TO_UNBLOCK, Scenes.GAME_SCENE);
+                triggerParent(map);
             }
         });
 
-//        getManagerContext().putSettings(Settings.FIELD_OF_VIEW, Float.toString(slider.getValue()));
+        triggerParent(Collections.singletonMap(MenuScene.CAMERA_FIELD_OF_VIEW, slider.getValue()));
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-//                getManagerContext().putSettings(Settings.FIELD_OF_VIEW, Float.toString(slider.getValue()));
+                triggerParent(Collections.singletonMap(MenuScene.CAMERA_FIELD_OF_VIEW, slider.getValue()));
             }
         });
 
         this.setInputProcessor(stage);
-    }
-
-    @Override
-    public void update() {
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.simple.castle.scenes.main.menu;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -42,7 +44,10 @@ public class MenuSceneBackground extends Scene {
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                childSceneEvent(Collections.singletonMap(MenuScene.TO_SCENE, Scenes.MENU_SCENE_MENU));
+                Map<String, Object> map = new HashMap<>();
+                map.put(MenuScene.TO_SCENE, Scenes.MENU_SCENE_MENU);
+                map.put(MenuScene.TO_BLOCK, Scenes.GAME_SCENE);
+                triggerParent(map);
             }
         });
 

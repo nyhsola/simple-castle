@@ -12,19 +12,24 @@ public abstract class Scene extends ApplicationDrawable implements SceneEvent {
     private InputProcessor inputProcessor;
     protected Manager manager = new Manager();
 
-    @Override
-    public void childSceneEvent(Map<String, Object> map) {
-        if (parent != null) {
-            parent.childSceneEvent(map);
-        }
-    }
-
     public Scene() {
         this.parent = null;
     }
 
     public Scene(Scene parent) {
         this.parent = parent;
+    }
+
+    @Override
+    public void triggerParent(Map<String, Object> map) {
+        if (parent != null) {
+            parent.triggerParent(map);
+        }
+    }
+
+    @Override
+    public void triggerChild(Map<String, Object> map) {
+        manager.triggerChild(map);
     }
 
     @Override
