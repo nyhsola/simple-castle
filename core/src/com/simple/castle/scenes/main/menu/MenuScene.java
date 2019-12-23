@@ -1,27 +1,32 @@
 package com.simple.castle.scenes.main.menu;
 
+import static com.simple.castle.constants.Constants.DEFAULT_UI_SKIN;
+
+import java.util.Map;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.simple.castle.constants.Scenes;
 import com.simple.castle.scene.Scene;
 
-import static com.simple.castle.constants.Constants.DEFAULT_UI_SKIN;
-
 public class MenuScene extends Scene {
+
+    public static final String TO_SCENE = "State";
 
     @Override
     public void create() {
         FileHandle skinFileHandle = Gdx.files.internal(DEFAULT_UI_SKIN);
         manager
-                .addScene(Scenes.MENU_SCENE_BACKGROUND, new MenuSceneBackground(skinFileHandle))
-                .addScene(Scenes.MENU_SCENE_MENU, new MenuSceneMain(skinFileHandle))
+                .addScene(Scenes.MENU_SCENE_BACKGROUND, new MenuSceneBackground(this, skinFileHandle))
+                .addScene(Scenes.MENU_SCENE_MENU, new MenuSceneMain(this, skinFileHandle))
                 .setCurrentScene(Scenes.MENU_SCENE_BACKGROUND);
         super.create();
     }
 
-//    @Override
-//    public void settingUpdated(String name, String value) {
-//        this.getManagerContext().putSettings(name, value);
-//    }
-
+    @Override
+    public void childSceneEvent(Map<String, Object> map) {
+        if (map.containsKey(TO_SCENE)) {
+            manager.setCurrentScene((String) map.get(TO_SCENE));
+        }
+    }
 }

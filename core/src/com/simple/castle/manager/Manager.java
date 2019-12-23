@@ -36,6 +36,7 @@ public class Manager extends ApplicationDrawable {
         forEachScene(ApplicationDrawable::create);
     }
 
+    @Override
     public void update() {
         forEachScene(Scene::update);
         forEachAlwaysRender(Scene::update);

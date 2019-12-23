@@ -1,13 +1,31 @@
 package com.simple.castle.scene;
 
+import java.util.Map;
+
 import com.badlogic.gdx.InputProcessor;
 import com.simple.castle.drawable.ApplicationDrawable;
 import com.simple.castle.manager.Manager;
 
-public abstract class Scene extends ApplicationDrawable {
+public abstract class Scene extends ApplicationDrawable implements SceneEvent {
 
-    protected Manager manager = new Manager();
+    private final Scene parent;
     private InputProcessor inputProcessor;
+    protected Manager manager = new Manager();
+
+    @Override
+    public void childSceneEvent(Map<String, Object> map) {
+        if (parent != null) {
+            parent.childSceneEvent(map);
+        }
+    }
+
+    public Scene() {
+        this.parent = null;
+    }
+
+    public Scene(Scene parent) {
+        this.parent = parent;
+    }
 
     @Override
     public void create() {
@@ -100,9 +118,11 @@ public abstract class Scene extends ApplicationDrawable {
 
     /**
      * If you set this, parent scenes will be ignored
+     *
      * @param inputProcessor
      */
     public void setInputProcessor(InputProcessor inputProcessor) {
         this.inputProcessor = inputProcessor;
     }
+
 }

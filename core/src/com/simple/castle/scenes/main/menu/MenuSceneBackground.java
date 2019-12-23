@@ -1,5 +1,7 @@
 package com.simple.castle.scenes.main.menu;
 
+import java.util.Collections;
+
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -20,7 +22,8 @@ public class MenuSceneBackground extends Scene {
     private Table table;
     private TextButton menuButton;
 
-    public MenuSceneBackground(FileHandle skinFileHandle) {
+    public MenuSceneBackground(Scene parent, FileHandle skinFileHandle) {
+        super(parent);
         this.skinFileHandle = skinFileHandle;
     }
 
@@ -39,7 +42,7 @@ public class MenuSceneBackground extends Scene {
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-//                getManagerContext().setCurrentScene(Scenes.MENU_SCENE_MENU);
+                childSceneEvent(Collections.singletonMap(MenuScene.TO_SCENE, Scenes.MENU_SCENE_MENU));
             }
         });
 
