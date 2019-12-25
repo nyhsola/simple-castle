@@ -71,8 +71,7 @@ public class Manager extends ApplicationDrawable {
 
     @Override
     public void resize(int width, int height) {
-        forCurrentScene(scene -> scene.resize(width, height));
-        forEachAlwaysRender(scene -> scene.resize(width, height));
+        forEachScene(scene -> scene.resize(width, height));
     }
 
     @Override

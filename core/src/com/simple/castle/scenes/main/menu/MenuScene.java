@@ -39,4 +39,9 @@ public class MenuScene extends Scene {
         }
         super.toParent(map);
     }
+
+    @Override
+    public void fromParent(Map<String, Object> map) {
+        super.toChild(map);
+    }
 }

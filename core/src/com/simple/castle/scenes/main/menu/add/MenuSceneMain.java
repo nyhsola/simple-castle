@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.simple.castle.constants.Scenes;
 import com.simple.castle.scene.Scene;
 import com.simple.castle.scenes.main.menu.MenuScene;
@@ -73,7 +74,7 @@ public class MenuSceneMain extends Scene {
 
         toParent(Collections.singletonMap(MenuScene.CAMERA_FIELD_OF_VIEW, slider.getValue()));
 
-        stage = new Stage();
+        stage = new Stage(new ScreenViewport());
         stage.addActor(settingsTable);
         stage.addActor(backButtonTable);
         this.setInputProcessor(stage);
@@ -91,4 +92,8 @@ public class MenuSceneMain extends Scene {
         stage.dispose();
     }
 
+    @Override
+    public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
+    }
 }

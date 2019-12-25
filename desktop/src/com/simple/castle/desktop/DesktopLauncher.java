@@ -9,9 +9,8 @@ public class DesktopLauncher {
 //		System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 600;
-		config.height = 800;
-		config.resizable = false;
+		config.width = 800;
+		config.height = 600;
 		new LwjglApplication(new Game(), config);
 	}
 }

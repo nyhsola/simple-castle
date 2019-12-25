@@ -10,14 +10,17 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.JsonReader;
 import com.simple.castle.scene.Scene;
 import com.simple.castle.scenes.main.menu.MenuScene;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class GameScene extends Scene {
     private static final String MODELS_PLANE_G_3_DJ = "models/surface.g3dj";
+    public static final String CAMERA_POSITION = "CAMERA_POSITION";
 
     private PerspectiveCamera cam;
     private ModelBatch modelBatch;
@@ -55,6 +58,13 @@ public class GameScene extends Scene {
     }
 
     @Override
+    public void update() {
+        Map<String, Object> map = new HashMap<>();
+        map.put(CAMERA_POSITION, new Vector3(cam.position));
+        toParent(map);
+    }
+
+    @Override
     public void fromParent(Map<String, Object> map) {
         if (map.containsKey(MenuScene.CAMERA_FIELD_OF_VIEW)) {
             cam.fieldOfView = (float) map.get(MenuScene.CAMERA_FIELD_OF_VIEW);
@@ -74,5 +84,12 @@ public class GameScene extends Scene {
     public void dispose() {
         model.dispose();
         modelBatch.dispose();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        cam.viewportWidth = width;
+        cam.viewportHeight = height;
+        cam.update();
     }
 }
