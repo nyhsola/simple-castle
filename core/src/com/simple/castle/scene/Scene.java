@@ -21,15 +21,25 @@ public abstract class Scene extends ApplicationDrawable implements SceneEvent {
     }
 
     @Override
-    public void triggerParent(Map<String, Object> map) {
+    public void toParent(Map<String, Object> map) {
         if (parent != null) {
-            parent.triggerParent(map);
+            parent.fromChild(map);
         }
     }
 
     @Override
-    public void triggerChild(Map<String, Object> map) {
-        manager.triggerChild(map);
+    public void toChild(Map<String, Object> map) {
+        manager.fromParentToChildren(map);
+    }
+
+    @Override
+    public void fromParent(Map<String, Object> map) {
+
+    }
+
+    @Override
+    public void fromChild(Map<String, Object> map) {
+
     }
 
     @Override

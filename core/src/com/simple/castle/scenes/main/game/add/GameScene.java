@@ -1,6 +1,4 @@
-package com.simple.castle.scenes.main.game;
-
-import java.util.Map;
+package com.simple.castle.scenes.main.game.add;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
@@ -16,11 +14,11 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.simple.castle.scene.Scene;
 import com.simple.castle.scenes.main.menu.MenuScene;
 
-public class GameScene extends Scene {
+import java.util.Map;
 
+public class GameScene extends Scene {
     private static final String MODELS_PLANE_G_3_DJ = "models/surface.g3dj";
 
-    private G3dModelLoader modelLoader;
     private PerspectiveCamera cam;
     private ModelBatch modelBatch;
     private Model model;
@@ -28,16 +26,17 @@ public class GameScene extends Scene {
     private CameraInputController camController;
     private Environment environment;
 
-    public GameScene() {
+    public GameScene(Scene parent) {
+        super(parent);
     }
 
     @Override
     public void create() {
+        modelBatch = new ModelBatch();
+
         environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
-
-        modelBatch = new ModelBatch();
 
         cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cam.position.set(10f, 10f, 10f);
@@ -46,18 +45,18 @@ public class GameScene extends Scene {
         cam.far = 300f;
         cam.update();
 
-        camController = new CameraInputController(cam);
-
-        modelLoader = new G3dModelLoader(new JsonReader());
+        G3dModelLoader modelLoader = new G3dModelLoader(new JsonReader());
         model = modelLoader.loadModel(Gdx.files.internal(MODELS_PLANE_G_3_DJ));
         instance = new ModelInstance(model);
+
+        camController = new CameraInputController(cam);
 
         this.setInputProcessor(camController);
     }
 
     @Override
-    public void triggerChild(Map<String, Object> map) {
-        if(map.containsKey(MenuScene.CAMERA_FIELD_OF_VIEW)){
+    public void fromParent(Map<String, Object> map) {
+        if (map.containsKey(MenuScene.CAMERA_FIELD_OF_VIEW)) {
             cam.fieldOfView = (float) map.get(MenuScene.CAMERA_FIELD_OF_VIEW);
             cam.update();
         }
@@ -74,6 +73,6 @@ public class GameScene extends Scene {
     @Override
     public void dispose() {
         model.dispose();
+        modelBatch.dispose();
     }
-
 }

@@ -1,4 +1,4 @@
-package com.simple.castle.scenes.main.menu;
+package com.simple.castle.scenes.main.menu.add;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.simple.castle.constants.Scenes;
 import com.simple.castle.scene.Scene;
+import com.simple.castle.scenes.main.menu.MenuScene;
 
 public class MenuSceneMain extends Scene {
 
@@ -23,13 +24,8 @@ public class MenuSceneMain extends Scene {
 
     private Stage stage;
     private Skin skin;
-    private Table settingsTable;
     private Slider slider;
-    private Label labelCameraView;
     private Label labelCurrentValue;
-
-    private Table backButtonTable;
-    private TextButton backButton;
 
     public MenuSceneMain(Scene parent, FileHandle skinFileHandle) {
         super(parent);
@@ -38,52 +34,48 @@ public class MenuSceneMain extends Scene {
 
     @Override
     public void create() {
-        stage = new Stage();
-
         skin = new Skin(skinFileHandle);
-
-        settingsTable = new Table();
 
         slider = new Slider(0, 180, 1, false, skin);
         slider.setValue(67);
-        labelCameraView = new Label("Camera view", skin);
+        slider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                toParent(Collections.singletonMap(MenuScene.CAMERA_FIELD_OF_VIEW, slider.getValue()));
+            }
+        });
+
+        TextButton backButton = new TextButton("Back", skin);
+        backButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Map<String, Object> map = new HashMap<>();
+                map.put(MenuScene.TO_SCENE, Scenes.MENU_SCENE_BACKGROUND);
+                map.put(MenuScene.TO_UNBLOCK, Scenes.FULL_GAME_SCENE);
+                toParent(map);
+            }
+        });
+
+        Label labelCameraView = new Label("Camera view", skin);
         labelCurrentValue = new Label("", skin);
 
+        Table settingsTable = new Table();
         settingsTable.setFillParent(true);
-
         settingsTable.top();
         settingsTable.add();
         settingsTable.add(labelCameraView);
         settingsTable.add(slider);
         settingsTable.add(labelCurrentValue);
 
-        backButtonTable = new Table();
-        backButton = new TextButton("Back", skin);
-
+        Table backButtonTable = new Table();
         backButtonTable.setFillParent(true);
         backButtonTable.top().align(Align.topLeft).add(backButton);
 
+        toParent(Collections.singletonMap(MenuScene.CAMERA_FIELD_OF_VIEW, slider.getValue()));
+
+        stage = new Stage();
         stage.addActor(settingsTable);
         stage.addActor(backButtonTable);
-
-        backButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                Map<String, Object> map = new HashMap<>();
-                map.put(MenuScene.TO_SCENE, Scenes.MENU_SCENE_BACKGROUND);
-                map.put(MenuScene.TO_UNBLOCK, Scenes.GAME_SCENE);
-                triggerParent(map);
-            }
-        });
-
-        triggerParent(Collections.singletonMap(MenuScene.CAMERA_FIELD_OF_VIEW, slider.getValue()));
-        slider.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                triggerParent(Collections.singletonMap(MenuScene.CAMERA_FIELD_OF_VIEW, slider.getValue()));
-            }
-        });
-
         this.setInputProcessor(stage);
     }
 

@@ -8,6 +8,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.simple.castle.constants.Scenes;
 import com.simple.castle.scene.Scene;
+import com.simple.castle.scenes.main.menu.add.MenuSceneBackground;
+import com.simple.castle.scenes.main.menu.add.MenuSceneMain;
 
 public class MenuScene extends Scene {
 
@@ -31,10 +33,10 @@ public class MenuScene extends Scene {
     }
 
     @Override
-    public void triggerParent(Map<String, Object> map) {
+    public void fromChild(Map<String, Object> map) {
         if (map.containsKey(TO_SCENE)) {
             manager.setCurrentScene((String) map.get(TO_SCENE));
         }
-        super.triggerParent(map);
+        super.toParent(map);
     }
 }

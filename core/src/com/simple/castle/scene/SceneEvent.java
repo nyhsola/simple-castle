@@ -3,6 +3,8 @@ package com.simple.castle.scene;
 import java.util.Map;
 
 public interface SceneEvent {
-    void triggerParent(Map<String, Object> map);
-    void triggerChild(Map<String, Object> map);
+    void toParent(Map<String, Object> map);
+    void fromParent(Map<String, Object> map);
+    void toChild(Map<String, Object> map);
+    void fromChild(Map<String, Object> map);
 }

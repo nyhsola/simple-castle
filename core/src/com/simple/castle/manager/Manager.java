@@ -41,9 +41,9 @@ public class Manager extends ApplicationDrawable {
         return this;
     }
 
-    public void triggerChild(Map<String, Object> map) {
+    public void fromParentToChildren(Map<String, Object> map) {
         for (Scene scene : sceneMap.values()) {
-            scene.triggerChild(map);
+            scene.fromParent(map);
         }
     }
 
