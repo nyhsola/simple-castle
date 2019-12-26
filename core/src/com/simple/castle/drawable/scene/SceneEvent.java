@@ -1,4 +1,4 @@
-package com.simple.castle.scene;
+package com.simple.castle.drawable.scene;
 
 import java.util.Map;
 

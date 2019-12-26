@@ -1,4 +1,4 @@
-package com.simple.castle.scenes.main.menu;
+package com.simple.castle.game.scenes.main.menu;
 
 import static com.simple.castle.constants.Constants.DEFAULT_UI_SKIN;
 
@@ -7,9 +7,9 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.simple.castle.constants.Scenes;
-import com.simple.castle.scene.Scene;
-import com.simple.castle.scenes.main.menu.add.MenuSceneBackground;
-import com.simple.castle.scenes.main.menu.add.MenuSceneMain;
+import com.simple.castle.drawable.scene.Scene;
+import com.simple.castle.game.scenes.main.menu.add.MenuSceneBackground;
+import com.simple.castle.game.scenes.main.menu.add.MenuSceneMain;
 
 public class MenuScene extends Scene {
 

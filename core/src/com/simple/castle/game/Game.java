@@ -1,11 +1,11 @@
-package com.simple.castle.main;
+package com.simple.castle.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.simple.castle.constants.Scenes;
-import com.simple.castle.scene.Scene;
-import com.simple.castle.scenes.MainScene;
+import com.simple.castle.drawable.scene.Scene;
+import com.simple.castle.game.scenes.MainScene;
 
 public class Game extends Scene {
 

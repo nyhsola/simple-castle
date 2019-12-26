@@ -1,11 +1,11 @@
-package com.simple.castle.scenes;
+package com.simple.castle.game.scenes;
 
 import java.util.Map;
 
 import com.simple.castle.constants.Scenes;
-import com.simple.castle.scene.Scene;
-import com.simple.castle.scenes.main.game.FullGameScene;
-import com.simple.castle.scenes.main.menu.MenuScene;
+import com.simple.castle.drawable.scene.Scene;
+import com.simple.castle.game.scenes.main.game.FullGameScene;
+import com.simple.castle.game.scenes.main.menu.MenuScene;
 
 public class MainScene extends Scene {
 

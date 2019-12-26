@@ -1,8 +1,8 @@
-package com.simple.castle.scenes.main.game;
+package com.simple.castle.game.scenes.main.game;
 
 import com.simple.castle.constants.Scenes;
-import com.simple.castle.scene.Scene;
-import com.simple.castle.scenes.main.game.add.GameScene;
+import com.simple.castle.drawable.scene.Scene;
+import com.simple.castle.game.scenes.main.game.add.GameScene;
 
 import java.util.Map;
 

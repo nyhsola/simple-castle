@@ -1,4 +1,4 @@
-package com.simple.castle.manager;
+package com.simple.castle.drawable.manager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import com.simple.castle.drawable.ApplicationDrawable;
-import com.simple.castle.scene.Scene;
+import com.simple.castle.drawable.scene.Scene;
 
 public class Manager extends ApplicationDrawable {
 
@@ -15,7 +15,6 @@ public class Manager extends ApplicationDrawable {
     private final List<String> alwaysRender = new ArrayList<>();
     private final List<String> blockInput = new ArrayList<>();
     private String currentScene;
-
     public Manager addScene(String sceneName, Scene scene) {
         sceneMap.put(sceneName, scene);
         return this;

@@ -1,4 +1,4 @@
-package com.simple.castle.scenes.main.menu.add;
+package com.simple.castle.game.scenes.main.menu.add;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,8 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.simple.castle.constants.Scenes;
-import com.simple.castle.scene.Scene;
-import com.simple.castle.scenes.main.menu.MenuScene;
+import com.simple.castle.drawable.scene.Scene;
+import com.simple.castle.game.scenes.main.menu.MenuScene;
 
 public class MenuSceneMain extends Scene {
 

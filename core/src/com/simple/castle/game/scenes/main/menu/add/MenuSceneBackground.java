@@ -1,11 +1,10 @@
-package com.simple.castle.scenes.main.menu.add;
+package com.simple.castle.game.scenes.main.menu.add;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,12 +14,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.simple.castle.constants.Scenes;
-import com.simple.castle.scene.Scene;
-import com.simple.castle.scenes.main.game.add.GameScene;
-import com.simple.castle.scenes.main.menu.MenuScene;
+import com.simple.castle.drawable.scene.Scene;
+import com.simple.castle.game.scenes.main.game.add.objects.Camera;
+import com.simple.castle.game.scenes.main.menu.MenuScene;
 
 public class MenuSceneBackground extends Scene {
 
@@ -70,8 +68,8 @@ public class MenuSceneBackground extends Scene {
 
     @Override
     public void fromParent(Map<String, Object> map) {
-        if(map.containsKey(GameScene.CAMERA_POSITION)){
-            Vector3 position = (Vector3) map.get(GameScene.CAMERA_POSITION);
+        if(map.containsKey(Camera.CAMERA_POSITION)){
+            Vector3 position = (Vector3) map.get(Camera.CAMERA_POSITION);
             cameraPosition.setText(
                     new StringBuilder(CAMERA_POSITION_LABEL).append(" ")
                     .append(DECIMAL_FORMAT.format(position.x)).append(" ")
