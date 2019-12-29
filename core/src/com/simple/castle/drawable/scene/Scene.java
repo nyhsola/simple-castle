@@ -1,10 +1,10 @@
 package com.simple.castle.drawable.scene;
 
-import java.util.Map;
-
 import com.badlogic.gdx.InputProcessor;
 import com.simple.castle.drawable.ApplicationDrawable;
 import com.simple.castle.drawable.manager.Manager;
+
+import java.util.Map;
 
 public abstract class Scene extends ApplicationDrawable implements SceneEvent {
 
@@ -21,25 +21,25 @@ public abstract class Scene extends ApplicationDrawable implements SceneEvent {
     }
 
     @Override
-    public void toParent(Map<String, Object> map) {
+    public void notifyParent(Map<String, Object> map) {
         if (parent != null) {
-            parent.fromChild(map);
+            parent.onChildEvent(map);
         }
     }
 
     @Override
-    public void toChild(Map<String, Object> map) {
-        manager.fromParentToChildren(map);
+    public void notifyAllChildren(Map<String, Object> map) {
+        manager.notifyAllChildren(map);
     }
 
     @Override
-    public void fromParent(Map<String, Object> map) {
-
+    public void onParentEvent(Map<String, Object> map) {
+        this.notifyAllChildren(map);
     }
 
     @Override
-    public void fromChild(Map<String, Object> map) {
-
+    public void onChildEvent(Map<String, Object> map) {
+        this.notifyParent(map);
     }
 
     @Override

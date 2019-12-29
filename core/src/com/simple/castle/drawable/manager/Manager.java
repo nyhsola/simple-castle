@@ -1,13 +1,13 @@
 package com.simple.castle.drawable.manager;
 
+import com.simple.castle.drawable.ApplicationDrawable;
+import com.simple.castle.drawable.scene.Scene;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-
-import com.simple.castle.drawable.ApplicationDrawable;
-import com.simple.castle.drawable.scene.Scene;
 
 public class Manager extends ApplicationDrawable {
 
@@ -15,6 +15,7 @@ public class Manager extends ApplicationDrawable {
     private final List<String> alwaysRender = new ArrayList<>();
     private final List<String> blockInput = new ArrayList<>();
     private String currentScene;
+
     public Manager addScene(String sceneName, Scene scene) {
         sceneMap.put(sceneName, scene);
         return this;
@@ -40,9 +41,9 @@ public class Manager extends ApplicationDrawable {
         return this;
     }
 
-    public void fromParentToChildren(Map<String, Object> map) {
+    public void notifyAllChildren(Map<String, Object> map) {
         for (Scene scene : sceneMap.values()) {
-            scene.fromParent(map);
+            scene.onParentEvent(map);
         }
     }
 

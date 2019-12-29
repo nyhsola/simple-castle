@@ -1,15 +1,15 @@
 package com.simple.castle.game.scenes.main.menu;
 
-import static com.simple.castle.constants.Constants.DEFAULT_UI_SKIN;
-
-import java.util.Map;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.simple.castle.constants.Scenes;
 import com.simple.castle.drawable.scene.Scene;
 import com.simple.castle.game.scenes.main.menu.add.MenuSceneBackground;
 import com.simple.castle.game.scenes.main.menu.add.MenuSceneMain;
+
+import java.util.Map;
+
+import static com.simple.castle.constants.Constants.DEFAULT_UI_SKIN;
 
 public class MenuScene extends Scene {
 
@@ -33,15 +33,11 @@ public class MenuScene extends Scene {
     }
 
     @Override
-    public void fromChild(Map<String, Object> map) {
+    public void onChildEvent(Map<String, Object> map) {
         if (map.containsKey(TO_SCENE)) {
             manager.setCurrentScene((String) map.get(TO_SCENE));
         }
-        super.toParent(map);
+        super.onChildEvent(map);
     }
 
-    @Override
-    public void fromParent(Map<String, Object> map) {
-        super.toChild(map);
-    }
 }

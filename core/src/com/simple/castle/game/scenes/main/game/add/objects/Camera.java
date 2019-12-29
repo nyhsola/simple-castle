@@ -1,14 +1,14 @@
 package com.simple.castle.game.scenes.main.game.add.objects;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.simple.castle.drawable.scene.Scene;
 import com.simple.castle.game.scenes.main.menu.MenuScene;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Camera extends Scene {
 
@@ -87,7 +87,7 @@ public class Camera extends Scene {
     public void update() {
         Map<String, Object> map = new HashMap<>();
         map.put(CAMERA_POSITION, new Vector3(camera.position));
-        toParent(map);
+        notifyParent(map);
 
         if (keyUpHolds) {
             camera.position.z = camera.position.z - CAMERA_SPEED;
@@ -108,7 +108,7 @@ public class Camera extends Scene {
     }
 
     @Override
-    public void fromParent(Map<String, Object> map) {
+    public void onParentEvent(Map<String, Object> map) {
         if (map.containsKey(MenuScene.CAMERA_FIELD_OF_VIEW)) {
             camera.fieldOfView = (float) map.get(MenuScene.CAMERA_FIELD_OF_VIEW);
             camera.update();

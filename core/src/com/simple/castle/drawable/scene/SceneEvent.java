@@ -3,8 +3,11 @@ package com.simple.castle.drawable.scene;
 import java.util.Map;
 
 public interface SceneEvent {
-    void toParent(Map<String, Object> map);
-    void fromParent(Map<String, Object> map);
-    void toChild(Map<String, Object> map);
-    void fromChild(Map<String, Object> map);
+    void notifyParent(Map<String, Object> map);
+
+    void onParentEvent(Map<String, Object> map);
+
+    void notifyAllChildren(Map<String, Object> map);
+
+    void onChildEvent(Map<String, Object> map);
 }

@@ -15,8 +15,6 @@ import com.simple.castle.constants.Scenes;
 import com.simple.castle.drawable.scene.Scene;
 import com.simple.castle.game.scenes.main.game.add.objects.Camera;
 
-import java.util.Map;
-
 public class GameScene extends Scene {
     private static final String MODELS_PLANE_G_3_DJ = "models/surface.g3dj";
 
@@ -67,16 +65,6 @@ public class GameScene extends Scene {
     public void dispose() {
         model.dispose();
         modelBatch.dispose();
-    }
-
-    @Override
-    public void fromParent(Map<String, Object> map) {
-        toChild(map);
-    }
-
-    @Override
-    public void fromChild(Map<String, Object> map) {
-        toParent(map);
     }
 
 }

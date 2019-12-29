@@ -1,9 +1,5 @@
 package com.simple.castle.game.scenes.main.menu.add;
 
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -19,6 +15,10 @@ import com.simple.castle.constants.Scenes;
 import com.simple.castle.drawable.scene.Scene;
 import com.simple.castle.game.scenes.main.game.add.objects.Camera;
 import com.simple.castle.game.scenes.main.menu.MenuScene;
+
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MenuSceneBackground extends Scene {
 
@@ -46,7 +46,7 @@ public class MenuSceneBackground extends Scene {
                 Map<String, Object> map = new HashMap<>();
                 map.put(MenuScene.TO_SCENE, Scenes.MENU_SCENE_MENU);
                 map.put(MenuScene.TO_BLOCK, Scenes.FULL_GAME_SCENE);
-                toParent(map);
+                notifyParent(map);
             }
         });
 
@@ -67,14 +67,14 @@ public class MenuSceneBackground extends Scene {
     }
 
     @Override
-    public void fromParent(Map<String, Object> map) {
-        if(map.containsKey(Camera.CAMERA_POSITION)){
+    public void onParentEvent(Map<String, Object> map) {
+        if (map.containsKey(Camera.CAMERA_POSITION)) {
             Vector3 position = (Vector3) map.get(Camera.CAMERA_POSITION);
             cameraPosition.setText(
                     new StringBuilder(CAMERA_POSITION_LABEL).append(" ")
-                    .append(DECIMAL_FORMAT.format(position.x)).append(" ")
-                    .append(DECIMAL_FORMAT.format(position.y)).append(" ")
-                    .append(DECIMAL_FORMAT.format(position.z)));
+                            .append(DECIMAL_FORMAT.format(position.x)).append(" ")
+                            .append(DECIMAL_FORMAT.format(position.y)).append(" ")
+                            .append(DECIMAL_FORMAT.format(position.z)));
         }
     }
 

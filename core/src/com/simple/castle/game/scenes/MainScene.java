@@ -1,11 +1,11 @@
 package com.simple.castle.game.scenes;
 
-import java.util.Map;
-
 import com.simple.castle.constants.Scenes;
 import com.simple.castle.drawable.scene.Scene;
 import com.simple.castle.game.scenes.main.game.FullGameScene;
 import com.simple.castle.game.scenes.main.menu.MenuScene;
+
+import java.util.Map;
 
 public class MainScene extends Scene {
 
@@ -20,13 +20,13 @@ public class MainScene extends Scene {
     }
 
     @Override
-    public void fromChild(Map<String, Object> map) {
-        if(map.containsKey(MenuScene.TO_BLOCK)){
+    public void onChildEvent(Map<String, Object> map) {
+        if (map.containsKey(MenuScene.TO_BLOCK)) {
             manager.blockInput((String) map.get(MenuScene.TO_BLOCK));
         }
-        if(map.containsKey(MenuScene.TO_UNBLOCK)){
+        if (map.containsKey(MenuScene.TO_UNBLOCK)) {
             manager.removeBlockInput((String) map.get(MenuScene.TO_UNBLOCK));
         }
-        super.toChild(map);
+        super.notifyAllChildren(map);
     }
 }
