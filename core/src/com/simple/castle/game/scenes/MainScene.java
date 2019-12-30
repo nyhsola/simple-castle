@@ -9,6 +9,10 @@ import java.util.Map;
 
 public class MainScene extends Scene {
 
+    public MainScene(Scene parent) {
+        super(parent);
+    }
+
     @Override
     public void create() {
         manager

@@ -12,7 +12,7 @@ public abstract class ApplicationDrawable implements Drawable {
 
     }
 
-    public void update() {
+    public void update(float delta) {
 
     }
 

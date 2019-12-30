@@ -84,7 +84,7 @@ public class Camera extends Scene {
     }
 
     @Override
-    public void update() {
+    public void update(float delta) {
         Map<String, Object> map = new HashMap<>();
         map.put(CAMERA_POSITION, new Vector3(camera.position));
         notifyParent(map);

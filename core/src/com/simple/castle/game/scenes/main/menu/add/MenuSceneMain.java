@@ -1,6 +1,6 @@
 package com.simple.castle.game.scenes.main.menu.add;
 
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -15,23 +15,22 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MenuSceneMain extends Scene {
+import static com.simple.castle.constants.Constants.DEFAULT_UI_SKIN;
 
-    private final FileHandle skinFileHandle;
+public class MenuSceneMain extends Scene {
 
     private Stage stage;
     private Skin skin;
     private Slider slider;
     private Label labelCurrentValue;
 
-    public MenuSceneMain(Scene parent, FileHandle skinFileHandle) {
+    public MenuSceneMain(Scene parent) {
         super(parent);
-        this.skinFileHandle = skinFileHandle;
     }
 
     @Override
     public void create() {
-        skin = new Skin(skinFileHandle);
+        skin = new Skin(Gdx.files.internal(DEFAULT_UI_SKIN));
 
         slider = new Slider(0, 180, 1, false, skin);
         slider.setValue(67);

@@ -53,9 +53,8 @@ public class Manager extends ApplicationDrawable {
     }
 
     @Override
-    public void update() {
-        forEachScene(Scene::update);
-        forEachAlwaysRender(Scene::update);
+    public void update(float delta) {
+        forEachScene(scene -> scene.update(delta));
     }
 
     @Override
@@ -150,6 +149,7 @@ public class Manager extends ApplicationDrawable {
         }
     }
 
+    //TODO if current already, do not draw\or else
     private void forEachAlwaysRender(Consumer<Scene> screenConsumer) {
         for (String scene : alwaysRender) {
             if (sceneMap.containsKey(scene)) {

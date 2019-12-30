@@ -1,6 +1,6 @@
 package com.simple.castle.game.scenes.main.menu.add;
 
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -20,24 +20,25 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.simple.castle.constants.Constants.DEFAULT_UI_SKIN;
+
 public class MenuSceneBackground extends Scene {
 
     public static final String CAMERA_POSITION_LABEL = "Camera Position: ";
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##.00");
-    private final FileHandle skinFileHandle;
+
 
     private Stage stage;
     private Skin skin;
     private Label cameraPosition;
 
-    public MenuSceneBackground(Scene parent, FileHandle skinFileHandle) {
+    public MenuSceneBackground(Scene parent) {
         super(parent);
-        this.skinFileHandle = skinFileHandle;
     }
 
     @Override
     public void create() {
-        skin = new Skin(skinFileHandle);
+        skin = new Skin(Gdx.files.internal(DEFAULT_UI_SKIN));
 
         TextButton menuButton = new TextButton("Menu", skin);
         menuButton.addListener(new ChangeListener() {

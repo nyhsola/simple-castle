@@ -1,15 +1,11 @@
 package com.simple.castle.game.scenes.main.menu;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.simple.castle.constants.Scenes;
 import com.simple.castle.drawable.scene.Scene;
 import com.simple.castle.game.scenes.main.menu.add.MenuSceneBackground;
 import com.simple.castle.game.scenes.main.menu.add.MenuSceneMain;
 
 import java.util.Map;
-
-import static com.simple.castle.constants.Constants.DEFAULT_UI_SKIN;
 
 public class MenuScene extends Scene {
 
@@ -24,10 +20,9 @@ public class MenuScene extends Scene {
 
     @Override
     public void create() {
-        FileHandle skinFileHandle = Gdx.files.internal(DEFAULT_UI_SKIN);
         manager
-                .addScene(Scenes.MENU_SCENE_BACKGROUND, new MenuSceneBackground(this, skinFileHandle))
-                .addScene(Scenes.MENU_SCENE_MENU, new MenuSceneMain(this, skinFileHandle))
+                .addScene(Scenes.MENU_SCENE_BACKGROUND, new MenuSceneBackground(this))
+                .addScene(Scenes.MENU_SCENE_MENU, new MenuSceneMain(this))
                 .setCurrentScene(Scenes.MENU_SCENE_BACKGROUND);
         super.create();
     }

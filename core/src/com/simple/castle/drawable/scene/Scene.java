@@ -1,45 +1,17 @@
 package com.simple.castle.drawable.scene;
 
 import com.badlogic.gdx.InputProcessor;
-import com.simple.castle.drawable.ApplicationDrawable;
-import com.simple.castle.drawable.manager.Manager;
 
-import java.util.Map;
+public abstract class Scene extends SceneManaged {
 
-public abstract class Scene extends ApplicationDrawable implements SceneEvent {
-
-    private final Scene parent;
     private InputProcessor inputProcessor;
-    protected Manager manager = new Manager();
 
     public Scene() {
-        this.parent = null;
+        super();
     }
 
     public Scene(Scene parent) {
-        this.parent = parent;
-    }
-
-    @Override
-    public void notifyParent(Map<String, Object> map) {
-        if (parent != null) {
-            parent.onChildEvent(map);
-        }
-    }
-
-    @Override
-    public void notifyAllChildren(Map<String, Object> map) {
-        manager.notifyAllChildren(map);
-    }
-
-    @Override
-    public void onParentEvent(Map<String, Object> map) {
-        this.notifyAllChildren(map);
-    }
-
-    @Override
-    public void onChildEvent(Map<String, Object> map) {
-        this.notifyParent(map);
+        super(parent);
     }
 
     @Override
@@ -53,8 +25,8 @@ public abstract class Scene extends ApplicationDrawable implements SceneEvent {
     }
 
     @Override
-    public void update() {
-        manager.update();
+    public void update(float delta) {
+        manager.update(delta);
     }
 
     @Override
