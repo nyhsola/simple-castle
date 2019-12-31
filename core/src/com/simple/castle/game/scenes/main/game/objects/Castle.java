@@ -1,4 +1,4 @@
-package com.simple.castle.game.scenes.main.game.add.objects;
+package com.simple.castle.game.scenes.main.game.objects;
 
 import com.simple.castle.drawable.scene.Scene;
 

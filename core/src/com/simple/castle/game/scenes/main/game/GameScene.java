@@ -1,4 +1,4 @@
-package com.simple.castle.game.scenes.main.game.add;
+package com.simple.castle.game.scenes.main.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -13,7 +13,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.JsonReader;
 import com.simple.castle.constants.Scenes;
 import com.simple.castle.drawable.scene.Scene;
-import com.simple.castle.game.scenes.main.game.add.objects.Camera;
+import com.simple.castle.game.scenes.main.game.objects.Camera;
 
 public class GameScene extends Scene {
     private static final String MODELS_PLANE_G_3_DJ = "models/surface.g3dj";
@@ -24,10 +24,6 @@ public class GameScene extends Scene {
     private Model model;
     private ModelInstance instance;
     private Environment environment;
-
-    public GameScene(Scene parent) {
-        super(parent);
-    }
 
     @Override
     public void create() {
@@ -44,8 +40,7 @@ public class GameScene extends Scene {
         Node node = instance.getNode("RedCube");
         Vector3 position = node.translation;
 
-        camera = new Camera(this,
-                new Vector3(position.x, position.y + 7f, position.z + 4f),
+        camera = new Camera(new Vector3(position.x, position.y + 7f, position.z + 4f),
                 new Vector3(position.x, position.y, position.z),
                 67, 1, 300);
 
@@ -66,5 +61,4 @@ public class GameScene extends Scene {
         model.dispose();
         modelBatch.dispose();
     }
-
 }

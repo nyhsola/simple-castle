@@ -14,7 +14,7 @@ public class Game extends Scene {
     public void create() {
         Gdx.input.setInputProcessor(this);
         manager
-                .addScene(Scenes.MAIN_SCENE, new MainScene(this))
+                .addScene(Scenes.MAIN_SCENE, new MainScene())
                 .setCurrentScene(Scenes.MAIN_SCENE);
         super.create();
     }

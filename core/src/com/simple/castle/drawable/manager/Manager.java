@@ -42,11 +42,11 @@ public class Manager extends ApplicationDrawable implements InputProcessor {
         return this;
     }
 
-    public void notifyAllChildren(Map<String, Object> map) {
-        for (Scene scene : sceneMap.values()) {
-            scene.onParentEvent(map);
-        }
-    }
+//    public void notifyAllChildren(Map<String, Object> map) {
+//        for (Scene scene : sceneMap.values()) {
+//            scene.onParentEvent(map);
+//        }
+//    }
 
     @Override
     public void create() {

@@ -1,11 +1,10 @@
-package com.simple.castle.game.scenes.main.game.add.objects;
+package com.simple.castle.game.scenes.main.game.objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.simple.castle.drawable.scene.Scene;
-import com.simple.castle.game.scenes.main.menu.MenuScene;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,9 +24,7 @@ public class Camera extends Scene {
     private boolean keyLeftHolds = false;
     private boolean keyRightHolds = false;
 
-    public Camera(Scene parent, Vector3 position, Vector3 lookAt, float fieldOfView, float near, float far) {
-        super(parent);
-
+    public Camera(Vector3 position, Vector3 lookAt, float fieldOfView, float near, float far) {
         camera = new PerspectiveCamera(fieldOfView, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(position);
         camera.lookAt(lookAt);
@@ -87,7 +84,7 @@ public class Camera extends Scene {
     public void update(float delta) {
         Map<String, Object> map = new HashMap<>();
         map.put(CAMERA_POSITION, new Vector3(camera.position));
-        notifyParent(map);
+//        notifyParent(map);
 
         if (keyUpHolds) {
             camera.position.z = camera.position.z - CAMERA_SPEED;
@@ -107,13 +104,13 @@ public class Camera extends Scene {
         }
     }
 
-    @Override
-    public void onParentEvent(Map<String, Object> map) {
-        if (map.containsKey(MenuScene.CAMERA_FIELD_OF_VIEW)) {
-            camera.fieldOfView = (float) map.get(MenuScene.CAMERA_FIELD_OF_VIEW);
-            camera.update();
-        }
-    }
+//    @Override
+//    public void onParentEvent(Map<String, Object> map) {
+//        if (map.containsKey(MenuScene.CAMERA_FIELD_OF_VIEW)) {
+//            camera.fieldOfView = (float) map.get(MenuScene.CAMERA_FIELD_OF_VIEW);
+//            camera.update();
+//        }
+//    }
 
     @Override
     public void resize(int width, int height) {

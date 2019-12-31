@@ -1,4 +1,4 @@
-package com.simple.castle.game.scenes.main.menu.add;
+package com.simple.castle.game.scenes.main.menu.objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -7,12 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.simple.castle.constants.Scenes;
 import com.simple.castle.drawable.scene.Scene;
-import com.simple.castle.drawable.scene.SceneBaseEvent;
-import com.simple.castle.game.scenes.main.menu.MenuScene;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,10 +21,6 @@ public class MenuSceneMain extends Scene {
     private Slider slider;
     private Label labelCurrentValue;
 
-    public MenuSceneMain(Scene parent) {
-        super(parent);
-    }
-
     @Override
     public void create() {
         skin = new Skin(Gdx.files.internal(DEFAULT_UI_SKIN));
@@ -38,7 +30,7 @@ public class MenuSceneMain extends Scene {
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                notifyParent(Collections.singletonMap(MenuScene.CAMERA_FIELD_OF_VIEW, slider.getValue()));
+//                notifyParent(Collections.singletonMap(MenuScene.CAMERA_FIELD_OF_VIEW, slider.getValue()));
             }
         });
 
@@ -47,9 +39,9 @@ public class MenuSceneMain extends Scene {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Map<String, Object> map = new HashMap<>();
-                map.put(SceneBaseEvent.TO_SCENE, Scenes.MENU_SCENE_BACKGROUND);
-                map.put(SceneBaseEvent.TO_UNBLOCK, Scenes.FULL_GAME_SCENE);
-                notifyParent(map);
+//                map.put(SceneBaseEvent.TO_SCENE, Scenes.MENU_SCENE_BACKGROUND);
+//                map.put(SceneBaseEvent.TO_UNBLOCK, Scenes.FULL_GAME_SCENE);
+//                notifyParent(map);
             }
         });
 
@@ -68,7 +60,7 @@ public class MenuSceneMain extends Scene {
         backButtonTable.setFillParent(true);
         backButtonTable.top().align(Align.topLeft).add(backButton);
 
-        notifyParent(Collections.singletonMap(MenuScene.CAMERA_FIELD_OF_VIEW, slider.getValue()));
+//        notifyParent(Collections.singletonMap(MenuScene.CAMERA_FIELD_OF_VIEW, slider.getValue()));
 
         stage = new Stage(new ScreenViewport());
         stage.addActor(settingsTable);

@@ -1,7 +1,6 @@
-package com.simple.castle.game.scenes.main.menu.add;
+package com.simple.castle.game.scenes.main.menu.objects;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -13,8 +12,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.simple.castle.constants.Scenes;
 import com.simple.castle.drawable.scene.Scene;
-import com.simple.castle.drawable.scene.SceneBaseEvent;
-import com.simple.castle.game.scenes.main.game.add.objects.Camera;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -27,14 +24,9 @@ public class MenuSceneBackground extends Scene {
     public static final String CAMERA_POSITION_LABEL = "Camera Position: ";
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##.00");
 
-
     private Stage stage;
     private Skin skin;
     private Label cameraPosition;
-
-    public MenuSceneBackground(Scene parent) {
-        super(parent);
-    }
 
     @Override
     public void create() {
@@ -45,9 +37,9 @@ public class MenuSceneBackground extends Scene {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Map<String, Object> map = new HashMap<>();
-                map.put(SceneBaseEvent.TO_SCENE, Scenes.MENU_SCENE_MENU);
-                map.put(SceneBaseEvent.TO_BLOCK, Scenes.FULL_GAME_SCENE);
-                notifyParent(map);
+                map.put(Scene.CHANGE_SCENE, Scenes.MENU_SCENE_MENU);
+                map.put(Scene.BLOCK_SCENE, Scenes.GAME_SCENE);
+                notifyListeners(map);
             }
         });
 
@@ -67,17 +59,17 @@ public class MenuSceneBackground extends Scene {
         this.setInputProcessor(stage);
     }
 
-    @Override
-    public void onParentEvent(Map<String, Object> map) {
-        if (map.containsKey(Camera.CAMERA_POSITION)) {
-            Vector3 position = (Vector3) map.get(Camera.CAMERA_POSITION);
-            cameraPosition.setText(
-                    new StringBuilder(CAMERA_POSITION_LABEL).append(" ")
-                            .append(DECIMAL_FORMAT.format(position.x)).append(" ")
-                            .append(DECIMAL_FORMAT.format(position.y)).append(" ")
-                            .append(DECIMAL_FORMAT.format(position.z)));
-        }
-    }
+//    @Override
+//    public void onParentEvent(Map<String, Object> map) {
+//        if (map.containsKey(Camera.CAMERA_POSITION)) {
+//            Vector3 position = (Vector3) map.get(Camera.CAMERA_POSITION);
+//            cameraPosition.setText(
+//                    new StringBuilder(CAMERA_POSITION_LABEL).append(" ")
+//                            .append(DECIMAL_FORMAT.format(position.x)).append(" ")
+//                            .append(DECIMAL_FORMAT.format(position.y)).append(" ")
+//                            .append(DECIMAL_FORMAT.format(position.z)));
+//        }
+//    }
 
     @Override
     public void render() {

@@ -1,20 +1,13 @@
 package com.simple.castle.drawable.scene;
 
 import com.badlogic.gdx.InputProcessor;
-import com.simple.castle.drawable.application.ApplicationParent;
+import com.simple.castle.drawable.application.ApplicationDrawable;
 import com.simple.castle.drawable.manager.Manager;
 
-public abstract class SceneManaged extends ApplicationParent implements InputProcessor {
+public abstract class SceneManaged extends ApplicationDrawable implements InputProcessor {
 
     private InputProcessor inputProcessor;
     protected final Manager manager = new Manager();
-
-    public SceneManaged() {
-    }
-
-    public SceneManaged(Scene parent) {
-        super(parent);
-    }
 
     @Override
     public void create() {
