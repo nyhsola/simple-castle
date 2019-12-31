@@ -5,6 +5,11 @@ import com.simple.castle.drawable.scene.event.SceneEvent;
 import java.util.Map;
 
 public abstract class SceneBaseEvent extends SceneManaged implements SceneEvent {
+
+    public static final String TO_SCENE = "State";
+    public static final String TO_BLOCK = "Block";
+    public static final String TO_UNBLOCK = "Unblock";
+
     public SceneBaseEvent() {
     }
 

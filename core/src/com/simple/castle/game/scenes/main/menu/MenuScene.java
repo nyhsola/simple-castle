@@ -2,6 +2,7 @@ package com.simple.castle.game.scenes.main.menu;
 
 import com.simple.castle.constants.Scenes;
 import com.simple.castle.drawable.scene.Scene;
+import com.simple.castle.drawable.scene.SceneBaseEvent;
 import com.simple.castle.game.scenes.main.menu.add.MenuSceneBackground;
 import com.simple.castle.game.scenes.main.menu.add.MenuSceneMain;
 
@@ -9,9 +10,6 @@ import java.util.Map;
 
 public class MenuScene extends Scene {
 
-    public static final String TO_SCENE = "State";
-    public static final String TO_BLOCK = "Block";
-    public static final String TO_UNBLOCK = "Unblock";
     public static final String CAMERA_FIELD_OF_VIEW = "CameraFieldOfView";
 
     public MenuScene(Scene parent) {
@@ -29,8 +27,8 @@ public class MenuScene extends Scene {
 
     @Override
     public void onChildEvent(Map<String, Object> map) {
-        if (map.containsKey(TO_SCENE)) {
-            manager.setCurrentScene((String) map.get(TO_SCENE));
+        if (map.containsKey(SceneBaseEvent.TO_SCENE)) {
+            manager.setCurrentScene((String) map.get(SceneBaseEvent.TO_SCENE));
         }
         super.onChildEvent(map);
     }

@@ -25,11 +25,11 @@ public class MainScene extends Scene {
 
     @Override
     public void onChildEvent(Map<String, Object> map) {
-        if (map.containsKey(MenuScene.TO_BLOCK)) {
-            manager.blockInput((String) map.get(MenuScene.TO_BLOCK));
+        if (map.containsKey(TO_BLOCK)) {
+            manager.blockInput((String) map.get(TO_BLOCK));
         }
-        if (map.containsKey(MenuScene.TO_UNBLOCK)) {
-            manager.removeBlockInput((String) map.get(MenuScene.TO_UNBLOCK));
+        if (map.containsKey(TO_UNBLOCK)) {
+            manager.removeBlockInput((String) map.get(TO_UNBLOCK));
         }
         super.notifyAllChildren(map);
     }

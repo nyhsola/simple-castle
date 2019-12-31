@@ -13,8 +13,8 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.simple.castle.constants.Scenes;
 import com.simple.castle.drawable.scene.Scene;
+import com.simple.castle.drawable.scene.SceneBaseEvent;
 import com.simple.castle.game.scenes.main.game.add.objects.Camera;
-import com.simple.castle.game.scenes.main.menu.MenuScene;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -45,8 +45,8 @@ public class MenuSceneBackground extends Scene {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Map<String, Object> map = new HashMap<>();
-                map.put(MenuScene.TO_SCENE, Scenes.MENU_SCENE_MENU);
-                map.put(MenuScene.TO_BLOCK, Scenes.FULL_GAME_SCENE);
+                map.put(SceneBaseEvent.TO_SCENE, Scenes.MENU_SCENE_MENU);
+                map.put(SceneBaseEvent.TO_BLOCK, Scenes.FULL_GAME_SCENE);
                 notifyParent(map);
             }
         });

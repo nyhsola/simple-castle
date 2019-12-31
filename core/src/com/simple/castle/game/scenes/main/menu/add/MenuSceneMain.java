@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.simple.castle.constants.Scenes;
 import com.simple.castle.drawable.scene.Scene;
+import com.simple.castle.drawable.scene.SceneBaseEvent;
 import com.simple.castle.game.scenes.main.menu.MenuScene;
 
 import java.util.Collections;
@@ -46,8 +47,8 @@ public class MenuSceneMain extends Scene {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Map<String, Object> map = new HashMap<>();
-                map.put(MenuScene.TO_SCENE, Scenes.MENU_SCENE_BACKGROUND);
-                map.put(MenuScene.TO_UNBLOCK, Scenes.FULL_GAME_SCENE);
+                map.put(SceneBaseEvent.TO_SCENE, Scenes.MENU_SCENE_BACKGROUND);
+                map.put(SceneBaseEvent.TO_UNBLOCK, Scenes.FULL_GAME_SCENE);
                 notifyParent(map);
             }
         });

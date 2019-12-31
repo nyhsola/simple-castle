@@ -1,6 +1,7 @@
 package com.simple.castle.launcher;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
 import com.simple.castle.game.Game;
 
 public class GameLauncher implements ApplicationListener {
@@ -19,6 +20,7 @@ public class GameLauncher implements ApplicationListener {
 
     @Override
     public void render() {
+        game.update(Gdx.graphics.getDeltaTime());
         game.render();
     }
 
