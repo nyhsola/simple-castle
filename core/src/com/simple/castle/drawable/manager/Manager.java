@@ -1,5 +1,6 @@
 package com.simple.castle.drawable.manager;
 
+import com.badlogic.gdx.InputProcessor;
 import com.simple.castle.drawable.ApplicationDrawable;
 import com.simple.castle.drawable.scene.Scene;
 
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class Manager extends ApplicationDrawable {
+public class Manager extends ApplicationDrawable implements InputProcessor {
 
     private final Map<String, Scene> sceneMap = new HashMap<>();
     private final List<String> alwaysRender = new ArrayList<>();
