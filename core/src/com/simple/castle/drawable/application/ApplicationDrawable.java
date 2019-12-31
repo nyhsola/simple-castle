@@ -1,4 +1,4 @@
-package com.simple.castle.drawable;
+package com.simple.castle.drawable.application;
 
 public abstract class ApplicationDrawable implements Drawable {
 

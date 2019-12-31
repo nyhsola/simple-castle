@@ -1,4 +1,4 @@
-package com.simple.castle.drawable;
+package com.simple.castle.drawable.application;
 
 import com.badlogic.gdx.ApplicationListener;
 

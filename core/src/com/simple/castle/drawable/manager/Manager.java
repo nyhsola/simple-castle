@@ -1,7 +1,7 @@
 package com.simple.castle.drawable.manager;
 
 import com.badlogic.gdx.InputProcessor;
-import com.simple.castle.drawable.ApplicationDrawable;
+import com.simple.castle.drawable.application.ApplicationDrawable;
 import com.simple.castle.drawable.scene.Scene;
 
 import java.util.ArrayList;
