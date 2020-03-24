@@ -27,6 +27,7 @@ public class GameLauncher extends ApplicationAdapter {
 
     private ModelInstance surface;
     private ModelInstance redCube;
+    private ModelInstance sphere;
 
     private btCollisionObject surfaceObject;
     private btCollisionObject redCubeObject;
@@ -67,6 +68,19 @@ public class GameLauncher extends ApplicationAdapter {
 
         surface = new ModelInstance(model, "Surface");
         redCube = new ModelInstance(model, "RedCube");
+        sphere = new ModelInstance(model, "Sphere");
+
+
+//        ModelBuilder modelBuilder = new ModelBuilder();
+//        modelBuilder.begin();
+//        MeshPartBuilder builder = modelBuilder.part("line", 1, 3, new Material());
+//        builder.setColor(Color.RED);
+//        builder.line(0.0f, 0.0f, -5.0f, 0.0f, 0.0f, 5.0f);
+//        Model lineModel = modelBuilder.end();
+//        ModelInstance lineInstance = new ModelInstance(lineModel);
+//
+//        BoundingBox boundingBox = new BoundingBox();
+//        redCube.calculateBoundingBox(boundingBox.)
 
 //        surfaceObject = new btCollisionObject();
 //        surfaceObject.setCollisionShape(Bullet.obtainStaticNodeShape(surface.getNode("Surface"), true));
@@ -98,6 +112,7 @@ public class GameLauncher extends ApplicationAdapter {
         modelBatch.begin(gameCamera.getCamera());
         modelBatch.render(surface, environment);
         modelBatch.render(redCube, environment);
+        modelBatch.render(sphere, environment);
         modelBatch.end();
 
 //        if(checkCollision()) {
