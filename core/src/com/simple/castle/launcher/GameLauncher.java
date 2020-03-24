@@ -2,12 +2,10 @@ package com.simple.castle.launcher;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
@@ -15,62 +13,80 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
-import com.badlogic.gdx.graphics.g3d.model.Node;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
-import com.badlogic.gdx.math.collision.Ray;
+import com.badlogic.gdx.physics.bullet.Bullet;
+import com.badlogic.gdx.physics.bullet.collision.*;
 import com.badlogic.gdx.utils.JsonReader;
 
-public class GameLauncher extends ApplicationAdapter implements InputProcessor {
+public class GameLauncher extends ApplicationAdapter {
     private static final String MODELS_PLANE_G_3_DJ = "models/surface.g3dj";
     private static final Color CLEAR_COLOR = new Color(0.376f, 0.4f, 0.4f, 1);
-    private static final float CAMERA_SPEED = 0.1f;
-    private static final Vector3 tempVector = new Vector3();
-    private Camera camera;
+
     private ModelBatch modelBatch;
     private Model model;
-    private ModelInstance instance;
     private Environment environment;
-    private boolean keyUpHolds = false;
-    private boolean keyDownHolds = false;
-    private boolean keyLeftHolds = false;
-    private boolean keyRightHolds = false;
 
-    private int previousX;
-    private int previousY;
-    private boolean mouseDragged = false;
+    private ModelInstance surface;
+    private ModelInstance redCube;
+
+    private btCollisionObject surfaceObject;
+    private btCollisionObject redCubeObject;
+
+    private GameCamera gameCamera;
+    private InputMultiplexer input;
+
+    private btDefaultCollisionConfiguration collisionConfig;
+    private btCollisionDispatcher dispatcher;
+
+    public static btConvexHullShape createConvexHullShape(final Model model, boolean optimize) {
+        final Mesh mesh = model.meshes.get(0);
+        final btConvexHullShape shape = new btConvexHullShape(mesh.getVerticesBuffer(), mesh.getNumVertices(), mesh.getVertexSize());
+        if (!optimize) return shape;
+        // now optimize the shape
+        final btShapeHull hull = new btShapeHull(shape);
+        hull.buildHull(shape.getMargin());
+        final btConvexHullShape result = new btConvexHullShape(hull);
+        // delete the temporary shape
+        shape.dispose();
+        hull.dispose();
+        return result;
+    }
 
     @Override
     public void create() {
-        Gdx.input.setInputProcessor(this);
+        Bullet.init();
+        collisionConfig = new btDefaultCollisionConfiguration();
+        dispatcher = new btCollisionDispatcher(collisionConfig);
 
         modelBatch = new ModelBatch();
-
         environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
         G3dModelLoader modelLoader = new G3dModelLoader(new JsonReader());
         model = modelLoader.loadModel(Gdx.files.internal(MODELS_PLANE_G_3_DJ));
-        instance = new ModelInstance(model);
 
-        Node node = instance.getNode("RedCube");
-        Vector3 position = node.translation;
-        camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.position.set(new Vector3(position.x, position.y + 7f, position.z + 4f));
-        camera.lookAt(new Vector3(position.x, position.y, position.z));
-        camera.near = 1;
-        camera.far = 300;
+        surface = new ModelInstance(model, "Surface");
+        redCube = new ModelInstance(model, "RedCube");
 
-        camera.update();
+//        surfaceObject = new btCollisionObject();
+//        surfaceObject.setCollisionShape(Bullet.obtainStaticNodeShape(surface.getNode("Surface"), true));
+//        surfaceObject.setWorldTransform(surface.transform);
+//
+//        redCubeObject = new btCollisionObject();
+//        redCubeObject.setCollisionShape(Bullet.obtainStaticNodeShape(redCube.getNode("RedCube"), true));
+//        redCubeObject.setWorldTransform(redCube.transform);
+
+        gameCamera = new GameCamera(surface, redCube.getNode("RedCube").translation);
+        gameCamera.create();
+
+        input = new InputMultiplexer();
+        input.addProcessor(gameCamera);
+        Gdx.input.setInputProcessor(input);
     }
 
     @Override
     public void resize(int width, int height) {
-        camera.viewportWidth = width;
-        camera.viewportHeight = height;
-        camera.update();
+        gameCamera.resize(width, height);
     }
 
     @Override
@@ -79,129 +95,71 @@ public class GameLauncher extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glClearColor(CLEAR_COLOR.r, CLEAR_COLOR.g, CLEAR_COLOR.b, CLEAR_COLOR.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-        if (keyUpHolds) {
-            camera.position.z = camera.position.z - CAMERA_SPEED;
-            camera.update();
-        }
-        if (keyDownHolds) {
-            camera.position.z = camera.position.z + CAMERA_SPEED;
-            camera.update();
-        }
-        if (keyRightHolds) {
-            camera.position.x = camera.position.x + CAMERA_SPEED;
-            camera.update();
-        }
-        if (keyLeftHolds) {
-            camera.position.x = camera.position.x - CAMERA_SPEED;
-            camera.update();
-        }
-
-        modelBatch.begin(camera);
-        modelBatch.render(instance, environment);
+        modelBatch.begin(gameCamera.getCamera());
+        modelBatch.render(surface, environment);
+        modelBatch.render(redCube, environment);
         modelBatch.end();
+
+//        if(checkCollision()) {
+//            redCube.transform.translate(new Vector3(0, 0.01f, 0));
+//            redCube.calculateTransforms();
+//            redCubeObject.setWorldTransform(redCube.transform);
+//
+//            Vector3 position;
+//            position = redCube.transform.getTranslation(new Vector3());
+//
+//            Gdx.app.log("tag", "Collision " + position);
+//        }
     }
 
     @Override
     public void dispose() {
-        model.dispose();
         modelBatch.dispose();
+        model.dispose();
+        surfaceObject.dispose();
+        redCubeObject.dispose();
+        collisionConfig.dispose();
+        dispatcher.dispose();
     }
 
-    @Override
-    public boolean keyDown(int keycode) {
-        if (Input.Keys.UP == keycode || Input.Keys.W == keycode) {
-            keyUpHolds = true;
-        }
-        if (Input.Keys.DOWN == keycode || Input.Keys.S == keycode) {
-            keyDownHolds = true;
-        }
-        if (Input.Keys.LEFT == keycode || Input.Keys.A == keycode) {
-            keyLeftHolds = true;
-        }
-        if (Input.Keys.RIGHT == keycode || Input.Keys.D == keycode) {
-            keyRightHolds = true;
-        }
-        return false;
+    boolean checkCollision() {
+        CollisionObjectWrapper surfaceWrapper = new CollisionObjectWrapper(surfaceObject);
+        CollisionObjectWrapper cubeWrapper = new CollisionObjectWrapper(redCubeObject);
+
+        btCollisionAlgorithmConstructionInfo constructionInfo = new btCollisionAlgorithmConstructionInfo();
+        constructionInfo.setDispatcher1(dispatcher);
+        btCollisionAlgorithm algorithm = new btSphereBoxCollisionAlgorithm(null, constructionInfo, surfaceWrapper.wrapper, cubeWrapper.wrapper, false);
+
+        btDispatcherInfo info = new btDispatcherInfo();
+        btManifoldResult result = new btManifoldResult(surfaceWrapper.wrapper, cubeWrapper.wrapper);
+
+        algorithm.processCollision(surfaceWrapper.wrapper, cubeWrapper.wrapper, info, result);
+
+        boolean r = result.getPersistentManifold().getNumContacts() > 0;
+
+        result.dispose();
+        info.dispose();
+        algorithm.dispose();
+        constructionInfo.dispose();
+        cubeWrapper.dispose();
+        surfaceWrapper.dispose();
+
+        return r;
     }
 
-    @Override
-    public boolean keyUp(int keycode) {
-        if (Input.Keys.UP == keycode || Input.Keys.W == keycode) {
-            keyUpHolds = false;
-        }
-        if (Input.Keys.DOWN == keycode || Input.Keys.S == keycode) {
-            keyDownHolds = false;
-        }
-        if (Input.Keys.LEFT == keycode || Input.Keys.A == keycode) {
-            keyLeftHolds = false;
-        }
-        if (Input.Keys.RIGHT == keycode || Input.Keys.D == keycode) {
-            keyRightHolds = false;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (button == Input.Buttons.LEFT) {
-            mouseDragged = true;
-            Vector3 vector3 = planeIntersection(screenX, screenY);
-            if (vector3 != null) {
-                previousX = (int) vector3.x;
-                previousY = (int) vector3.z;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        mouseDragged = false;
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        if (mouseDragged) {
-            Vector3 vector3 = planeIntersection(screenX, screenY);
-            if (vector3 != null) {
-                final int deltaX = previousX - (int) vector3.x;
-                final int deltaY = previousY - (int) vector3.z;
-                camera.position.x = camera.position.x + deltaX;
-                camera.position.z = camera.position.z + deltaY;
-                camera.update();
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        Vector3 scl = tempVector.set(camera.direction).scl(amount);
-        camera.translate(scl);
-        camera.update();
-        return false;
-    }
-
-    private Vector3 planeIntersection(int screenX, int screenY) {
-        Ray pickRay = camera.getPickRay(screenX, screenY);
-        Vector3 position = new Vector3();
-        instance.transform.getTranslation(position);
-        Vector3 intersection = new Vector3();
-        if (Intersector.intersectRayBounds(pickRay, instance.calculateBoundingBox(new BoundingBox()), intersection)) {
-            return intersection;
-        }
-        return null;
-    }
+//    private FloatBuffer getFloatBuffer(Node model) {
+//        MeshPart meshPart = model.parts.get(0).meshPart;
+//
+//        float[] nVerts = new float[meshPart.size];
+//        meshPart.mesh.getVertices(nVerts);
+//
+//        ByteBuffer allocate = ByteBuffer.allocateDirect(nVerts.length * 4);
+//        allocate.order(ByteOrder.nativeOrder());
+//
+//        FloatBuffer floatBuffer1 = allocate.asFloatBuffer();
+//        floatBuffer1.put(nVerts);
+//        floatBuffer1.position(0);
+//
+//        return floatBuffer1;
+//    }
 }
