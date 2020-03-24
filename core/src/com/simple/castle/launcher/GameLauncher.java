@@ -6,13 +6,14 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
-import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.BoxShapeBuilder;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.physics.bullet.collision.*;
 import com.badlogic.gdx.utils.JsonReader;
@@ -28,6 +29,7 @@ public class GameLauncher extends ApplicationAdapter {
     private ModelInstance surface;
     private ModelInstance redCube;
     private ModelInstance sphere;
+    private ModelInstance sphereBox;
 
     private btCollisionObject surfaceObject;
     private btCollisionObject redCubeObject;
@@ -70,25 +72,12 @@ public class GameLauncher extends ApplicationAdapter {
         redCube = new ModelInstance(model, "RedCube");
         sphere = new ModelInstance(model, "Sphere");
 
-
-//        ModelBuilder modelBuilder = new ModelBuilder();
-//        modelBuilder.begin();
-//        MeshPartBuilder builder = modelBuilder.part("line", 1, 3, new Material());
-//        builder.setColor(Color.RED);
-//        builder.line(0.0f, 0.0f, -5.0f, 0.0f, 0.0f, 5.0f);
-//        Model lineModel = modelBuilder.end();
-//        ModelInstance lineInstance = new ModelInstance(lineModel);
-//
-//        BoundingBox boundingBox = new BoundingBox();
-//        redCube.calculateBoundingBox(boundingBox.)
-
-//        surfaceObject = new btCollisionObject();
-//        surfaceObject.setCollisionShape(Bullet.obtainStaticNodeShape(surface.getNode("Surface"), true));
-//        surfaceObject.setWorldTransform(surface.transform);
-//
-//        redCubeObject = new btCollisionObject();
-//        redCubeObject.setCollisionShape(Bullet.obtainStaticNodeShape(redCube.getNode("RedCube"), true));
-//        redCubeObject.setWorldTransform(redCube.transform);
+        BoundingBox out = new BoundingBox();
+        sphere.calculateBoundingBox(out);
+        ModelBuilder modelBuilder = new ModelBuilder();
+        modelBuilder.begin();
+        BoxShapeBuilder.build(modelBuilder.part("id", GL20.GL_LINES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, new Material()), out);
+        sphereBox = new ModelInstance(modelBuilder.end());
 
         gameCamera = new GameCamera(surface, redCube.getNode("RedCube").translation);
         gameCamera.create();
@@ -113,6 +102,7 @@ public class GameLauncher extends ApplicationAdapter {
         modelBatch.render(surface, environment);
         modelBatch.render(redCube, environment);
         modelBatch.render(sphere, environment);
+        modelBatch.render(sphereBox);
         modelBatch.end();
 
 //        if(checkCollision()) {
