@@ -29,7 +29,12 @@ public class GameLauncher extends ApplicationAdapter {
     private ModelInstance surface;
     private ModelInstance redCube;
     private ModelInstance sphere;
-    private ModelInstance sphereBox;
+
+    private ModelInstance surfaceBoxModel;
+    private ModelInstance sphereBoxModel;
+
+    private BoundingBox surfaceBox;
+    private BoundingBox sphereBox;
 
     private btCollisionObject surfaceObject;
     private btCollisionObject redCubeObject;
@@ -72,12 +77,20 @@ public class GameLauncher extends ApplicationAdapter {
         redCube = new ModelInstance(model, "RedCube");
         sphere = new ModelInstance(model, "Sphere");
 
-        BoundingBox out = new BoundingBox();
-        sphere.calculateBoundingBox(out);
+        surfaceBox = new BoundingBox();
+        sphereBox = new BoundingBox();
+
+        surface.calculateBoundingBox(surfaceBox);
+        sphere.calculateBoundingBox(sphereBox);
+
         ModelBuilder modelBuilder = new ModelBuilder();
         modelBuilder.begin();
-        BoxShapeBuilder.build(modelBuilder.part("id", GL20.GL_LINES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, new Material()), out);
-        sphereBox = new ModelInstance(modelBuilder.end());
+        BoxShapeBuilder.build(modelBuilder.part("id", GL20.GL_LINES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, new Material()), surfaceBox);
+        surfaceBoxModel = new ModelInstance(modelBuilder.end());
+
+        modelBuilder.begin();
+        BoxShapeBuilder.build(modelBuilder.part("id", GL20.GL_LINES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, new Material()), sphereBox);
+        sphereBoxModel = new ModelInstance(modelBuilder.end());
 
         gameCamera = new GameCamera(surface, redCube.getNode("RedCube").translation);
         gameCamera.create();
@@ -102,8 +115,12 @@ public class GameLauncher extends ApplicationAdapter {
         modelBatch.render(surface, environment);
         modelBatch.render(redCube, environment);
         modelBatch.render(sphere, environment);
-        modelBatch.render(sphereBox);
+
+        modelBatch.render(sphereBoxModel);
+        modelBatch.render(surfaceBoxModel);
         modelBatch.end();
+
+//            sphereBoxModel.transform.translate(new Vector3(0, -0.01f, 0));
 
 //        if(checkCollision()) {
 //            redCube.transform.translate(new Vector3(0, 0.01f, 0));
