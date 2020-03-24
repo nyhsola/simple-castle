@@ -16,7 +16,10 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.graphics.g3d.model.Node;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.JsonReader;
 
 public class GameLauncher extends ApplicationAdapter implements InputProcessor {
@@ -36,6 +39,7 @@ public class GameLauncher extends ApplicationAdapter implements InputProcessor {
 
     private int previousX;
     private int previousY;
+    private boolean mouseDragged = false;
 
     @Override
     public void create() {
@@ -144,28 +148,35 @@ public class GameLauncher extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        previousX = screenX;
-        previousY = screenY;
+        if (button == Input.Buttons.LEFT) {
+            mouseDragged = true;
+            Vector3 vector3 = planeIntersection(screenX, screenY);
+            if (vector3 != null) {
+                previousX = (int) vector3.x;
+                previousY = (int) vector3.z;
+            }
+        }
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        mouseDragged = false;
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        final int deltaX = previousX - screenX;
-        final int deltaY = previousY - screenY;
-
-        if (pointer == Input.Buttons.LEFT) {
-            camera.position.x = camera.position.x + deltaX;
-            camera.position.z = camera.position.z + deltaY;
-            camera.update();
+        if (mouseDragged) {
+            Vector3 vector3 = planeIntersection(screenX, screenY);
+            if (vector3 != null) {
+                final int deltaX = previousX - (int) vector3.x;
+                final int deltaY = previousY - (int) vector3.z;
+                camera.position.x = camera.position.x + deltaX;
+                camera.position.z = camera.position.z + deltaY;
+                camera.update();
+            }
         }
-        previousX = screenX;
-        previousY = screenY;
 
         return false;
     }
@@ -181,5 +192,16 @@ public class GameLauncher extends ApplicationAdapter implements InputProcessor {
         camera.translate(scl);
         camera.update();
         return false;
+    }
+
+    private Vector3 planeIntersection(int screenX, int screenY) {
+        Ray pickRay = camera.getPickRay(screenX, screenY);
+        Vector3 position = new Vector3();
+        instance.transform.getTranslation(position);
+        Vector3 intersection = new Vector3();
+        if (Intersector.intersectRayBounds(pickRay, instance.calculateBoundingBox(new BoundingBox()), intersection)) {
+            return intersection;
+        }
+        return null;
     }
 }
