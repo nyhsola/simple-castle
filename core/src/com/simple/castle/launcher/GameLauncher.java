@@ -5,99 +5,96 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttributes;
-import com.badlogic.gdx.graphics.g3d.*;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.BoxShapeBuilder;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.bullet.Bullet;
-import com.badlogic.gdx.physics.bullet.collision.*;
-import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.physics.bullet.collision.btBoxShape;
+import com.badlogic.gdx.physics.bullet.collision.btCollisionDispatcher;
+import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
+import com.badlogic.gdx.physics.bullet.collision.btDefaultCollisionConfiguration;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class GameLauncher extends ApplicationAdapter {
-    private static final String MODELS_PLANE_G_3_DJ = "models/surface.g3dj";
     private static final Color CLEAR_COLOR = new Color(0.376f, 0.4f, 0.4f, 1);
 
     private ModelBatch modelBatch;
     private Model model;
-    private Environment environment;
-
-    private ModelInstance surface;
-    private ModelInstance redCube;
-    private ModelInstance sphere;
-
-    private ModelInstance surfaceBoxModel;
-    private ModelInstance sphereBoxModel;
-
-    private BoundingBox surfaceBox;
-    private BoundingBox sphereBox;
 
     private btCollisionObject surfaceObject;
-    private btCollisionObject redCubeObject;
+    private btCollisionObject sphereObject;
 
     private GameCamera gameCamera;
-    private InputMultiplexer input;
+    private WorldSettings worldSettings;
+    private List<ModelInstance> modelInstances;
 
     private btDefaultCollisionConfiguration collisionConfig;
     private btCollisionDispatcher dispatcher;
 
-    public static btConvexHullShape createConvexHullShape(final Model model, boolean optimize) {
-        final Mesh mesh = model.meshes.get(0);
-        final btConvexHullShape shape = new btConvexHullShape(mesh.getVerticesBuffer(), mesh.getNumVertices(), mesh.getVertexSize());
-        if (!optimize) return shape;
-        // now optimize the shape
-        final btShapeHull hull = new btShapeHull(shape);
-        hull.buildHull(shape.getMargin());
-        final btConvexHullShape result = new btConvexHullShape(hull);
-        // delete the temporary shape
-        shape.dispose();
-        hull.dispose();
-        return result;
-    }
-
-    @Override
-    public void create() {
+    private void preInit() {
         Bullet.init();
         collisionConfig = new btDefaultCollisionConfiguration();
         dispatcher = new btCollisionDispatcher(collisionConfig);
 
         modelBatch = new ModelBatch();
-        environment = new Environment();
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+        model = ModelLoader.loadModel();
+    }
 
-        G3dModelLoader modelLoader = new G3dModelLoader(new JsonReader());
-        model = modelLoader.loadModel(Gdx.files.internal(MODELS_PLANE_G_3_DJ));
+    private void postInit() {
+        ModelInstance surface = new ModelInstance(model, "Surface");
+        ModelInstance redCube = new ModelInstance(model, "RedCube");
+        ModelInstance sphere = new ModelInstance(model, "Sphere");
 
-        surface = new ModelInstance(model, "Surface");
-        redCube = new ModelInstance(model, "RedCube");
-        sphere = new ModelInstance(model, "Sphere");
-
-        surfaceBox = new BoundingBox();
-        sphereBox = new BoundingBox();
+        BoundingBox surfaceBox = new BoundingBox();
+        BoundingBox sphereBox = new BoundingBox();
 
         surface.calculateBoundingBox(surfaceBox);
         sphere.calculateBoundingBox(sphereBox);
 
+        surfaceObject = new btCollisionObject();
+        surfaceObject.setCollisionShape(new btBoxShape(surfaceBox.getDimensions(new Vector3())));
+        surfaceObject.setWorldTransform(surface.transform);
+
+        sphereObject = new btCollisionObject();
+        sphereObject.setCollisionShape(new btBoxShape(sphereBox.getDimensions(new Vector3())));
+        sphereObject.setWorldTransform(sphere.transform);
+
         ModelBuilder modelBuilder = new ModelBuilder();
         modelBuilder.begin();
         BoxShapeBuilder.build(modelBuilder.part("id", GL20.GL_LINES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, new Material()), surfaceBox);
-        surfaceBoxModel = new ModelInstance(modelBuilder.end());
+        ModelInstance surfaceBoxModel = new ModelInstance(modelBuilder.end());
 
         modelBuilder.begin();
         BoxShapeBuilder.build(modelBuilder.part("id", GL20.GL_LINES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, new Material()), sphereBox);
-        sphereBoxModel = new ModelInstance(modelBuilder.end());
+        ModelInstance sphereBoxModel = new ModelInstance(modelBuilder.end());
 
         gameCamera = new GameCamera(surface, redCube.getNode("RedCube").translation);
         gameCamera.create();
 
-        input = new InputMultiplexer();
+        worldSettings = new WorldSettings();
+        worldSettings.create();
+
+        InputMultiplexer input = new InputMultiplexer();
         input.addProcessor(gameCamera);
         Gdx.input.setInputProcessor(input);
+
+        modelInstances = new ArrayList<>();
+        modelInstances.addAll(Arrays.asList(surface, redCube, sphere, sphereBoxModel, surfaceBoxModel));
+    }
+
+    @Override
+    public void create() {
+        this.preInit();
+        this.postInit();
     }
 
     @Override
@@ -112,26 +109,8 @@ public class GameLauncher extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         modelBatch.begin(gameCamera.getCamera());
-        modelBatch.render(surface, environment);
-        modelBatch.render(redCube, environment);
-        modelBatch.render(sphere, environment);
-
-        modelBatch.render(sphereBoxModel);
-        modelBatch.render(surfaceBoxModel);
+        modelBatch.render(modelInstances, worldSettings.getEnvironment());
         modelBatch.end();
-
-//            sphereBoxModel.transform.translate(new Vector3(0, -0.01f, 0));
-
-//        if(checkCollision()) {
-//            redCube.transform.translate(new Vector3(0, 0.01f, 0));
-//            redCube.calculateTransforms();
-//            redCubeObject.setWorldTransform(redCube.transform);
-//
-//            Vector3 position;
-//            position = redCube.transform.getTranslation(new Vector3());
-//
-//            Gdx.app.log("tag", "Collision " + position);
-//        }
     }
 
     @Override
@@ -139,49 +118,9 @@ public class GameLauncher extends ApplicationAdapter {
         modelBatch.dispose();
         model.dispose();
         surfaceObject.dispose();
-        redCubeObject.dispose();
+        sphereObject.dispose();
         collisionConfig.dispose();
         dispatcher.dispose();
     }
 
-    boolean checkCollision() {
-        CollisionObjectWrapper surfaceWrapper = new CollisionObjectWrapper(surfaceObject);
-        CollisionObjectWrapper cubeWrapper = new CollisionObjectWrapper(redCubeObject);
-
-        btCollisionAlgorithmConstructionInfo constructionInfo = new btCollisionAlgorithmConstructionInfo();
-        constructionInfo.setDispatcher1(dispatcher);
-        btCollisionAlgorithm algorithm = new btSphereBoxCollisionAlgorithm(null, constructionInfo, surfaceWrapper.wrapper, cubeWrapper.wrapper, false);
-
-        btDispatcherInfo info = new btDispatcherInfo();
-        btManifoldResult result = new btManifoldResult(surfaceWrapper.wrapper, cubeWrapper.wrapper);
-
-        algorithm.processCollision(surfaceWrapper.wrapper, cubeWrapper.wrapper, info, result);
-
-        boolean r = result.getPersistentManifold().getNumContacts() > 0;
-
-        result.dispose();
-        info.dispose();
-        algorithm.dispose();
-        constructionInfo.dispose();
-        cubeWrapper.dispose();
-        surfaceWrapper.dispose();
-
-        return r;
-    }
-
-//    private FloatBuffer getFloatBuffer(Node model) {
-//        MeshPart meshPart = model.parts.get(0).meshPart;
-//
-//        float[] nVerts = new float[meshPart.size];
-//        meshPart.mesh.getVertices(nVerts);
-//
-//        ByteBuffer allocate = ByteBuffer.allocateDirect(nVerts.length * 4);
-//        allocate.order(ByteOrder.nativeOrder());
-//
-//        FloatBuffer floatBuffer1 = allocate.asFloatBuffer();
-//        floatBuffer1.put(nVerts);
-//        floatBuffer1.position(0);
-//
-//        return floatBuffer1;
-//    }
 }
