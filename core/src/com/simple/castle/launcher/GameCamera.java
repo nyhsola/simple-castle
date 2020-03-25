@@ -38,8 +38,8 @@ public class GameCamera extends ApplicationAdapter implements InputProcessor {
         camera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(new Vector3(position.x, position.y + 7f, position.z + 4f));
         camera.lookAt(new Vector3(position.x, position.y, position.z));
-        camera.near = 1;
-        camera.far = 300;
+        camera.near = 0.1f;
+        camera.far = 1000;
 
         camera.update();
     }
@@ -166,7 +166,7 @@ public class GameCamera extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
-        Vector3 scl = tempVector.set(camera.direction).scl(amount);
+        Vector3 scl = tempVector.set(camera.direction).scl(amount * 20);
         camera.translate(scl);
         camera.update();
         return false;

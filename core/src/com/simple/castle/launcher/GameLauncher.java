@@ -5,19 +5,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.VertexAttributes;
-import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.BoxShapeBuilder;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.bullet.Bullet;
-import com.badlogic.gdx.physics.bullet.collision.btBoxShape;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionDispatcher;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 import com.badlogic.gdx.physics.bullet.collision.btDefaultCollisionConfiguration;
 
 import java.util.ArrayList;
@@ -30,8 +23,8 @@ public class GameLauncher extends ApplicationAdapter {
     private ModelBatch modelBatch;
     private Model model;
 
-    private btCollisionObject surfaceObject;
-    private btCollisionObject sphereObject;
+//    private btCollisionObject surfaceObject;
+//    private btCollisionObject sphereObject;
 
     private GameCamera gameCamera;
     private WorldSettings worldSettings;
@@ -39,6 +32,10 @@ public class GameLauncher extends ApplicationAdapter {
 
     private btDefaultCollisionConfiguration collisionConfig;
     private btCollisionDispatcher dispatcher;
+
+    Tools tools = new Tools();
+    private GameModel surfaceGameModel;
+    private GameModel cylinder;
 
     private void preInit() {
         Bullet.init();
@@ -50,34 +47,10 @@ public class GameLauncher extends ApplicationAdapter {
     }
 
     private void postInit() {
-        ModelInstance surface = new ModelInstance(model, "Surface");
-        ModelInstance redCube = new ModelInstance(model, "RedCube");
-        ModelInstance sphere = new ModelInstance(model, "Sphere");
+        surfaceGameModel = new GameModel("Plane", model);
+        cylinder = new GameModel("Cylinder", model);
 
-        BoundingBox surfaceBox = new BoundingBox();
-        BoundingBox sphereBox = new BoundingBox();
-
-        surface.calculateBoundingBox(surfaceBox);
-        sphere.calculateBoundingBox(sphereBox);
-
-        surfaceObject = new btCollisionObject();
-        surfaceObject.setCollisionShape(new btBoxShape(surfaceBox.getDimensions(new Vector3())));
-        surfaceObject.setWorldTransform(surface.transform);
-
-        sphereObject = new btCollisionObject();
-        sphereObject.setCollisionShape(new btBoxShape(sphereBox.getDimensions(new Vector3())));
-        sphereObject.setWorldTransform(sphere.transform);
-
-        ModelBuilder modelBuilder = new ModelBuilder();
-        modelBuilder.begin();
-        BoxShapeBuilder.build(modelBuilder.part("id", GL20.GL_LINES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, new Material()), surfaceBox);
-        ModelInstance surfaceBoxModel = new ModelInstance(modelBuilder.end());
-
-        modelBuilder.begin();
-        BoxShapeBuilder.build(modelBuilder.part("id", GL20.GL_LINES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, new Material()), sphereBox);
-        ModelInstance sphereBoxModel = new ModelInstance(modelBuilder.end());
-
-        gameCamera = new GameCamera(surface, redCube.getNode("RedCube").translation);
+        gameCamera = new GameCamera(surfaceGameModel.getModelInstance(), cylinder.getModelInstance().nodes.get(0).translation);
         gameCamera.create();
 
         worldSettings = new WorldSettings();
@@ -88,7 +61,7 @@ public class GameLauncher extends ApplicationAdapter {
         Gdx.input.setInputProcessor(input);
 
         modelInstances = new ArrayList<>();
-        modelInstances.addAll(Arrays.asList(surface, redCube, sphere, sphereBoxModel, surfaceBoxModel));
+        modelInstances.addAll(Arrays.asList(surfaceGameModel.getModelInstance(), cylinder.getModelInstance()));
     }
 
     @Override
@@ -111,16 +84,22 @@ public class GameLauncher extends ApplicationAdapter {
         modelBatch.begin(gameCamera.getCamera());
         modelBatch.render(modelInstances, worldSettings.getEnvironment());
         modelBatch.end();
+
+        if (!tools.checkCollision(dispatcher, surfaceGameModel.getBtCollisionObject(), cylinder.getBtCollisionObject())) {
+            cylinder.getModelInstance().transform.translate(new Vector3(0, -0.1f, 0));
+            cylinder.getBtCollisionObject().setWorldTransform(cylinder.getModelInstance().transform);
+        }
     }
 
     @Override
     public void dispose() {
         modelBatch.dispose();
         model.dispose();
-        surfaceObject.dispose();
-        sphereObject.dispose();
         collisionConfig.dispose();
         dispatcher.dispose();
+
+        cylinder.dispose();
+        surfaceGameModel.dispose();
     }
 
 }

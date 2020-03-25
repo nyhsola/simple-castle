@@ -1,6 +1,5 @@
 package com.simple.castle.launcher;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.model.MeshPart;
@@ -58,8 +57,6 @@ public class Tools {
         int numContacts = result.getPersistentManifold().getNumContacts();
         boolean r = numContacts > 0;
 
-        Gdx.app.log("tag", "" + numContacts);
-
         result.dispose();
         info.dispose();
         algorithm.dispose();
@@ -69,4 +66,27 @@ public class Tools {
 
         return r;
     }
+
+    //    BoundingBox surfaceBox = new BoundingBox();
+    //    BoundingBox sphereBox = new BoundingBox();
+    //
+    //        surface.calculateBoundingBox(surfaceBox);
+    //        sphere.calculateBoundingBox(sphereBox);
+    //
+    //    surfaceObject = new btCollisionObject();
+    //        surfaceObject.setCollisionShape(new btBoxShape(surfaceBox.getDimensions(new Vector3())));
+    //        surfaceObject.setWorldTransform(surface.transform);
+    //
+    //    sphereObject = new btCollisionObject();
+    //        sphereObject.setCollisionShape(new btBoxShape(sphereBox.getDimensions(new Vector3())));
+    //        sphereObject.setWorldTransform(sphere.transform);
+    //
+    //    ModelBuilder modelBuilder = new ModelBuilder();
+    //        modelBuilder.begin();
+    //        BoxShapeBuilder.build(modelBuilder.part("id", GL20.GL_LINES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, new Material()), surfaceBox);
+    //    ModelInstance surfaceBoxModel = new ModelInstance(modelBuilder.end());
+    //
+    //        modelBuilder.begin();
+    //        BoxShapeBuilder.build(modelBuilder.part("id", GL20.GL_LINES, VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal, new Material()), sphereBox);
+    //    ModelInstance sphereBoxModel = new ModelInstance(modelBuilder.end());
 }
