@@ -1,7 +1,6 @@
 package com.simple.castle.launcher.deprecated.test.bullet;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 
 public class BGameRenderer extends ApplicationAdapter {
@@ -13,8 +12,8 @@ public class BGameRenderer extends ApplicationAdapter {
         modelBatch = new ModelBatch();
     }
 
-    public void render(Camera camera, BPhysicWorld bPhysicWorld, BEnvironment bEnvironment) {
-        modelBatch.begin(camera);
+    public void render(BGameCamera bGameCamera, BPhysicWorld bPhysicWorld, BEnvironment bEnvironment) {
+        modelBatch.begin(bGameCamera.getCam());
         modelBatch.render(bPhysicWorld.getInstances(), bEnvironment.getEnvironment());
         modelBatch.end();
     }

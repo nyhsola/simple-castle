@@ -1,5 +1,6 @@
 package com.simple.castle.launcher.deprecated.test.bullet;
 
+import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.VertexAttributes;
@@ -7,16 +8,43 @@ import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.*;
 import com.badlogic.gdx.utils.ArrayMap;
 
-public class ModelFabric {
+public class BModelFactory extends ApplicationAdapter {
+    private final static short GROUND_FLAG = 1 << 8;
+    private final static short OBJECT_FLAG = 1 << 9;
+    private final static short ALL_FLAG = -1;
+
     private ArrayMap<String, BGameObject.Constructor> constructorArrayMap;
     private Model model;
 
-    ModelFabric() {
+    @Override
+    public void create() {
         constructorArrayMap = constructObjects();
+    }
+
+    public BGameObject constructGround() {
+        BGameObject object = this.getGameObjects().get("ground").construct();
+        object.body.setCollisionFlags(object.body.getCollisionFlags() | btCollisionObject.CollisionFlags.CF_KINEMATIC_OBJECT);
+        object.body.setContactCallbackFlag(GROUND_FLAG);
+        object.body.setContactCallbackFilter(0);
+        object.body.setActivationState(Collision.DISABLE_DEACTIVATION);
+        return object;
+    }
+
+    public BGameObject randomObject(int objCount) {
+        BGameObject obj = this.getGameObjects().values[1 + MathUtils.random(this.getGameObjects().size - 2)].construct();
+        obj.transform.setFromEulerAngles(MathUtils.random(360f), MathUtils.random(360f), MathUtils.random(360f));
+        obj.transform.trn(MathUtils.random(-2.5f, 2.5f), 9f, MathUtils.random(-2.5f, 2.5f));
+        obj.body.proceedToTransform(obj.transform);
+        obj.body.setUserValue(objCount);
+        obj.body.setCollisionFlags(obj.body.getCollisionFlags() | btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
+        obj.body.setContactCallbackFlag(OBJECT_FLAG);
+        obj.body.setContactCallbackFilter(GROUND_FLAG);
+        return obj;
     }
 
     private ArrayMap<String, BGameObject.Constructor> constructObjects() {
@@ -61,7 +89,7 @@ public class ModelFabric {
         model.dispose();
     }
 
-    public ArrayMap<String, BGameObject.Constructor> getConstructorArrayMap() {
+    public ArrayMap<String, BGameObject.Constructor> getGameObjects() {
         return constructorArrayMap;
     }
 }

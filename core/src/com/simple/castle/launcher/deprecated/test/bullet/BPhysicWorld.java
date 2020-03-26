@@ -3,6 +3,7 @@ package com.simple.castle.launcher.deprecated.test.bullet;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.physics.bullet.collision.*;
@@ -23,6 +24,8 @@ public class BPhysicWorld extends ApplicationAdapter {
 
     private Array<BGameObject> instances;
     private BGameObject ground;
+
+    private float angle, speed = 90f;
 
     public BGameObject getGround() {
         return ground;
@@ -54,7 +57,13 @@ public class BPhysicWorld extends ApplicationAdapter {
     }
 
     public void update(float delta) {
+        updateGround(delta);
         dynamicsWorld.stepSimulation(delta, 5, 1f / 60f);
+    }
+
+    private void updateGround(float delta) {
+        angle = (angle + delta * speed) % 360f;
+        getGround().transform.setTranslation(0, MathUtils.sinDeg(angle) * 2.5f, 0f);
     }
 
     @Override
