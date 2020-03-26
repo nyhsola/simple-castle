@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class BPhysicWorld extends ApplicationAdapter {
 
-    BPhysicWorld.MyContactListener contactListener;
+    private BPhysicWorld.MyContactListener contactListener;
     private btCollisionConfiguration collisionConfig;
     private btDispatcher dispatcher;
     private btBroadphaseInterface broadphase;

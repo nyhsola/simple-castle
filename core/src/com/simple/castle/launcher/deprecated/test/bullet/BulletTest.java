@@ -4,10 +4,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.bullet.collision.Collision;
@@ -19,27 +15,27 @@ public class BulletTest extends ApplicationAdapter {
     final static short ALL_FLAG = -1;
 
     BPhysicWorld bPhysicWorld;
-
+    BEnvironment bEnvironment;
+    BGameRenderer bGameRenderer;
     ModelFabric modelFabric;
 
     PerspectiveCamera cam;
     CameraInputController camController;
-    ModelBatch modelBatch;
-    Environment environment;
     float spawnTimer;
     float angle, speed = 90f;
 
     @Override
     public void create() {
+        bGameRenderer = new BGameRenderer();
+        bGameRenderer.create();
+
         bPhysicWorld = new BPhysicWorld();
         bPhysicWorld.create();
 
-        modelFabric = new ModelFabric();
+        bEnvironment = new BEnvironment();
+        bEnvironment.create();
 
-        modelBatch = new ModelBatch();
-        environment = new Environment();
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+        modelFabric = new ModelFabric();
 
         cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cam.position.set(3f, 7f, 10f);
@@ -53,10 +49,10 @@ public class BulletTest extends ApplicationAdapter {
 
         BGameObject object = modelFabric.getConstructorArrayMap().get("ground").construct();
         object.body.setCollisionFlags(object.body.getCollisionFlags() | btCollisionObject.CollisionFlags.CF_KINEMATIC_OBJECT);
-        bPhysicWorld.addGround(object);
         object.body.setContactCallbackFlag(GROUND_FLAG);
         object.body.setContactCallbackFilter(0);
         object.body.setActivationState(Collision.DISABLE_DEACTIVATION);
+        bPhysicWorld.addGround(object);
     }
 
     public void spawn() {
@@ -90,15 +86,12 @@ public class BulletTest extends ApplicationAdapter {
         Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1.f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-        modelBatch.begin(cam);
-        modelBatch.render(bPhysicWorld.getInstances(), environment);
-        modelBatch.end();
+        bGameRenderer.render(cam, bPhysicWorld, bEnvironment);
     }
 
     @Override
     public void dispose() {
         bPhysicWorld.dispose();
-        modelBatch.dispose();
         modelFabric.dispose();
     }
 }
