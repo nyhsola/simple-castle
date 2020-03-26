@@ -1,4 +1,4 @@
-package com.simple.castle.launcher;
+package com.simple.castle.launcher.deprecated.test;
 
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.g3d.Model;

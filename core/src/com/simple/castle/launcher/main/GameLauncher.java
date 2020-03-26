@@ -1,11 +1,11 @@
-package com.simple.castle.launcher;
+package com.simple.castle.launcher.main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionDispatcher;
-import com.badlogic.gdx.physics.bullet.collision.btDefaultCollisionConfiguration;
+import com.simple.castle.launcher.physics.PhysicWorld;
+import com.simple.castle.launcher.utils.ModelLoader;
 
 import java.util.Arrays;
 
@@ -14,23 +14,17 @@ public class GameLauncher extends ApplicationAdapter {
 
     private GameCamera gameCamera;
 
-    private btDefaultCollisionConfiguration collisionConfig;
-    private btCollisionDispatcher dispatcher;
-
     private GameModel surfaceGameModel;
     private GameModel cylinder;
 
-    private PhysicWorld physicWorld;
+    private com.simple.castle.launcher.physics.PhysicWorld physicWorld;
     private GameRenderer gameRenderer;
 
-    private void preInit() {
+    @Override
+    public void create() {
         physicWorld = new PhysicWorld();
-        collisionConfig = new btDefaultCollisionConfiguration();
-        dispatcher = new btCollisionDispatcher(collisionConfig);
         model = ModelLoader.loadModel();
-    }
 
-    private void postInit() {
         surfaceGameModel = new GameModel("Plane", model);
         cylinder = new GameModel("Cylinder", model);
 
@@ -40,21 +34,15 @@ public class GameLauncher extends ApplicationAdapter {
         gameCamera = new GameCamera(surfaceGameModel.getModelInstance(), cylinder.getModelInstance().nodes.get(0).translation);
         gameCamera.create();
 
-        WorldSettings worldSettings = new WorldSettings();
-        worldSettings.create();
+        GameWorldSettings gameWorldSettings = new GameWorldSettings();
+        gameWorldSettings.create();
 
-        gameRenderer = new GameRenderer(gameCamera, worldSettings,
+        gameRenderer = new GameRenderer(gameCamera, gameWorldSettings,
                 Arrays.asList(surfaceGameModel.getModelInstance(), cylinder.getModelInstance()));
 
         InputMultiplexer input = new InputMultiplexer();
         input.addProcessor(gameCamera);
         Gdx.input.setInputProcessor(input);
-    }
-
-    @Override
-    public void create() {
-        this.preInit();
-        this.postInit();
     }
 
     @Override
@@ -73,9 +61,6 @@ public class GameLauncher extends ApplicationAdapter {
     @Override
     public void dispose() {
         model.dispose();
-        collisionConfig.dispose();
-        dispatcher.dispose();
-
         cylinder.dispose();
         surfaceGameModel.dispose();
     }

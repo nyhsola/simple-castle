@@ -1,4 +1,4 @@
-package com.simple.castle.launcher;
+package com.simple.castle.launcher.physics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.bullet.DebugDrawer;
 import com.badlogic.gdx.physics.bullet.collision.*;
 import com.badlogic.gdx.physics.bullet.dynamics.*;
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
+import com.simple.castle.launcher.main.GameModel;
 
 public class PhysicWorld {
     private btDynamicsWorld world;
@@ -42,10 +43,11 @@ public class PhysicWorld {
     }
 
     public void update(float delta) {
+        world.performDiscreteCollisionDetection();
         world.stepSimulation(delta);
     }
 
-    public btRigidBody addStaticRigidBody(GameModel gameModel) {
+    public btRigidBody addStaticRigidBody(com.simple.castle.launcher.main.GameModel gameModel) {
         btCollisionShape shape = Bullet.obtainStaticNodeShape(gameModel.getModelInstance().nodes.get(0), true);
         btRigidBody.btRigidBodyConstructionInfo info = new btRigidBody.btRigidBodyConstructionInfo(1, gameModel.getMotionState(), shape, Vector3.Zero);
         btRigidBody body = new btRigidBody(info);
@@ -60,6 +62,7 @@ public class PhysicWorld {
         btCollisionShape shape = Bullet.obtainStaticNodeShape(gameModel.getModelInstance().nodes.get(0), true);
         btRigidBody.btRigidBodyConstructionInfo info = new btRigidBody.btRigidBodyConstructionInfo(1, gameModel.getMotionState(), shape, Vector3.Zero);
         btRigidBody body = new btRigidBody(info);
+
         body.setUserValue(2);
         body.setCollisionFlags(body.getCollisionFlags() | btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
         Vector3 inertia = new Vector3();

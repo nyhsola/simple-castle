@@ -1,4 +1,4 @@
-package com.simple.castle.launcher;
+package com.simple.castle.launcher.main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -13,13 +13,13 @@ public class GameRenderer extends ApplicationAdapter {
     private static final Color CLEAR_COLOR = new Color(0.376f, 0.4f, 0.4f, 1);
 
     private final GameCamera gameCamera;
-    private final WorldSettings worldSettings;
+    private final GameWorldSettings gameWorldSettings;
     private List<ModelInstance> modelInstanceList;
     private ModelBatch modelBatch;
 
-    public GameRenderer(GameCamera gameCamera, WorldSettings worldSettings, List<ModelInstance> modelInstanceList) {
+    public GameRenderer(GameCamera gameCamera, GameWorldSettings gameWorldSettings, List<ModelInstance> modelInstanceList) {
         this.gameCamera = gameCamera;
-        this.worldSettings = worldSettings;
+        this.gameWorldSettings = gameWorldSettings;
         this.modelInstanceList = modelInstanceList;
         modelBatch = new ModelBatch();
     }
@@ -32,7 +32,7 @@ public class GameRenderer extends ApplicationAdapter {
 
 
         modelBatch.begin(gameCamera.getCamera());
-        modelBatch.render(modelInstanceList, worldSettings.getEnvironment());
+        modelBatch.render(modelInstanceList, gameWorldSettings.getEnvironment());
         modelBatch.end();
     }
 

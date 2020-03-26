@@ -1,4 +1,4 @@
-package com.simple.castle.launcher;
+package com.simple.castle.launcher.physics;
 
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Matrix4;

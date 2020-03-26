@@ -1,11 +1,11 @@
-package com.simple.castle.launcher;
+package com.simple.castle.launcher.main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 
-public class WorldSettings extends ApplicationAdapter {
+public class GameWorldSettings extends ApplicationAdapter {
     private Environment environment;
 
     @Override
