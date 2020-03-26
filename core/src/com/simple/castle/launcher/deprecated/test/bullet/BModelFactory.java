@@ -77,8 +77,8 @@ public class BModelFactory extends ApplicationAdapter {
         constructors.put("box", new BGameObject.Constructor(model, "box", new btBoxShape(new Vector3(0.5f, 0.5f, 0.5f)), 1f));
         constructors.put("cone", new BGameObject.Constructor(model, "cone", new btConeShape(0.5f, 2f), 1f));
         constructors.put("capsule", new BGameObject.Constructor(model, "capsule", new btCapsuleShape(.5f, 1f), 1f));
-        constructors.put("cylinder", new BGameObject.Constructor(model, "cylinder", new btCylinderShape(new Vector3(.5f, 1f, .5f)),
-                1f));
+        constructors.put("cylinder", new BGameObject.Constructor(model, "cylinder", new btCylinderShape(new Vector3(.5f, 1f, .5f)), 1f));
+        constructors.put("myground", new BGameObject.Constructor(model, "cylinder", new btCylinderShape(new Vector3(.5f, 1f, .5f)), 1f));
         return constructors;
     }
 

@@ -6,7 +6,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.simple.castle.launcher.physics.PhysicModel;
 import com.simple.castle.launcher.physics.PhysicWorld;
-import com.simple.castle.launcher.utils.ModelLoader;
+import com.simple.castle.launcher.utils.BModelLoader;
 
 import java.util.Arrays;
 
@@ -24,7 +24,7 @@ public class GameLauncher extends ApplicationAdapter {
     @Override
     public void create() {
         physicWorld = new PhysicWorld();
-        model = ModelLoader.loadModel();
+        model = BModelLoader.loadModel();
 
         surfacePhysicModel = new PhysicModel("Plane", model);
         cylinder = new PhysicModel("Cylinder", model);

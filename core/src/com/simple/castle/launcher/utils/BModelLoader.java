@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.utils.JsonReader;
 
-public class ModelLoader {
+public class BModelLoader {
     private static final String MODELS_PLANE_G_3_DJ = "models/data.g3dj";
 
     public static Model loadModel() {
