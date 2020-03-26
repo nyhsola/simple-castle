@@ -17,6 +17,8 @@ import com.badlogic.gdx.utils.Array;
 
 public class BPhysicWorld extends ApplicationAdapter {
 
+    private final boolean DEBUG_DRAW = false;
+
     private BPhysicWorld.MyContactListener contactListener;
     private btCollisionConfiguration collisionConfig;
     private btDispatcher dispatcher;
@@ -69,9 +71,11 @@ public class BPhysicWorld extends ApplicationAdapter {
         updateGround(delta);
         dynamicsWorld.stepSimulation(delta, 5, 1f / 60f);
 
-        debugDrawer.begin(camera.getCam());
-        dynamicsWorld.debugDrawWorld();
-        debugDrawer.end();
+        if (DEBUG_DRAW) {
+            debugDrawer.begin(camera.getCam());
+            dynamicsWorld.debugDrawWorld();
+            debugDrawer.end();
+        }
     }
 
     private void updateGround(float delta) {
