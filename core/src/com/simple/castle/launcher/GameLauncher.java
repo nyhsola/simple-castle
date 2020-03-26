@@ -34,8 +34,8 @@ public class GameLauncher extends ApplicationAdapter {
         surfaceGameModel = new GameModel("Plane", model);
         cylinder = new GameModel("Cylinder", model);
 
-        physicWorld.addRigidBody(surfaceGameModel);
-        physicWorld.addRigidBodyPhysic(cylinder, 1);
+        physicWorld.addStaticRigidBody(surfaceGameModel);
+        physicWorld.addDynamicRigidBody(cylinder, 1);
 
         gameCamera = new GameCamera(surfaceGameModel.getModelInstance(), cylinder.getModelInstance().nodes.get(0).translation);
         gameCamera.create();
@@ -68,8 +68,6 @@ public class GameLauncher extends ApplicationAdapter {
 
         physicWorld.update(Gdx.graphics.getDeltaTime());
         physicWorld.debugDraw(gameCamera.getCamera());
-
-        cylinder.getModelInstance().transform.set(cylinder.getBtRigidBody().getWorldTransform());
     }
 
     @Override

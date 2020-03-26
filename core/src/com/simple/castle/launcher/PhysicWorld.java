@@ -39,17 +39,19 @@ public class PhysicWorld {
         world.stepSimulation(delta);
     }
 
-    public btRigidBody addRigidBody(GameModel gameModel) {
+    public btRigidBody addStaticRigidBody(GameModel gameModel) {
         btCollisionShape shape = Bullet.obtainStaticNodeShape(gameModel.getModelInstance().nodes.get(0), true);
-        btRigidBody body = new btRigidBody(0, gameModel.getMotionState(), shape);
+        btRigidBody.btRigidBodyConstructionInfo info = new btRigidBody.btRigidBodyConstructionInfo(0, gameModel.getMotionState(), shape, Vector3.Zero);
+        btRigidBody body = new btRigidBody(info);
         body.activate();
-        world.addRigidBody(body);
+        world.addCollisionObject(body);
         return body;
     }
 
-    public btRigidBody addRigidBodyPhysic(GameModel gameModel, float mass) {
+    public btRigidBody addDynamicRigidBody(GameModel gameModel, float mass) {
         btCollisionShape shape = Bullet.obtainStaticNodeShape(gameModel.getModelInstance().nodes.get(0), true);
-        btRigidBody body = new btRigidBody(100, gameModel.getMotionState(), shape);
+        btRigidBody.btRigidBodyConstructionInfo info = new btRigidBody.btRigidBodyConstructionInfo(0, gameModel.getMotionState(), shape, Vector3.Zero);
+        btRigidBody body = new btRigidBody(info);
 
         Vector3 inertia = new Vector3();
         body.getCollisionShape().calculateLocalInertia(mass, inertia);
@@ -57,7 +59,6 @@ public class PhysicWorld {
         body.updateInertiaTensor();
         body.activate();
 
-        gameModel.setBtRigidBody(body);
         world.addRigidBody(body);
         return body;
     }
