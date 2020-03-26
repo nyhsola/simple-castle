@@ -1,5 +1,6 @@
 package com.simple.castle.launcher;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.Bullet;
@@ -21,6 +22,7 @@ public class PhysicWorld {
     private MyContactListener myContactListener;
 
     public PhysicWorld() {
+        Gdx.app.log("TAG", "Init");
         Bullet.init();
 
         myContactListener = new MyContactListener();
@@ -47,6 +49,7 @@ public class PhysicWorld {
         btCollisionShape shape = Bullet.obtainStaticNodeShape(gameModel.getModelInstance().nodes.get(0), true);
         btRigidBody.btRigidBodyConstructionInfo info = new btRigidBody.btRigidBodyConstructionInfo(1, gameModel.getMotionState(), shape, Vector3.Zero);
         btRigidBody body = new btRigidBody(info);
+        body.setUserValue(2);
         body.setCollisionFlags(body.getCollisionFlags() | btCollisionObject.CollisionFlags.CF_KINEMATIC_OBJECT);
         body.activate();
         world.addRigidBody(body);
@@ -55,8 +58,9 @@ public class PhysicWorld {
 
     public btRigidBody addDynamicRigidBody(GameModel gameModel, float mass) {
         btCollisionShape shape = Bullet.obtainStaticNodeShape(gameModel.getModelInstance().nodes.get(0), true);
-        btRigidBody.btRigidBodyConstructionInfo info = new btRigidBody.btRigidBodyConstructionInfo(0, gameModel.getMotionState(), shape, Vector3.Zero);
+        btRigidBody.btRigidBodyConstructionInfo info = new btRigidBody.btRigidBodyConstructionInfo(1, gameModel.getMotionState(), shape, Vector3.Zero);
         btRigidBody body = new btRigidBody(info);
+        body.setUserValue(2);
         body.setCollisionFlags(body.getCollisionFlags() | btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
         Vector3 inertia = new Vector3();
         body.getCollisionShape().calculateLocalInertia(mass, inertia);
