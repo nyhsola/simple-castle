@@ -18,8 +18,12 @@ public class PhysicWorld {
     private btBroadphaseInterface btBroadphaseInterface;
     private btConstraintSolver btConstraintSolver;
 
+    private MyContactListener myContactListener;
+
     public PhysicWorld() {
         Bullet.init();
+
+        myContactListener = new MyContactListener();
 
         btCollisionConfiguration = new btDefaultCollisionConfiguration();
         btDispatcher = new btCollisionDispatcher(btCollisionConfiguration);
@@ -41,10 +45,11 @@ public class PhysicWorld {
 
     public btRigidBody addStaticRigidBody(GameModel gameModel) {
         btCollisionShape shape = Bullet.obtainStaticNodeShape(gameModel.getModelInstance().nodes.get(0), true);
-        btRigidBody.btRigidBodyConstructionInfo info = new btRigidBody.btRigidBodyConstructionInfo(0, gameModel.getMotionState(), shape, Vector3.Zero);
+        btRigidBody.btRigidBodyConstructionInfo info = new btRigidBody.btRigidBodyConstructionInfo(1, gameModel.getMotionState(), shape, Vector3.Zero);
         btRigidBody body = new btRigidBody(info);
+        body.setCollisionFlags(body.getCollisionFlags() | btCollisionObject.CollisionFlags.CF_KINEMATIC_OBJECT);
         body.activate();
-        world.addCollisionObject(body);
+        world.addRigidBody(body);
         return body;
     }
 
@@ -52,7 +57,7 @@ public class PhysicWorld {
         btCollisionShape shape = Bullet.obtainStaticNodeShape(gameModel.getModelInstance().nodes.get(0), true);
         btRigidBody.btRigidBodyConstructionInfo info = new btRigidBody.btRigidBodyConstructionInfo(0, gameModel.getMotionState(), shape, Vector3.Zero);
         btRigidBody body = new btRigidBody(info);
-
+        body.setCollisionFlags(body.getCollisionFlags() | btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
         Vector3 inertia = new Vector3();
         body.getCollisionShape().calculateLocalInertia(mass, inertia);
         body.setMassProps(mass, inertia);
