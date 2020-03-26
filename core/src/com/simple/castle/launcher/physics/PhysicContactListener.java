@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.bullet.collision.ContactListener;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 import com.badlogic.gdx.physics.bullet.collision.btManifoldPoint;
 
-public class MyContactListener extends ContactListener {
+public class PhysicContactListener extends ContactListener {
     @Override
     public void onContactStarted(btCollisionObject colObj0, btCollisionObject colObj1) {
         Gdx.app.log("TAG", "Collision!");

@@ -1,6 +1,5 @@
 package com.simple.castle.launcher.physics;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.Bullet;
@@ -8,7 +7,6 @@ import com.badlogic.gdx.physics.bullet.DebugDrawer;
 import com.badlogic.gdx.physics.bullet.collision.*;
 import com.badlogic.gdx.physics.bullet.dynamics.*;
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
-import com.simple.castle.launcher.main.GameModel;
 
 public class PhysicWorld {
     private btDynamicsWorld world;
@@ -20,13 +18,12 @@ public class PhysicWorld {
     private btBroadphaseInterface btBroadphaseInterface;
     private btConstraintSolver btConstraintSolver;
 
-    private MyContactListener myContactListener;
+    private PhysicContactListener physicContactListener;
 
     public PhysicWorld() {
-        Gdx.app.log("TAG", "Init");
         Bullet.init();
 
-        myContactListener = new MyContactListener();
+        physicContactListener = new PhysicContactListener();
 
         btCollisionConfiguration = new btDefaultCollisionConfiguration();
         btDispatcher = new btCollisionDispatcher(btCollisionConfiguration);
@@ -47,21 +44,18 @@ public class PhysicWorld {
         world.stepSimulation(delta);
     }
 
-    public btRigidBody addStaticRigidBody(com.simple.castle.launcher.main.GameModel gameModel) {
-        btCollisionShape shape = Bullet.obtainStaticNodeShape(gameModel.getModelInstance().nodes.get(0), true);
-        btRigidBody.btRigidBodyConstructionInfo info = new btRigidBody.btRigidBodyConstructionInfo(1, gameModel.getMotionState(), shape, Vector3.Zero);
-        btRigidBody body = new btRigidBody(info);
+    public void addKinematicObject(PhysicModel physicModel) {
+        btRigidBody body = obtainCollisionShapeFromModel(physicModel);
+
         body.setUserValue(2);
         body.setCollisionFlags(body.getCollisionFlags() | btCollisionObject.CollisionFlags.CF_KINEMATIC_OBJECT);
         body.activate();
+
         world.addRigidBody(body);
-        return body;
     }
 
-    public btRigidBody addDynamicRigidBody(GameModel gameModel, float mass) {
-        btCollisionShape shape = Bullet.obtainStaticNodeShape(gameModel.getModelInstance().nodes.get(0), true);
-        btRigidBody.btRigidBodyConstructionInfo info = new btRigidBody.btRigidBodyConstructionInfo(1, gameModel.getMotionState(), shape, Vector3.Zero);
-        btRigidBody body = new btRigidBody(info);
+    public void addDynamicObject(PhysicModel physicModel, float mass) {
+        btRigidBody body = obtainCollisionShapeFromModel(physicModel);
 
         body.setUserValue(2);
         body.setCollisionFlags(body.getCollisionFlags() | btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
@@ -72,12 +66,17 @@ public class PhysicWorld {
         body.activate();
 
         world.addRigidBody(body);
-        return body;
     }
 
     public void debugDraw(Camera camera) {
         debugDrawer.begin(camera);
         world.debugDrawWorld();
         debugDrawer.end();
+    }
+
+    private btRigidBody obtainCollisionShapeFromModel(PhysicModel model) {
+        btCollisionShape shape = Bullet.obtainStaticNodeShape(model.getModelInstance().nodes.get(0), true);
+        btRigidBody.btRigidBodyConstructionInfo info = new btRigidBody.btRigidBodyConstructionInfo(1, model.getMotionState(), shape, Vector3.Zero);
+        return new btRigidBody(info);
     }
 }

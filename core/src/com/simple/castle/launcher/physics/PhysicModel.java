@@ -1,15 +1,14 @@
-package com.simple.castle.launcher.main;
+package com.simple.castle.launcher.physics;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.simple.castle.launcher.physics.MotionState;
 
-public class GameModel extends ApplicationAdapter {
+public class PhysicModel extends ApplicationAdapter {
     private ModelInstance modelInstance;
     private MotionState motionState;
 
-    public GameModel(String nodeName, Model model) {
+    public PhysicModel(String nodeName, Model model) {
         modelInstance = new ModelInstance(model, nodeName);
         motionState = new MotionState(modelInstance);
     }
