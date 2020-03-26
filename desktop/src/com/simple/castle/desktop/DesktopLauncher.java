@@ -2,15 +2,15 @@ package com.simple.castle.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.simple.castle.launcher.main.GameLauncher;
+import com.simple.castle.launcher.deprecated.test.bullet.BulletTest;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 //		System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
 
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 800;
-		config.height = 600;
-		new LwjglApplication(new GameLauncher(), config);
-	}
+        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+        config.width = 800;
+        config.height = 600;
+        new LwjglApplication(new BulletTest(), config);
+    }
 }
