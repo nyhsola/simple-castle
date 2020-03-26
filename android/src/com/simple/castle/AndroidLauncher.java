@@ -3,7 +3,7 @@ package com.simple.castle;
 import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.simple.castle.launcher.main.GameLauncher;
+import com.simple.castle.launcher.deprecated.test.main.GameLauncher;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override

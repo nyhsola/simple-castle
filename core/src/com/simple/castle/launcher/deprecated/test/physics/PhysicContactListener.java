@@ -1,4 +1,4 @@
-package com.simple.castle.launcher.physics;
+package com.simple.castle.launcher.deprecated.test.physics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.bullet.collision.ContactListener;

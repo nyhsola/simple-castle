@@ -1,4 +1,4 @@
-package com.simple.castle.launcher.deprecated.test.bullet;
+package com.simple.castle.launcher.main.bullet;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -11,7 +11,7 @@ public class BGameLauncher extends ApplicationAdapter {
     private BEnvironment bEnvironment;
     private BGameRenderer bGameRenderer;
     private BGameCamera bGameCamera;
-    private BModelFactory BModelFactory;
+    private com.simple.castle.launcher.main.bullet.BModelFactory BModelFactory;
 
     private float spawnTimer;
 

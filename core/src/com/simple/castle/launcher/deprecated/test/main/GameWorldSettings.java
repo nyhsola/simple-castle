@@ -1,11 +1,11 @@
-package com.simple.castle.launcher.deprecated.test.bullet;
+package com.simple.castle.launcher.deprecated.test.main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 
-public class BEnvironment extends ApplicationAdapter {
+public class GameWorldSettings extends ApplicationAdapter {
     private Environment environment;
 
     @Override

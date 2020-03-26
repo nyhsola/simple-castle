@@ -1,12 +1,12 @@
-package com.simple.castle.launcher.main;
+package com.simple.castle.launcher.deprecated.test.main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.simple.castle.launcher.physics.PhysicModel;
-import com.simple.castle.launcher.physics.PhysicWorld;
-import com.simple.castle.launcher.utils.BModelLoader;
+import com.simple.castle.launcher.deprecated.test.physics.PhysicModel;
+import com.simple.castle.launcher.deprecated.test.physics.PhysicWorld;
+import com.simple.castle.launcher.main.utils.BModelLoader;
 
 import java.util.Arrays;
 
@@ -15,10 +15,10 @@ public class GameLauncher extends ApplicationAdapter {
 
     private GameCamera gameCamera;
 
-    private PhysicModel surfacePhysicModel;
-    private PhysicModel cylinder;
+    private com.simple.castle.launcher.deprecated.test.physics.PhysicModel surfacePhysicModel;
+    private com.simple.castle.launcher.deprecated.test.physics.PhysicModel cylinder;
 
-    private PhysicWorld physicWorld;
+    private com.simple.castle.launcher.deprecated.test.physics.PhysicWorld physicWorld;
     private GameRenderer gameRenderer;
 
     @Override
@@ -26,7 +26,7 @@ public class GameLauncher extends ApplicationAdapter {
         physicWorld = new PhysicWorld();
         model = BModelLoader.loadModel();
 
-        surfacePhysicModel = new PhysicModel("Plane", model);
+        surfacePhysicModel = new com.simple.castle.launcher.deprecated.test.physics.PhysicModel("Plane", model);
         cylinder = new PhysicModel("Cylinder", model);
 
         physicWorld.addKinematicObject(surfacePhysicModel);

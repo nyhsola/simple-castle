@@ -1,4 +1,4 @@
-package com.simple.castle.launcher.deprecated.test.bullet;
+package com.simple.castle.launcher.main.bullet;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;

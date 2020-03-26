@@ -1,4 +1,4 @@
-package com.simple.castle.launcher.main;
+package com.simple.castle.launcher.deprecated.test.main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;

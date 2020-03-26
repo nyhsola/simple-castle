@@ -1,4 +1,4 @@
-package com.simple.castle.launcher.physics;
+package com.simple.castle.launcher.deprecated.test.physics;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
@@ -18,7 +18,7 @@ public class PhysicWorld {
     private btBroadphaseInterface btBroadphaseInterface;
     private btConstraintSolver btConstraintSolver;
 
-    private PhysicContactListener physicContactListener;
+    private com.simple.castle.launcher.deprecated.test.physics.PhysicContactListener physicContactListener;
 
     public PhysicWorld() {
         Bullet.init();
