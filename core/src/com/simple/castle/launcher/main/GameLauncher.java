@@ -18,7 +18,7 @@ public class GameLauncher extends ApplicationAdapter {
     private PhysicModel surfacePhysicModel;
     private PhysicModel cylinder;
 
-    private com.simple.castle.launcher.physics.PhysicWorld physicWorld;
+    private PhysicWorld physicWorld;
     private GameRenderer gameRenderer;
 
     @Override
