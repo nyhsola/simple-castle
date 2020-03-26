@@ -21,6 +21,13 @@ public class BGameCamera extends ApplicationAdapter {
         camController = new CameraInputController(cam);
     }
 
+    @Override
+    public void resize(int width, int height) {
+        cam.viewportWidth = width;
+        cam.viewportHeight = height;
+        cam.update();
+    }
+
     public void update() {
         cam.update();
     }

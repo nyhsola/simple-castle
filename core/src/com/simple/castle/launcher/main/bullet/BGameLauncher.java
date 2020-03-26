@@ -11,7 +11,7 @@ public class BGameLauncher extends ApplicationAdapter {
     private BEnvironment bEnvironment;
     private BGameRenderer bGameRenderer;
     private BGameCamera bGameCamera;
-    private com.simple.castle.launcher.main.bullet.BModelFactory BModelFactory;
+    private BModelFactory BModelFactory;
 
     private float spawnTimer;
 
@@ -43,18 +43,25 @@ public class BGameLauncher extends ApplicationAdapter {
     @Override
     public void render() {
         final float delta = Math.min(1f / 30f, Gdx.graphics.getDeltaTime());
-        bPhysicWorld.update(delta);
 
         if ((spawnTimer -= delta) < 0) {
             bPhysicWorld.addRigidBody(BModelFactory.randomObject(bPhysicWorld.objCount()));
-            spawnTimer = 1.5f;
+            spawnTimer = 0.5f;
         }
 
+        Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1.f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         bGameCamera.update();
         bGameRenderer.render(bGameCamera, bPhysicWorld, bEnvironment);
+
+        bPhysicWorld.update(bGameCamera, delta);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        bGameCamera.resize(width, height);
     }
 
     @Override

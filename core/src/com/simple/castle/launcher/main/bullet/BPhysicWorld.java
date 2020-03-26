@@ -6,11 +6,13 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.Bullet;
+import com.badlogic.gdx.physics.bullet.DebugDrawer;
 import com.badlogic.gdx.physics.bullet.collision.*;
 import com.badlogic.gdx.physics.bullet.dynamics.btConstraintSolver;
 import com.badlogic.gdx.physics.bullet.dynamics.btDiscreteDynamicsWorld;
 import com.badlogic.gdx.physics.bullet.dynamics.btDynamicsWorld;
 import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver;
+import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
 import com.badlogic.gdx.utils.Array;
 
 public class BPhysicWorld extends ApplicationAdapter {
@@ -26,6 +28,8 @@ public class BPhysicWorld extends ApplicationAdapter {
     private BGameObject ground;
 
     private float angle, speed = 90f;
+
+    private DebugDrawer debugDrawer;
 
     public BGameObject getGround() {
         return ground;
@@ -44,6 +48,11 @@ public class BPhysicWorld extends ApplicationAdapter {
         dynamicsWorld.setGravity(new Vector3(0, -10f, 0));
 
         instances = new Array<>();
+
+        debugDrawer = new DebugDrawer();
+        debugDrawer.setDebugMode(btIDebugDraw.DebugDrawModes.DBG_MAX_DEBUG_DRAW_MODE);
+
+        dynamicsWorld.setDebugDrawer(debugDrawer);
     }
 
     public void addGround(BGameObject ground) {
@@ -56,9 +65,13 @@ public class BPhysicWorld extends ApplicationAdapter {
         dynamicsWorld.addRigidBody(object.body);
     }
 
-    public void update(float delta) {
+    public void update(BGameCamera camera, float delta) {
         updateGround(delta);
         dynamicsWorld.stepSimulation(delta, 5, 1f / 60f);
+
+        debugDrawer.begin(camera.getCam());
+        dynamicsWorld.debugDrawWorld();
+        debugDrawer.end();
     }
 
     private void updateGround(float delta) {
