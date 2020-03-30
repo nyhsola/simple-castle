@@ -46,7 +46,7 @@ public class BGameLauncher extends ApplicationAdapter {
 
         if ((spawnTimer -= delta) < 0) {
             bPhysicWorld.addRigidBody(BModelFactory.randomObject(bPhysicWorld.objCount()));
-            spawnTimer = 0.5f;
+            spawnTimer = 0.25f;
         }
 
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

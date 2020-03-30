@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class BPhysicWorld extends ApplicationAdapter {
 
-    private final boolean DEBUG_DRAW = false;
+    private final boolean DEBUG_DRAW = true;
 
     private BPhysicWorld.MyContactListener contactListener;
     private btCollisionConfiguration collisionConfig;
@@ -68,7 +68,7 @@ public class BPhysicWorld extends ApplicationAdapter {
     }
 
     public void update(BGameCamera camera, float delta) {
-        updateGround(delta);
+//        updateGround(delta);
         dynamicsWorld.stepSimulation(delta, 5, 1f / 60f);
 
         if (DEBUG_DRAW) {

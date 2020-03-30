@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.*;
 import com.badlogic.gdx.utils.ArrayMap;
+import com.simple.castle.launcher.main.utils.BModelLoader;
 
 public class BModelFactory extends ApplicationAdapter {
     private final static short GROUND_FLAG = 1 << 8;
@@ -73,14 +74,15 @@ public class BModelFactory extends ApplicationAdapter {
         ArrayMap<String, BGameObject.Constructor> constructors;
         constructors = new ArrayMap<>(String.class, BGameObject.Constructor.class);
         constructors.put("ground", new BGameObject.Constructor(model, "ground", new btBoxShape(new Vector3(2.5f, 0.5f, 2.5f)), 0f));
-        constructors.put("sphere", new BGameObject.Constructor(model, "sphere", new btSphereShape(0.5f), 1f));
-        constructors.put("box", new BGameObject.Constructor(model, "box", new btBoxShape(new Vector3(0.5f, 0.5f, 0.5f)), 1f));
-        constructors.put("cone", new BGameObject.Constructor(model, "cone", new btConeShape(0.5f, 2f), 1f));
-        constructors.put("capsule", new BGameObject.Constructor(model, "capsule", new btCapsuleShape(.5f, 1f), 1f));
+//        constructors.put("sphere", new BGameObject.Constructor(model, "sphere", new btSphereShape(0.5f), 1f));
+//        constructors.put("box", new BGameObject.Constructor(model, "box", new btBoxShape(new Vector3(0.5f, 0.5f, 0.5f)), 1f));
+//        constructors.put("cone", new BGameObject.Constructor(model, "cone", new btConeShape(0.5f, 2f), 1f));
+//        constructors.put("capsule", new BGameObject.Constructor(model, "capsule", new btCapsuleShape(.5f, 1f), 1f));
         constructors.put("cylinder", new BGameObject.Constructor(model, "cylinder", new btCylinderShape(new Vector3(.5f, 1f, .5f)), 1f));
 
-//        Model myModel = BModelLoader.loadModel();
-//        constructors.put("myground", new BGameObject.Constructor(myModel, "Cylinder", Bullet.obtainStaticNodeShape(myModel.getNode("Cylinder"), true), 1f));
+        Model myModel = BModelLoader.loadModel();
+
+        constructors.put("myground", new BGameObject.Constructor(myModel, "Cube", new btSphereShape(0.5f), 1f));
 
         return constructors;
     }
