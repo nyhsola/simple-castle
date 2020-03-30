@@ -1,4 +1,4 @@
-package com.simple.castle.launcher.main.bullet;
+package com.simple.castle.launcher.main.bullet.object;
 
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -25,7 +25,7 @@ public class BGameObject extends ModelInstance implements Disposable {
         motionState.dispose();
     }
 
-    static class Constructor implements Disposable {
+    public static class Constructor implements Disposable {
         private static Vector3 localInertia = new Vector3();
         public final Model model;
         public final String node;
@@ -36,10 +36,11 @@ public class BGameObject extends ModelInstance implements Disposable {
             this.model = model;
             this.node = node;
             this.shape = shape;
-            if (mass > 0f)
+            if (mass > 0f) {
                 shape.calculateLocalInertia(mass, localInertia);
-            else
+            } else {
                 localInertia.set(0, 0, 0);
+            }
             this.constructionInfo = new btRigidBody.btRigidBodyConstructionInfo(mass, null, shape, localInertia);
         }
 

@@ -1,4 +1,4 @@
-package com.simple.castle.launcher.main.bullet;
+package com.simple.castle.launcher.main.bullet.object;
 
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.physics.bullet.linearmath.btMotionState;

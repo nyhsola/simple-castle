@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.bullet.dynamics.btDynamicsWorld;
 import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver;
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
 import com.badlogic.gdx.utils.Array;
+import com.simple.castle.launcher.main.bullet.object.BGameObject;
 
 public class BPhysicWorld extends ApplicationAdapter {
 
@@ -92,8 +93,9 @@ public class BPhysicWorld extends ApplicationAdapter {
         collisionConfig.dispose();
         contactListener.dispose();
 
-        for (BGameObject obj : instances)
+        for (BGameObject obj : instances) {
             obj.dispose();
+        }
         instances.clear();
     }
 

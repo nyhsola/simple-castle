@@ -32,7 +32,7 @@ public class BGameLauncher extends ApplicationAdapter {
         BModelFactory = new BModelFactory();
         BModelFactory.create();
 
-        bPhysicWorld.addGround(BModelFactory.constructGround());
+        BModelFactory.constructMap().forEach(bPhysicWorld::addRigidBody);
 
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(bGameCamera.getInputProcessor());
@@ -44,10 +44,10 @@ public class BGameLauncher extends ApplicationAdapter {
     public void render() {
         final float delta = Math.min(1f / 30f, Gdx.graphics.getDeltaTime());
 
-        if ((spawnTimer -= delta) < 0) {
-            bPhysicWorld.addRigidBody(BModelFactory.randomObject(bPhysicWorld.objCount()));
-            spawnTimer = 0.25f;
-        }
+//        if ((spawnTimer -= delta) < 0) {
+//            bPhysicWorld.addRigidBody(BModelFactory.randomObject(bPhysicWorld.objCount()));
+//            spawnTimer = 0.50f;
+//        }
 
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1.f);
