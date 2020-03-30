@@ -2,6 +2,7 @@ package com.simple.castle.launcher.main.bullet.object;
 
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
@@ -14,7 +15,7 @@ public class BGameObject extends ModelInstance implements Disposable {
     public BGameObject(Model model, String node, btRigidBody.btRigidBodyConstructionInfo constructionInfo) {
         super(model, node);
         motionState = new BMotionState();
-        motionState.transform = transform;
+        motionState.transform = new Matrix4(transform).setToTranslation(model.getNode(node).translation);
         body = new btRigidBody(constructionInfo);
         body.setMotionState(motionState);
     }
