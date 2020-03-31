@@ -13,9 +13,11 @@ public class GameObject extends ModelInstance implements Disposable {
     public final MotionState motionState;
 
     public GameObject(Model model, String node, btRigidBody.btRigidBodyConstructionInfo constructionInfo) {
-        super(model, node);
+        super(model, new Matrix4(), node, false);
+
         motionState = new MotionState();
-        motionState.transform = new Matrix4(transform).setToTranslation(model.getNode(node).translation);
+        motionState.transform = this.transform;
+
         body = new btRigidBody(constructionInfo);
         body.setMotionState(motionState);
     }
