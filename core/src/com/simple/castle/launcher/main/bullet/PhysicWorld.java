@@ -1,7 +1,6 @@
 package com.simple.castle.launcher.main.bullet;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.physics.bullet.DebugDrawer;
@@ -12,34 +11,29 @@ import com.badlogic.gdx.physics.bullet.dynamics.btDynamicsWorld;
 import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver;
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
 import com.badlogic.gdx.utils.Array;
-import com.simple.castle.launcher.main.bullet.object.BGameObject;
+import com.simple.castle.launcher.main.bullet.object.GameObject;
 
-public class BPhysicWorld extends ApplicationAdapter {
+public class PhysicWorld extends ApplicationAdapter {
 
     private final boolean DEBUG_DRAW = true;
 
-    private BPhysicWorld.MyContactListener contactListener;
+    private PhysicWorld.MyContactListener contactListener;
     private btCollisionConfiguration collisionConfig;
     private btDispatcher dispatcher;
     private btBroadphaseInterface broadphase;
-    private btDynamicsWorld dynamicsWorld;
     private btConstraintSolver constraintSolver;
 
-    private Array<BGameObject> instances;
-    private BGameObject ground;
+    private btDynamicsWorld dynamicsWorld;
 
-    private float angle, speed = 90f;
+    private Array<GameObject> instances;
 
     private DebugDrawer debugDrawer;
-
-    public BGameObject getGround() {
-        return ground;
-    }
 
     @Override
     public void create() {
         Bullet.init();
-        contactListener = new BPhysicWorld.MyContactListener();
+
+        contactListener = new MyContactListener();
 
         collisionConfig = new btDefaultCollisionConfiguration();
         dispatcher = new btCollisionDispatcher(collisionConfig);
@@ -56,30 +50,19 @@ public class BPhysicWorld extends ApplicationAdapter {
         dynamicsWorld.setDebugDrawer(debugDrawer);
     }
 
-    public void addGround(BGameObject ground) {
-        this.ground = ground;
-        addRigidBody(ground);
-    }
-
-    public void addRigidBody(BGameObject object) {
+    public void addRigidBody(GameObject object) {
         instances.add(object);
         dynamicsWorld.addRigidBody(object.body);
     }
 
-    public void update(BGameCamera camera, float delta) {
-//        updateGround(delta);
+    public void update(GameCamera camera, float delta) {
         dynamicsWorld.stepSimulation(delta, 5, 1f / 60f);
 
         if (DEBUG_DRAW) {
-            debugDrawer.begin(camera.getCam());
+            debugDrawer.begin(camera.getPerspectiveCamera());
             dynamicsWorld.debugDrawWorld();
             debugDrawer.end();
         }
-    }
-
-    private void updateGround(float delta) {
-        angle = (angle + delta * speed) % 360f;
-        getGround().transform.setTranslation(0, MathUtils.sinDeg(angle) * 2.5f, 0f);
     }
 
     @Override
@@ -90,14 +73,13 @@ public class BPhysicWorld extends ApplicationAdapter {
         dispatcher.dispose();
         collisionConfig.dispose();
         contactListener.dispose();
-
-        for (BGameObject obj : instances) {
+        for (GameObject obj : instances) {
             obj.dispose();
         }
         instances.clear();
     }
 
-    public Array<BGameObject> getInstances() {
+    public Array<GameObject> getInstances() {
         return instances;
     }
 
@@ -105,7 +87,7 @@ public class BPhysicWorld extends ApplicationAdapter {
         return instances.size;
     }
 
-    class MyContactListener extends ContactListener {
+    private static class MyContactListener extends ContactListener {
         @Override
         public boolean onContactAdded(int userValue0, int partId0, int index0, boolean match0, int userValue1, int partId1,
                                       int index1, boolean match1) {

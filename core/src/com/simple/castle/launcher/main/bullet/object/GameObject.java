@@ -8,13 +8,13 @@ import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.utils.Disposable;
 
-public class BGameObject extends ModelInstance implements Disposable {
+public class GameObject extends ModelInstance implements Disposable {
     public final btRigidBody body;
-    public final BMotionState motionState;
+    public final MotionState motionState;
 
-    public BGameObject(Model model, String node, btRigidBody.btRigidBodyConstructionInfo constructionInfo) {
+    public GameObject(Model model, String node, btRigidBody.btRigidBodyConstructionInfo constructionInfo) {
         super(model, node);
-        motionState = new BMotionState();
+        motionState = new MotionState();
         motionState.transform = new Matrix4(transform).setToTranslation(model.getNode(node).translation);
         body = new btRigidBody(constructionInfo);
         body.setMotionState(motionState);
@@ -45,8 +45,8 @@ public class BGameObject extends ModelInstance implements Disposable {
             this.constructionInfo = new btRigidBody.btRigidBodyConstructionInfo(mass, null, shape, localInertia);
         }
 
-        public BGameObject construct() {
-            return new BGameObject(model, node, constructionInfo);
+        public GameObject construct() {
+            return new GameObject(model, node, constructionInfo);
         }
 
         @Override

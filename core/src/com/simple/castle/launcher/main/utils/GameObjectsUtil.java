@@ -1,4 +1,4 @@
-package com.simple.castle.launcher.main.bullet.object;
+package com.simple.castle.launcher.main.utils;
 
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.math.Vector3;
@@ -6,7 +6,10 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.bullet.collision.btBoxShape;
 import com.badlogic.gdx.physics.bullet.collision.btSphereShape;
 
-public class BGameObjectsUtil {
+public class GameObjectsUtil {
+
+    private GameObjectsUtil() {
+    }
 
     public static btBoxShape calculateBox(Model model, String node) {
         BoundingBox boundingBox = new BoundingBox();

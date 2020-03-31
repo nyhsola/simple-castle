@@ -5,11 +5,14 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.utils.JsonReader;
 
-public class BModelLoader {
-    private static final String MODELS_PLANE_G_3_DJ = "models/map.g3dj";
+public class ModelLoader {
+    private static final String MAIN_MODEL = "models/map.g3dj";
+
+    private ModelLoader() {
+    }
 
     public static Model loadModel() {
         G3dModelLoader modelLoader = new G3dModelLoader(new JsonReader());
-        return modelLoader.loadModel(Gdx.files.internal(MODELS_PLANE_G_3_DJ));
+        return modelLoader.loadModel(Gdx.files.internal(MAIN_MODEL));
     }
 }
