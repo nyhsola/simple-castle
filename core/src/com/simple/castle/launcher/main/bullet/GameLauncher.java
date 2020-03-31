@@ -50,8 +50,8 @@ public class GameLauncher extends ApplicationAdapter {
         }
 
         gameCamera.update();
-        physicWorld.update(gameCamera, delta);
         gameRenderer.render(gameCamera, physicWorld, gameEnvironment);
+        physicWorld.update(gameCamera, delta);
     }
 
     @Override
