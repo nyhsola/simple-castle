@@ -1,8 +1,9 @@
-package com.simple.castle.launcher.main.bullet;
+package com.simple.castle.launcher.main.bullet.main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.simple.castle.launcher.main.bullet.*;
 
 public class GameLauncher extends ApplicationAdapter {
 
