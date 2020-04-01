@@ -6,7 +6,7 @@ import com.badlogic.gdx.physics.bullet.collision.Collision;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 import com.badlogic.gdx.utils.ArrayMap;
 import com.simple.castle.launcher.main.bullet.object.GameObject;
-import com.simple.castle.launcher.main.bullet.object.GameObject.Constructor;
+import com.simple.castle.launcher.main.bullet.object.GameObjectConstructor;
 import com.simple.castle.launcher.main.utils.GameObjectsUtil;
 import com.simple.castle.launcher.main.utils.ModelLoader;
 
@@ -18,7 +18,7 @@ public class ModelFactory extends ApplicationAdapter {
     private final static short OBJECT_FLAG = 1 << 9;
     private final static short ALL_FLAG = -1;
 
-    private final ArrayMap<String, GameObject.Constructor> constructorsArrayMap = new ArrayMap<>();
+    private final ArrayMap<String, GameObjectConstructor> constructorsArrayMap = new ArrayMap<>();
     private Model mainModel;
 
     @Override
@@ -27,11 +27,11 @@ public class ModelFactory extends ApplicationAdapter {
         constructorsArrayMap.putAll(constructObjects());
     }
 
-    private ArrayMap<String, GameObject.Constructor> constructObjects() {
-        ArrayMap<String, Constructor> constructors = new ArrayMap<>(String.class, Constructor.class);
-        constructors.put("Surface", new Constructor(mainModel, "Surface", GameObjectsUtil.calculateBox(mainModel, "Surface"), 0f));
-        constructors.put("Castle-1", new Constructor(mainModel, "Castle-1", GameObjectsUtil.calculateBox(mainModel, "Castle-1"), 0f));
-        constructors.put("Unit-1", new Constructor(mainModel, "Unit-1", GameObjectsUtil.calculateSphere(mainModel, "Unit-1"), 1f));
+    private ArrayMap<String, GameObjectConstructor> constructObjects() {
+        ArrayMap<String, GameObjectConstructor> constructors = new ArrayMap<>(String.class, GameObjectConstructor.class);
+        constructors.put("Surface", new GameObjectConstructor(mainModel, "Surface", GameObjectsUtil.calculateBox(mainModel, "Surface"), 0f));
+        constructors.put("Castle-1", new GameObjectConstructor(mainModel, "Castle-1", GameObjectsUtil.calculateBox(mainModel, "Castle-1"), 0f));
+        constructors.put("Unit-1", new GameObjectConstructor(mainModel, "Unit-1", GameObjectsUtil.calculateSphere(mainModel, "Unit-1"), 1f));
         return constructors;
     }
 
@@ -59,14 +59,14 @@ public class ModelFactory extends ApplicationAdapter {
     }
 
     public void dispose() {
-        for (GameObject.Constructor ctor : constructorsArrayMap.values()) {
+        for (GameObjectConstructor ctor : constructorsArrayMap.values()) {
             ctor.dispose();
         }
         constructorsArrayMap.clear();
         mainModel.dispose();
     }
 
-    public ArrayMap<String, GameObject.Constructor> getGameObjectsConstructors() {
+    public ArrayMap<String, GameObjectConstructor> getGameObjectsConstructors() {
         return constructorsArrayMap;
     }
 }
