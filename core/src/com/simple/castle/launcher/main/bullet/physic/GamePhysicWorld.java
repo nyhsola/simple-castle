@@ -1,4 +1,4 @@
-package com.simple.castle.launcher.main.bullet;
+package com.simple.castle.launcher.main.bullet.physic;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.math.Vector3;
@@ -12,12 +12,13 @@ import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSol
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
 import com.badlogic.gdx.utils.Array;
 import com.simple.castle.launcher.main.bullet.object.GameObject;
+import com.simple.castle.launcher.main.bullet.render.GameCamera;
 
-public class PhysicWorld extends ApplicationAdapter {
+public class GamePhysicWorld extends ApplicationAdapter {
 
     private final boolean DEBUG_DRAW = true;
 
-    private PhysicWorld.MyContactListener contactListener;
+    private GamePhysicWorld.MyContactListener contactListener;
     private btCollisionConfiguration collisionConfig;
     private btDispatcher dispatcher;
     private btBroadphaseInterface broadphase;

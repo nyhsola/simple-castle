@@ -3,15 +3,17 @@ package com.simple.castle.launcher.main.bullet.main;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.simple.castle.launcher.main.bullet.*;
+import com.simple.castle.launcher.main.bullet.physic.GamePhysicWorld;
+import com.simple.castle.launcher.main.bullet.render.GameRenderer;
 
 public class GameLauncher extends ApplicationAdapter {
 
-    private PhysicWorld physicWorld;
-    private GameEnvironment gameEnvironment;
-    private GameRenderer gameRenderer;
-    private GameCamera gameCamera;
+    private GamePhysicWorld gamePhysicWorld;
+    private com.simple.castle.launcher.main.bullet.render.GameEnvironment gameEnvironment;
+    private com.simple.castle.launcher.main.bullet.render.GameRenderer gameRenderer;
+    private com.simple.castle.launcher.main.bullet.render.GameCamera gameCamera;
     private ModelFactory modelFactory;
+    private com.simple.castle.launcher.main.bullet.render.GameOverlay gameOverlay;
 
     private float spawnTimer;
 
@@ -20,19 +22,22 @@ public class GameLauncher extends ApplicationAdapter {
         gameRenderer = new GameRenderer();
         gameRenderer.create();
 
-        physicWorld = new PhysicWorld();
-        physicWorld.create();
+        gamePhysicWorld = new GamePhysicWorld();
+        gamePhysicWorld.create();
 
-        gameEnvironment = new GameEnvironment();
+        gameEnvironment = new com.simple.castle.launcher.main.bullet.render.GameEnvironment();
         gameEnvironment.create();
 
-        gameCamera = new GameCamera();
+        gameCamera = new com.simple.castle.launcher.main.bullet.render.GameCamera();
         gameCamera.create();
 
         modelFactory = new ModelFactory();
         modelFactory.create();
 
-        modelFactory.constructMainObjects().forEach(physicWorld::addRigidBody);
+        gameOverlay = new com.simple.castle.launcher.main.bullet.render.GameOverlay();
+        gameOverlay.create();
+
+        modelFactory.constructMainObjects().forEach(gamePhysicWorld::addRigidBody);
 
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(gameCamera.getInputProcessor());
@@ -51,8 +56,9 @@ public class GameLauncher extends ApplicationAdapter {
         }
 
         gameCamera.update();
-        gameRenderer.render(gameCamera, physicWorld, gameEnvironment);
-        physicWorld.update(gameCamera, delta);
+        gameRenderer.render(gameCamera, gamePhysicWorld, gameEnvironment);
+        gamePhysicWorld.update(gameCamera, delta);
+        gameOverlay.render();
     }
 
     @Override
@@ -62,7 +68,7 @@ public class GameLauncher extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        physicWorld.dispose();
+        gamePhysicWorld.dispose();
         modelFactory.dispose();
     }
 }

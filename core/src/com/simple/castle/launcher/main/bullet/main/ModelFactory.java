@@ -1,4 +1,4 @@
-package com.simple.castle.launcher.main.bullet;
+package com.simple.castle.launcher.main.bullet.main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.g3d.Model;
