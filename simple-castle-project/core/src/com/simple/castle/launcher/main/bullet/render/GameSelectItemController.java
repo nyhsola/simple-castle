@@ -17,6 +17,9 @@ public class GameSelectItemController extends InputAdapter {
 
     private GameObject gameObject;
 
+    private BoundingBox tmp = new BoundingBox();
+    private Vector3 tmpVector3 = new Vector3();
+
     public GameSelectItemController(GameCamera gameCamera, GamePhysicWorld gamePhysicWorld) {
         this.gameCamera = gameCamera;
         this.gamePhysicWorld = gamePhysicWorld;
@@ -32,7 +35,11 @@ public class GameSelectItemController extends InputAdapter {
         Ray pickRay = gameCamera.getPerspectiveCamera().getPickRay(touchedX, touchedY);
         Vector3 intersection = new Vector3();
         return StreamSupport.stream(gameObjectList.spliterator(), false)
-                .filter(gameObject -> Intersector.intersectRayBounds(pickRay, gameObject.calculateBoundingBox(new BoundingBox()), intersection))
+                .filter(gameObject -> {
+                    BoundingBox boundingBox = gameObject.calculateBoundingBox(tmp);
+                    boundingBox.mul(gameObject.transform);
+                    return Intersector.intersectRayBounds(pickRay, boundingBox, intersection);
+                })
                 .findAny()
                 .orElse(null);
     }
