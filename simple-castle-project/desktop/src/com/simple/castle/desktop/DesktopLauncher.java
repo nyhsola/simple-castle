@@ -5,7 +5,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.simple.castle.launcher.main.bullet.main.GameLauncher;
 
 public class DesktopLauncher {
-	public static void main (String[] arg) {
+    public static void main(String[] arg) {
 //		System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
 
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
