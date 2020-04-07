@@ -14,6 +14,9 @@ public class GameOverlay extends ApplicationAdapter {
     private BitmapFont bitmapFont;
     private SpriteBatch batch;
 
+    private Vector3 tmpVector3 = new Vector3();
+    private Quaternion tmpQuaternion = new Quaternion();
+
     @Override
     public void create() {
         bitmapFont = new BitmapFont();
@@ -28,21 +31,17 @@ public class GameOverlay extends ApplicationAdapter {
 
         if (selected != null) {
             bitmapFont.draw(batch, "Selected (model): " +
-                    "Position: " + format(selected.transform.getTranslation(new Vector3())) + " " +
-                    "Rotation: " + format(selected.transform.getRotation(new Quaternion())), 0, 40);
+                    "Position: " + format(selected.transform.getTranslation(tmpVector3)) + " " +
+                    "Rotation: " + format(selected.transform.getRotation(tmpQuaternion)), 0, 40);
 
             bitmapFont.draw(batch, "Selected (physic): " +
-                    "Position: " + format(selected.body.getWorldTransform().getTranslation(new Vector3())) + " " +
-                    "Rotation: " + format(selected.body.getWorldTransform().getRotation(new Quaternion())), 0, 60);
+                    "Position: " + format(selected.body.getWorldTransform().getTranslation(tmpVector3)) + " " +
+                    "Rotation: " + format(selected.body.getWorldTransform().getRotation(tmpQuaternion)), 0, 60);
 
             bitmapFont.draw(batch, selected.node, 0, 80);
         }
 
         batch.end();
-    }
-
-    @Override
-    public void resize(int width, int height) {
     }
 
     private String format(Vector3 vector3) {

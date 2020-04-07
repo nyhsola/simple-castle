@@ -2368,7 +2368,7 @@
 	"nodes": [
 		{
 			"id": "Castle-1", 
-			"translation": [ 26.967140,  0.000000,  0.000000], 
+			"translation": [ 26.967140,  0.999864,  0.000000], 
 			"parts": [
 				{
 					"meshpartid": "Cube.001_part1", 
@@ -2379,7 +2379,7 @@
 		}, 
 		{
 			"id": "Castle-2", 
-			"translation": [ 0.000000,  0.000000,  11.059772], 
+			"translation": [ 0.000000,  1.055331,  11.059772], 
 			"parts": [
 				{
 					"meshpartid": "Cube.002_part1", 
@@ -2390,7 +2390,7 @@
 		}, 
 		{
 			"id": "Castle-3", 
-			"translation": [-10.021735,  0.000000,  0.000000], 
+			"translation": [-10.021735,  0.907827,  0.000000], 
 			"parts": [
 				{
 					"meshpartid": "Cube.004_part1", 
@@ -2401,7 +2401,7 @@
 		}, 
 		{
 			"id": "Castle-4", 
-			"translation": [ 0.000000,  0.000000, -11.057281], 
+			"translation": [ 0.000000,  1.016137, -11.057281], 
 			"parts": [
 				{
 					"meshpartid": "Cube.003_part1", 
