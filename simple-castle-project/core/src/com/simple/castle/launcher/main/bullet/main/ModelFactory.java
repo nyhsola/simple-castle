@@ -22,10 +22,15 @@ public class ModelFactory extends ApplicationAdapter {
     private final ArrayMap<String, GameObjectConstructor> constructorsArrayMap = new ArrayMap<>();
     private Model mainModel;
 
+    private List<GameObject> initObjects;
+
+    private GameObject initObject;
+
     @Override
     public void create() {
         mainModel = ModelLoader.loadModel();
         constructorsArrayMap.putAll(constructObjects());
+        initObjects = constructMainObjects();
     }
 
     private ArrayMap<String, GameObjectConstructor> constructObjects() {
@@ -54,12 +59,13 @@ public class ModelFactory extends ApplicationAdapter {
         return constructors;
     }
 
-    public List<GameObject> constructMainObjects() {
-        return Arrays.asList(constructStaticObject("Castle-1"),
+    private List<GameObject> constructMainObjects() {
+        initObject = constructStaticObject("Castle-1");
+        return Arrays.asList(constructObject("Unit-1"),
+                initObject,
                 constructStaticObject("Castle-2"),
                 constructStaticObject("Castle-3"),
                 constructStaticObject("Castle-4"),
-                constructObject("Unit-1"),
                 constructStaticObject("Surface"));
     }
 
@@ -81,8 +87,8 @@ public class ModelFactory extends ApplicationAdapter {
     }
 
     public void dispose() {
-        for (GameObjectConstructor ctor : constructorsArrayMap.values()) {
-            ctor.dispose();
+        for (GameObjectConstructor constructor : constructorsArrayMap.values()) {
+            constructor.dispose();
         }
         constructorsArrayMap.clear();
         mainModel.dispose();
@@ -90,5 +96,13 @@ public class ModelFactory extends ApplicationAdapter {
 
     public ArrayMap<String, GameObjectConstructor> getGameObjectsConstructors() {
         return constructorsArrayMap;
+    }
+
+    public List<GameObject> getInitObjects() {
+        return initObjects;
+    }
+
+    public GameObject getInitObject() {
+        return initObject;
     }
 }

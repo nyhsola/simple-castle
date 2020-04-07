@@ -3,6 +3,7 @@ package com.simple.castle.launcher.main.bullet.main;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.math.Vector3;
 import com.simple.castle.launcher.main.bullet.physic.GamePhysicWorld;
 import com.simple.castle.launcher.main.bullet.render.*;
 
@@ -30,22 +31,22 @@ public class GameLauncher extends ApplicationAdapter {
         gameEnvironment = new GameEnvironment();
         gameEnvironment.create();
 
-        gameCamera = new GameCamera();
-        gameCamera.create();
-
         modelFactory = new ModelFactory();
         modelFactory.create();
 
         gameOverlay = new GameOverlay();
         gameOverlay.create();
 
+        gameCamera = new GameCamera(modelFactory.getInitObject().transform.getTranslation(new Vector3()));
+        gameCamera.create();
+
         gameSelectItemController = new GameSelectItemController(gameCamera, gamePhysicWorld);
 
-        modelFactory.constructMainObjects().forEach(gamePhysicWorld::addRigidBody);
+        modelFactory.getInitObjects().forEach(gamePhysicWorld::addRigidBody);
 
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(gameSelectItemController);
-        inputMultiplexer.addProcessor(gameCamera.getInputProcessor());
+        inputMultiplexer.addProcessor(gameCamera);
 
         Gdx.input.setInputProcessor(inputMultiplexer);
     }
@@ -60,7 +61,7 @@ public class GameLauncher extends ApplicationAdapter {
             spawnTimer = 3.50f;
         }
 
-        gameCamera.update();
+        gameCamera.render();
         gameRenderer.render(gameCamera, gamePhysicWorld, gameEnvironment);
         gamePhysicWorld.update(gameCamera, delta);
 
