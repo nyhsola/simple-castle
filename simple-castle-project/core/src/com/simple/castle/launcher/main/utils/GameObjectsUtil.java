@@ -1,6 +1,5 @@
 package com.simple.castle.launcher.main.utils;
 
-import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.bullet.collision.btBoxShape;
@@ -8,22 +7,20 @@ import com.badlogic.gdx.physics.bullet.collision.btSphereShape;
 
 public class GameObjectsUtil {
 
+    private static final float SCALAR = 0.5f;
+
     private GameObjectsUtil() {
     }
 
-    public static btBoxShape calculateBox(Model model, String node) {
-        BoundingBox boundingBox = new BoundingBox();
-        model.getNode(node).calculateBoundingBox(boundingBox);
+    public static btBoxShape calculateBox(BoundingBox boundingBox) {
         Vector3 dimensions = new Vector3();
         boundingBox.getDimensions(dimensions);
-        return new btBoxShape(dimensions.scl(0.5f));
+        return new btBoxShape(dimensions.scl(SCALAR));
     }
 
-    public static btSphereShape calculateSphere(Model model, String node) {
-        BoundingBox boundingBox = new BoundingBox();
-        model.getNode(node).calculateBoundingBox(boundingBox);
+    public static btSphereShape calculateSphere(BoundingBox boundingBox) {
         Vector3 dimensions = new Vector3();
         boundingBox.getDimensions(dimensions);
-        return new btSphereShape(dimensions.scl(0.5f).x);
+        return new btSphereShape(dimensions.scl(SCALAR).x);
     }
 }

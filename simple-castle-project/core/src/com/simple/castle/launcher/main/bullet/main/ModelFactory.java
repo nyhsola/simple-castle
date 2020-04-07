@@ -2,6 +2,7 @@ package com.simple.castle.launcher.main.bullet.main;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.bullet.collision.Collision;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 import com.badlogic.gdx.utils.ArrayMap;
@@ -28,15 +29,36 @@ public class ModelFactory extends ApplicationAdapter {
     }
 
     private ArrayMap<String, GameObjectConstructor> constructObjects() {
+        BoundingBox tmp = new BoundingBox();
+
+        String surface = "Surface";
+        String unit1 = "Unit-1";
+        String castle1 = "Castle-1";
+        String castle2 = "Castle-2";
+        String castle3 = "Castle-3";
+        String castle4 = "Castle-4";
+
         ArrayMap<String, GameObjectConstructor> constructors = new ArrayMap<>(String.class, GameObjectConstructor.class);
-        constructors.put("Surface", new GameObjectConstructor(mainModel, "Surface", GameObjectsUtil.calculateBox(mainModel, "Surface"), 0f));
-        constructors.put("Castle-1", new GameObjectConstructor(mainModel, "Castle-1", GameObjectsUtil.calculateBox(mainModel, "Castle-1"), 0f));
-        constructors.put("Unit-1", new GameObjectConstructor(mainModel, "Unit-1", GameObjectsUtil.calculateSphere(mainModel, "Unit-1"), 1f));
+        constructors.put(surface, new GameObjectConstructor(mainModel, surface,
+                GameObjectsUtil.calculateBox(mainModel.getNode(surface).calculateBoundingBox(tmp)), 0f));
+        constructors.put(castle1, new GameObjectConstructor(mainModel, castle1,
+                GameObjectsUtil.calculateBox(mainModel.getNode(castle1).calculateBoundingBox(tmp)), 0f));
+        constructors.put(castle2, new GameObjectConstructor(mainModel, castle2,
+                GameObjectsUtil.calculateBox(mainModel.getNode(castle2).calculateBoundingBox(tmp)), 0f));
+        constructors.put(castle3, new GameObjectConstructor(mainModel, castle3,
+                GameObjectsUtil.calculateBox(mainModel.getNode(castle3).calculateBoundingBox(tmp)), 0f));
+        constructors.put(castle4, new GameObjectConstructor(mainModel, castle4,
+                GameObjectsUtil.calculateBox(mainModel.getNode(castle4).calculateBoundingBox(tmp)), 0f));
+        constructors.put(unit1, new GameObjectConstructor(mainModel, unit1,
+                GameObjectsUtil.calculateSphere(mainModel.getNode(unit1).calculateBoundingBox(tmp)), 1f));
         return constructors;
     }
 
     public List<GameObject> constructMainObjects() {
         return Arrays.asList(constructStaticObject("Castle-1"),
+                constructStaticObject("Castle-2"),
+                constructStaticObject("Castle-3"),
+                constructStaticObject("Castle-4"),
                 constructObject("Unit-1"),
                 constructStaticObject("Surface"));
     }
