@@ -4,16 +4,18 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.simple.castle.launcher.main.bullet.physic.GamePhysicWorld;
-import com.simple.castle.launcher.main.bullet.render.GameRenderer;
+import com.simple.castle.launcher.main.bullet.render.*;
 
 public class GameLauncher extends ApplicationAdapter {
 
     private GamePhysicWorld gamePhysicWorld;
-    private com.simple.castle.launcher.main.bullet.render.GameEnvironment gameEnvironment;
-    private com.simple.castle.launcher.main.bullet.render.GameRenderer gameRenderer;
-    private com.simple.castle.launcher.main.bullet.render.GameCamera gameCamera;
+    private GameEnvironment gameEnvironment;
+    private GameRenderer gameRenderer;
+    private GameCamera gameCamera;
     private ModelFactory modelFactory;
-    private com.simple.castle.launcher.main.bullet.render.GameOverlay gameOverlay;
+    private GameOverlay gameOverlay;
+
+    private GameSelectItemController gameSelectItemController;
 
     private float spawnTimer;
 
@@ -25,21 +27,24 @@ public class GameLauncher extends ApplicationAdapter {
         gamePhysicWorld = new GamePhysicWorld();
         gamePhysicWorld.create();
 
-        gameEnvironment = new com.simple.castle.launcher.main.bullet.render.GameEnvironment();
+        gameEnvironment = new GameEnvironment();
         gameEnvironment.create();
 
-        gameCamera = new com.simple.castle.launcher.main.bullet.render.GameCamera();
+        gameCamera = new GameCamera();
         gameCamera.create();
 
         modelFactory = new ModelFactory();
         modelFactory.create();
 
-        gameOverlay = new com.simple.castle.launcher.main.bullet.render.GameOverlay();
+        gameOverlay = new GameOverlay();
         gameOverlay.create();
+
+        gameSelectItemController = new GameSelectItemController(gameCamera, gamePhysicWorld);
 
         modelFactory.constructMainObjects().forEach(gamePhysicWorld::addRigidBody);
 
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(gameSelectItemController);
         inputMultiplexer.addProcessor(gameCamera.getInputProcessor());
 
         Gdx.input.setInputProcessor(inputMultiplexer);
@@ -58,7 +63,8 @@ public class GameLauncher extends ApplicationAdapter {
         gameCamera.update();
         gameRenderer.render(gameCamera, gamePhysicWorld, gameEnvironment);
         gamePhysicWorld.update(gameCamera, delta);
-        gameOverlay.render();
+
+        gameOverlay.render(gameCamera, gameSelectItemController.getGameObject());
     }
 
     @Override

@@ -36,9 +36,9 @@ public class ModelFactory extends ApplicationAdapter {
     }
 
     public List<GameObject> constructMainObjects() {
-        return Arrays.asList(constructStaticObject("Surface"),
-                constructStaticObject("Castle-1"),
-                constructObject("Unit-1"));
+        return Arrays.asList(constructStaticObject("Castle-1"),
+                constructObject("Unit-1"),
+                constructStaticObject("Surface"));
     }
 
     public GameObject constructStaticObject(String value) {

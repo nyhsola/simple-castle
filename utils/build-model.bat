@@ -1,0 +1,1 @@
+"fbx-converter/fbx-conv.exe" -o G3DJ "blender-project/map.fbx"
