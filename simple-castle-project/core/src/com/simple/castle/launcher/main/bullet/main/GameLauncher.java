@@ -37,7 +37,7 @@ public class GameLauncher extends ApplicationAdapter {
         gameOverlay = new GameOverlay();
         gameOverlay.create();
 
-        gameCamera = new GameCamera(modelFactory.getInitObject().transform.getTranslation(new Vector3()));
+        gameCamera = new GameCamera(modelFactory.getSurface(), modelFactory.getInitObject().transform.getTranslation(new Vector3()));
         gameCamera.create();
 
         gameSelectItemController = new GameSelectItemController(gameCamera, gamePhysicWorld);

@@ -7,6 +7,9 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
+import com.simple.castle.launcher.main.bullet.object.GameObject;
+import com.simple.castle.launcher.main.utils.GameIntersectUtils;
 
 public class GameCamera extends ApplicationAdapter implements InputProcessor {
     private static final int FIELD_OF_VIEW = 67;
@@ -15,16 +18,22 @@ public class GameCamera extends ApplicationAdapter implements InputProcessor {
     private PerspectiveCamera perspectiveCamera;
     private CameraInputController camController;
 
-    private Vector3 lookAtInit;
+    private final GameObject plane;
+    private final Vector3 lookAtInit;
 
     private boolean keyUpHolds = false;
     private boolean keyDownHolds = false;
     private boolean keyLeftHolds = false;
     private boolean keyRightHolds = false;
 
+    private float previousX;
+    private float previousY;
+    private boolean mouseDragged = false;
+
     private Vector3 tempVector = new Vector3();
 
-    public GameCamera(Vector3 lookAtInit) {
+    public GameCamera(GameObject plane, Vector3 lookAtInit) {
+        this.plane = plane;
         this.lookAtInit = lookAtInit;
     }
 
@@ -113,16 +122,35 @@ public class GameCamera extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (button == Input.Buttons.LEFT) {
+            mouseDragged = true;
+            Vector3 vector3 = GameIntersectUtils.intersectPositionPoint(new BoundingBox(), this, plane, screenX, screenY);
+            if (vector3 != null) {
+                previousX = vector3.x;
+                previousY = vector3.z;
+            }
+        }
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        mouseDragged = false;
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        if (mouseDragged) {
+            Vector3 vector3 = GameIntersectUtils.intersectPositionPoint(new BoundingBox(), this, plane, screenX, screenY);
+            if (vector3 != null) {
+                final float deltaX = previousX - vector3.x;
+                final float deltaY = previousY - vector3.z;
+                perspectiveCamera.position.x = perspectiveCamera.position.x + deltaX;
+                perspectiveCamera.position.z = perspectiveCamera.position.z + deltaY;
+                perspectiveCamera.update();
+            }
+        }
         return false;
     }
 

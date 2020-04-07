@@ -25,6 +25,7 @@ public class ModelFactory extends ApplicationAdapter {
     private List<GameObject> initObjects;
 
     private GameObject initObject;
+    private GameObject surface;
 
     @Override
     public void create() {
@@ -61,12 +62,14 @@ public class ModelFactory extends ApplicationAdapter {
 
     private List<GameObject> constructMainObjects() {
         initObject = constructStaticObject("Castle-1");
+        surface = constructStaticObject("Surface");
+
         return Arrays.asList(constructObject("Unit-1"),
                 initObject,
                 constructStaticObject("Castle-2"),
                 constructStaticObject("Castle-3"),
                 constructStaticObject("Castle-4"),
-                constructStaticObject("Surface"));
+                surface);
     }
 
     public GameObject constructStaticObject(String value) {
@@ -104,5 +107,9 @@ public class ModelFactory extends ApplicationAdapter {
 
     public GameObject getInitObject() {
         return initObject;
+    }
+
+    public GameObject getSurface() {
+        return surface;
     }
 }

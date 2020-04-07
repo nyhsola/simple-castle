@@ -1,14 +1,11 @@
 package com.simple.castle.launcher.main.bullet.render;
 
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import com.badlogic.gdx.math.collision.Ray;
 import com.simple.castle.launcher.main.bullet.object.GameObject;
 import com.simple.castle.launcher.main.bullet.physic.GamePhysicWorld;
-
-import java.util.stream.StreamSupport;
+import com.simple.castle.launcher.main.utils.GameIntersectUtils;
 
 public class GameSelectItemController extends InputAdapter {
 
@@ -27,21 +24,8 @@ public class GameSelectItemController extends InputAdapter {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        gameObject = intersect(gameCamera, gamePhysicWorld.getInstances(), screenX, screenY);
+        gameObject = GameIntersectUtils.intersect(tmp, gameCamera, gamePhysicWorld.getInstances(), screenX, screenY);
         return super.touchDown(screenX, screenY, pointer, button);
-    }
-
-    private GameObject intersect(GameCamera gameCamera, Iterable<GameObject> gameObjectList, int touchedX, int touchedY) {
-        Ray pickRay = gameCamera.getPerspectiveCamera().getPickRay(touchedX, touchedY);
-        Vector3 intersection = new Vector3();
-        return StreamSupport.stream(gameObjectList.spliterator(), false)
-                .filter(gameObject -> {
-                    BoundingBox boundingBox = gameObject.calculateBoundingBox(tmp);
-                    boundingBox.mul(gameObject.transform);
-                    return Intersector.intersectRayBounds(pickRay, boundingBox, intersection);
-                })
-                .findAny()
-                .orElse(null);
     }
 
     public GameObject getGameObject() {
