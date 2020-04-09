@@ -3,6 +3,7 @@ package com.simple.castle.launcher.main.bullet.main;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.simple.castle.launcher.main.bullet.controller.GameObjectController;
 import com.simple.castle.launcher.main.bullet.controller.GameSelectItemController;
@@ -75,15 +76,18 @@ public class GameLauncher extends ApplicationAdapter {
         gameCamera.render();
         gameRenderer.render(gameCamera, gamePhysicWorld, gameEnvironment);
         gamePhysicWorld.update(gameCamera, delta);
-
         gameOverlay.render(gameCamera, gameSelectItemController.getSelectedObject());
     }
 
     public void spawn() {
         SphereUnit build = new SphereUnit.Builder(modelFactory.getMainModel()).build();
-        gamePhysicWorld.addRigidBody(build);
 
-        build.transform.setTranslation(modelFactory.getSpawner().transform.getTranslation(new Vector3()));
+        build.body.setWorldTransform(new Matrix4());
+        build.body.translate(modelFactory.getSpawner().transform.getTranslation(new Vector3()));
+
+        gamePhysicWorld.addRigidBody(build);
+//
+
     }
 
     @Override
