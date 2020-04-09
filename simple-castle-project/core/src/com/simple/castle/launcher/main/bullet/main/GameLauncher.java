@@ -1,103 +1,43 @@
 package com.simple.castle.launcher.main.bullet.main;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector3;
-import com.simple.castle.launcher.main.bullet.controller.GameObjectController;
-import com.simple.castle.launcher.main.bullet.controller.GameSelectItemController;
-import com.simple.castle.launcher.main.bullet.object.unit.SphereUnit;
-import com.simple.castle.launcher.main.bullet.physic.GamePhysicWorld;
-import com.simple.castle.launcher.main.bullet.render.GameCamera;
-import com.simple.castle.launcher.main.bullet.render.GameEnvironment;
-import com.simple.castle.launcher.main.bullet.render.GameOverlay;
-import com.simple.castle.launcher.main.bullet.render.GameRenderer;
+import com.simple.castle.launcher.main.bullet.scene.GameScene;
 
-public class GameLauncher extends ApplicationAdapter {
+public class GameLauncher implements ApplicationListener {
 
-    private GamePhysicWorld gamePhysicWorld;
-    private GameEnvironment gameEnvironment;
-    private GameRenderer gameRenderer;
-    private GameCamera gameCamera;
-    private ModelFactory modelFactory;
-    private GameOverlay gameOverlay;
-
-    private GameObjectController gameObjectController;
-
-    private GameSelectItemController gameSelectItemController;
-
-    private float spawnTimer;
+    private GameScene gameScene;
 
     @Override
     public void create() {
-        gameRenderer = new GameRenderer();
-        gameRenderer.create();
+        gameScene = new GameScene();
+        gameScene.create();
 
-        gamePhysicWorld = new GamePhysicWorld();
-        gamePhysicWorld.create();
-
-        gameEnvironment = new GameEnvironment();
-        gameEnvironment.create();
-
-        modelFactory = new ModelFactory();
-        modelFactory.create();
-
-        gameOverlay = new GameOverlay();
-        gameOverlay.create();
-
-        gameCamera = new GameCamera(modelFactory.getSurface(), modelFactory.getInitObject().transform.getTranslation(new Vector3()));
-        gameCamera.create();
-
-        gameObjectController = new GameObjectController(this);
-
-        gameSelectItemController = new GameSelectItemController(gameCamera, gamePhysicWorld);
-
-        modelFactory.getInitObjects().forEach(gamePhysicWorld::addRigidBody);
-
-        InputMultiplexer inputMultiplexer = new InputMultiplexer();
-        inputMultiplexer.addProcessor(gameSelectItemController);
-        inputMultiplexer.addProcessor(gameObjectController);
-        inputMultiplexer.addProcessor(gameCamera);
-
-        Gdx.input.setInputProcessor(inputMultiplexer);
-    }
-
-    @Override
-    public void render() {
-        final float delta = Math.min(1f / 30f, Gdx.graphics.getDeltaTime());
-
-        if ((spawnTimer -= delta) < 0) {
-//            bPhysicWorld.addRigidBody(BModelFactory.randomObject(bPhysicWorld.objCount()));
-            // Check Linear force
-            spawnTimer = 3.50f;
-        }
-
-        gameCamera.render();
-        gameRenderer.render(gameCamera, gamePhysicWorld, gameEnvironment);
-        gamePhysicWorld.update(gameCamera, delta);
-        gameOverlay.render(gameCamera, gameSelectItemController.getSelectedObject());
-    }
-
-    public void spawn() {
-        SphereUnit build = new SphereUnit.Builder(modelFactory.getMainModel()).build();
-
-        build.body.setWorldTransform(new Matrix4());
-        build.body.translate(modelFactory.getSpawner().transform.getTranslation(new Vector3()));
-
-        gamePhysicWorld.addRigidBody(build);
-//
-
+        Gdx.input.setInputProcessor(gameScene);
     }
 
     @Override
     public void resize(int width, int height) {
-        gameCamera.resize(width, height);
+        gameScene.resize(width, height);
+    }
+
+    @Override
+    public void render() {
+        gameScene.render();
+    }
+
+    @Override
+    public void pause() {
+        gameScene.pause();
+    }
+
+    @Override
+    public void resume() {
+        gameScene.resume();
     }
 
     @Override
     public void dispose() {
-        gamePhysicWorld.dispose();
-        modelFactory.dispose();
+        gameScene.dispose();
     }
 }

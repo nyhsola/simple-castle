@@ -58,7 +58,6 @@ public class GamePhysicWorld extends ApplicationAdapter {
 
     public void update(GameCamera camera, float delta) {
         dynamicsWorld.stepSimulation(delta, 5, 1f / 60f);
-
         if (DEBUG_DRAW) {
             debugDrawer.begin(camera.getPerspectiveCamera());
             dynamicsWorld.debugDrawWorld();

@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.simple.castle.launcher.main.bullet.object.GameObject;
@@ -16,7 +15,6 @@ public class GameCamera extends ApplicationAdapter implements InputProcessor {
     private static final float CAMERA_SPEED = 0.5f;
 
     private PerspectiveCamera perspectiveCamera;
-    private CameraInputController camController;
 
     private final GameObject plane;
     private final Vector3 lookAtInit;
@@ -45,7 +43,6 @@ public class GameCamera extends ApplicationAdapter implements InputProcessor {
         perspectiveCamera.near = 1f;
         perspectiveCamera.far = 300f;
         perspectiveCamera.update();
-        camController = new CameraInputController(perspectiveCamera);
     }
 
     @Override
@@ -59,21 +56,16 @@ public class GameCamera extends ApplicationAdapter implements InputProcessor {
     public void render() {
         if (keyUpHolds) {
             perspectiveCamera.position.x = perspectiveCamera.position.x - CAMERA_SPEED;
-            perspectiveCamera.update();
         }
         if (keyDownHolds) {
             perspectiveCamera.position.x = perspectiveCamera.position.x + CAMERA_SPEED;
-            perspectiveCamera.update();
         }
         if (keyRightHolds) {
             perspectiveCamera.position.z = perspectiveCamera.position.z - CAMERA_SPEED;
-            perspectiveCamera.update();
         }
         if (keyLeftHolds) {
             perspectiveCamera.position.z = perspectiveCamera.position.z + CAMERA_SPEED;
-            perspectiveCamera.update();
         }
-
         perspectiveCamera.update();
     }
 
