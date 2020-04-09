@@ -15,8 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ModelFactory extends ApplicationAdapter {
-    private final static short GROUND_FLAG = 1 << 8;
-    private final static short OBJECT_FLAG = 1 << 9;
+    public final static short GROUND_FLAG = 1 << 8;
+    public final static short OBJECT_FLAG = 1 << 9;
     private final static short ALL_FLAG = -1;
 
     private final ArrayMap<String, GameObjectConstructor> constructorsArrayMap = new ArrayMap<>();
@@ -26,6 +26,15 @@ public class ModelFactory extends ApplicationAdapter {
 
     private GameObject initObject;
     private GameObject surface;
+    private GameObject spawner;
+
+    public GameObject getSpawner() {
+        return spawner;
+    }
+
+    public Model getMainModel() {
+        return mainModel;
+    }
 
     @Override
     public void create() {
@@ -43,6 +52,7 @@ public class ModelFactory extends ApplicationAdapter {
         String castle2 = "Castle-2";
         String castle3 = "Castle-3";
         String castle4 = "Castle-4";
+        String spawner1 = "Spawner-1";
 
         ArrayMap<String, GameObjectConstructor> constructors = new ArrayMap<>(String.class, GameObjectConstructor.class);
         constructors.put(surface, new GameObjectConstructor(mainModel, surface,
@@ -57,14 +67,18 @@ public class ModelFactory extends ApplicationAdapter {
                 GameObjectsUtil.calculateBox(mainModel.getNode(castle4).calculateBoundingBox(tmp)), 0f));
         constructors.put(unit1, new GameObjectConstructor(mainModel, unit1,
                 GameObjectsUtil.calculateSphere(mainModel.getNode(unit1).calculateBoundingBox(tmp)), 1f));
+
+        constructors.put(spawner1, new GameObjectConstructor(mainModel, spawner1,
+                GameObjectsUtil.calculateBox(mainModel.getNode(spawner1).calculateBoundingBox(tmp)), 0f));
         return constructors;
     }
 
     private List<GameObject> constructMainObjects() {
         initObject = constructStaticObject("Castle-1");
         surface = constructStaticObject("Surface");
+        spawner = constructObject("Spawner-1");
 
-        return Arrays.asList(constructObject("Unit-1"),
+        return Arrays.asList(spawner,
                 initObject,
                 constructStaticObject("Castle-2"),
                 constructStaticObject("Castle-3"),

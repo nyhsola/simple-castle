@@ -1,10 +1,11 @@
-package com.simple.castle.launcher.main.bullet.render;
+package com.simple.castle.launcher.main.bullet.controller;
 
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.simple.castle.launcher.main.bullet.object.GameObject;
 import com.simple.castle.launcher.main.bullet.physic.GamePhysicWorld;
+import com.simple.castle.launcher.main.bullet.render.GameCamera;
 import com.simple.castle.launcher.main.utils.GameIntersectUtils;
 
 public class GameSelectItemController extends InputAdapter {
@@ -28,7 +29,7 @@ public class GameSelectItemController extends InputAdapter {
         return super.touchDown(screenX, screenY, pointer, button);
     }
 
-    public GameObject getGameObject() {
+    public GameObject getSelectedObject() {
         return gameObject;
     }
 }

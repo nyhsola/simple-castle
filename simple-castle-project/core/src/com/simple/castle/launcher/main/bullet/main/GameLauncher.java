@@ -4,8 +4,14 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Vector3;
+import com.simple.castle.launcher.main.bullet.controller.GameObjectController;
+import com.simple.castle.launcher.main.bullet.controller.GameSelectItemController;
+import com.simple.castle.launcher.main.bullet.object.unit.SphereUnit;
 import com.simple.castle.launcher.main.bullet.physic.GamePhysicWorld;
-import com.simple.castle.launcher.main.bullet.render.*;
+import com.simple.castle.launcher.main.bullet.render.GameCamera;
+import com.simple.castle.launcher.main.bullet.render.GameEnvironment;
+import com.simple.castle.launcher.main.bullet.render.GameOverlay;
+import com.simple.castle.launcher.main.bullet.render.GameRenderer;
 
 public class GameLauncher extends ApplicationAdapter {
 
@@ -15,6 +21,8 @@ public class GameLauncher extends ApplicationAdapter {
     private GameCamera gameCamera;
     private ModelFactory modelFactory;
     private GameOverlay gameOverlay;
+
+    private GameObjectController gameObjectController;
 
     private GameSelectItemController gameSelectItemController;
 
@@ -40,12 +48,15 @@ public class GameLauncher extends ApplicationAdapter {
         gameCamera = new GameCamera(modelFactory.getSurface(), modelFactory.getInitObject().transform.getTranslation(new Vector3()));
         gameCamera.create();
 
+        gameObjectController = new GameObjectController(this);
+
         gameSelectItemController = new GameSelectItemController(gameCamera, gamePhysicWorld);
 
         modelFactory.getInitObjects().forEach(gamePhysicWorld::addRigidBody);
 
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(gameSelectItemController);
+        inputMultiplexer.addProcessor(gameObjectController);
         inputMultiplexer.addProcessor(gameCamera);
 
         Gdx.input.setInputProcessor(inputMultiplexer);
@@ -65,7 +76,14 @@ public class GameLauncher extends ApplicationAdapter {
         gameRenderer.render(gameCamera, gamePhysicWorld, gameEnvironment);
         gamePhysicWorld.update(gameCamera, delta);
 
-        gameOverlay.render(gameCamera, gameSelectItemController.getGameObject());
+        gameOverlay.render(gameCamera, gameSelectItemController.getSelectedObject());
+    }
+
+    public void spawn() {
+        SphereUnit build = new SphereUnit.Builder(modelFactory.getMainModel()).build();
+        gamePhysicWorld.addRigidBody(build);
+
+        build.transform.setTranslation(modelFactory.getSpawner().transform.getTranslation(new Vector3()));
     }
 
     @Override
