@@ -27,7 +27,7 @@ public class GameOverlay extends ApplicationAdapter {
         batch.begin();
 
         bitmapFont.draw(batch, "Camera position: " +
-                format(gameCamera.getPerspectiveCamera().position), 0, 20);
+                format(gameCamera.position), 0, 20);
 
         if (selected != null) {
             bitmapFont.draw(batch, "Selected (model): " +

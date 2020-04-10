@@ -1,6 +1,5 @@
 package com.simple.castle.launcher.main.bullet.render;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -10,14 +9,12 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.simple.castle.launcher.main.bullet.object.GameObject;
 import com.simple.castle.launcher.main.utils.GameIntersectUtils;
 
-public class GameCamera extends ApplicationAdapter implements InputProcessor {
+public class GameCamera extends PerspectiveCamera implements InputProcessor {
+
     private static final int FIELD_OF_VIEW = 67;
     private static final float CAMERA_SPEED = 0.5f;
-
-    private PerspectiveCamera perspectiveCamera;
-
-    private final GameObject plane;
-    private final Vector3 lookAtInit;
+    private static final float NEAR = 1f;
+    private static final float FAR = 300f;
 
     private boolean keyUpHolds = false;
     private boolean keyDownHolds = false;
@@ -26,51 +23,41 @@ public class GameCamera extends ApplicationAdapter implements InputProcessor {
 
     private float previousX;
     private float previousY;
+
     private boolean mouseDragged = false;
+
+    private final GameObject surface;
 
     private Vector3 tempVector = new Vector3();
 
-    public GameCamera(GameObject plane, Vector3 lookAtInit) {
-        this.plane = plane;
-        this.lookAtInit = lookAtInit;
+    public GameCamera(GameObject surface) {
+        super(FIELD_OF_VIEW, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        this.surface = surface;
+        near = NEAR;
+        far = FAR;
+        update();
     }
 
-    @Override
-    public void create() {
-        perspectiveCamera = new PerspectiveCamera(FIELD_OF_VIEW, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        perspectiveCamera.position.set(lookAtInit.x + 10f, lookAtInit.y + 10f, lookAtInit.z);
-        perspectiveCamera.lookAt(lookAtInit);
-        perspectiveCamera.near = 1f;
-        perspectiveCamera.far = 300f;
-        perspectiveCamera.update();
-    }
-
-    @Override
     public void resize(int width, int height) {
-        perspectiveCamera.viewportWidth = width;
-        perspectiveCamera.viewportHeight = height;
-        perspectiveCamera.update();
+        viewportWidth = width;
+        viewportHeight = height;
     }
 
     @Override
-    public void render() {
+    public void update() {
         if (keyUpHolds) {
-            perspectiveCamera.position.x = perspectiveCamera.position.x - CAMERA_SPEED;
+            position.x = position.x - CAMERA_SPEED;
         }
         if (keyDownHolds) {
-            perspectiveCamera.position.x = perspectiveCamera.position.x + CAMERA_SPEED;
+            position.x = position.x + CAMERA_SPEED;
         }
         if (keyRightHolds) {
-            perspectiveCamera.position.z = perspectiveCamera.position.z - CAMERA_SPEED;
+            position.z = position.z - CAMERA_SPEED;
         }
         if (keyLeftHolds) {
-            perspectiveCamera.position.z = perspectiveCamera.position.z + CAMERA_SPEED;
+            position.z = position.z + CAMERA_SPEED;
         }
-        perspectiveCamera.update();
-    }
-
-    public PerspectiveCamera getPerspectiveCamera() {
-        return perspectiveCamera;
+        super.update();
     }
 
     @Override
@@ -116,7 +103,7 @@ public class GameCamera extends ApplicationAdapter implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (button == Input.Buttons.LEFT) {
             mouseDragged = true;
-            Vector3 vector3 = GameIntersectUtils.intersectPositionPoint(new BoundingBox(), this, plane, screenX, screenY);
+            Vector3 vector3 = GameIntersectUtils.intersectPositionPoint(new BoundingBox(), this, surface, screenX, screenY);
             if (vector3 != null) {
                 previousX = vector3.x;
                 previousY = vector3.z;
@@ -134,13 +121,12 @@ public class GameCamera extends ApplicationAdapter implements InputProcessor {
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         if (mouseDragged) {
-            Vector3 vector3 = GameIntersectUtils.intersectPositionPoint(new BoundingBox(), this, plane, screenX, screenY);
+            Vector3 vector3 = GameIntersectUtils.intersectPositionPoint(new BoundingBox(), this, surface, screenX, screenY);
             if (vector3 != null) {
                 final float deltaX = previousX - vector3.x;
                 final float deltaY = previousY - vector3.z;
-                perspectiveCamera.position.x = perspectiveCamera.position.x + deltaX;
-                perspectiveCamera.position.z = perspectiveCamera.position.z + deltaY;
-                perspectiveCamera.update();
+                position.x += deltaX;
+                position.z += deltaY;
             }
         }
         return false;
@@ -153,9 +139,7 @@ public class GameCamera extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
-        Vector3 scl = tempVector.set(perspectiveCamera.direction).scl(amount);
-        perspectiveCamera.translate(scl);
-        perspectiveCamera.update();
+        translate(tempVector.set(direction).scl(amount));
         return false;
     }
 }

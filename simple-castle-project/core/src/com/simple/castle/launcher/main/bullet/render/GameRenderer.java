@@ -20,7 +20,7 @@ public class GameRenderer extends ApplicationAdapter {
         Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1.f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-        modelBatch.begin(gameCamera.getPerspectiveCamera());
+        modelBatch.begin(gameCamera);
         modelBatch.render(gamePhysicWorld.getInstances(), gameEnvironment.getEnvironment());
         modelBatch.end();
     }

@@ -50,8 +50,11 @@ public class GameScene implements ApplicationListener, InputProcessor {
         gameOverlay = new GameOverlay();
         gameOverlay.create();
 
-        gameCamera = new GameCamera(modelFactory.getSurface(), modelFactory.getInitObject().transform.getTranslation(new Vector3()));
-        gameCamera.create();
+        Vector3 translation = modelFactory.getInitObject().transform.getTranslation(new Vector3());
+
+        gameCamera = new GameCamera(modelFactory.getSurface());
+        gameCamera.position.set(translation.x + 10f, translation.y + 10f, translation.z);
+        gameCamera.lookAt(translation);
 
         gameUnitSpawner = new GameUnitSpawner(this);
 
@@ -77,7 +80,8 @@ public class GameScene implements ApplicationListener, InputProcessor {
 
         mainUnitController.update();
 
-        gameCamera.render();
+        gameCamera.update();
+
         gameRenderer.render(gameCamera, gamePhysicWorld, gameEnvironment);
         gamePhysicWorld.update(gameCamera, delta);
         gameOverlay.render(gameCamera, gameSelectItemController.getSelectedObject());
