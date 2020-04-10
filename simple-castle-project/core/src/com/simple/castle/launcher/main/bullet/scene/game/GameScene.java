@@ -3,16 +3,12 @@ package com.simple.castle.launcher.main.bullet.scene.game;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ArrayMap;
-import com.simple.castle.launcher.main.bullet.controller.GameSelectItemController;
-import com.simple.castle.launcher.main.bullet.controller.GameUnitSpawner;
 import com.simple.castle.launcher.main.bullet.main.GameModels;
 import com.simple.castle.launcher.main.bullet.object.AbstractGameObject;
 import com.simple.castle.launcher.main.bullet.object.GameObjectConstructor;
 import com.simple.castle.launcher.main.bullet.object.unit.KinematicGameObject;
-import com.simple.castle.launcher.main.bullet.object.unit.UnitGameObject;
 import com.simple.castle.launcher.main.bullet.render.GameCamera;
 import com.simple.castle.launcher.main.bullet.render.GameEnvironment;
 import com.simple.castle.launcher.main.bullet.render.GameOverlay;
@@ -21,7 +17,6 @@ import com.simple.castle.launcher.main.bullet.scene.game.physic.GameSceneWorld;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class GameScene extends ScreenAdapter implements InputProcessor {
 
@@ -40,9 +35,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
     private GameEnvironment gameEnvironment;
     private GameCamera gameCamera;
 
-    private GameUnitSpawner gameUnitSpawner;
-    private GameSelectItemController gameSelectItemController;
-
     public GameScene(GameRenderer gameRenderer, GameModels gameModels) {
         this.gameRenderer = gameRenderer;
         this.gameModels = gameModels;
@@ -54,7 +46,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         gameCamera.update();
         gameRenderer.render(gameCamera, sceneGameObjects.values(), gameEnvironment);
         gameSceneWorld.update(gameCamera, Math.min(1f / 30f, delta));
-        gameOverlay.render(gameCamera, gameSelectItemController.getSelectedObject());
     }
 
     @Override
@@ -89,11 +80,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         gameCamera.position.set(redCastlePosition.x + 10f, redCastlePosition.y + 10f, redCastlePosition.z);
         gameCamera.lookAt(redCastlePosition);
 
-        gameUnitSpawner = new GameUnitSpawner(this);
-        gameSelectItemController = new GameSelectItemController(gameCamera, this);
-
-        inputMultiplexer.addProcessor(gameSelectItemController);
-        inputMultiplexer.addProcessor(gameUnitSpawner);
         inputMultiplexer.addProcessor(gameSceneWorld);
         inputMultiplexer.addProcessor(gameCamera);
     }
@@ -145,18 +131,4 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         return inputMultiplexer.scrolled(amount);
     }
 
-    public void spawn() {
-        UnitGameObject unitGameObject = new UnitGameObject(gameModels.getConstructors().get("Unit-1"));
-
-        sceneGameObjects.put(UUID.randomUUID().toString(), unitGameObject);
-
-        unitGameObject.body.setWorldTransform(new Matrix4());
-        unitGameObject.body.translate(sceneGameObjects.get("Spawner-1").transform.getTranslation(new Vector3()));
-
-        gameSceneWorld.addRigidBody(unitGameObject);
-    }
-
-    public Map<String, AbstractGameObject> getSceneGameObjects() {
-        return sceneGameObjects;
-    }
 }
