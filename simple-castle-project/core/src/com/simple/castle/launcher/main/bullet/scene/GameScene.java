@@ -19,6 +19,8 @@ import com.simple.castle.launcher.main.bullet.render.GameRenderer;
 
 public class GameScene implements ApplicationListener, InputProcessor {
 
+    private final Vector3 tmpVector = new Vector3();
+
     private InputMultiplexer inputMultiplexer = new InputMultiplexer();
 
     private GamePhysicWorld gamePhysicWorld;
@@ -50,11 +52,12 @@ public class GameScene implements ApplicationListener, InputProcessor {
         gameOverlay = new GameOverlay();
         gameOverlay.create();
 
-        Vector3 translation = modelFactory.getInitObject().transform.getTranslation(new Vector3());
+        Vector3 redCastlePosition = modelFactory.getRedCastle().transform.getTranslation(tmpVector);
 
-        gameCamera = new GameCamera(modelFactory.getSurface());
-        gameCamera.position.set(translation.x + 10f, translation.y + 10f, translation.z);
-        gameCamera.lookAt(translation);
+        gameCamera = new GameCamera();
+        gameCamera.basePlane = modelFactory.getSurface();
+        gameCamera.position.set(redCastlePosition.x + 10f, redCastlePosition.y + 10f, redCastlePosition.z);
+        gameCamera.lookAt(redCastlePosition);
 
         gameUnitSpawner = new GameUnitSpawner(this);
 

@@ -24,7 +24,7 @@ public class ModelFactory extends ApplicationAdapter {
 
     private List<GameObject> initObjects;
 
-    private GameObject initObject;
+    private GameObject redCastle;
     private GameObject surface;
     private GameObject spawner;
 
@@ -74,12 +74,12 @@ public class ModelFactory extends ApplicationAdapter {
     }
 
     private List<GameObject> constructMainObjects() {
-        initObject = constructStaticObject("Castle-1");
+        redCastle = constructStaticObject("Castle-1");
         surface = constructStaticObject("Surface");
         spawner = constructObject("Spawner-1");
 
         return Arrays.asList(spawner,
-                initObject,
+                redCastle,
                 constructStaticObject("Castle-2"),
                 constructStaticObject("Castle-3"),
                 constructStaticObject("Castle-4"),
@@ -119,8 +119,8 @@ public class ModelFactory extends ApplicationAdapter {
         return initObjects;
     }
 
-    public GameObject getInitObject() {
-        return initObject;
+    public GameObject getRedCastle() {
+        return redCastle;
     }
 
     public GameObject getSurface() {

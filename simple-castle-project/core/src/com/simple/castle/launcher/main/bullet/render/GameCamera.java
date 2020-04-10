@@ -11,10 +11,14 @@ import com.simple.castle.launcher.main.utils.GameIntersectUtils;
 
 public class GameCamera extends PerspectiveCamera implements InputProcessor {
 
+    public GameObject basePlane;
+
     private static final int FIELD_OF_VIEW = 67;
     private static final float CAMERA_SPEED = 0.5f;
     private static final float NEAR = 1f;
     private static final float FAR = 300f;
+
+    private boolean mouseDragged = false;
 
     private boolean keyUpHolds = false;
     private boolean keyDownHolds = false;
@@ -24,15 +28,10 @@ public class GameCamera extends PerspectiveCamera implements InputProcessor {
     private float previousX;
     private float previousY;
 
-    private boolean mouseDragged = false;
-
-    private final GameObject surface;
-
     private Vector3 tempVector = new Vector3();
 
-    public GameCamera(GameObject surface) {
+    public GameCamera() {
         super(FIELD_OF_VIEW, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        this.surface = surface;
         near = NEAR;
         far = FAR;
         update();
@@ -101,9 +100,9 @@ public class GameCamera extends PerspectiveCamera implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (button == Input.Buttons.LEFT) {
+        if (basePlane != null && button == Input.Buttons.LEFT) {
             mouseDragged = true;
-            Vector3 vector3 = GameIntersectUtils.intersectPositionPoint(new BoundingBox(), this, surface, screenX, screenY);
+            Vector3 vector3 = GameIntersectUtils.intersectPositionPoint(new BoundingBox(), this, basePlane, screenX, screenY);
             if (vector3 != null) {
                 previousX = vector3.x;
                 previousY = vector3.z;
@@ -120,8 +119,8 @@ public class GameCamera extends PerspectiveCamera implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        if (mouseDragged) {
-            Vector3 vector3 = GameIntersectUtils.intersectPositionPoint(new BoundingBox(), this, surface, screenX, screenY);
+        if (basePlane != null && mouseDragged) {
+            Vector3 vector3 = GameIntersectUtils.intersectPositionPoint(new BoundingBox(), this, basePlane, screenX, screenY);
             if (vector3 != null) {
                 final float deltaX = previousX - vector3.x;
                 final float deltaY = previousY - vector3.z;
