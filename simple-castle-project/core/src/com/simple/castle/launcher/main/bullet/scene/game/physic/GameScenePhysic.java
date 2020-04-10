@@ -15,13 +15,13 @@ import com.simple.castle.launcher.main.bullet.render.GameCamera;
 public class GameScenePhysic implements Disposable {
     private final boolean DEBUG_DRAW = true;
 
-    private GameScenePhysic.MyContactListener contactListener;
-    private btCollisionConfiguration collisionConfig;
-    private btDispatcher dispatcher;
-    private btBroadphaseInterface broadphase;
-    private btConstraintSolver constraintSolver;
-    private btDynamicsWorld dynamicsWorld;
-    private DebugDrawer debugDrawer;
+    private final GameScenePhysic.MyContactListener contactListener;
+    private final btCollisionConfiguration collisionConfig;
+    private final btDispatcher dispatcher;
+    private final btBroadphaseInterface broadphase;
+    private final btConstraintSolver constraintSolver;
+    private final btDynamicsWorld dynamicsWorld;
+    private final DebugDrawer debugDrawer;
 
     public GameScenePhysic() {
         contactListener = new GameScenePhysic.MyContactListener();
