@@ -1,43 +1,41 @@
 package com.simple.castle.launcher.main.bullet.main;
 
-import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.physics.bullet.Bullet;
+import com.simple.castle.launcher.main.bullet.render.GameRenderer;
 import com.simple.castle.launcher.main.bullet.scene.GameScene;
+import com.simple.castle.launcher.main.utils.ModelLoader;
 
-public class GameLauncher implements ApplicationListener {
+public class GameLauncher extends Game {
 
-    private GameScene gameScene;
+    private GameRenderer gameRenderer;
+    private GameModels gameModels;
+
+    private Model model;
 
     @Override
     public void create() {
-        gameScene = new GameScene();
-        gameScene.create();
+        Bullet.init();
 
+        model = ModelLoader.loadModel();
+
+        gameRenderer = new GameRenderer();
+        gameModels = new GameModels(model);
+
+        GameScene gameScene = new GameScene(gameRenderer, gameModels);
+
+        setScreen(gameScene);
         Gdx.input.setInputProcessor(gameScene);
     }
 
     @Override
-    public void resize(int width, int height) {
-        gameScene.resize(width, height);
-    }
-
-    @Override
-    public void render() {
-        gameScene.render();
-    }
-
-    @Override
-    public void pause() {
-        gameScene.pause();
-    }
-
-    @Override
-    public void resume() {
-        gameScene.resume();
-    }
-
-    @Override
     public void dispose() {
-        gameScene.dispose();
+        gameRenderer.dispose();
+        gameModels.dispose();
+        model.dispose();
+
+        super.dispose();
     }
 }

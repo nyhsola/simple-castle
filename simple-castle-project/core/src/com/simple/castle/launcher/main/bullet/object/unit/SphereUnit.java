@@ -9,8 +9,8 @@ import com.simple.castle.launcher.main.bullet.object.GameObject;
 import com.simple.castle.launcher.main.bullet.object.GameObjectConstructor;
 import com.simple.castle.launcher.main.utils.GameObjectsUtil;
 
-import static com.simple.castle.launcher.main.bullet.main.ModelFactory.GROUND_FLAG;
-import static com.simple.castle.launcher.main.bullet.main.ModelFactory.OBJECT_FLAG;
+import static com.simple.castle.launcher.main.bullet.main.GameModels.GROUND_FLAG;
+import static com.simple.castle.launcher.main.bullet.main.GameModels.OBJECT_FLAG;
 
 public class SphereUnit extends GameObject {
 

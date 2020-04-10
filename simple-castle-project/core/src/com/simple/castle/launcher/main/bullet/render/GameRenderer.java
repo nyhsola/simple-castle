@@ -1,17 +1,15 @@
 package com.simple.castle.launcher.main.bullet.render;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.simple.castle.launcher.main.bullet.physic.GamePhysicWorld;
 
-public class GameRenderer extends ApplicationAdapter {
+public class GameRenderer {
 
-    private ModelBatch modelBatch;
+    private final ModelBatch modelBatch;
 
-    @Override
-    public void create() {
+    public GameRenderer() {
         modelBatch = new ModelBatch();
     }
 
@@ -25,7 +23,6 @@ public class GameRenderer extends ApplicationAdapter {
         modelBatch.end();
     }
 
-    @Override
     public void dispose() {
         modelBatch.dispose();
     }

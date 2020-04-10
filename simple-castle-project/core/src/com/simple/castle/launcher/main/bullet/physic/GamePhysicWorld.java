@@ -2,7 +2,6 @@ package com.simple.castle.launcher.main.bullet.physic;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.physics.bullet.DebugDrawer;
 import com.badlogic.gdx.physics.bullet.collision.*;
 import com.badlogic.gdx.physics.bullet.dynamics.btConstraintSolver;
@@ -32,8 +31,6 @@ public class GamePhysicWorld extends ApplicationAdapter {
 
     @Override
     public void create() {
-        Bullet.init();
-
         contactListener = new MyContactListener();
 
         collisionConfig = new btDefaultCollisionConfiguration();
@@ -81,10 +78,6 @@ public class GamePhysicWorld extends ApplicationAdapter {
 
     public Array<GameObject> getInstances() {
         return instances;
-    }
-
-    public int objCount() {
-        return instances.size;
     }
 
     private static class MyContactListener extends ContactListener {

@@ -91,3 +91,7 @@ task run(type: Exec) {
     def adb = path + "/platform-tools/adb"
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.simple.castle/com.simple.castle.AndroidLauncher'
 }
+
+dependencies {
+    implementation project(path: ':core')
+}

@@ -28,8 +28,7 @@ public class GameObject extends ModelInstance implements Disposable {
         motionState.dispose();
     }
 
-    public void update() {
-
+    public String getNode() {
+        return node;
     }
-
 }
