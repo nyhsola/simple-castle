@@ -5,17 +5,17 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
-import com.simple.castle.launcher.main.bullet.object.GameObject;
+import com.simple.castle.launcher.main.bullet.object.AbstractGameObject;
 
 import java.util.Locale;
 
 public class GameOverlay extends ApplicationAdapter {
 
+    private final Quaternion tmpQuaternion = new Quaternion();
+    private final Vector3 tmpVector3 = new Vector3();
+
     private BitmapFont bitmapFont;
     private SpriteBatch batch;
-
-    private Vector3 tmpVector3 = new Vector3();
-    private Quaternion tmpQuaternion = new Quaternion();
 
     @Override
     public void create() {
@@ -23,7 +23,7 @@ public class GameOverlay extends ApplicationAdapter {
         batch = new SpriteBatch();
     }
 
-    public void render(GameCamera gameCamera, GameObject selected) {
+    public void render(GameCamera gameCamera, AbstractGameObject selected) {
         batch.begin();
 
         bitmapFont.draw(batch, "Camera position: " +
@@ -42,6 +42,12 @@ public class GameOverlay extends ApplicationAdapter {
         }
 
         batch.end();
+    }
+
+    @Override
+    public void dispose() {
+        bitmapFont.dispose();
+        batch.dispose();
     }
 
     private String format(Vector3 vector3) {

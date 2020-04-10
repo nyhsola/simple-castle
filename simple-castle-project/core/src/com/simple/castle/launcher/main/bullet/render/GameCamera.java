@@ -6,12 +6,12 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import com.simple.castle.launcher.main.bullet.object.GameObject;
+import com.simple.castle.launcher.main.bullet.object.AbstractGameObject;
 import com.simple.castle.launcher.main.utils.GameIntersectUtils;
 
 public class GameCamera extends PerspectiveCamera implements InputProcessor {
 
-    public GameObject basePlane;
+    public AbstractGameObject basePlane;
 
     private static final int FIELD_OF_VIEW = 67;
     private static final float CAMERA_SPEED = 0.5f;

@@ -1,24 +1,27 @@
 package com.simple.castle.launcher.main.bullet.object;
 
-import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.utils.Disposable;
 
-public class GameObject extends ModelInstance implements Disposable {
+public abstract class AbstractGameObject extends ModelInstance implements Disposable {
+    public final static short GROUND_FLAG = 1 << 8;
+    public final static short OBJECT_FLAG = 1 << 9;
+    public final static short ALL_FLAG = -1;
+
     public final btRigidBody body;
     public final MotionState motionState;
     public final String node;
 
-    public GameObject(Model model, String node, btRigidBody.btRigidBodyConstructionInfo constructionInfo) {
-        super(model, new Matrix4(), node, true);
-        this.node = node;
+    public AbstractGameObject(GameObjectConstructor gameObjectConstructor) {
+        super(gameObjectConstructor.model, new Matrix4(), gameObjectConstructor.node, true);
+        this.node = gameObjectConstructor.node;
 
         motionState = new MotionState();
         motionState.transform = this.transform;
 
-        body = new btRigidBody(constructionInfo);
+        body = new btRigidBody(gameObjectConstructor.constructionInfo);
         body.setMotionState(motionState);
     }
 

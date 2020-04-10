@@ -1,22 +1,27 @@
-package com.simple.castle.launcher.main.bullet.scene;
+package com.simple.castle.launcher.main.bullet.scene.game;
 
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.ArrayMap;
 import com.simple.castle.launcher.main.bullet.controller.GameSelectItemController;
 import com.simple.castle.launcher.main.bullet.controller.GameUnitSpawner;
 import com.simple.castle.launcher.main.bullet.main.GameModels;
-import com.simple.castle.launcher.main.bullet.main.GameObjectType;
-import com.simple.castle.launcher.main.bullet.object.GameObject;
-import com.simple.castle.launcher.main.bullet.physic.GamePhysicWorld;
+import com.simple.castle.launcher.main.bullet.object.AbstractGameObject;
+import com.simple.castle.launcher.main.bullet.object.GameObjectConstructor;
+import com.simple.castle.launcher.main.bullet.object.unit.KinematicGameObject;
+import com.simple.castle.launcher.main.bullet.object.unit.UnitGameObject;
 import com.simple.castle.launcher.main.bullet.render.GameCamera;
 import com.simple.castle.launcher.main.bullet.render.GameEnvironment;
 import com.simple.castle.launcher.main.bullet.render.GameOverlay;
 import com.simple.castle.launcher.main.bullet.render.GameRenderer;
+import com.simple.castle.launcher.main.bullet.scene.game.physic.GameSceneWorld;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class GameScene extends ScreenAdapter implements InputProcessor {
 
@@ -26,29 +31,29 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
 
     private final GameRenderer gameRenderer;
     private final GameModels gameModels;
+    private final GameSceneWorld gameSceneWorld;
 
-    private Map<String, GameObject> sceneGameObjects;
+    private Map<String, AbstractGameObject> sceneGameObjects;
 
-    private GamePhysicWorld gamePhysicWorld;
-    private GameEnvironment gameEnvironment;
-    private GameCamera gameCamera;
     private GameOverlay gameOverlay;
 
-    private GameUnitSpawner gameUnitSpawner;
+    private GameEnvironment gameEnvironment;
+    private GameCamera gameCamera;
 
+    private GameUnitSpawner gameUnitSpawner;
     private GameSelectItemController gameSelectItemController;
 
     public GameScene(GameRenderer gameRenderer, GameModels gameModels) {
         this.gameRenderer = gameRenderer;
         this.gameModels = gameModels;
+        this.gameSceneWorld = new GameSceneWorld();
     }
 
     @Override
     public void render(float delta) {
         gameCamera.update();
-
-        gameRenderer.render(gameCamera, gamePhysicWorld, gameEnvironment);
-        gamePhysicWorld.update(gameCamera, Math.min(1f / 30f, delta));
+        gameRenderer.render(gameCamera, sceneGameObjects.values(), gameEnvironment);
+        gameSceneWorld.update(gameCamera, Math.min(1f / 30f, delta));
         gameOverlay.render(gameCamera, gameSelectItemController.getSelectedObject());
     }
 
@@ -59,22 +64,23 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
 
     @Override
     public void show() {
-        gamePhysicWorld = new GamePhysicWorld();
-        gamePhysicWorld.create();
-
         gameEnvironment = new GameEnvironment();
         gameEnvironment.create();
 
         gameOverlay = new GameOverlay();
         gameOverlay.create();
 
-        sceneGameObjects = gameModels.constructNextModels(Map.ofEntries(
-                Map.entry("Surface", GameObjectType.KINEMATIC),
-                Map.entry("Castle-1", GameObjectType.KINEMATIC),
-                Map.entry("Castle-2", GameObjectType.KINEMATIC),
-                Map.entry("Castle-3", GameObjectType.KINEMATIC),
-                Map.entry("Castle-4", GameObjectType.KINEMATIC),
-                Map.entry("Spawner-1", GameObjectType.KINEMATIC)));
+        ArrayMap<String, GameObjectConstructor> constructors = gameModels.getConstructors();
+
+        sceneGameObjects = new HashMap<>(Map.ofEntries(
+                Map.entry("Surface", new KinematicGameObject(constructors.get("Surface"))),
+                Map.entry("Castle-1", new KinematicGameObject(constructors.get("Castle-1"))),
+                Map.entry("Castle-2", new KinematicGameObject(constructors.get("Castle-2"))),
+                Map.entry("Castle-3", new KinematicGameObject(constructors.get("Castle-3"))),
+                Map.entry("Castle-4", new KinematicGameObject(constructors.get("Castle-4"))),
+                Map.entry("Spawner-1", new KinematicGameObject(constructors.get("Spawner-1")))));
+
+        sceneGameObjects.forEach((s, gameObject) -> gameSceneWorld.addRigidBody(gameObject));
 
         Vector3 redCastlePosition = sceneGameObjects.get("Castle-1").transform.getTranslation(tempVector);
 
@@ -84,19 +90,19 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         gameCamera.lookAt(redCastlePosition);
 
         gameUnitSpawner = new GameUnitSpawner(this);
-
-        gameSelectItemController = new GameSelectItemController(gameCamera, gamePhysicWorld);
-
-        sceneGameObjects.forEach((s, gameObject) -> gamePhysicWorld.addRigidBody(gameObject));
+        gameSelectItemController = new GameSelectItemController(gameCamera, this);
 
         inputMultiplexer.addProcessor(gameSelectItemController);
         inputMultiplexer.addProcessor(gameUnitSpawner);
+        inputMultiplexer.addProcessor(gameSceneWorld);
         inputMultiplexer.addProcessor(gameCamera);
     }
 
     @Override
     public void hide() {
-        gamePhysicWorld.dispose();
+        gameSceneWorld.dispose();
+        gameOverlay.dispose();
+        sceneGameObjects.forEach((s, gameObject) -> gameObject.dispose());
     }
 
     @Override
@@ -140,13 +146,17 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
     }
 
     public void spawn() {
-        GameObject build = gameModels.constructNextModels(Map.ofEntries(Map.entry("Unit-1", GameObjectType.OBJECT)))
-                .get("Unit-1");
+        UnitGameObject unitGameObject = new UnitGameObject(gameModels.getConstructors().get("Unit-1"));
 
-        build.body.setWorldTransform(new Matrix4());
-        build.body.translate(sceneGameObjects.get("Spawner-1").transform.getTranslation(new Vector3()));
+        sceneGameObjects.put(UUID.randomUUID().toString(), unitGameObject);
 
-        gamePhysicWorld.addRigidBody(build);
+        unitGameObject.body.setWorldTransform(new Matrix4());
+        unitGameObject.body.translate(sceneGameObjects.get("Spawner-1").transform.getTranslation(new Vector3()));
+
+        gameSceneWorld.addRigidBody(unitGameObject);
     }
 
+    public Map<String, AbstractGameObject> getSceneGameObjects() {
+        return sceneGameObjects;
+    }
 }

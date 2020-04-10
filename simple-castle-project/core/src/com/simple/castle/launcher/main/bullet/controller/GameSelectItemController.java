@@ -2,32 +2,31 @@ package com.simple.castle.launcher.main.bullet.controller;
 
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import com.simple.castle.launcher.main.bullet.object.GameObject;
-import com.simple.castle.launcher.main.bullet.physic.GamePhysicWorld;
+import com.simple.castle.launcher.main.bullet.object.AbstractGameObject;
 import com.simple.castle.launcher.main.bullet.render.GameCamera;
+import com.simple.castle.launcher.main.bullet.scene.game.GameScene;
 import com.simple.castle.launcher.main.utils.GameIntersectUtils;
 
 public class GameSelectItemController extends InputAdapter {
 
     private final GameCamera gameCamera;
-    private final GamePhysicWorld gamePhysicWorld;
+    private final BoundingBox tempBoundingBox = new BoundingBox();
+    private final GameScene gameScene;
 
-    private GameObject gameObject;
+    private AbstractGameObject abstractGameObject;
 
-    private BoundingBox tempBoundingBox = new BoundingBox();
-
-    public GameSelectItemController(GameCamera gameCamera, GamePhysicWorld gamePhysicWorld) {
+    public GameSelectItemController(GameCamera gameCamera, GameScene gameScene) {
         this.gameCamera = gameCamera;
-        this.gamePhysicWorld = gamePhysicWorld;
+        this.gameScene = gameScene;
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        gameObject = GameIntersectUtils.intersect(tempBoundingBox, gameCamera, gamePhysicWorld.getInstances(), screenX, screenY);
+        abstractGameObject = GameIntersectUtils.intersect(tempBoundingBox, gameCamera, gameScene.getSceneGameObjects().values(), screenX, screenY);
         return super.touchDown(screenX, screenY, pointer, button);
     }
 
-    public GameObject getSelectedObject() {
-        return gameObject;
+    public AbstractGameObject getSelectedObject() {
+        return abstractGameObject;
     }
 }

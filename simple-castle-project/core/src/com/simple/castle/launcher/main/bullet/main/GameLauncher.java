@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.simple.castle.launcher.main.bullet.render.GameRenderer;
-import com.simple.castle.launcher.main.bullet.scene.GameScene;
+import com.simple.castle.launcher.main.bullet.scene.game.GameScene;
 import com.simple.castle.launcher.main.utils.ModelLoader;
 
 public class GameLauncher extends Game {

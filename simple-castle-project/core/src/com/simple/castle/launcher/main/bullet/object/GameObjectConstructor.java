@@ -25,10 +25,6 @@ public class GameObjectConstructor implements Disposable {
         this.constructionInfo = new btRigidBody.btRigidBodyConstructionInfo(mass, null, shape, localInertia);
     }
 
-    public GameObject construct() {
-        return new GameObject(model, node, constructionInfo);
-    }
-
     @Override
     public void dispose() {
         shape.dispose();

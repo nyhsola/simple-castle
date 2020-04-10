@@ -2,7 +2,7 @@ package com.simple.castle.launcher.main.bullet.controller;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.simple.castle.launcher.main.bullet.scene.GameScene;
+import com.simple.castle.launcher.main.bullet.scene.game.GameScene;
 
 public class GameUnitSpawner extends InputAdapter {
 

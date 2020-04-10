@@ -1,6 +1,5 @@
-package com.simple.castle.launcher.main.bullet.physic;
+package com.simple.castle.launcher.main.bullet.scene.game.physic;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.DebugDrawer;
 import com.badlogic.gdx.physics.bullet.collision.*;
@@ -9,29 +8,23 @@ import com.badlogic.gdx.physics.bullet.dynamics.btDiscreteDynamicsWorld;
 import com.badlogic.gdx.physics.bullet.dynamics.btDynamicsWorld;
 import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver;
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
-import com.badlogic.gdx.utils.Array;
-import com.simple.castle.launcher.main.bullet.object.GameObject;
+import com.badlogic.gdx.utils.Disposable;
+import com.simple.castle.launcher.main.bullet.object.AbstractGameObject;
 import com.simple.castle.launcher.main.bullet.render.GameCamera;
 
-public class GamePhysicWorld extends ApplicationAdapter {
-
+public class GameScenePhysic implements Disposable {
     private final boolean DEBUG_DRAW = true;
 
-    private GamePhysicWorld.MyContactListener contactListener;
+    private GameScenePhysic.MyContactListener contactListener;
     private btCollisionConfiguration collisionConfig;
     private btDispatcher dispatcher;
     private btBroadphaseInterface broadphase;
     private btConstraintSolver constraintSolver;
-
     private btDynamicsWorld dynamicsWorld;
-
-    private Array<GameObject> instances;
-
     private DebugDrawer debugDrawer;
 
-    @Override
-    public void create() {
-        contactListener = new MyContactListener();
+    public GameScenePhysic() {
+        contactListener = new GameScenePhysic.MyContactListener();
 
         collisionConfig = new btDefaultCollisionConfiguration();
         dispatcher = new btCollisionDispatcher(collisionConfig);
@@ -40,16 +33,13 @@ public class GamePhysicWorld extends ApplicationAdapter {
         dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, constraintSolver, collisionConfig);
         dynamicsWorld.setGravity(new Vector3(0, -10f, 0));
 
-        instances = new Array<>();
-
         debugDrawer = new DebugDrawer();
         debugDrawer.setDebugMode(btIDebugDraw.DebugDrawModes.DBG_MAX_DEBUG_DRAW_MODE);
 
         dynamicsWorld.setDebugDrawer(debugDrawer);
     }
 
-    public void addRigidBody(GameObject object) {
-        instances.add(object);
+    public void addRigidBody(AbstractGameObject object) {
         dynamicsWorld.addRigidBody(object.body);
     }
 
@@ -70,14 +60,6 @@ public class GamePhysicWorld extends ApplicationAdapter {
         dispatcher.dispose();
         collisionConfig.dispose();
         contactListener.dispose();
-        for (GameObject obj : instances) {
-            obj.dispose();
-        }
-        instances.clear();
-    }
-
-    public Array<GameObject> getInstances() {
-        return instances;
     }
 
     private static class MyContactListener extends ContactListener {
