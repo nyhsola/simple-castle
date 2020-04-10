@@ -10,8 +10,6 @@ import com.simple.castle.launcher.main.bullet.controller.GameUnitSpawner;
 import com.simple.castle.launcher.main.bullet.main.GameModels;
 import com.simple.castle.launcher.main.bullet.main.GameObjectType;
 import com.simple.castle.launcher.main.bullet.object.GameObject;
-import com.simple.castle.launcher.main.bullet.object.unit.SphereUnit;
-import com.simple.castle.launcher.main.bullet.object.unit.controller.MainUnitController;
 import com.simple.castle.launcher.main.bullet.physic.GamePhysicWorld;
 import com.simple.castle.launcher.main.bullet.render.GameCamera;
 import com.simple.castle.launcher.main.bullet.render.GameEnvironment;
@@ -37,7 +35,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
     private GameOverlay gameOverlay;
 
     private GameUnitSpawner gameUnitSpawner;
-    private MainUnitController mainUnitController;
 
     private GameSelectItemController gameSelectItemController;
 
@@ -48,8 +45,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
 
     @Override
     public void render(float delta) {
-        mainUnitController.update();
-
         gameCamera.update();
 
         gameRenderer.render(gameCamera, gamePhysicWorld, gameEnvironment);
@@ -91,8 +86,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         gameUnitSpawner = new GameUnitSpawner(this);
 
         gameSelectItemController = new GameSelectItemController(gameCamera, gamePhysicWorld);
-
-        mainUnitController = new MainUnitController();
 
         sceneGameObjects.forEach((s, gameObject) -> gamePhysicWorld.addRigidBody(gameObject));
 
@@ -147,7 +140,8 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
     }
 
     public void spawn() {
-        SphereUnit build = new SphereUnit.Builder(gameModels.getMainModel()).build();
+        GameObject build = gameModels.constructNextModels(Map.ofEntries(Map.entry("Unit-1", GameObjectType.OBJECT)))
+                .get("Unit-1");
 
         build.body.setWorldTransform(new Matrix4());
         build.body.translate(sceneGameObjects.get("Spawner-1").transform.getTranslation(new Vector3()));
