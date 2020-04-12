@@ -1,11 +1,10 @@
-package com.simple.castle.launcher.main.bullet.controller;
+package com.simple.castle.launcher.main.bullet.scene.game.controller;
 
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.simple.castle.launcher.main.bullet.object.AbstractGameObject;
 import com.simple.castle.launcher.main.bullet.render.GameCamera;
 import com.simple.castle.launcher.main.bullet.scene.game.GameScene;
-import com.simple.castle.launcher.main.utils.GameIntersectUtils;
 
 public class GameSelectItemController extends InputAdapter {
 
@@ -22,7 +21,7 @@ public class GameSelectItemController extends InputAdapter {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        abstractGameObject = GameIntersectUtils.intersect(tempBoundingBox, gameCamera, gameScene.getSceneGameObjects().values(), screenX, screenY);
+//        abstractGameObject = GameIntersectUtils.intersect(tempBoundingBox, gameCamera, gameScene.getSceneGameObjects().values(), screenX, screenY);
         return super.touchDown(screenX, screenY, pointer, button);
     }
 

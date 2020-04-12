@@ -25,10 +25,8 @@ public class GameOverlay extends ApplicationAdapter {
 
     public void render(GameCamera gameCamera, AbstractGameObject selected) {
         batch.begin();
-
         bitmapFont.draw(batch, "Camera position: " +
                 format(gameCamera.position), 0, 20);
-
         if (selected != null) {
             bitmapFont.draw(batch, "Selected (model): " +
                     "Position: " + format(selected.transform.getTranslation(tmpVector3)) + " " +
@@ -40,7 +38,6 @@ public class GameOverlay extends ApplicationAdapter {
 
             bitmapFont.draw(batch, selected.node, 0, 80);
         }
-
         batch.end();
     }
 

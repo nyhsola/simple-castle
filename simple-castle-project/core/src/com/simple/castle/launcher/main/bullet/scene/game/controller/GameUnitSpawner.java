@@ -1,4 +1,4 @@
-package com.simple.castle.launcher.main.bullet.controller;
+package com.simple.castle.launcher.main.bullet.scene.game.controller;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -16,7 +16,7 @@ public class GameUnitSpawner extends InputAdapter {
     public boolean keyDown(int keycode) {
 
         if (Input.Keys.SPACE == keycode) {
-            gameLauncher.spawn();
+//            gameLauncher.spawn();
         }
 
         return super.keyDown(keycode);
