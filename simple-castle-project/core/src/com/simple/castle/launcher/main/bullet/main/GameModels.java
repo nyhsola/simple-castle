@@ -8,6 +8,7 @@ import com.simple.castle.launcher.main.bullet.object.GameObjectConstructor;
 import com.simple.castle.launcher.main.utils.GameObjectsUtil;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -17,19 +18,23 @@ public class GameModels {
     private final Model mainModel;
     private final ArrayMap<String, GameObjectConstructor> constructors;
 
-    private final Map<List<Object>, Function<BoundingBox, btCollisionShape>> nodeShape = Map.ofEntries(
+    private final Map<List<Object>, Function<BoundingBox, btCollisionShape>> nodeShape = new HashMap<>(Map.ofEntries(
             Map.entry(Arrays.asList(0f, "Surface"), GameObjectsUtil::calculateBox),
             Map.entry(Arrays.asList(1f, "Unit-1"), GameObjectsUtil::calculateSphere),
             Map.entry(Arrays.asList(0f, "Castle-1"), GameObjectsUtil::calculateBox),
             Map.entry(Arrays.asList(0f, "Castle-2"), GameObjectsUtil::calculateBox),
             Map.entry(Arrays.asList(0f, "Castle-3"), GameObjectsUtil::calculateBox),
             Map.entry(Arrays.asList(0f, "Castle-4"), GameObjectsUtil::calculateBox),
-            Map.entry(Arrays.asList(0f, "Spawner-1"), GameObjectsUtil::calculateBox));
+            Map.entry(Arrays.asList(0f, "Spawner-1"), GameObjectsUtil::calculateBox),
+            Map.entry(Arrays.asList(0f, "Spawner-2"), GameObjectsUtil::calculateBox)));
 
     public GameModels(Model mainModel) {
         this.mainModel = mainModel;
-
         constructors = new ArrayMap<>();
+        for (int i = 0; i < 123; i++) {
+            String format = String.format("Cone.%03d", i);
+            nodeShape.put(Arrays.asList(0f, format), GameObjectsUtil::calculateBox);
+        }
         constructors.putAll(constructObjects());
     }
 

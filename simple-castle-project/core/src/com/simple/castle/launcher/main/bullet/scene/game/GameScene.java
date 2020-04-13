@@ -67,13 +67,19 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
 
     @Override
     public void show() {
+        for (int i = 0; i < 123; i++) {
+            String format = String.format("Cone.%03d", i);
+            sceneGameObjects.put(format, new KinematicGameObject(constructors.get(format)));
+        }
+
         sceneGameObjects.putAll(Map.ofEntries(
                 Map.entry("Surface", new KinematicGameObject(constructors.get("Surface"))),
                 Map.entry("Castle-1", new KinematicGameObject(constructors.get("Castle-1"))),
                 Map.entry("Castle-2", new KinematicGameObject(constructors.get("Castle-2"))),
                 Map.entry("Castle-3", new KinematicGameObject(constructors.get("Castle-3"))),
                 Map.entry("Castle-4", new KinematicGameObject(constructors.get("Castle-4"))),
-                Map.entry("Spawner-1", new KinematicGameObject(constructors.get("Spawner-1")))));
+                Map.entry("Spawner-1", new KinematicGameObject(constructors.get("Spawner-1"))),
+                Map.entry("Spawner-2", new KinematicGameObject(constructors.get("Spawner-2")))));
         sceneGameObjects.forEach((s, gameObject) -> gameScenePhysic.addRigidBody(gameObject));
 
         gameEnvironment = new GameEnvironment();
@@ -141,12 +147,12 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
 
     private void spawnUnit() {
         Vector3 spawner1 = sceneGameObjects.get("Spawner-1").transform.getTranslation(tempVector).cpy();
-        Vector3 castle2 = sceneGameObjects.get("Castle-2").transform.getTranslation(tempVector).cpy();
+        Vector3 spawner2 = sceneGameObjects.get("Spawner-2").transform.getTranslation(tempVector).cpy();
 
         UnitGameObject unitGameObject = new UnitGameObject(constructors.get("Unit-1"));
         unitGameObject.body.setWorldTransform(new Matrix4());
         unitGameObject.body.translate(spawner1);
-        unitGameObject.body.setLinearVelocity(castle2.sub(spawner1).scl(0.1f));
+        unitGameObject.body.setLinearVelocity(spawner2.sub(spawner1).scl(0.1f));
 
         gameScenePhysic.addRigidBody(unitGameObject);
         sceneGameObjects.put("Unit-1" + UUID.randomUUID(), unitGameObject);
