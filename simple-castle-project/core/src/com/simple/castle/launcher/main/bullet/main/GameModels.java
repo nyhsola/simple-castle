@@ -25,8 +25,9 @@ public class GameModels {
             Map.entry(Arrays.asList(0f, "Castle-2"), GameObjectsUtil::calculateBox),
             Map.entry(Arrays.asList(0f, "Castle-3"), GameObjectsUtil::calculateBox),
             Map.entry(Arrays.asList(0f, "Castle-4"), GameObjectsUtil::calculateBox),
-            Map.entry(Arrays.asList(0f, "Spawner-1"), GameObjectsUtil::calculateBox),
-            Map.entry(Arrays.asList(0f, "Spawner-2"), GameObjectsUtil::calculateBox)));
+            Map.entry(Arrays.asList(0f, "Area-Left-Down"), GameObjectsUtil::calculateBox),
+            Map.entry(Arrays.asList(0f, "Spawner-Red-Left"), GameObjectsUtil::calculateBox),
+            Map.entry(Arrays.asList(0f, "Spawner-Blue-Down"), GameObjectsUtil::calculateBox)));
 
     public GameModels(Model mainModel) {
         this.mainModel = mainModel;
