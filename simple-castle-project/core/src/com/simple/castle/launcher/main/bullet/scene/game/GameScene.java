@@ -85,13 +85,14 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
                 Map.entry("Castle-4", new KinematicGameObject(constructors.get("Castle-4"))),
                 Map.entry("Area-Left-Down", new KinematicGameObject(constructors.get("Area-Left-Down"))),
                 Map.entry("Spawner-Red-Left", new KinematicGameObject(constructors.get("Spawner-Red-Left"))),
-                Map.entry("Spawner-Blue-Down", new KinematicGameObject(constructors.get("Spawner-Blue-Down")))));
+                Map.entry("Spawner-Blue-Down", new KinematicGameObject(constructors.get("Spawner-Blue-Down")))
+        ));
         sceneGameObjects.forEach((s, gameObject) -> gameScenePhysic.addRigidBody(gameObject));
 
         gameEnvironment = new GameEnvironment();
         gameEnvironment.create();
 
-        Vector3 redCastlePosition = sceneGameObjects.get("Castle-1").transform.getTranslation(tempVector);
+        Vector3 redCastlePosition = constructors.get("Castle-1").model.getNode("Castle-1").translation;
         gameCamera = new GameCamera();
         gameCamera.basePlane = sceneGameObjects.get("Surface");
         gameCamera.position.set(redCastlePosition.x + 10f, redCastlePosition.y + 10f, redCastlePosition.z);
