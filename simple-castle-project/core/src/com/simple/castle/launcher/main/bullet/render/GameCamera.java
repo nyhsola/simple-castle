@@ -25,6 +25,8 @@ public class GameCamera extends PerspectiveCamera implements InputProcessor {
     private boolean keyLeftHolds = false;
     private boolean keyRightHolds = false;
 
+    private boolean keyCtrlHolds = false;
+
     private float previousX;
     private float previousY;
 
@@ -73,6 +75,9 @@ public class GameCamera extends PerspectiveCamera implements InputProcessor {
         if (Input.Keys.RIGHT == keycode || Input.Keys.D == keycode) {
             keyRightHolds = true;
         }
+        if (Input.Keys.CONTROL_LEFT == keycode) {
+            keyCtrlHolds = true;
+        }
         return false;
     }
 
@@ -89,6 +94,9 @@ public class GameCamera extends PerspectiveCamera implements InputProcessor {
         }
         if (Input.Keys.RIGHT == keycode || Input.Keys.D == keycode) {
             keyRightHolds = false;
+        }
+        if (Input.Keys.CONTROL_LEFT == keycode) {
+            keyCtrlHolds = false;
         }
         return false;
     }
@@ -138,7 +146,9 @@ public class GameCamera extends PerspectiveCamera implements InputProcessor {
 
     @Override
     public boolean scrolled(int amount) {
-        translate(tempVector.set(direction).scl(amount));
+        if (!keyCtrlHolds) {
+            translate(tempVector.set(direction).scl(amount));
+        }
         return false;
     }
 }
