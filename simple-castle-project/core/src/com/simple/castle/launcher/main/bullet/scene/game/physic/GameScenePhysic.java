@@ -13,7 +13,6 @@ import com.simple.castle.launcher.main.bullet.object.AbstractGameObject;
 import com.simple.castle.launcher.main.bullet.render.GameCamera;
 
 public class GameScenePhysic implements Disposable {
-    private final boolean DEBUG_DRAW = true;
 
     private final GameScenePhysic.MyContactListener contactListener;
     private final btCollisionConfiguration collisionConfig;
@@ -43,9 +42,9 @@ public class GameScenePhysic implements Disposable {
         dynamicsWorld.addRigidBody(object.body);
     }
 
-    public void update(GameCamera camera, float delta) {
+    public void update(GameCamera camera, float delta, boolean debugDraw) {
         dynamicsWorld.stepSimulation(delta, 5, 1f / 60f);
-        if (DEBUG_DRAW) {
+        if (debugDraw) {
             debugDrawer.begin(camera);
             dynamicsWorld.debugDrawWorld();
             debugDrawer.end();

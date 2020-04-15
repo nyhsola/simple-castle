@@ -12,7 +12,6 @@ public class GameLauncher extends Game {
 
     private GameRenderer gameRenderer;
     private GameModels gameModels;
-
     private Model model;
 
     @Override

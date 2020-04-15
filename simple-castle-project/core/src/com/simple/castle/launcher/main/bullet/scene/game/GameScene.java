@@ -45,6 +45,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
     private GameCamera gameCamera;
 
     private AbstractGameObject selected;
+    private boolean debugDraw = false;
 
     public GameScene(GameRenderer gameRenderer, GameModels gameModels) {
         this.gameRenderer = gameRenderer;
@@ -61,7 +62,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         gameCamera.update();
         this.updateUnit();
         gameRenderer.render(gameCamera, sceneGameObjects.values(), gameEnvironment);
-        gameScenePhysic.update(gameCamera, Math.min(1f / 30f, delta));
+        gameScenePhysic.update(gameCamera, Math.min(1f / 30f, delta), debugDraw);
         this.renderOverlay();
     }
 
@@ -113,6 +114,9 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
     public boolean keyDown(int keycode) {
         if (Input.Keys.SPACE == keycode) {
             this.spawnUnit();
+        }
+        if (Input.Keys.ESCAPE == keycode) {
+            debugDraw = !debugDraw;
         }
         return inputMultiplexer.keyDown(keycode);
     }

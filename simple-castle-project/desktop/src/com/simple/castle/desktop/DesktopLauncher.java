@@ -7,10 +7,9 @@ import com.simple.castle.launcher.main.bullet.main.GameLauncher;
 public class DesktopLauncher {
     public static void main(String[] arg) {
 //		System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
-
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.width = 800;
-        config.height = 600;
+        config.width = LwjglApplicationConfiguration.getDesktopDisplayMode().width;
+        config.height = LwjglApplicationConfiguration.getDesktopDisplayMode().height;
         new LwjglApplication(new GameLauncher(), config);
     }
 }
