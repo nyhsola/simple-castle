@@ -59,7 +59,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
 
     @Override
     public void render(float delta) {
-        gameCamera.update();
+        gameCamera.update(delta);
         this.updateUnit();
         gameRenderer.render(gameCamera, sceneGameObjects.values(), gameEnvironment);
         gameScenePhysic.update(gameCamera, Math.min(1f / 30f, delta), debugDraw);

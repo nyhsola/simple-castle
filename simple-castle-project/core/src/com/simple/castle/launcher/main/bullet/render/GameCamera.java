@@ -14,7 +14,7 @@ public class GameCamera extends PerspectiveCamera implements InputProcessor {
     public AbstractGameObject basePlane;
 
     private static final int FIELD_OF_VIEW = 67;
-    private static final float CAMERA_SPEED = 0.5f;
+    private static final float CAMERA_SPEED = 25;
     private static final float NEAR = 1f;
     private static final float FAR = 300f;
 
@@ -44,19 +44,19 @@ public class GameCamera extends PerspectiveCamera implements InputProcessor {
         viewportHeight = height;
     }
 
-    @Override
-    public void update() {
+    public void update(float delta) {
+        float cameraSpeed = CAMERA_SPEED * delta;
         if (keyUpHolds) {
-            position.x = position.x - CAMERA_SPEED;
+            position.x = position.x - cameraSpeed;
         }
         if (keyDownHolds) {
-            position.x = position.x + CAMERA_SPEED;
+            position.x = position.x + cameraSpeed;
         }
         if (keyRightHolds) {
-            position.z = position.z - CAMERA_SPEED;
+            position.z = position.z - cameraSpeed;
         }
         if (keyLeftHolds) {
-            position.z = position.z + CAMERA_SPEED;
+            position.z = position.z + cameraSpeed;
         }
         super.update();
     }
