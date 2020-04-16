@@ -149,6 +149,7 @@ public class GameCamera extends PerspectiveCamera implements InputProcessor {
         if (!keyCtrlHolds) {
             translate(tempVector.set(direction).scl(amount));
         }
+        // TODO: 4/16/2020 By holding ctrl, change angle between camera and surface
         return false;
     }
 }

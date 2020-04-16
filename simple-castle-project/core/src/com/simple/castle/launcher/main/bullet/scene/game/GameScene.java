@@ -180,6 +180,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         bitmapFont.draw(batch, "Camera position: " +
                 format(gameCamera.position), 0, 20);
         if (selected != null) {
+            // TODO: 4/16/2020 Correctly resize text
             bitmapFont.draw(batch, "Selected (model): " +
                     "Position: " + format(selected.transform.getTranslation(tempVector)) + " " +
                     "Rotation: " + format(selected.transform.getRotation(tempQuaternion)), 0, 40);
