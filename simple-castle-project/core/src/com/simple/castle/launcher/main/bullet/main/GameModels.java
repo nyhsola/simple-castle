@@ -7,10 +7,7 @@ import com.badlogic.gdx.utils.ArrayMap;
 import com.simple.castle.launcher.main.bullet.object.GameObjectConstructor;
 import com.simple.castle.launcher.main.utils.GameObjectsUtil;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 public class GameModels {
@@ -25,16 +22,40 @@ public class GameModels {
             Map.entry(Arrays.asList(0f, "Castle-2"), GameObjectsUtil::calculateBox),
             Map.entry(Arrays.asList(0f, "Castle-3"), GameObjectsUtil::calculateBox),
             Map.entry(Arrays.asList(0f, "Castle-4"), GameObjectsUtil::calculateBox),
+
             Map.entry(Arrays.asList(0f, "Area-Left-Down"), GameObjectsUtil::calculateBox),
+            Map.entry(Arrays.asList(0f, "Area-Left-Up"), GameObjectsUtil::calculateBox),
+            Map.entry(Arrays.asList(0f, "Area-Right-Down"), GameObjectsUtil::calculateBox),
+            Map.entry(Arrays.asList(0f, "Area-Right-Up"), GameObjectsUtil::calculateBox),
+
             Map.entry(Arrays.asList(0f, "Spawner-Red-Left"), GameObjectsUtil::calculateBox),
-            Map.entry(Arrays.asList(0f, "Spawner-Blue-Down"), GameObjectsUtil::calculateBox)));
+            Map.entry(Arrays.asList(0f, "Spawner-Red-Right"), GameObjectsUtil::calculateBox),
+            Map.entry(Arrays.asList(0f, "Spawner-Red-Up"), GameObjectsUtil::calculateBox),
+
+            Map.entry(Arrays.asList(0f, "Spawner-Blue-Down"), GameObjectsUtil::calculateBox),
+            Map.entry(Arrays.asList(0f, "Spawner-Blue-Left"), GameObjectsUtil::calculateBox),
+            Map.entry(Arrays.asList(0f, "Spawner-Blue-Up"), GameObjectsUtil::calculateBox),
+
+            Map.entry(Arrays.asList(0f, "Spawner-Green-Down"), GameObjectsUtil::calculateBox),
+            Map.entry(Arrays.asList(0f, "Spawner-Green-Left"), GameObjectsUtil::calculateBox),
+            Map.entry(Arrays.asList(0f, "Spawner-Green-Right"), GameObjectsUtil::calculateBox),
+
+            Map.entry(Arrays.asList(0f, "Spawner-Teal-Down"), GameObjectsUtil::calculateBox),
+            Map.entry(Arrays.asList(0f, "Spawner-Teal-Left"), GameObjectsUtil::calculateBox),
+            Map.entry(Arrays.asList(0f, "Spawner-Teal-Up"), GameObjectsUtil::calculateBox)));
 
     public GameModels(Model mainModel) {
         this.mainModel = mainModel;
         constructors = new ArrayMap<>();
-        for (int i = 0; i < 123; i++) {
+
+        Set<String> nodes = new HashSet<>();
+        mainModel.nodes.forEach(node -> nodes.add(node.id));
+
+        for (int i = 0; i < 800; i++) {
             String format = String.format("Cone.%03d", i);
-            nodeShape.put(Arrays.asList(0f, format), GameObjectsUtil::calculateBox);
+            if (nodes.contains(format)) {
+                nodeShape.put(Arrays.asList(0f, format), GameObjectsUtil::calculateBox);
+            }
         }
         constructors.putAll(constructObjects());
     }

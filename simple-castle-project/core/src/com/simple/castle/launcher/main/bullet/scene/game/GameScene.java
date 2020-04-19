@@ -73,9 +73,11 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
 
     @Override
     public void show() {
-        for (int i = 0; i < 123; i++) {
+        for (int i = 0; i < 800; i++) {
             String format = String.format("Cone.%03d", i);
-            sceneGameObjects.put(format, new KinematicGameObject(constructors.get(format)));
+            if (constructors.containsKey(format)) {
+                sceneGameObjects.put(format, new KinematicGameObject(constructors.get(format)));
+            }
         }
 
         sceneGameObjects.putAll(Map.ofEntries(
@@ -84,9 +86,27 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
                 Map.entry("Castle-2", new KinematicGameObject(constructors.get("Castle-2"))),
                 Map.entry("Castle-3", new KinematicGameObject(constructors.get("Castle-3"))),
                 Map.entry("Castle-4", new KinematicGameObject(constructors.get("Castle-4"))),
+
                 Map.entry("Area-Left-Down", new KinematicGameObject(constructors.get("Area-Left-Down"))),
+                Map.entry("Area-Left-Up", new KinematicGameObject(constructors.get("Area-Left-Up"))),
+                Map.entry("Area-Right-Down", new KinematicGameObject(constructors.get("Area-Right-Down"))),
+                Map.entry("Area-Right-Up", new KinematicGameObject(constructors.get("Area-Right-Up"))),
+
                 Map.entry("Spawner-Red-Left", new KinematicGameObject(constructors.get("Spawner-Red-Left"))),
-                Map.entry("Spawner-Blue-Down", new KinematicGameObject(constructors.get("Spawner-Blue-Down")))
+                Map.entry("Spawner-Red-Right", new KinematicGameObject(constructors.get("Spawner-Red-Right"))),
+                Map.entry("Spawner-Red-Up", new KinematicGameObject(constructors.get("Spawner-Red-Up"))),
+
+                Map.entry("Spawner-Blue-Down", new KinematicGameObject(constructors.get("Spawner-Blue-Down"))),
+                Map.entry("Spawner-Blue-Left", new KinematicGameObject(constructors.get("Spawner-Blue-Left"))),
+                Map.entry("Spawner-Blue-Up", new KinematicGameObject(constructors.get("Spawner-Blue-Up"))),
+
+                Map.entry("Spawner-Green-Down", new KinematicGameObject(constructors.get("Spawner-Green-Down"))),
+                Map.entry("Spawner-Green-Left", new KinematicGameObject(constructors.get("Spawner-Green-Left"))),
+                Map.entry("Spawner-Green-Right", new KinematicGameObject(constructors.get("Spawner-Green-Right"))),
+
+                Map.entry("Spawner-Teal-Down", new KinematicGameObject(constructors.get("Spawner-Teal-Down"))),
+                Map.entry("Spawner-Teal-Left", new KinematicGameObject(constructors.get("Spawner-Teal-Left"))),
+                Map.entry("Spawner-Teal-Up", new KinematicGameObject(constructors.get("Spawner-Teal-Up")))
         ));
         sceneGameObjects.forEach((s, gameObject) -> gameScenePhysic.addRigidBody(gameObject));
 
@@ -189,7 +209,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
                     "Position: " + format(selected.body.getWorldTransform().getTranslation(tempVector)) + " " +
                     "Rotation: " + format(selected.body.getWorldTransform().getRotation(tempQuaternion)), 0, 60);
 
-            bitmapFont.draw(batch, selected.node, 0, 80);
+            bitmapFont.draw(batch, (String) selected.body.userData, 0, 80);
         }
         batch.end();
     }
