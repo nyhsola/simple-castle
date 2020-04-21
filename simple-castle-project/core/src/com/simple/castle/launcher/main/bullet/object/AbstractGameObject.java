@@ -1,6 +1,7 @@
 package com.simple.castle.launcher.main.bullet.object;
 
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -19,6 +20,7 @@ public abstract class AbstractGameObject extends ModelInstance implements Dispos
         motionState.transform = this.transform;
 
         body = new btRigidBody(gameObjectConstructor.constructionInfo);
+        body.setWorldTransform(new Matrix4());
         body.setMotionState(motionState);
         body.userData = gameObjectConstructor.node;
     }
