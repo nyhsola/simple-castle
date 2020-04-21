@@ -30,7 +30,7 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = 11
+        sourceCompatibility = JavaVersion.VERSION_11
     }
 }
 
