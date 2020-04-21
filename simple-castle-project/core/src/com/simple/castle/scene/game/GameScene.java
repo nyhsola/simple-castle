@@ -62,6 +62,8 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         this.model = ModelLoader.loadModel();
         this.gameModelsConstructor = new GameModelsConstructor(model);
         this.gameSceneObjects = new GameSceneObjects(gameModelsConstructor);
+
+
     }
 
     @Override
