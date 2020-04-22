@@ -77,5 +77,6 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
         implementation 'com.google.guava:guava:29.0-jre'
+        implementation 'org.json:json:20190722'
     }
 }

@@ -1,0 +1,34 @@
+{
+  "models": [
+    {
+      "model": "Surface",
+      "shape": "box",
+      "mass": 0
+    },
+    {
+      "model": "Unit-1",
+      "shape": "sphere",
+      "mass": 1
+    },
+    {
+      "model": "Castle(?:-\\d)",
+      "shape": "box",
+      "mass": 0
+    },
+    {
+      "model": "Area-(?:.+)",
+      "shape": "box",
+      "mass": 0
+    },
+    {
+      "model": "Spawner-(?:.+)",
+      "shape": "box",
+      "mass": 0
+    },
+    {
+      "model": "Cone(?:.+)",
+      "shape": "box",
+      "mass": 0
+    }
+  ]
+}
