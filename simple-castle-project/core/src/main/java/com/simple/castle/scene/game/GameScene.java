@@ -11,8 +11,6 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import com.google.common.graph.Graph;
-import com.google.common.graph.GraphBuilder;
 import com.simple.castle.object.absunit.AbstractGameObject;
 import com.simple.castle.object.unit.UnitGameObject;
 import com.simple.castle.render.GameCamera;
@@ -54,8 +52,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
     private final Model model;
     private final GameModelsConstructor gameModelsConstructor;
 
-    private final Graph<Vector3> map;
-
     public GameScene(GameRenderer gameRenderer) {
         this.gameRenderer = gameRenderer;
         this.gameScenePhysic = new GameScenePhysic();
@@ -66,8 +62,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         this.model = ModelLoader.loadModel();
         this.gameModelsConstructor = new GameModelsConstructor(model);
         this.gameSceneObjects = new GameSceneObjects(gameModelsConstructor);
-
-        this.map = GraphBuilder.undirected().build();
     }
 
     @Override

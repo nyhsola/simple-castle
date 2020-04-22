@@ -1,0 +1,19 @@
+{
+  "models": [
+    {
+      "model": "Surface"
+    },
+    {
+      "model": "Castle(?:-\\d)"
+    },
+    {
+      "model": "Area-(?:.+)"
+    },
+    {
+      "model": "Spawner-(?:.+)"
+    },
+    {
+      "model": "Cone(?:.+)"
+    }
+  ]
+}

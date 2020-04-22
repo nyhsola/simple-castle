@@ -62,4 +62,8 @@ public class GameModelsConstructor {
         return constructors.get(name);
     }
 
+    public Set<String> getAllConstructors() {
+        return constructors.keySet();
+    }
+
 }
