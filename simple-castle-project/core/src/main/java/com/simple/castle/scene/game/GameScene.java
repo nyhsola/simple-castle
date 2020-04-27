@@ -16,14 +16,13 @@ import com.simple.castle.object.unit.UnitGameObject;
 import com.simple.castle.render.GameCamera;
 import com.simple.castle.render.GameEnvironment;
 import com.simple.castle.render.GameRenderer;
+import com.simple.castle.scene.game.controller.GameUnitController;
 import com.simple.castle.scene.game.object.GameModelsConstructor;
 import com.simple.castle.scene.game.object.GameSceneObjects;
 import com.simple.castle.scene.game.physic.GameScenePhysic;
 import com.simple.castle.utils.GameIntersectUtils;
 import com.simple.castle.utils.ModelLoader;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -41,8 +40,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
     private final GameSceneObjects gameSceneObjects;
     private final InputMultiplexer inputMultiplexer;
 
-    private final List<UnitGameObject> units = new ArrayList<>();
-
     private GameEnvironment gameEnvironment;
     private GameCamera gameCamera;
 
@@ -51,6 +48,8 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
 
     private final Model model;
     private final GameModelsConstructor gameModelsConstructor;
+
+    private final GameUnitController gameUnitController;
 
     public GameScene(GameRenderer gameRenderer) {
         this.gameRenderer = gameRenderer;
@@ -62,12 +61,14 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         this.model = ModelLoader.loadModel();
         this.gameModelsConstructor = new GameModelsConstructor(model);
         this.gameSceneObjects = new GameSceneObjects(gameModelsConstructor);
+
+        this.gameUnitController = new GameUnitController(gameSceneObjects);
     }
 
     @Override
     public void render(float delta) {
         gameCamera.update(delta);
-        this.updateUnit();
+        gameUnitController.update();
         gameRenderer.render(gameCamera, gameSceneObjects.getSceneObjects(), gameEnvironment);
         gameScenePhysic.update(gameCamera, Math.min(1f / 30f, delta), debugDraw);
         this.renderOverlay();
@@ -162,16 +163,11 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
 
         unitGameObject.body.setWorldTransform(new Matrix4());
         unitGameObject.body.translate(spawnerRedLeft);
-        unitGameObject.body.setLinearVelocity(areaLeftDown.sub(spawnerRedLeft).scl(0.1f));
+//        unitGameObject.body.setLinearVelocity(areaLeftDown.sub(spawnerRedLeft).scl(0.1f));
 
         gameScenePhysic.addRigidBody(unitGameObject);
         gameSceneObjects.addSceneObject("Unit-1-" + UUID.randomUUID(), unitGameObject);
-
-        units.add(unitGameObject);
-    }
-
-    private void updateUnit() {
-
+        gameUnitController.addUnit(unitGameObject);
     }
 
     private void renderOverlay() {

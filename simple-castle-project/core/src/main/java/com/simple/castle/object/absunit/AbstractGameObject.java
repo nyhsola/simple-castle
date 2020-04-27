@@ -14,11 +14,15 @@ public abstract class AbstractGameObject extends ModelInstance implements Dispos
     public final btRigidBody body;
     public final MotionState motionState;
 
+    public final String name;
+
     public AbstractGameObject(GameObjectConstructor gameObjectConstructor) {
         super(gameObjectConstructor.model, gameObjectConstructor.node, true);
 
         motionState = new MotionState();
         motionState.transform = this.transform;
+
+        name = gameObjectConstructor.node;
 
         body = new btRigidBody(gameObjectConstructor.constructionInfo);
         body.setMotionState(motionState);
