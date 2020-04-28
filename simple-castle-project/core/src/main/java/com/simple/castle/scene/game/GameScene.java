@@ -7,7 +7,6 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
@@ -63,6 +62,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         this.gameSceneObjects = new GameSceneObjects(gameModelsConstructor);
 
         this.gameUnitController = new GameUnitController(gameSceneObjects);
+        this.gameScenePhysic.addListenerWithPredicate(gameUnitController);
     }
 
     @Override
@@ -109,7 +109,9 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (Input.Keys.SPACE == keycode) {
-            this.spawnUnit();
+            UnitGameObject unitGameObject = gameUnitController.spawnUnit(gameModelsConstructor);
+            gameScenePhysic.addRigidBody(unitGameObject);
+            gameSceneObjects.addSceneObject("Unit-1-" + UUID.randomUUID(), unitGameObject);
         }
         if (Input.Keys.ESCAPE == keycode) {
             debugDraw = !debugDraw;
@@ -153,23 +155,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         return inputMultiplexer.scrolled(amount);
     }
 
-    private void spawnUnit() {
-        Vector3 spawnerRedLeft = gameSceneObjects.getSceneObject("Spawner-Red-Left").transform
-                .getTranslation(tempVector).cpy();
-        Vector3 areaLeftDown = gameSceneObjects.getSceneObject("Area-Left-Down").transform
-                .getTranslation(tempVector).cpy();
-
-        UnitGameObject unitGameObject = new UnitGameObject(gameModelsConstructor.getConstructor("Unit-1"));
-
-        unitGameObject.body.setWorldTransform(new Matrix4());
-        unitGameObject.body.translate(spawnerRedLeft);
-//        unitGameObject.body.setLinearVelocity(areaLeftDown.sub(spawnerRedLeft).scl(0.1f));
-
-        gameScenePhysic.addRigidBody(unitGameObject);
-        gameSceneObjects.addSceneObject("Unit-1-" + UUID.randomUUID(), unitGameObject);
-        gameUnitController.addUnit(unitGameObject);
-    }
-
     private void renderOverlay() {
         batch.begin();
         bitmapFont.draw(batch, "Camera position: " +
@@ -184,7 +169,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
                     "Position: " + format(selected.body.getWorldTransform().getTranslation(tempVector)) + " " +
                     "Rotation: " + format(selected.body.getWorldTransform().getRotation(tempQuaternion)), 0, 60);
 
-            bitmapFont.draw(batch, (String) selected.body.userData, 0, 80);
+            bitmapFont.draw(batch, selected.name, 0, 80);
         }
         batch.end();
     }

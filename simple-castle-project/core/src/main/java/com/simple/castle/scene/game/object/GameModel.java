@@ -1,4 +1,4 @@
-package main.java.com.simple.castle.scene.game.object;
+package com.simple.castle.scene.game.object;
 
 import java.util.HashMap;
 

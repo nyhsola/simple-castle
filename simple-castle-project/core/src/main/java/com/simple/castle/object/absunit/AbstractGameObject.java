@@ -26,7 +26,6 @@ public abstract class AbstractGameObject extends ModelInstance implements Dispos
 
         body = new btRigidBody(gameObjectConstructor.constructionInfo);
         body.setMotionState(motionState);
-        body.userData = gameObjectConstructor.node;
     }
 
     @Override

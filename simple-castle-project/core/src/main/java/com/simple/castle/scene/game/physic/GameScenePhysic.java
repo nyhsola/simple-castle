@@ -9,8 +9,13 @@ import com.badlogic.gdx.physics.bullet.dynamics.btDynamicsWorld;
 import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver;
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
 import com.badlogic.gdx.utils.Disposable;
+import com.simple.castle.listener.CollisionEvent;
 import com.simple.castle.object.absunit.AbstractGameObject;
 import com.simple.castle.render.GameCamera;
+import javafx.util.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameScenePhysic implements Disposable {
 
@@ -61,15 +66,25 @@ public class GameScenePhysic implements Disposable {
         contactListener.dispose();
     }
 
+    public void addListenerWithPredicate(CollisionEvent collisionEvent) {
+        contactListener.addListener(collisionEvent);
+    }
+
     private static class MyContactListener extends ContactListener {
-        @Override
-        public boolean onContactAdded(int userValue0, int partId0, int index0, boolean match0, int userValue1, int partId1,
-                                      int index1, boolean match1) {
-//            if (match0)
-//                ((ColorAttribute) instances.get(userValue0).materials.get(0).get(ColorAttribute.Diffuse)).color.set(Color.WHITE);
-//            if (match1)
-//                ((ColorAttribute) instances.get(userValue1).materials.get(0).get(ColorAttribute.Diffuse)).color.set(Color.WHITE);
-            return true;
+        private final List<CollisionEvent> collisionEventList = new ArrayList<>();
+
+        public void addListener(CollisionEvent collisionEvent) {
+            collisionEventList.add(collisionEvent);
         }
+
+        @Override
+        public void onContactStarted(btCollisionObject colObj0, btCollisionObject colObj1) {
+            for (CollisionEvent collisionEvent : collisionEventList) {
+                if (collisionEvent.getEventFilter().test(new Pair<>(colObj0, colObj1))) {
+                    collisionEvent.collisionEvent(colObj0, colObj1);
+                }
+            }
+        }
+
     }
 }

@@ -7,7 +7,6 @@ import com.simple.castle.object.GameObjectConstructor;
 import com.simple.castle.utils.GameObjectsUtil;
 import com.simple.castle.utils.ModelUtils;
 import com.simple.castle.utils.PropertyLoader;
-import main.java.com.simple.castle.scene.game.object.GameModel;
 
 import java.util.*;
 import java.util.stream.Collectors;

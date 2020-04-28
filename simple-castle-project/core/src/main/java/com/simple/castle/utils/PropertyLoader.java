@@ -40,10 +40,6 @@ public final class PropertyLoader {
         return gameModels;
     }
 
-    public static String loadGameScenePath() {
-        return PropertyLoader.loadResource((String) getProperties().get(GAME_SCENE_PATH));
-    }
-
     private static Properties getProperties() {
         Properties properties = new Properties();
         try {
