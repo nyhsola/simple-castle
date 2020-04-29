@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.Disposable;
 import com.simple.castle.listener.CollisionEvent;
 import com.simple.castle.object.absunit.AbstractGameObject;
 import com.simple.castle.render.GameCamera;
-import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,9 +79,7 @@ public class GameScenePhysic implements Disposable {
         @Override
         public void onContactStarted(btCollisionObject colObj0, btCollisionObject colObj1) {
             for (CollisionEvent collisionEvent : collisionEventList) {
-                if (collisionEvent.getEventFilter().test(new Pair<>(colObj0, colObj1))) {
-                    collisionEvent.collisionEvent(colObj0, colObj1);
-                }
+                collisionEvent.collisionEvent(colObj0, colObj1);
             }
         }
 
