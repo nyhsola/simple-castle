@@ -7,7 +7,12 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.simple.castle.object.absunit.AbstractGameObject;
+import com.simple.castle.scene.game.GameScene;
+import com.simple.castle.scene.game.object.GameSceneObjects;
 import com.simple.castle.utils.GameIntersectUtils;
+import com.simple.castle.utils.PropertyLoader;
+
+import java.util.Properties;
 
 public class GameCamera extends PerspectiveCamera implements InputProcessor {
 
@@ -32,11 +37,20 @@ public class GameCamera extends PerspectiveCamera implements InputProcessor {
 
     private Vector3 tempVector = new Vector3();
 
-    public GameCamera() {
+    public GameCamera(GameSceneObjects gameSceneObjects) {
         super(FIELD_OF_VIEW, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        Properties properties = PropertyLoader.loadPropertiesFromScene(GameScene.SCENE_NAME);
+        String positionProp = properties.getProperty("camera-init-position-from");
+        String basePlaneProp = properties.getProperty("camera-base-plane");
+
+        Vector3 redCastlePosition = gameSceneObjects.getSceneObject(positionProp).transform.getTranslation(tempVector);
+        basePlane = gameSceneObjects.getSceneObject(basePlaneProp);
+        position.set(redCastlePosition.x + 10f, redCastlePosition.y + 10f, redCastlePosition.z);
+        lookAt(redCastlePosition);
+
         near = NEAR;
         far = FAR;
-        update();
     }
 
     public void resize(int width, int height) {

@@ -23,7 +23,7 @@ public class GameUnitController implements CollisionEvent {
     private final Vector3 redLeftSpawnPosition;
     private final Map<String, UnitGameObject> unitGameObjects = new HashMap<>();
 
-    private long previousTime = System.currentTimeMillis();
+    private long previousTimeForUpdateTarget = System.currentTimeMillis();
 
     public GameUnitController(GameSceneObjects gameSceneObjects) {
         this.gameSceneObjects = gameSceneObjects;
@@ -31,9 +31,9 @@ public class GameUnitController implements CollisionEvent {
     }
 
     public void update() {
-        if (System.currentTimeMillis() - previousTime > 1000) {
+        if (System.currentTimeMillis() - previousTimeForUpdateTarget > 1000) {
             unitGameObjects.forEach((key, value) -> value.updateTarget());
-            previousTime = System.currentTimeMillis();
+            previousTimeForUpdateTarget = System.currentTimeMillis();
         }
     }
 

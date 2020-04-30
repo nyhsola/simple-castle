@@ -12,13 +12,17 @@ import java.util.Map;
 
 public class GameSceneObjects {
 
-    private final GameModelsConstructor gameModelsConstructor;
     private final Map<String, AbstractGameObject> sceneGameObjects;
 
     public GameSceneObjects(GameModelsConstructor gameModelsConstructor) {
-        this.gameModelsConstructor = gameModelsConstructor;
         this.sceneGameObjects = new HashMap<>();
-        initializeBasicMap();
+
+        PropertyLoader.loadObjectsFromScene(GameScene.SCENE_NAME)
+                .stream()
+                .map(pattern -> ModelUtils.getValuesByPattern(gameModelsConstructor.getAllConstructors(), pattern))
+                .flatMap(Collection::stream)
+                .forEach(object ->
+                        sceneGameObjects.put(object, new KinematicGameObject(gameModelsConstructor.getConstructor(object))));
     }
 
     public void dispose() {
@@ -35,15 +39,5 @@ public class GameSceneObjects {
 
     public Collection<AbstractGameObject> getSceneObjects() {
         return sceneGameObjects.values();
-    }
-
-    public void initializeBasicMap() {
-        PropertyLoader.loadObjectsFromScene(GameScene.SCENE_NAME)
-                .forEach(pattern -> {
-                    Collection<String> valuesByPattern = ModelUtils.getValuesByPattern(gameModelsConstructor.getAllConstructors(), pattern);
-
-                    valuesByPattern.forEach(sceneGameObject ->
-                            sceneGameObjects.put(sceneGameObject, new KinematicGameObject(gameModelsConstructor.getConstructor(sceneGameObject))));
-                });
     }
 }

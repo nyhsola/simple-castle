@@ -44,6 +44,11 @@ public final class PropertyLoader {
         return sceneObjects;
     }
 
+    public static Properties loadPropertiesFromScene(String sceneNameSearch) {
+        String sceneName = findScene(sceneNameSearch);
+        return loadProperties("scenes/" + sceneName + "/scene.properties");
+    }
+
     private static String findScene(String sceneName) {
         String scenesFile = (String) loadProperties(APP_PROPERTIES).get("scenes-file");
         return (String) new JSONObject(loadResource(scenesFile))

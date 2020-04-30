@@ -88,12 +88,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         gameEnvironment = new GameEnvironment();
         gameEnvironment.create();
 
-        Vector3 redCastlePosition = gameSceneObjects.getSceneObject("castle-1").transform.getTranslation(tempVector);
-
-        gameCamera = new GameCamera();
-        gameCamera.basePlane = gameSceneObjects.getSceneObject("ground");
-        gameCamera.position.set(redCastlePosition.x + 10f, redCastlePosition.y + 10f, redCastlePosition.z);
-        gameCamera.lookAt(redCastlePosition);
+        gameCamera = new GameCamera(gameSceneObjects);
 
         inputMultiplexer.addProcessor(gameCamera);
     }
