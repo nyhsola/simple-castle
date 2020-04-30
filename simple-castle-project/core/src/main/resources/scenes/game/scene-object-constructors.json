@@ -1,32 +1,27 @@
 {
   "models": [
     {
-      "model": "Surface",
+      "model": "ground",
       "shape": "box",
       "mass": 0
     },
     {
-      "model": "Unit-1",
+      "model": "unit-1",
       "shape": "sphere",
       "mass": 1
     },
     {
-      "model": "Castle(?:-\\d)",
+      "model": "castle(?:-\\d)",
       "shape": "box",
       "mass": 0
     },
     {
-      "model": "Area-(?:.+)",
+      "model": "area-(?:.+)",
       "shape": "box",
       "mass": 0
     },
     {
-      "model": "Spawner-(?:.+)",
-      "shape": "box",
-      "mass": 0
-    },
-    {
-      "model": "Cone(?:.+)",
+      "model": "cone(?:.+)",
       "shape": "box",
       "mass": 0
     }

@@ -1,0 +1,16 @@
+{
+  "models": [
+    {
+      "model": "ground"
+    },
+    {
+      "model": "castle(?:-\\d)"
+    },
+    {
+      "model": "area-(?:.+)"
+    },
+    {
+      "model": "cone(?:.+)"
+    }
+  ]
+}

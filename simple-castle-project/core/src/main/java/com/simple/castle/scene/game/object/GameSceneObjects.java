@@ -2,6 +2,7 @@ package com.simple.castle.scene.game.object;
 
 import com.simple.castle.object.absunit.AbstractGameObject;
 import com.simple.castle.object.absunit.KinematicGameObject;
+import com.simple.castle.scene.game.GameScene;
 import com.simple.castle.utils.ModelUtils;
 import com.simple.castle.utils.PropertyLoader;
 
@@ -37,7 +38,7 @@ public class GameSceneObjects {
     }
 
     public void initializeBasicMap() {
-        PropertyLoader.loadGameSceneObjects()
+        PropertyLoader.loadObjectsFromScene(GameScene.SCENE_NAME)
                 .forEach(pattern -> {
                     Collection<String> valuesByPattern = ModelUtils.getValuesByPattern(gameModelsConstructor.getAllConstructors(), pattern);
 

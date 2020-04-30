@@ -27,6 +27,8 @@ import java.util.UUID;
 
 public class GameScene extends ScreenAdapter implements InputProcessor {
 
+    public final static String SCENE_NAME = "game";
+
     private final Vector3 tempVector = new Vector3();
     private final Quaternion tempQuaternion = new Quaternion();
     private final BoundingBox tempBoundingBox = new BoundingBox();
@@ -86,10 +88,10 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         gameEnvironment = new GameEnvironment();
         gameEnvironment.create();
 
-        Vector3 redCastlePosition = gameSceneObjects.getSceneObject("Castle-1").transform.getTranslation(tempVector);
+        Vector3 redCastlePosition = gameSceneObjects.getSceneObject("castle-1").transform.getTranslation(tempVector);
 
         gameCamera = new GameCamera();
-        gameCamera.basePlane = gameSceneObjects.getSceneObject("Surface");
+        gameCamera.basePlane = gameSceneObjects.getSceneObject("ground");
         gameCamera.position.set(redCastlePosition.x + 10f, redCastlePosition.y + 10f, redCastlePosition.z);
         gameCamera.lookAt(redCastlePosition);
 
@@ -111,7 +113,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         if (Input.Keys.SPACE == keycode) {
             UnitGameObject unitGameObject = gameUnitController.spawnUnit(gameModelsConstructor);
             gameScenePhysic.addRigidBody(unitGameObject);
-            gameSceneObjects.addSceneObject("Unit-1-" + UUID.randomUUID(), unitGameObject);
+            gameSceneObjects.addSceneObject("unit-1-" + UUID.randomUUID(), unitGameObject);
         }
         if (Input.Keys.ESCAPE == keycode) {
             debugDraw = !debugDraw;

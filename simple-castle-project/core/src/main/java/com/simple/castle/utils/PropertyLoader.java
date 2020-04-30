@@ -4,46 +4,63 @@ import com.google.common.io.CharStreams;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public final class PropertyLoader {
 
     private static final String APP_PROPERTIES = "app.properties";
-    private static final String MODELS_TO_LOAD = "models-to-load";
-    private static final String GAME_SCENE_OBJECTS = "game-scene-objects";
-    private static final String GAME_SCENE_PATH = "game-scene-path";
 
     private PropertyLoader() {
     }
 
-    @SuppressWarnings("unchecked")
-    public static List<HashMap<String, Object>> loadGameModels() {
+    public static List<HashMap<String, Object>> loadConstructorsFromScene(String sceneNameSearch) {
         List<HashMap<String, Object>> gameModels = new ArrayList<>();
-        new JSONObject(PropertyLoader.loadResource((String) getProperties().get(MODELS_TO_LOAD)))
+
+        String sceneName = findScene(sceneNameSearch);
+
+        new JSONObject(loadResource("scenes/" + sceneName + "/scene-object-constructors.json"))
                 .getJSONArray("models")
                 .toList()
-                .forEach(model -> gameModels.add((HashMap<String, Object>) model));
+                .forEach(model -> gameModels.add(castToMap(model)));
         return gameModels;
     }
 
-    @SuppressWarnings("unchecked")
-    public static List<String> loadGameSceneObjects() {
-        List<String> gameModels = new ArrayList<>();
-        new JSONObject(PropertyLoader.loadResource((String) getProperties().get(GAME_SCENE_OBJECTS)))
+    public static List<String> loadObjectsFromScene(String sceneNameSearch) {
+        List<String> sceneObjects = new ArrayList<>();
+
+        String sceneName = findScene(sceneNameSearch);
+
+        new JSONObject(loadResource("scenes/" + sceneName + "/scene-objects.json"))
                 .getJSONArray("models")
                 .toList()
-                .forEach(model -> gameModels.add((String) ((HashMap<String, Object>) model).get("model")));
-        return gameModels;
+                .forEach(model -> sceneObjects.add((String) castToMap(model).get("model")));
+
+        return sceneObjects;
     }
 
-    private static Properties getProperties() {
+    private static String findScene(String sceneName) {
+        String scenesFile = (String) loadProperties(APP_PROPERTIES).get("scenes-file");
+        return (String) new JSONObject(loadResource(scenesFile))
+                .getJSONArray("scenes")
+                .toList()
+                .stream()
+                .filter(scene -> scene.equals(sceneName))
+                .collect(Collectors.toSet())
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Missing scene properties"));
+    }
+
+    private static Properties loadProperties(String resource) {
         Properties properties = new Properties();
         try {
-            properties.load(PropertyLoader.class.getResourceAsStream("/" + APP_PROPERTIES));
+            properties.load(loadInputStream(resource));
             return properties;
         } catch (IOException exception) {
             throw new AssertionError("Missing file", exception);
@@ -52,11 +69,18 @@ public final class PropertyLoader {
 
     private static String loadResource(String resource) {
         try {
-            return CharStreams.toString(
-                    new InputStreamReader(
-                            PropertyLoader.class.getResourceAsStream("/" + resource)));
+            return CharStreams.toString(new InputStreamReader(loadInputStream(resource)));
         } catch (IOException exception) {
             throw new AssertionError("Missing file", exception);
         }
+    }
+
+    private static InputStream loadInputStream(String resource) {
+        return PropertyLoader.class.getResourceAsStream("/" + resource);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static HashMap<String, Object> castToMap(Object object) {
+        return ((HashMap<String, Object>) object);
     }
 }

@@ -2013,18 +2013,10 @@
 				-0.180240,  0.382683, -0.906127, -0.093838,  0.289003, -0.952718,  0.781250,  0.625000, 
 				 0.000000,  0.382683, -0.923880, -0.093838,  0.289003, -0.952718,  0.750000,  0.625000, 
 				-0.191341,  0.195090, -0.961939, -0.093838,  0.289003, -0.952718,  0.781250,  0.562500, 
-				 4.269412,  0.000000,  3.910156,  0.000000,  1.000000,  0.000000,  1.000000,  0.000000, 
-				-4.220618,  0.000000, -3.998449,  0.000000,  1.000000,  0.000000,  0.000000,  1.000000, 
-				-4.269412,  0.000000,  3.998449,  0.000000,  1.000000,  0.000000,  0.000000,  0.000000, 
-				 4.269412,  0.000000, -3.998449,  0.000000,  1.000000,  0.000000,  1.000000,  1.000000, 
-				 4.514870,  0.000000,  4.967969,  0.000000,  1.000000,  0.000000,  1.000000,  0.000000, 
-				-4.466076,  0.000000, -5.056262,  0.000000,  1.000000,  0.000000,  0.000000,  1.000000, 
-				-4.514870,  0.000000,  5.056262,  0.000000,  1.000000,  0.000000,  0.000000,  0.000000, 
-				 4.514870,  0.000000, -5.056262,  0.000000,  1.000000,  0.000000,  1.000000,  1.000000, 
-				 1.000000,  0.000000,  1.000000,  0.000000,  1.000000,  0.000000,  1.000000,  0.000000, 
-				 1.000000,  0.000000, -1.000000,  0.000000,  1.000000,  0.000000,  1.000000,  1.000000, 
-				-1.000000,  0.000000,  1.000000,  0.000000,  1.000000,  0.000000,  0.000000,  0.000000, 
-				-1.000000,  0.000000, -1.000000,  0.000000,  1.000000,  0.000000,  0.000000,  1.000000, 
+				 1.989598,  0.000000,  1.989598,  0.000000,  1.000000,  0.000000,  1.000000,  0.000000, 
+				 1.989598,  0.000000, -1.989598,  0.000000,  1.000000,  0.000000,  1.000000,  1.000000, 
+				-1.989598,  0.000000,  1.989598,  0.000000,  1.000000,  0.000000,  0.000000,  0.000000, 
+				-1.989598,  0.000000, -1.989598,  0.000000,  1.000000,  0.000000,  0.000000,  1.000000, 
 				-0.000000, -2.531221, -1.000000,  0.096177,  0.192890, -0.976496,  0.250000,  0.490000, 
 				-0.000000,  2.531221,  0.000000,  0.096177,  0.192890, -0.976496,  0.250000,  0.250000, 
 				 0.195090, -2.531221, -0.980785,  0.096177,  0.192890, -0.976496,  0.296822,  0.485388, 
@@ -2442,116 +2434,36 @@
 					]
 				}, 
 				{
-					"id": "Plane.007_part1", 
-					"type": "TRIANGLES", 
-					"indices": [ 2008,  2009,  2010,  2009,  2008,  2011]
-				}, 
-				{
-					"id": "Plane.014_part1", 
-					"type": "TRIANGLES", 
-					"indices": [ 2008,  2009,  2010,  2009,  2008,  2011]
-				}, 
-				{
-					"id": "Plane.015_part1", 
-					"type": "TRIANGLES", 
-					"indices": [ 2008,  2009,  2010,  2009,  2008,  2011]
-				}, 
-				{
-					"id": "Plane.016_part1", 
-					"type": "TRIANGLES", 
-					"indices": [ 2008,  2009,  2010,  2009,  2008,  2011]
-				}, 
-				{
-					"id": "Plane.017_part1", 
-					"type": "TRIANGLES", 
-					"indices": [ 2012,  2013,  2014,  2013,  2012,  2015]
-				}, 
-				{
 					"id": "Plane.001_part1", 
 					"type": "TRIANGLES", 
-					"indices": [ 2016,  2017,  2018,  2018,  2017,  2019]
-				}, 
-				{
-					"id": "Plane.004_part1", 
-					"type": "TRIANGLES", 
-					"indices": [ 2016,  2017,  2018,  2018,  2017,  2019]
-				}, 
-				{
-					"id": "Plane.002_part1", 
-					"type": "TRIANGLES", 
-					"indices": [ 2016,  2017,  2018,  2018,  2017,  2019]
-				}, 
-				{
-					"id": "Plane.003_part1", 
-					"type": "TRIANGLES", 
-					"indices": [ 2016,  2017,  2018,  2018,  2017,  2019]
-				}, 
-				{
-					"id": "Plane.005_part1", 
-					"type": "TRIANGLES", 
-					"indices": [ 2016,  2017,  2018,  2018,  2017,  2019]
-				}, 
-				{
-					"id": "Plane.006_part1", 
-					"type": "TRIANGLES", 
-					"indices": [ 2016,  2017,  2018,  2018,  2017,  2019]
-				}, 
-				{
-					"id": "Plane.008_part1", 
-					"type": "TRIANGLES", 
-					"indices": [ 2016,  2017,  2018,  2018,  2017,  2019]
-				}, 
-				{
-					"id": "Plane.009_part1", 
-					"type": "TRIANGLES", 
-					"indices": [ 2016,  2017,  2018,  2018,  2017,  2019]
-				}, 
-				{
-					"id": "Plane.010_part1", 
-					"type": "TRIANGLES", 
-					"indices": [ 2016,  2017,  2018,  2018,  2017,  2019]
-				}, 
-				{
-					"id": "Plane.011_part1", 
-					"type": "TRIANGLES", 
-					"indices": [ 2016,  2017,  2018,  2018,  2017,  2019]
-				}, 
-				{
-					"id": "Plane.012_part1", 
-					"type": "TRIANGLES", 
-					"indices": [ 2016,  2017,  2018,  2018,  2017,  2019]
-				}, 
-				{
-					"id": "Plane.013_part1", 
-					"type": "TRIANGLES", 
-					"indices": [ 2016,  2017,  2018,  2018,  2017,  2019]
+					"indices": [ 2008,  2009,  2010,  2010,  2009,  2011]
 				}, 
 				{
 					"id": "Cone_part1", 
 					"type": "TRIANGLES", 
 					"indices": [
-						 2020,  2021,  2022,  2023,  2024,  2025,  2026,  2027,  2028,  2029,  2030,  2031, 
-						 2032,  2033,  2034,  2035,  2036,  2037,  2038,  2039,  2040,  2041,  2042,  2043, 
-						 2044,  2045,  2046,  2047,  2048,  2049,  2050,  2051,  2052,  2053,  2054,  2055, 
-						 2056,  2057,  2058,  2059,  2060,  2061,  2062,  2063,  2064,  2065,  2066,  2067, 
-						 2068,  2069,  2070,  2071,  2072,  2073,  2074,  2075,  2076,  2077,  2078,  2079, 
-						 2080,  2081,  2082,  2083,  2084,  2085,  2086,  2087,  2088,  2089,  2090,  2091, 
-						 2092,  2093,  2094,  2095,  2096,  2097,  2098,  2099,  2100,  2101,  2102,  2103, 
-						 2104,  2105,  2106,  2107,  2108,  2109,  2110,  2111,  2112,  2113,  2114,  2115, 
-						 2116,  2117,  2118,  2119,  2120,  2121,  2122,  2123,  2116,  2122,  2116,  2120, 
-						 2124,  2116,  2123,  2117,  2116,  2125,  2118,  2117,  2126,  2127,  2120,  2116, 
-						 2128,  2127,  2129,  2120,  2127,  2128,  2119,  2122,  2120,  2130,  2119,  2121, 
-						 2131,  2130,  2132,  2119,  2130,  2131,  2122,  2133,  2134,  2133,  2122,  2119, 
-						 2134,  2133,  2135,  2122,  2134,  2136,  2122,  2137,  2138,  2139,  2122,  2140, 
-						 2137,  2122,  2139,  2138,  2123,  2122,  2141,  2138,  2142,  2141,  2142,  2143, 
-						 2123,  2138,  2141,  2124,  2123,  2144,  2124,  2125,  2116,  2145,  2124,  2146, 
-						 2125,  2124,  2145,  2117,  2125,  2147
+						 2012,  2013,  2014,  2015,  2016,  2017,  2018,  2019,  2020,  2021,  2022,  2023, 
+						 2024,  2025,  2026,  2027,  2028,  2029,  2030,  2031,  2032,  2033,  2034,  2035, 
+						 2036,  2037,  2038,  2039,  2040,  2041,  2042,  2043,  2044,  2045,  2046,  2047, 
+						 2048,  2049,  2050,  2051,  2052,  2053,  2054,  2055,  2056,  2057,  2058,  2059, 
+						 2060,  2061,  2062,  2063,  2064,  2065,  2066,  2067,  2068,  2069,  2070,  2071, 
+						 2072,  2073,  2074,  2075,  2076,  2077,  2078,  2079,  2080,  2081,  2082,  2083, 
+						 2084,  2085,  2086,  2087,  2088,  2089,  2090,  2091,  2092,  2093,  2094,  2095, 
+						 2096,  2097,  2098,  2099,  2100,  2101,  2102,  2103,  2104,  2105,  2106,  2107, 
+						 2108,  2109,  2110,  2111,  2112,  2113,  2114,  2115,  2108,  2114,  2108,  2112, 
+						 2116,  2108,  2115,  2109,  2108,  2117,  2110,  2109,  2118,  2119,  2112,  2108, 
+						 2120,  2119,  2121,  2112,  2119,  2120,  2111,  2114,  2112,  2122,  2111,  2113, 
+						 2123,  2122,  2124,  2111,  2122,  2123,  2114,  2125,  2126,  2125,  2114,  2111, 
+						 2126,  2125,  2127,  2114,  2126,  2128,  2114,  2129,  2130,  2131,  2114,  2132, 
+						 2129,  2114,  2131,  2130,  2115,  2114,  2133,  2130,  2134,  2133,  2134,  2135, 
+						 2115,  2130,  2133,  2116,  2115,  2136,  2116,  2117,  2108,  2137,  2116,  2138, 
+						 2117,  2116,  2137,  2109,  2117,  2139
 					]
 				}, 
 				{
 					"id": "Plane_part1", 
 					"type": "TRIANGLES", 
-					"indices": [ 2148,  2149,  2150,  2150,  2149,  2151]
+					"indices": [ 2140,  2141,  2142,  2142,  2141,  2143]
 				}
 			]
 		}
@@ -2594,159 +2506,6 @@
 			"shininess":  36.000000
 		}, 
 		{
-			"id": "Material", 
-			"ambient": [ 0.050876,  0.050876,  0.050876], 
-			"diffuse": [ 0.348080,  0.375750,  0.341656], 
-			"emissive": [ 0.000000,  0.000000,  0.000000], 
-			"opacity":  1.000000, 
-			"specular": [ 0.348080,  0.375750,  0.341656], 
-			"shininess":  36.000000
-		}, 
-		{
-			"id": "Material-spawner-1", 
-			"ambient": [ 0.050876,  0.050876,  0.050876], 
-			"diffuse": [ 0.800000,  0.000817,  0.000000], 
-			"emissive": [ 0.000000,  0.000000,  0.000000], 
-			"opacity":  1.000000, 
-			"specular": [ 0.800000,  0.000817,  0.000000], 
-			"shininess":  36.000000
-		}, 
-		{
-			"id": "Material-spawner-1.001", 
-			"ambient": [ 0.050876,  0.050876,  0.050876], 
-			"diffuse": [ 0.800000,  0.000817,  0.000000], 
-			"emissive": [ 0.000000,  0.000000,  0.000000], 
-			"opacity":  1.000000, 
-			"specular": [ 0.800000,  0.000817,  0.000000], 
-			"shininess":  36.000000
-		}, 
-		{
-			"id": "Material-spawner-1.002", 
-			"ambient": [ 0.050876,  0.050876,  0.050876], 
-			"diffuse": [ 0.000000,  0.009349,  0.800000], 
-			"emissive": [ 0.000000,  0.000000,  0.000000], 
-			"opacity":  1.000000, 
-			"specular": [ 0.000000,  0.009349,  0.800000], 
-			"shininess":  36.000000
-		}, 
-		{
-			"id": "Material-spawner-1.003", 
-			"ambient": [ 0.050876,  0.050876,  0.050876], 
-			"diffuse": [ 0.800000,  0.000817,  0.000000], 
-			"emissive": [ 0.000000,  0.000000,  0.000000], 
-			"opacity":  1.000000, 
-			"specular": [ 0.800000,  0.000817,  0.000000], 
-			"shininess":  36.000000
-		}, 
-		{
-			"id": "Material-spawner-1.004", 
-			"ambient": [ 0.050876,  0.050876,  0.050876], 
-			"diffuse": [ 0.000000,  0.031942,  0.800000], 
-			"emissive": [ 0.000000,  0.000000,  0.000000], 
-			"opacity":  1.000000, 
-			"specular": [ 0.000000,  0.031942,  0.800000], 
-			"shininess":  36.000000
-		}, 
-		{
-			"id": "Material-spawner-1.005", 
-			"ambient": [ 0.050876,  0.050876,  0.050876], 
-			"diffuse": [ 0.000000,  0.005878,  0.800000], 
-			"emissive": [ 0.000000,  0.000000,  0.000000], 
-			"opacity":  1.000000, 
-			"specular": [ 0.000000,  0.005878,  0.800000], 
-			"shininess":  36.000000
-		}, 
-		{
-			"id": "Material-spawner-1.006", 
-			"ambient": [ 0.050876,  0.050876,  0.050876], 
-			"diffuse": [ 0.010924,  0.800000,  0.000000], 
-			"emissive": [ 0.000000,  0.000000,  0.000000], 
-			"opacity":  1.000000, 
-			"specular": [ 0.010924,  0.800000,  0.000000], 
-			"shininess":  36.000000
-		}, 
-		{
-			"id": "Material-spawner-1.007", 
-			"ambient": [ 0.050876,  0.050876,  0.050876], 
-			"diffuse": [ 0.010924,  0.800000,  0.000000], 
-			"emissive": [ 0.000000,  0.000000,  0.000000], 
-			"opacity":  1.000000, 
-			"specular": [ 0.010924,  0.800000,  0.000000], 
-			"shininess":  36.000000
-		}, 
-		{
-			"id": "Material-spawner-1.008", 
-			"ambient": [ 0.050876,  0.050876,  0.050876], 
-			"diffuse": [ 0.010924,  0.800000,  0.000000], 
-			"emissive": [ 0.000000,  0.000000,  0.000000], 
-			"opacity":  1.000000, 
-			"specular": [ 0.010924,  0.800000,  0.000000], 
-			"shininess":  36.000000
-		}, 
-		{
-			"id": "Material-spawner-1.009", 
-			"ambient": [ 0.050876,  0.050876,  0.050876], 
-			"diffuse": [ 0.000000,  0.800000,  0.563343], 
-			"emissive": [ 0.000000,  0.000000,  0.000000], 
-			"opacity":  1.000000, 
-			"specular": [ 0.000000,  0.800000,  0.563343], 
-			"shininess":  36.000000
-		}, 
-		{
-			"id": "Material-spawner-1.010", 
-			"ambient": [ 0.050876,  0.050876,  0.050876], 
-			"diffuse": [ 0.000000,  0.800000,  0.563343], 
-			"emissive": [ 0.000000,  0.000000,  0.000000], 
-			"opacity":  1.000000, 
-			"specular": [ 0.000000,  0.800000,  0.563343], 
-			"shininess":  36.000000
-		}, 
-		{
-			"id": "Material-spawner-1.011", 
-			"ambient": [ 0.050876,  0.050876,  0.050876], 
-			"diffuse": [ 0.000000,  0.800000,  0.563343], 
-			"emissive": [ 0.000000,  0.000000,  0.000000], 
-			"opacity":  1.000000, 
-			"specular": [ 0.000000,  0.800000,  0.563343], 
-			"shininess":  36.000000
-		}, 
-		{
-			"id": "Material.001", 
-			"ambient": [ 0.050876,  0.050876,  0.050876], 
-			"diffuse": [ 0.348080,  0.375750,  0.341656], 
-			"emissive": [ 0.000000,  0.000000,  0.000000], 
-			"opacity":  1.000000, 
-			"specular": [ 0.348080,  0.375750,  0.341656], 
-			"shininess":  36.000000
-		}, 
-		{
-			"id": "Material.002", 
-			"ambient": [ 0.050876,  0.050876,  0.050876], 
-			"diffuse": [ 0.348080,  0.375750,  0.341656], 
-			"emissive": [ 0.000000,  0.000000,  0.000000], 
-			"opacity":  1.000000, 
-			"specular": [ 0.348080,  0.375750,  0.341656], 
-			"shininess":  36.000000
-		}, 
-		{
-			"id": "Material.003", 
-			"ambient": [ 0.050876,  0.050876,  0.050876], 
-			"diffuse": [ 0.348080,  0.375750,  0.341656], 
-			"emissive": [ 0.000000,  0.000000,  0.000000], 
-			"opacity":  1.000000, 
-			"specular": [ 0.348080,  0.375750,  0.341656], 
-			"shininess":  36.000000
-		}, 
-		{
-			"id": "Material.004", 
-			"ambient": [ 0.050876,  0.050876,  0.050876], 
-			"diffuse": [ 0.348080,  0.375750,  0.341656], 
-			"emissive": [ 0.000000,  0.000000,  0.000000], 
-			"opacity":  1.000000, 
-			"specular": [ 0.348080,  0.375750,  0.341656], 
-			"shininess":  36.000000
-		}, 
-		{
 			"id": "Unit-1-Material", 
 			"ambient": [ 0.050876,  0.050876,  0.050876], 
 			"diffuse": [ 0.800000,  0.000000,  0.011066], 
@@ -2765,6 +2524,15 @@
 			"shininess":  36.000000
 		}, 
 		{
+			"id": "plate-material", 
+			"ambient": [ 0.050876,  0.050876,  0.050876], 
+			"diffuse": [ 0.122841,  1.000000,  0.915239], 
+			"emissive": [ 0.000000,  0.000000,  0.000000], 
+			"opacity":  1.000000, 
+			"specular": [ 0.122841,  1.000000,  0.915239], 
+			"shininess":  0.000000
+		}, 
+		{
 			"id": "tree-material", 
 			"ambient": [ 0.050876,  0.050876,  0.050876], 
 			"diffuse": [ 0.000000,  0.800000,  0.002289], 
@@ -2776,8 +2544,8 @@
 	], 
 	"nodes": [
 		{
-			"id": "Castle-1", 
-			"translation": [ 71.699814,  1.015587,  0.049491], 
+			"id": "castle-1", 
+			"translation": [ 72.112053,  1.015587,  0.049491], 
 			"parts": [
 				{
 					"meshpartid": "Cube.001_part1", 
@@ -2787,8 +2555,8 @@
 			]
 		}, 
 		{
-			"id": "Castle-2", 
-			"translation": [ 0.011055,  0.932408,  72.522552], 
+			"id": "castle-2", 
+			"translation": [ 0.058481,  0.932408,  71.997673], 
 			"parts": [
 				{
 					"meshpartid": "Cube.002_part1", 
@@ -2798,8 +2566,8 @@
 			]
 		}, 
 		{
-			"id": "Castle-3", 
-			"translation": [-72.647560,  0.929073,  0.109533], 
+			"id": "castle-3", 
+			"translation": [-72.091003,  0.929073, -0.057073], 
 			"parts": [
 				{
 					"meshpartid": "Cube.004_part1", 
@@ -2809,8 +2577,8 @@
 			]
 		}, 
 		{
-			"id": "Castle-4", 
-			"translation": [-0.306245,  0.853850, -72.584572], 
+			"id": "castle-4", 
+			"translation": [ 0.022532,  0.853850, -72.207008], 
 			"parts": [
 				{
 					"meshpartid": "Cube.003_part1", 
@@ -2820,8 +2588,8 @@
 			]
 		}, 
 		{
-			"id": "Unit-1", 
-			"translation": [ 79.714592, -0.101980, -0.090071], 
+			"id": "unit-1", 
+			"translation": [ 97.306953,  0.913205, -75.406250], 
 			"parts": [
 				{
 					"meshpartid": "Sphere.001_part1", 
@@ -2831,305 +2599,239 @@
 			]
 		}, 
 		{
-			"id": "Area-Left-Down", 
-			"translation": [ 69.674583,  0.021479,  70.001961], 
-			"parts": [
-				{
-					"meshpartid": "Plane.007_part1", 
-					"materialid": "Material", 
-					"uvMapping": [[]]
-				}
-			]
-		}, 
-		{
-			"id": "Area-Right-Down", 
-			"translation": [ 69.674583,  0.021479, -70.288719], 
-			"parts": [
-				{
-					"meshpartid": "Plane.014_part1", 
-					"materialid": "Material.001", 
-					"uvMapping": [[]]
-				}
-			]
-		}, 
-		{
-			"id": "Area-Right-Up", 
-			"translation": [-69.825768,  0.021479, -70.288719], 
-			"parts": [
-				{
-					"meshpartid": "Plane.015_part1", 
-					"materialid": "Material.002", 
-					"uvMapping": [[]]
-				}
-			]
-		}, 
-		{
-			"id": "Area-Left-Up", 
-			"translation": [-70.414246,  0.021479,  70.001961], 
-			"parts": [
-				{
-					"meshpartid": "Plane.016_part1", 
-					"materialid": "Material.003", 
-					"uvMapping": [[]]
-				}
-			]
-		}, 
-		{
-			"id": "Area-Left-Down.001", 
-			"translation": [ 0.028561,  0.021479, -0.340046], 
-			"parts": [
-				{
-					"meshpartid": "Plane.017_part1", 
-					"materialid": "Material.004", 
-					"uvMapping": [[]]
-				}
-			]
-		}, 
-		{
-			"id": "Spawner-Red-Left", 
-			"translation": [ 71.433273,  0.019211,  4.986181], 
+			"id": "area-1-2", 
+			"translation": [ 65.065758,  0.055446,  0.000000], 
 			"parts": [
 				{
 					"meshpartid": "Plane.001_part1", 
-					"materialid": "Material-spawner-1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Spawner-Blue-Down", 
-			"translation": [ 4.340060,  0.019211,  72.406136], 
+			"id": "area-1", 
+			"translation": [ 72.032722,  0.055446,  0.000000], 
 			"parts": [
 				{
-					"meshpartid": "Plane.004_part1", 
-					"materialid": "Material-spawner-1.002", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Spawner-Red-Up", 
-			"translation": [ 67.301392,  0.019211,  0.039066], 
+			"id": "area-1-3", 
+			"translation": [ 72.022018,  0.055446, -7.037247], 
 			"parts": [
 				{
-					"meshpartid": "Plane.002_part1", 
-					"materialid": "Material-spawner-1.001", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Spawner-Red-Right", 
-			"translation": [ 71.720116,  0.019211, -4.660121], 
+			"id": "area-1-1", 
+			"translation": [ 72.075050,  0.055446,  7.031196], 
 			"parts": [
 				{
-					"meshpartid": "Plane.003_part1", 
-					"materialid": "Material-spawner-1.003", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Spawner-Blue-Left", 
-			"translation": [-0.020538,  0.019211,  67.485420], 
+			"id": "area-1-1-1", 
+			"translation": [ 72.075050,  0.055446,  72.031502], 
 			"parts": [
 				{
-					"meshpartid": "Plane.005_part1", 
-					"materialid": "Material-spawner-1.004", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Spawner-Blue-Up", 
-			"translation": [-4.217225,  0.019211,  72.406136], 
+			"id": "area-2-3", 
+			"translation": [ 6.953531,  0.055446,  72.031502], 
 			"parts": [
 				{
-					"meshpartid": "Plane.006_part1", 
-					"materialid": "Material-spawner-1.005", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Spawner-Green-Down", 
-			"translation": [-67.695107,  0.019211,  0.096469], 
+			"id": "area-2", 
+			"translation": [-0.051144,  0.055446,  72.031502], 
 			"parts": [
 				{
-					"meshpartid": "Plane.008_part1", 
-					"materialid": "Material-spawner-1.006", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Spawner-Green-Left", 
-			"translation": [-72.429153,  0.019211,  5.167243], 
+			"id": "area-2-1", 
+			"translation": [-7.142545,  0.055446,  72.031502], 
 			"parts": [
 				{
-					"meshpartid": "Plane.009_part1", 
-					"materialid": "Material-spawner-1.007", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Spawner-Green-Right", 
-			"translation": [-72.429153,  0.019211, -4.874657], 
+			"id": "area-2-2", 
+			"translation": [-0.051144,  0.055446,  64.965851], 
 			"parts": [
 				{
-					"meshpartid": "Plane.010_part1", 
-					"materialid": "Material-spawner-1.008", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Spawner-Teal-Up", 
-			"translation": [-5.294349,  0.019211, -72.625023], 
+			"id": "area-2-1-1", 
+			"translation": [-72.000916,  0.055446,  72.031502], 
 			"parts": [
 				{
-					"meshpartid": "Plane.011_part1", 
-					"materialid": "Material-spawner-1.009", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Spawner-Teal-Down", 
-			"translation": [ 4.384620,  0.019211, -72.625023], 
+			"id": "area-3", 
+			"translation": [-72.000916,  0.055446, -0.032907], 
 			"parts": [
 				{
-					"meshpartid": "Plane.012_part1", 
-					"materialid": "Material-spawner-1.010", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Spawner-Teal-Left", 
-			"translation": [-0.262034,  0.019211, -67.759499], 
+			"id": "area-3-1", 
+			"translation": [-72.000916,  0.055446, -7.001307], 
 			"parts": [
 				{
-					"meshpartid": "Plane.013_part1", 
-					"materialid": "Material-spawner-1.011", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Cone.001", 
-			"translation": [ 74.786095,  2.431662,  5.021392], 
+			"id": "area-3-2", 
+			"translation": [-65.021202,  0.055446, -0.032907], 
 			"parts": [
 				{
-					"meshpartid": "Cone_part1", 
-					"materialid": "tree-material", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Cone.053", 
-			"translation": [ 64.625412,  2.431662,  5.021392], 
+			"id": "area-3-3", 
+			"translation": [-72.000916,  0.055446,  7.035873], 
 			"parts": [
 				{
-					"meshpartid": "Cone_part1", 
-					"materialid": "tree-material", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Cone.081", 
-			"translation": [ 74.786095,  2.431662,  64.696838], 
+			"id": "area-3-1-1", 
+			"translation": [-72.000916,  0.055446, -71.956917], 
 			"parts": [
 				{
-					"meshpartid": "Cone_part1", 
-					"materialid": "tree-material", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Cone.127", 
-			"translation": [ 74.786095,  2.431662,  74.938934], 
+			"id": "area-4", 
+			"translation": [-0.027094,  0.055446, -71.956917], 
 			"parts": [
 				{
-					"meshpartid": "Cone_part1", 
-					"materialid": "tree-material", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Cone.509", 
-			"translation": [ 64.625412,  2.431662, -5.085448], 
+			"id": "area-4-1", 
+			"translation": [ 7.023513,  0.055446, -71.956917], 
 			"parts": [
 				{
-					"meshpartid": "Cone_part1", 
-					"materialid": "tree-material", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Cone.716", 
-			"translation": [ 74.852242,  2.431662, -5.085448], 
+			"id": "area-4-2", 
+			"translation": [-0.027094,  0.055446, -64.929207], 
 			"parts": [
 				{
-					"meshpartid": "Cone_part1", 
-					"materialid": "tree-material", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Cone.128", 
-			"translation": [ 64.052269,  2.431662,  64.696838], 
+			"id": "area-4-3", 
+			"translation": [-7.066951,  0.055446, -71.956917], 
 			"parts": [
 				{
-					"meshpartid": "Cone_part1", 
-					"materialid": "tree-material", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Cone.721", 
-			"translation": [ 64.052269,  2.431662,  75.134132], 
+			"id": "area-4-1-1", 
+			"translation": [ 71.967575,  0.055446, -71.956917], 
 			"parts": [
 				{
-					"meshpartid": "Cone_part1", 
-					"materialid": "tree-material", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Cone.085", 
-			"translation": [ 7.008266,  2.431662,  75.134132], 
+			"id": "area-0", 
+			"translation": [ 0.005388,  0.055446,  0.000000], 
 			"parts": [
 				{
-					"meshpartid": "Cone_part1", 
-					"materialid": "tree-material", 
+					"meshpartid": "Plane.001_part1", 
+					"materialid": "plate-material", 
 					"uvMapping": [[]]
 				}
 			]
 		}, 
 		{
-			"id": "Cone.086", 
-			"translation": [-7.645943,  2.431662,  75.134132], 
-			"parts": [
-				{
-					"meshpartid": "Cone_part1", 
-					"materialid": "tree-material", 
-					"uvMapping": [[]]
-				}
-			]
-		}, 
-		{
-			"id": "Cone.109", 
-			"translation": [-7.645943,  2.431662,  64.451668], 
+			"id": "cone.001", 
+			"translation": [ 75.987976,  2.431662,  3.691074], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3139,8 +2841,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.113", 
-			"translation": [ 7.007033,  2.431662,  64.451668], 
+			"id": "cone.053", 
+			"translation": [ 68.805733,  2.431662,  3.622036], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3150,8 +2852,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.080", 
-			"translation": [-64.583649,  2.431662,  75.134132], 
+			"id": "cone.080", 
+			"translation": [-68.816643,  2.431662,  74.849770], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3161,8 +2863,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.119", 
-			"translation": [-75.905998,  2.431662,  75.134132], 
+			"id": "cone.081", 
+			"translation": [ 74.942474,  2.431662,  68.966820], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3172,8 +2874,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.437", 
-			"translation": [-64.583649,  2.431662,  64.044273], 
+			"id": "cone.085", 
+			"translation": [ 3.445185,  2.431662,  75.134132], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3183,8 +2885,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.462", 
-			"translation": [-76.076332,  2.431662,  64.044273], 
+			"id": "cone.086", 
+			"translation": [-3.526617,  2.431662,  75.134132], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3194,8 +2896,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.408", 
-			"translation": [-64.583649,  2.431662,  5.393337], 
+			"id": "cone.109", 
+			"translation": [-3.586943,  2.431662,  68.753876], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3205,8 +2907,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.464", 
-			"translation": [-76.003418,  2.431662,  5.393337], 
+			"id": "cone.113", 
+			"translation": [ 3.493098,  2.431662,  68.845009], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3216,8 +2918,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.482", 
-			"translation": [-76.003418,  2.431662, -7.305631], 
+			"id": "cone.119", 
+			"translation": [-75.305122,  2.431662,  74.876770], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3227,8 +2929,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.493", 
-			"translation": [-65.407364,  2.431662, -7.305631], 
+			"id": "cone.127", 
+			"translation": [ 74.948982,  2.431662,  75.098694], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3238,8 +2940,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.324", 
-			"translation": [-76.003418,  2.431662, -64.181213], 
+			"id": "cone.128", 
+			"translation": [ 69.003746,  2.431662,  68.991234], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3249,8 +2951,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.326", 
-			"translation": [-76.003418,  2.431662, -75.346481], 
+			"id": "cone.165", 
+			"translation": [-6.150982,  2.431662, -6.099105], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3260,8 +2962,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.328", 
-			"translation": [-64.433540,  2.431662, -75.346481], 
+			"id": "cone.211", 
+			"translation": [ 68.944801,  2.431662, -68.942726], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3271,8 +2973,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.330", 
-			"translation": [-64.433540,  2.431662, -64.525955], 
+			"id": "cone.214", 
+			"translation": [ 68.853218,  2.431662, -75.045090], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3282,8 +2984,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.244", 
-			"translation": [-7.781872,  2.431662, -64.525955], 
+			"id": "cone.223", 
+			"translation": [ 75.115936,  2.431662, -75.019920], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3293,8 +2995,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.247", 
-			"translation": [-7.781872,  2.431662, -75.543839], 
+			"id": "cone.226", 
+			"translation": [ 75.049683,  2.431662, -68.927711], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3304,8 +3006,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.300", 
-			"translation": [ 6.606454,  2.431662, -75.543839], 
+			"id": "cone.244", 
+			"translation": [-3.546186,  2.431662, -68.893684], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3315,8 +3017,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.303", 
-			"translation": [ 6.606454,  2.431662, -64.530960], 
+			"id": "cone.247", 
+			"translation": [-3.575260,  2.431662, -75.042366], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3326,8 +3028,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.211", 
-			"translation": [ 64.084419,  2.431662, -64.530960], 
+			"id": "cone.278", 
+			"translation": [-6.110792,  2.431662,  6.116973], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3337,8 +3039,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.214", 
-			"translation": [ 64.084419,  2.431662, -75.843803], 
+			"id": "cone.293", 
+			"translation": [ 5.862960,  2.431662,  6.054033], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3348,8 +3050,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.223", 
-			"translation": [ 75.220207,  2.431662, -75.843803], 
+			"id": "cone.300", 
+			"translation": [ 3.701719,  2.431662, -75.003616], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3359,8 +3061,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.226", 
-			"translation": [ 75.220207,  2.431662, -65.493988], 
+			"id": "cone.303", 
+			"translation": [ 3.643455,  2.431662, -68.939423], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3370,8 +3072,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.165", 
-			"translation": [-5.823838,  2.431662, -5.519859], 
+			"id": "cone.309", 
+			"translation": [ 6.101850,  2.431662, -6.179308], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3381,8 +3083,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.278", 
-			"translation": [-5.823838,  2.431662,  5.532194], 
+			"id": "cone.324", 
+			"translation": [-75.032837,  2.431662, -68.772461], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3392,8 +3094,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.293", 
-			"translation": [ 5.825771,  2.431662,  5.532194], 
+			"id": "cone.326", 
+			"translation": [-75.004852,  2.431662, -75.121460], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3403,8 +3105,8 @@
 			]
 		}, 
 		{
-			"id": "Cone.309", 
-			"translation": [ 6.108491,  2.431662, -5.519859], 
+			"id": "cone.328", 
+			"translation": [-68.880577,  2.431662, -75.114418], 
 			"parts": [
 				{
 					"meshpartid": "Cone_part1", 
@@ -3414,7 +3116,117 @@
 			]
 		}, 
 		{
-			"id": "Surface", 
+			"id": "cone.330", 
+			"translation": [-68.884560,  2.431662, -68.819641], 
+			"parts": [
+				{
+					"meshpartid": "Cone_part1", 
+					"materialid": "tree-material", 
+					"uvMapping": [[]]
+				}
+			]
+		}, 
+		{
+			"id": "cone.408", 
+			"translation": [-68.877144,  2.431662,  3.486777], 
+			"parts": [
+				{
+					"meshpartid": "Cone_part1", 
+					"materialid": "tree-material", 
+					"uvMapping": [[]]
+				}
+			]
+		}, 
+		{
+			"id": "cone.437", 
+			"translation": [-68.871368,  2.431662,  68.791016], 
+			"parts": [
+				{
+					"meshpartid": "Cone_part1", 
+					"materialid": "tree-material", 
+					"uvMapping": [[]]
+				}
+			]
+		}, 
+		{
+			"id": "cone.462", 
+			"translation": [-75.125565,  2.431662,  68.859497], 
+			"parts": [
+				{
+					"meshpartid": "Cone_part1", 
+					"materialid": "tree-material", 
+					"uvMapping": [[]]
+				}
+			]
+		}, 
+		{
+			"id": "cone.464", 
+			"translation": [-75.013618,  2.431662,  3.614888], 
+			"parts": [
+				{
+					"meshpartid": "Cone_part1", 
+					"materialid": "tree-material", 
+					"uvMapping": [[]]
+				}
+			]
+		}, 
+		{
+			"id": "cone.482", 
+			"translation": [-75.086067,  2.431662, -3.666546], 
+			"parts": [
+				{
+					"meshpartid": "Cone_part1", 
+					"materialid": "tree-material", 
+					"uvMapping": [[]]
+				}
+			]
+		}, 
+		{
+			"id": "cone.493", 
+			"translation": [-68.849129,  2.431662, -3.626546], 
+			"parts": [
+				{
+					"meshpartid": "Cone_part1", 
+					"materialid": "tree-material", 
+					"uvMapping": [[]]
+				}
+			]
+		}, 
+		{
+			"id": "cone.509", 
+			"translation": [ 68.747063,  2.431662, -3.560039], 
+			"parts": [
+				{
+					"meshpartid": "Cone_part1", 
+					"materialid": "tree-material", 
+					"uvMapping": [[]]
+				}
+			]
+		}, 
+		{
+			"id": "cone.716", 
+			"translation": [ 76.061501,  2.431662, -3.630661], 
+			"parts": [
+				{
+					"meshpartid": "Cone_part1", 
+					"materialid": "tree-material", 
+					"uvMapping": [[]]
+				}
+			]
+		}, 
+		{
+			"id": "cone.721", 
+			"translation": [ 68.913940,  2.431662,  75.134132], 
+			"parts": [
+				{
+					"meshpartid": "Cone_part1", 
+					"materialid": "tree-material", 
+					"uvMapping": [[]]
+				}
+			]
+		}, 
+		{
+			"id": "ground", 
 			"parts": [
 				{
 					"meshpartid": "Plane_part1", 
@@ -3422,12 +3234,11 @@
 					"uvMapping": [[]]
 				}
 			]
+		}, 
+		{
+			"id": "editor-only-plane", 
+			"translation": [ 95.031296,  0.000000, -50.409752]
 		}
 	], 
-	"animations": [
-		{
-			"id": "Cone.482|Cone.482Action", 
-			"bones": []
-		}
-	]
+	"animations": []
 }

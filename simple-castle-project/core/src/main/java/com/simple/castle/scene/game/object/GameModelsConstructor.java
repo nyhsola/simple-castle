@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.simple.castle.object.GameObjectConstructor;
+import com.simple.castle.scene.game.GameScene;
 import com.simple.castle.utils.GameObjectsUtil;
 import com.simple.castle.utils.ModelUtils;
 import com.simple.castle.utils.PropertyLoader;
@@ -22,7 +23,7 @@ public class GameModelsConstructor {
         this.constructors = new HashMap<>();
         this.gameModels = new HashSet<>();
 
-        PropertyLoader.loadGameModels().forEach(gameModelLambda -> {
+        PropertyLoader.loadConstructorsFromScene(GameScene.SCENE_NAME).forEach(gameModelLambda -> {
             GameModel gameModel = new GameModel(gameModelLambda);
             Collection<GameModel> gameModelsAdd = ModelUtils.getNodesFromModelByPattern(mainModel, gameModel.getModel())
                     .stream()

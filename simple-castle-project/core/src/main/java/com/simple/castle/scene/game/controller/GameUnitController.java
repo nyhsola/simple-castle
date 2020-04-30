@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 public class GameUnitController implements CollisionEvent {
 
     private static final Vector3 tempVector = new Vector3();
-    private static final Set<String> redLeftPath = ImmutableSet.of("Spawner-Red-Left", "Area-Left-Down", "Spawner-Blue-Down");
+    private static final Set<String> redLeftPath = ImmutableSet.of("area-1-1", "area-1-1-1", "area-2-3");
 
     private final GameSceneObjects gameSceneObjects;
     private final Vector3 redLeftSpawnPosition;
@@ -27,22 +27,13 @@ public class GameUnitController implements CollisionEvent {
 
     public GameUnitController(GameSceneObjects gameSceneObjects) {
         this.gameSceneObjects = gameSceneObjects;
-        this.redLeftSpawnPosition = gameSceneObjects.getSceneObject("Spawner-Red-Left").transform.getTranslation(tempVector).cpy();
+        this.redLeftSpawnPosition = gameSceneObjects.getSceneObject("area-1-1").transform.getTranslation(tempVector).cpy();
     }
 
     public void update() {
         if (System.currentTimeMillis() - previousTime > 1000) {
-            unitGameObjects.forEach((key, value) -> updateLinearVelocity(value));
+            unitGameObjects.forEach((key, value) -> value.updateTarget());
             previousTime = System.currentTimeMillis();
-        }
-    }
-
-    private void updateLinearVelocity(UnitGameObject unit) {
-        AbstractGameObject movingTo = unit.getMovingTo();
-        if (movingTo != null) {
-            Vector3 unitV = unit.transform.getTranslation(tempVector).cpy();
-            Vector3 toObjectV = movingTo.transform.getTranslation(tempVector).cpy();
-            unit.body.setLinearVelocity(toObjectV.sub(unitV).nor().scl(5));
         }
     }
 
@@ -67,31 +58,23 @@ public class GameUnitController implements CollisionEvent {
                     .orElse(null);
 
             if (unitGameObject != null && kinematicObject != null) {
-                if (kinematicObject.name.equals("Spawner-Red-Left")) {
-                    unitGameObject.setMovingTo(gameSceneObjects.getSceneObject("Area-Left-Down"));
+                if (kinematicObject.name.equals("area-1-1")) {
+                    AbstractGameObject sceneObject = gameSceneObjects.getSceneObject("area-1-1-1");
+                    unitGameObject.setTarget(sceneObject.transform.getTranslation(tempVector).cpy());
                 }
 
-                if (kinematicObject.name.equals("Area-Left-Down")) {
-                    unitGameObject.setMovingTo(gameSceneObjects.getSceneObject("Spawner-Blue-Down"));
+                if (kinematicObject.name.equals("area-1-1-1")) {
+                    AbstractGameObject sceneObject = gameSceneObjects.getSceneObject("area-2-3");
+                    unitGameObject.setTarget(sceneObject.transform.getTranslation(tempVector).cpy());
                 }
                 Gdx.app.log("", unitGameObject.name + " " + unitGameObject.body.userData + " " + kinematicObject.name);
             }
         }
     }
 
-    private String getNextDirection(String currentDirection) {
-        if (currentDirection.equals("Spawner-Red-Left")) {
-            return "Area-Left-Down";
-        }
-        if (currentDirection.equals("Area-Left-Down")) {
-            return "Spawner-Blue-Down";
-        }
-        return "";
-    }
-
     public UnitGameObject spawnUnit(GameModelsConstructor gameModelsConstructor) {
         String uuid = UUID.randomUUID().toString();
-        UnitGameObject unitGameObject = new UnitGameObject(gameModelsConstructor.getConstructor("Unit-1"));
+        UnitGameObject unitGameObject = new UnitGameObject(gameModelsConstructor.getConstructor("unit-1"));
         unitGameObject.body.setWorldTransform(new Matrix4());
         unitGameObject.body.translate(redLeftSpawnPosition);
         unitGameObject.body.userData = uuid;
