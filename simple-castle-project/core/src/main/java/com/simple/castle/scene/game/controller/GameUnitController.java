@@ -23,12 +23,27 @@ public class GameUnitController implements CollisionEvent {
     private final Vector3 redLeftSpawnPosition;
     private final Map<String, UnitGameObject> unitGameObjects = new HashMap<>();
 
+    private long previousTime = System.currentTimeMillis();
+
     public GameUnitController(GameSceneObjects gameSceneObjects) {
         this.gameSceneObjects = gameSceneObjects;
         this.redLeftSpawnPosition = gameSceneObjects.getSceneObject("Spawner-Red-Left").transform.getTranslation(tempVector).cpy();
     }
 
     public void update() {
+        if (System.currentTimeMillis() - previousTime > 1000) {
+            unitGameObjects.forEach((key, value) -> updateLinearVelocity(value));
+            previousTime = System.currentTimeMillis();
+        }
+    }
+
+    private void updateLinearVelocity(UnitGameObject unit) {
+        AbstractGameObject movingTo = unit.getMovingTo();
+        if (movingTo != null) {
+            Vector3 unitV = unit.transform.getTranslation(tempVector).cpy();
+            Vector3 toObjectV = movingTo.transform.getTranslation(tempVector).cpy();
+            unit.body.setLinearVelocity(toObjectV.sub(unitV).nor().scl(5));
+        }
     }
 
     @Override
@@ -52,28 +67,26 @@ public class GameUnitController implements CollisionEvent {
                     .orElse(null);
 
             if (unitGameObject != null && kinematicObject != null) {
-
                 if (kinematicObject.name.equals("Spawner-Red-Left")) {
-                    Vector3 spawnerRedLeft = gameSceneObjects.getSceneObject("Spawner-Red-Left").transform
-                            .getTranslation(tempVector).cpy();
-                    Vector3 areaLeftDown = gameSceneObjects.getSceneObject("Area-Left-Down").transform
-                            .getTranslation(tempVector).cpy();
-
-                    unitGameObject.body.setLinearVelocity(areaLeftDown.sub(spawnerRedLeft).nor().scl(5));
+                    unitGameObject.setMovingTo(gameSceneObjects.getSceneObject("Area-Left-Down"));
                 }
 
                 if (kinematicObject.name.equals("Area-Left-Down")) {
-                    Vector3 areaLeftDown = gameSceneObjects.getSceneObject("Area-Left-Down").transform
-                            .getTranslation(tempVector).cpy();
-                    Vector3 spawnerBlueDown = gameSceneObjects.getSceneObject("Spawner-Blue-Down").transform
-                            .getTranslation(tempVector).cpy();
-
-                    unitGameObject.body.setLinearVelocity(spawnerBlueDown.sub(areaLeftDown).nor().scl(3));
+                    unitGameObject.setMovingTo(gameSceneObjects.getSceneObject("Spawner-Blue-Down"));
                 }
-
                 Gdx.app.log("", unitGameObject.name + " " + unitGameObject.body.userData + " " + kinematicObject.name);
             }
         }
+    }
+
+    private String getNextDirection(String currentDirection) {
+        if (currentDirection.equals("Spawner-Red-Left")) {
+            return "Area-Left-Down";
+        }
+        if (currentDirection.equals("Area-Left-Down")) {
+            return "Spawner-Blue-Down";
+        }
+        return "";
     }
 
     public UnitGameObject spawnUnit(GameModelsConstructor gameModelsConstructor) {
