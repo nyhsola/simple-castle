@@ -21,7 +21,7 @@
       "mass": 0
     },
     {
-      "nodes-pattern": "cone(?:.+)",
+      "nodes-pattern": "tree",
       "shape": "ADJUSTED_BOX",
       "mass": 0
     }

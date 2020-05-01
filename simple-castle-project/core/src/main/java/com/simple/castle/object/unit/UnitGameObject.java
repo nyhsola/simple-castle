@@ -20,6 +20,8 @@ public class UnitGameObject extends ActiveGameObject {
             this.body.setLinearVelocity(target.cpy().sub(unitV).nor().scl(UNIT_DEFAULT_SPEED));
             this.body.setAngularVelocity(new Vector3(0, 0, 1));
             this.body.getOrientation();
+
+
         }
     }
 

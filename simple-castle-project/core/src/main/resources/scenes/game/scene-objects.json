@@ -13,7 +13,7 @@
       "interact": "GHOST"
     },
     {
-      "model": "cone(?:.+)",
+      "model": "tree",
       "interact": "KINEMATIC"
     }
   ]
