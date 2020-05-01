@@ -3,7 +3,7 @@ package com.simple.castle.render;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.simple.castle.object.absunit.AbstractGameObject;
+import com.simple.castle.object.unit.absunit.AbstractGameObject;
 
 import java.util.Collection;
 

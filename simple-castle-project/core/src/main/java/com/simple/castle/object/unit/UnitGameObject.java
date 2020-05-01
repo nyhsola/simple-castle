@@ -1,8 +1,8 @@
 package com.simple.castle.object.unit;
 
 import com.badlogic.gdx.math.Vector3;
-import com.simple.castle.object.GameObjectConstructor;
-import com.simple.castle.object.absunit.ActiveGameObject;
+import com.simple.castle.object.constructors.ObjectConstructor;
+import com.simple.castle.object.unit.absunit.ActiveGameObject;
 
 public class UnitGameObject extends ActiveGameObject {
 
@@ -10,8 +10,8 @@ public class UnitGameObject extends ActiveGameObject {
     private final Vector3 tempVector = new Vector3();
     private Vector3 target;
 
-    public UnitGameObject(GameObjectConstructor gameObjectConstructor) {
-        super(gameObjectConstructor);
+    public UnitGameObject(ObjectConstructor objectConstructor) {
+        super(objectConstructor);
     }
 
     public void updateTarget() {

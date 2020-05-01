@@ -6,10 +6,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public final class PropertyLoader {
@@ -19,8 +16,8 @@ public final class PropertyLoader {
     private PropertyLoader() {
     }
 
-    public static List<HashMap<String, Object>> loadConstructorsFromScene(String sceneNameSearch) {
-        List<HashMap<String, Object>> gameModels = new ArrayList<>();
+    public static List<Map<String, Object>> loadConstructorsFromScene(String sceneNameSearch) {
+        List<Map<String, Object>> gameModels = new ArrayList<>();
 
         String sceneName = findScene(sceneNameSearch);
 

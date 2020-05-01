@@ -1,4 +1,4 @@
-package com.simple.castle.object;
+package com.simple.castle.object.unit.absunit;
 
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.physics.bullet.linearmath.btMotionState;

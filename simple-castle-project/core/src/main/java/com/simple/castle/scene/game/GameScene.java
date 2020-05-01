@@ -10,19 +10,21 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import com.simple.castle.object.absunit.AbstractGameObject;
+import com.simple.castle.object.constructors.ObjectConstructors;
+import com.simple.castle.object.constructors.SceneObjectsConstructor;
 import com.simple.castle.object.unit.UnitGameObject;
+import com.simple.castle.object.unit.absunit.AbstractGameObject;
 import com.simple.castle.render.GameCamera;
 import com.simple.castle.render.GameEnvironment;
 import com.simple.castle.render.GameRenderer;
 import com.simple.castle.scene.game.controller.GameUnitController;
-import com.simple.castle.scene.game.object.GameModelsConstructor;
-import com.simple.castle.scene.game.object.GameSceneObjects;
 import com.simple.castle.scene.game.physic.GameScenePhysic;
 import com.simple.castle.utils.GameIntersectUtils;
 import com.simple.castle.utils.ModelLoader;
+import com.simple.castle.utils.PropertyLoader;
 
 import java.util.Locale;
+import java.util.Properties;
 import java.util.UUID;
 
 public class GameScene extends ScreenAdapter implements InputProcessor {
@@ -38,17 +40,17 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
 
     private final GameRenderer gameRenderer;
     private final GameScenePhysic gameScenePhysic;
-    private final GameSceneObjects gameSceneObjects;
+    private final SceneObjectsConstructor sceneObjectsConstructor;
     private final InputMultiplexer inputMultiplexer;
 
-    private GameEnvironment gameEnvironment;
-    private GameCamera gameCamera;
+    private final GameEnvironment gameEnvironment;
+    private final GameCamera gameCamera;
 
     private AbstractGameObject selected;
     private boolean debugDraw = false;
 
     private final Model model;
-    private final GameModelsConstructor gameModelsConstructor;
+    private final ObjectConstructors objectConstructors;
 
     private final GameUnitController gameUnitController;
 
@@ -60,18 +62,34 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         this.batch = new SpriteBatch();
 
         this.model = ModelLoader.loadModel();
-        this.gameModelsConstructor = new GameModelsConstructor(model);
-        this.gameSceneObjects = new GameSceneObjects(gameModelsConstructor);
+        this.objectConstructors = new ObjectConstructors.Builder(model)
+                .build(PropertyLoader.loadConstructorsFromScene(SCENE_NAME));
+        this.sceneObjectsConstructor = new SceneObjectsConstructor.Builder(objectConstructors)
+                .build(PropertyLoader.loadObjectsFromScene(SCENE_NAME));
 
-        this.gameUnitController = new GameUnitController(gameSceneObjects);
+        this.gameUnitController = new GameUnitController(sceneObjectsConstructor);
         this.gameScenePhysic.addListenerWithPredicate(gameUnitController);
+
+        this.sceneObjectsConstructor.getSceneObjects().forEach(gameScenePhysic::addRigidBody);
+
+        this.gameEnvironment = new GameEnvironment();
+        this.gameEnvironment.create();
+
+        Properties properties = PropertyLoader.loadPropertiesFromScene(GameScene.SCENE_NAME);
+        String positionProp = properties.getProperty("camera-init-position-from");
+        String basePlaneProp = properties.getProperty("camera-base-plane");
+        this.gameCamera = new GameCamera(
+                sceneObjectsConstructor.getSceneObject(positionProp).transform.getTranslation(tempVector),
+                sceneObjectsConstructor.getSceneObject(basePlaneProp));
+
+        this.inputMultiplexer.addProcessor(gameCamera);
     }
 
     @Override
     public void render(float delta) {
         gameCamera.update(delta);
         gameUnitController.update();
-        gameRenderer.render(gameCamera, gameSceneObjects.getSceneObjects(), gameEnvironment);
+        gameRenderer.render(gameCamera, sceneObjectsConstructor.getSceneObjects(), gameEnvironment);
         gameScenePhysic.update(gameCamera, Math.min(1f / 30f, delta), debugDraw);
         this.renderOverlay();
     }
@@ -83,14 +101,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
 
     @Override
     public void show() {
-        gameSceneObjects.getSceneObjects().forEach(gameScenePhysic::addRigidBody);
 
-        gameEnvironment = new GameEnvironment();
-        gameEnvironment.create();
-
-        gameCamera = new GameCamera(gameSceneObjects);
-
-        inputMultiplexer.addProcessor(gameCamera);
     }
 
     @Override
@@ -99,16 +110,16 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         batch.dispose();
         gameScenePhysic.dispose();
         model.dispose();
-        gameModelsConstructor.dispose();
-        gameSceneObjects.dispose();
+        objectConstructors.dispose();
+        sceneObjectsConstructor.dispose();
     }
 
     @Override
     public boolean keyDown(int keycode) {
         if (Input.Keys.SPACE == keycode) {
-            UnitGameObject unitGameObject = gameUnitController.spawnUnit(gameModelsConstructor);
+            UnitGameObject unitGameObject = gameUnitController.spawnUnit(objectConstructors);
             gameScenePhysic.addRigidBody(unitGameObject);
-            gameSceneObjects.addSceneObject("unit-1-" + UUID.randomUUID(), unitGameObject);
+            sceneObjectsConstructor.addSceneObject("unit-1-" + UUID.randomUUID(), unitGameObject);
         }
         if (Input.Keys.ESCAPE == keycode) {
             debugDraw = !debugDraw;
@@ -128,7 +139,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        selected = GameIntersectUtils.intersect(tempBoundingBox, gameCamera, gameSceneObjects.getSceneObjects(), screenX, screenY);
+        selected = GameIntersectUtils.intersect(tempBoundingBox, gameCamera, sceneObjectsConstructor.getSceneObjects(), screenX, screenY);
         return inputMultiplexer.touchDown(screenX, screenY, pointer, button);
     }
 

@@ -2,27 +2,27 @@
   "models": [
     {
       "model": "ground",
-      "shape": "box",
+      "shape": "ADJUSTED_BOX",
       "mass": 0
     },
     {
-      "model": "unit-1",
-      "shape": "sphere",
+      "model": "unit-type-1",
+      "shape": "ADJUSTED_BOX",
       "mass": 1
     },
     {
       "model": "castle(?:-\\d)",
-      "shape": "box",
+      "shape": "ADJUSTED_BOX",
       "mass": 0
     },
     {
       "model": "area-(?:.+)",
-      "shape": "box",
+      "shape": "ADJUSTED_BOX",
       "mass": 0
     },
     {
       "model": "cone(?:.+)",
-      "shape": "box",
+      "shape": "ADJUSTED_BOX",
       "mass": 0
     }
   ]

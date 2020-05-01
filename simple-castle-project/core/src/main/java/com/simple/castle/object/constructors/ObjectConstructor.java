@@ -1,4 +1,4 @@
-package com.simple.castle.object;
+package com.simple.castle.object.constructors;
 
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.math.Vector3;
@@ -6,7 +6,7 @@ import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.utils.Disposable;
 
-public class GameObjectConstructor implements Disposable {
+public class ObjectConstructor implements Disposable {
     private static final Vector3 localInertia = new Vector3();
 
     public final Model model;
@@ -14,7 +14,7 @@ public class GameObjectConstructor implements Disposable {
     public final btCollisionShape shape;
     public final btRigidBody.btRigidBodyConstructionInfo constructionInfo;
 
-    public GameObjectConstructor(Model model, String node, btCollisionShape shape, float mass) {
+    public ObjectConstructor(Model model, String node, btCollisionShape shape, float mass) {
         this.model = model;
         this.node = node;
         this.shape = shape;

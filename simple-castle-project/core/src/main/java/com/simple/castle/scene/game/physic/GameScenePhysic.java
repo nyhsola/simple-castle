@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSol
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
 import com.badlogic.gdx.utils.Disposable;
 import com.simple.castle.listener.CollisionEvent;
-import com.simple.castle.object.absunit.AbstractGameObject;
+import com.simple.castle.object.unit.absunit.AbstractGameObject;
 import com.simple.castle.render.GameCamera;
 
 import java.util.ArrayList;
