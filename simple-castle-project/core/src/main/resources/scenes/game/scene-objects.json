@@ -1,16 +1,20 @@
 {
   "models": [
     {
-      "model": "ground"
+      "model": "ground",
+      "interact": "KINEMATIC"
     },
     {
-      "model": "castle(?:-\\d)"
+      "model": "castle(?:-\\d)",
+      "interact": "KINEMATIC"
     },
     {
-      "model": "area-(?:.+)"
+      "model": "area-(?:.+)",
+      "interact": "GHOST"
     },
     {
-      "model": "cone(?:.+)"
+      "model": "cone(?:.+)",
+      "interact": "KINEMATIC"
     }
   ]
 }

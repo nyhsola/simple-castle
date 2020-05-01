@@ -1,7 +1,6 @@
 package com.simple.castle.object.constructors;
 
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.simple.castle.utils.ModelUtils;
 
@@ -14,15 +13,14 @@ public class ObjectConstructors {
     private final Map<String, ObjectConstructor> constructors = new HashMap<>();
 
     private ObjectConstructors(Model mainModel, List<Map<String, Object>> constructorsPattern) {
-        final BoundingBox temp = new BoundingBox();
         List<ObjectConstructor> collectedConstructors = constructorsPattern
                 .stream()
                 .map(loadNodesFromModelByPattern(mainModel))
                 .flatMap(Collection::stream)
                 .map((gameModelJson) -> {
-                            btCollisionShape shape = RigidBodyTool.valueOf(gameModelJson.getShape())
-                                    .calculate(mainModel.getNode(gameModelJson.getModel()).calculateBoundingBox(temp));
-                            return new ObjectConstructor(mainModel, gameModelJson.getModel(), shape, gameModelJson.getMass());
+                            btCollisionShape shape = RigidBodies.valueOf(gameModelJson.getShape())
+                                    .calculate(mainModel.getNode(gameModelJson.getNodesPattern()));
+                            return new ObjectConstructor(mainModel, gameModelJson.getNodesPattern(), shape, gameModelJson.getMass());
                         }
                 )
                 .collect(Collectors.toList());
@@ -33,9 +31,9 @@ public class ObjectConstructors {
     private Function<Map<String, Object>, List<GameModelJson>> loadNodesFromModelByPattern(Model mainModel) {
         return map -> {
             GameModelJson dto = new GameModelJson(map);
-            return ModelUtils.getNodesFromModelByPattern(mainModel, dto.getModel())
+            return ModelUtils.getNodesFromModelByPattern(mainModel, dto.getNodesPattern())
                     .stream()
-                    .map(modelName -> new GameModelJson(modelName, dto.getShape(), dto.getMass()))
+                    .map(modelName -> new GameModelJson(modelName, dto.getShape(), dto.getMass(), dto.getInteract()))
                     .collect(Collectors.toList());
         };
     }

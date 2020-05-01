@@ -3,28 +3,31 @@ package com.simple.castle.object.constructors;
 import java.util.Map;
 
 public class GameModelJson {
-    private String model;
+    private String nodesPattern;
     private String shape;
     private Integer mass;
+    private String interact;
 
-    public GameModelJson(String model, String shape, Integer mass) {
-        this.model = model;
+    public GameModelJson(String nodesPattern, String shape, Integer mass, String interact) {
+        this.nodesPattern = nodesPattern;
         this.shape = shape;
         this.mass = mass;
+        this.interact = interact;
     }
 
     public GameModelJson(Map<String, Object> values) {
-        this.model = (String) values.get("model");
+        this.nodesPattern = (String) values.get("nodes-pattern");
         this.shape = (String) values.get("shape");
         this.mass = (Integer) values.get("mass");
+        this.interact = (String) values.get("interact");
     }
 
-    public String getModel() {
-        return model;
+    public String getNodesPattern() {
+        return nodesPattern;
     }
 
-    public void setModel(String model) {
-        this.model = model;
+    public void setNodesPattern(String nodesPattern) {
+        this.nodesPattern = nodesPattern;
     }
 
     public String getShape() {
@@ -41,5 +44,13 @@ public class GameModelJson {
 
     public void setMass(Integer mass) {
         this.mass = mass;
+    }
+
+    public String getInteract() {
+        return interact;
+    }
+
+    public void setInteract(String interact) {
+        this.interact = interact;
     }
 }

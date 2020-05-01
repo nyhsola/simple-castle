@@ -28,7 +28,8 @@ public final class PropertyLoader {
         return gameModels;
     }
 
-    public static List<String> loadObjectsFromScene(String sceneNameSearch) {
+    public static List<Map<String, Object>> loadObjectsFromScene(String sceneNameSearch) {
+        List<Map<String, Object>> gameModels = new ArrayList<>();
         List<String> sceneObjects = new ArrayList<>();
 
         String sceneName = findScene(sceneNameSearch);
@@ -36,9 +37,9 @@ public final class PropertyLoader {
         new JSONObject(loadResource("scenes/" + sceneName + "/scene-objects.json"))
                 .getJSONArray("models")
                 .toList()
-                .forEach(model -> sceneObjects.add((String) castToMap(model).get("model")));
+                .forEach(model -> gameModels.add(castToMap(model)));
 
-        return sceneObjects;
+        return gameModels;
     }
 
     public static Properties loadPropertiesFromScene(String sceneNameSearch) {

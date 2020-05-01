@@ -1,27 +1,27 @@
 {
   "models": [
     {
-      "model": "ground",
+      "nodes-pattern": "ground",
       "shape": "ADJUSTED_BOX",
       "mass": 0
     },
     {
-      "model": "unit-type-1",
-      "shape": "ADJUSTED_BOX",
+      "nodes-pattern": "unit-type-1",
+      "shape": "BASE_BOX",
       "mass": 1
     },
     {
-      "model": "castle(?:-\\d)",
+      "nodes-pattern": "castle(?:-\\d)",
       "shape": "ADJUSTED_BOX",
       "mass": 0
     },
     {
-      "model": "area-(?:.+)",
+      "nodes-pattern": "area-(?:.+)",
       "shape": "ADJUSTED_BOX",
       "mass": 0
     },
     {
-      "model": "cone(?:.+)",
+      "nodes-pattern": "cone(?:.+)",
       "shape": "ADJUSTED_BOX",
       "mass": 0
     }

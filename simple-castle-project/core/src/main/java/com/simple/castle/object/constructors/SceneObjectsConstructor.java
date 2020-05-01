@@ -1,7 +1,6 @@
 package com.simple.castle.object.constructors;
 
 import com.simple.castle.object.unit.absunit.AbstractGameObject;
-import com.simple.castle.object.unit.absunit.KinematicGameObject;
 import com.simple.castle.utils.ModelUtils;
 
 import java.util.Collection;
@@ -13,14 +12,17 @@ public class SceneObjectsConstructor {
 
     private final Map<String, AbstractGameObject> sceneGameObjects;
 
-    private SceneObjectsConstructor(ObjectConstructors objectConstructors, List<String> objects) {
+    @SuppressWarnings("unchecked")
+    private SceneObjectsConstructor(ObjectConstructors objectConstructors, List<Map<String, Object>> objects) {
         this.sceneGameObjects = new HashMap<>();
-
         objects.stream()
-                .map(pattern -> ModelUtils.getValuesByPattern(objectConstructors.getAllConstructors(), pattern))
-                .flatMap(Collection::stream)
+                .map(map -> new Object[]{map.get("interact"), ModelUtils.getValuesByPattern(objectConstructors.getAllConstructors(), (String) map.get("model"))})
                 .forEach(object ->
-                        sceneGameObjects.put(object, new KinematicGameObject(objectConstructors.getConstructor(object))));
+                {
+                    Collection<String> strings = (Collection<String>) object[1];
+                    strings.forEach(s ->
+                            sceneGameObjects.put(s, Interact.valueOf((String) object[0]).build(objectConstructors.getConstructor(s))));
+                });
     }
 
     public void dispose() {
@@ -46,7 +48,7 @@ public class SceneObjectsConstructor {
             this.objectConstructors = objectConstructors;
         }
 
-        public SceneObjectsConstructor build(List<String> objects) {
+        public SceneObjectsConstructor build(List<Map<String, Object>> objects) {
             return new SceneObjectsConstructor(objectConstructors, objects);
         }
     }

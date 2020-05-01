@@ -30,7 +30,7 @@ public class GameUnitController implements CollisionEvent {
     }
 
     public void update() {
-        if (System.currentTimeMillis() - previousTimeForUpdateTarget > 1000) {
+        if (System.currentTimeMillis() - previousTimeForUpdateTarget > 200) {
             unitGameObjects.forEach((key, value) -> value.updateTarget());
             previousTimeForUpdateTarget = System.currentTimeMillis();
         }
