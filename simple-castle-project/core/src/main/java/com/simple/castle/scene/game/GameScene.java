@@ -118,7 +118,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
             gameScenePhysic.addRigidBody(unitGameObject);
             sceneObjectsConstructor.addSceneObject("unit-1-" + UUID.randomUUID(), unitGameObject);
         }
-        if (Input.Keys.D == keycode) {
+        if (Input.Keys.Q == keycode) {
             debugDraw = !debugDraw;
         }
         if (Input.Keys.ESCAPE == keycode) {
