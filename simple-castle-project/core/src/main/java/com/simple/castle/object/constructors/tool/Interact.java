@@ -1,5 +1,6 @@
-package com.simple.castle.object.constructors;
+package com.simple.castle.object.constructors.tool;
 
+import com.simple.castle.object.constructors.ObjectConstructor;
 import com.simple.castle.object.unit.absunit.AbstractGameObject;
 import com.simple.castle.object.unit.absunit.ActiveGameObject;
 import com.simple.castle.object.unit.absunit.GhostGameObject;

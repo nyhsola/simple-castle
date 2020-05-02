@@ -1,5 +1,6 @@
 package com.simple.castle.object.unit;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.simple.castle.object.constructors.ObjectConstructor;
 import com.simple.castle.object.unit.absunit.ActiveGameObject;
@@ -7,7 +8,16 @@ import com.simple.castle.object.unit.absunit.ActiveGameObject;
 public class UnitGameObject extends ActiveGameObject {
 
     private static final int UNIT_DEFAULT_SPEED = 5;
+
     private final Vector3 tempVector = new Vector3();
+    private final Vector3 faceDirection = new Vector3(1, 0, 0);
+
+    private final Vector3 rotateL = new Vector3(0, 1, 0);
+    private final Vector3 rotateR = new Vector3(0, -1, 0);
+
+    private double previousAngle;
+    private boolean direction = false;
+
     private Vector3 target;
 
     public UnitGameObject(ObjectConstructor objectConstructor) {
@@ -17,12 +27,39 @@ public class UnitGameObject extends ActiveGameObject {
     public void updateTarget() {
         if (target != null) {
             Vector3 unitV = this.transform.getTranslation(tempVector);
-            this.body.setLinearVelocity(target.cpy().sub(unitV).nor().scl(UNIT_DEFAULT_SPEED));
-            this.body.setAngularVelocity(new Vector3(0, 0, 1));
-            this.body.getOrientation();
+            Vector3 targetDirection = target.cpy().sub(unitV).nor();
+            this.body.setLinearVelocity(targetDirection.scl(UNIT_DEFAULT_SPEED));
 
+            double currentAngle = getAngleBetweenVectors(targetDirection, getModelForwardDirection());
+            if (currentAngle <= 0 || currentAngle >= 5) {
+                if (currentAngle - previousAngle > 0) {
+                    direction = !direction;
+                }
+                previousAngle = currentAngle;
+                if (direction) {
+                    this.body.setAngularVelocity(rotateL);
+                } else {
+                    this.body.setAngularVelocity(rotateR);
+                }
+            } else {
+                this.body.setAngularVelocity(Vector3.Zero);
+            }
 
+            Gdx.app.log("tag", " " + currentAngle);
         }
+    }
+
+    private Vector3 getModelForwardDirection() {
+        return this.body.getOrientation().transform(faceDirection.cpy());
+    }
+
+    private double getAngleBetweenVectors(Vector3 a, Vector3 b) {
+        Vector3 norA = b.cpy().nor();
+        Vector3 norB = a.cpy().nor();
+
+        float dot = norB.dot(norA);
+
+        return Math.toDegrees(Math.acos(dot));
     }
 
     public Vector3 getTarget() {

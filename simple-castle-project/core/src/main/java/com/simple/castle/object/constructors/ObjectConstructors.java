@@ -2,6 +2,7 @@ package com.simple.castle.object.constructors;
 
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
+import com.simple.castle.object.constructors.tool.RigidBodies;
 import com.simple.castle.utils.ModelUtils;
 
 import java.util.*;

@@ -1,4 +1,4 @@
-package com.simple.castle.object.constructors;
+package com.simple.castle.object.constructors.tool;
 
 import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.math.Vector3;
@@ -25,19 +25,15 @@ public enum RigidBodies {
     private static btBoxShape calculateBaseBox(Node node) {
         final BoundingBox temp = new BoundingBox();
         BoundingBox boundingBox = node.calculateBoundingBox(temp);
-
         Vector3 dimensions = new Vector3();
         boundingBox.getDimensions(dimensions);
-
         float max = Math.max(dimensions.x, dimensions.z);
-
         return new btBoxShape(new Vector3(max, dimensions.y, max).scl(SCALAR));
     }
 
     private static btBoxShape calculateAdjustedBox(Node node) {
         final BoundingBox temp = new BoundingBox();
         BoundingBox boundingBox = node.calculateBoundingBox(temp);
-
         Vector3 dimensions = new Vector3();
         boundingBox.getDimensions(dimensions);
         return new btBoxShape(dimensions.scl(SCALAR));
@@ -46,7 +42,6 @@ public enum RigidBodies {
     private static btSphereShape calculateSphere(Node node) {
         final BoundingBox temp = new BoundingBox();
         BoundingBox boundingBox = node.calculateBoundingBox(temp);
-
         Vector3 dimensions = new Vector3();
         boundingBox.getDimensions(dimensions);
         return new btSphereShape(dimensions.scl(SCALAR).x);

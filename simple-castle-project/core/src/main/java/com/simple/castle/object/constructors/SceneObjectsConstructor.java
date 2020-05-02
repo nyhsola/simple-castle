@@ -1,5 +1,6 @@
 package com.simple.castle.object.constructors;
 
+import com.simple.castle.object.constructors.tool.Interact;
 import com.simple.castle.object.unit.absunit.AbstractGameObject;
 import com.simple.castle.utils.ModelUtils;
 
