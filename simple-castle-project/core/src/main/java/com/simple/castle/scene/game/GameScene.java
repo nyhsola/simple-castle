@@ -1,9 +1,6 @@
 package com.simple.castle.scene.game;
 
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Model;
@@ -121,8 +118,11 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
             gameScenePhysic.addRigidBody(unitGameObject);
             sceneObjectsConstructor.addSceneObject("unit-1-" + UUID.randomUUID(), unitGameObject);
         }
-        if (Input.Keys.ESCAPE == keycode) {
+        if (Input.Keys.D == keycode) {
             debugDraw = !debugDraw;
+        }
+        if (Input.Keys.ESCAPE == keycode) {
+            Gdx.app.exit();
         }
         return inputMultiplexer.keyDown(keycode);
     }
