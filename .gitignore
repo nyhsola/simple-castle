@@ -1,0 +1,10 @@
+.gradle/
+.idea/
+build/
+
+*.iml
+
+local.properties
+
+**/blender-project/map.fbx
+**/blender-project/map.g3dj

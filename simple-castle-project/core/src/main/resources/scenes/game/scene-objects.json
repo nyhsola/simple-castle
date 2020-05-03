@@ -1,0 +1,20 @@
+{
+  "models": [
+    {
+      "model": "ground",
+      "interact": "KINEMATIC"
+    },
+    {
+      "model": "castle(?:-\\d)",
+      "interact": "KINEMATIC"
+    },
+    {
+      "model": "area-(?:.+)",
+      "interact": "GHOST"
+    },
+    {
+      "model": "tree.*",
+      "interact": "KINEMATIC"
+    }
+  ]
+}
