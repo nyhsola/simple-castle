@@ -28,6 +28,7 @@ import com.simple.castle.utils.AssetLoader;
 import com.simple.castle.utils.GameIntersectUtils;
 import com.simple.castle.utils.PropertyLoader;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.UUID;
@@ -124,9 +125,12 @@ public class GameScene extends ScreenAdapter implements InputProcessor, RemoveLi
         if (timeLeft <= 0) {
             timeLeft = spawnEvery;
 
-            UnitGameObject unitGameObject = gameUnitController.spawnUnit(objectConstructors);
-            gameScenePhysic.addRigidBody(unitGameObject);
-            sceneObjectsHandler.addSceneObject("unit-1-" + UUID.randomUUID(), unitGameObject);
+            List<UnitGameObject> unitGameObjects = gameUnitController.spawnUnits(objectConstructors);
+            unitGameObjects.forEach(gameScenePhysic::addRigidBody);
+            unitGameObjects.forEach(unitGameObject -> sceneObjectsHandler.addSceneObject(
+                    "unit-" + UUID.randomUUID(),
+                    unitGameObject
+            ));
         }
         stage.draw();
     }
