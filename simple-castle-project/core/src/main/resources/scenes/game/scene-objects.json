@@ -13,7 +13,7 @@
       "interact": "GHOST"
     },
     {
-      "model": "tree",
+      "model": "tree.*",
       "interact": "KINEMATIC"
     }
   ]

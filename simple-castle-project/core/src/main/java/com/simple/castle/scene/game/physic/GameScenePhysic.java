@@ -46,6 +46,10 @@ public class GameScenePhysic implements Disposable {
         dynamicsWorld.addRigidBody(object.body);
     }
 
+    public void removeRigidBody(AbstractGameObject object) {
+        dynamicsWorld.removeRigidBody(object.body);
+    }
+
     public void update(GameCamera camera, float delta, boolean debugDraw) {
         dynamicsWorld.stepSimulation(delta, 5, 1f / 60f);
         if (debugDraw) {
@@ -65,7 +69,7 @@ public class GameScenePhysic implements Disposable {
         contactListener.dispose();
     }
 
-    public void addListenerWithPredicate(CollisionEvent collisionEvent) {
+    public void addContactListener(CollisionEvent collisionEvent) {
         contactListener.addListener(collisionEvent);
     }
 

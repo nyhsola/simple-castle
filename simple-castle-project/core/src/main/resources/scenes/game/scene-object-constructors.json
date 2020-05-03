@@ -6,7 +6,7 @@
       "mass": 0
     },
     {
-      "nodes-pattern": "unit-type-1",
+      "nodes-pattern": "unit-type.*",
       "shape": "BASE_BOX",
       "mass": 1
     },
@@ -21,7 +21,7 @@
       "mass": 0
     },
     {
-      "nodes-pattern": "tree",
+      "nodes-pattern": "tree.*",
       "shape": "ADJUSTED_BOX",
       "mass": 0
     }

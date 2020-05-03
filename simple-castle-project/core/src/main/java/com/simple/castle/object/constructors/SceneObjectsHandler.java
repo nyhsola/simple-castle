@@ -9,12 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SceneObjectsConstructor {
+public class SceneObjectsHandler {
 
     private final Map<String, AbstractGameObject> sceneGameObjects;
 
     @SuppressWarnings("unchecked")
-    private SceneObjectsConstructor(ObjectConstructors objectConstructors, List<Map<String, Object>> objects) {
+    private SceneObjectsHandler(ObjectConstructors objectConstructors, List<Map<String, Object>> objects) {
         this.sceneGameObjects = new HashMap<>();
         objects.stream()
                 .map(map -> new Object[]{map.get("interact"), ModelUtils.getValuesByPattern(objectConstructors.getAllConstructors(), (String) map.get("model"))})
@@ -42,6 +42,11 @@ public class SceneObjectsConstructor {
         return sceneGameObjects.values();
     }
 
+    public void disposeObject(AbstractGameObject object) {
+        sceneGameObjects.remove(object.name);
+        object.dispose();
+    }
+
     public static final class Builder {
         private final ObjectConstructors objectConstructors;
 
@@ -49,8 +54,8 @@ public class SceneObjectsConstructor {
             this.objectConstructors = objectConstructors;
         }
 
-        public SceneObjectsConstructor build(List<Map<String, Object>> objects) {
-            return new SceneObjectsConstructor(objectConstructors, objects);
+        public SceneObjectsHandler build(List<Map<String, Object>> objects) {
+            return new SceneObjectsHandler(objectConstructors, objects);
         }
     }
 }

@@ -7,8 +7,16 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.simple.castle.listener.RemoveListener;
 import com.simple.castle.object.constructors.ObjectConstructors;
-import com.simple.castle.object.constructors.SceneObjectsConstructor;
+import com.simple.castle.object.constructors.SceneObjectsHandler;
 import com.simple.castle.object.unit.UnitGameObject;
 import com.simple.castle.object.unit.absunit.AbstractGameObject;
 import com.simple.castle.render.GameCamera;
@@ -16,15 +24,15 @@ import com.simple.castle.render.GameEnvironment;
 import com.simple.castle.render.GameRenderer;
 import com.simple.castle.scene.game.controller.GameUnitController;
 import com.simple.castle.scene.game.physic.GameScenePhysic;
+import com.simple.castle.utils.AssetLoader;
 import com.simple.castle.utils.GameIntersectUtils;
-import com.simple.castle.utils.ModelLoader;
 import com.simple.castle.utils.PropertyLoader;
 
 import java.util.Locale;
 import java.util.Properties;
 import java.util.UUID;
 
-public class GameScene extends ScreenAdapter implements InputProcessor {
+public class GameScene extends ScreenAdapter implements InputProcessor, RemoveListener {
 
     public final static String SCENE_NAME = "game";
 
@@ -37,37 +45,54 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
 
     private final GameRenderer gameRenderer;
     private final GameScenePhysic gameScenePhysic;
-    private final SceneObjectsConstructor sceneObjectsConstructor;
+    private static final long spawnEvery = 3 * 1000;
     private final InputMultiplexer inputMultiplexer;
 
     private final GameEnvironment gameEnvironment;
     private final GameCamera gameCamera;
 
-    private AbstractGameObject selected;
-    private boolean debugDraw = false;
-
     private final Model model;
     private final ObjectConstructors objectConstructors;
+    private final SceneObjectsHandler sceneObjectsHandler;
+    private final Stage stage;
+    private final Skin skin;
+    private final Label timeLabel;
 
     private final GameUnitController gameUnitController;
+    private final TextButton timeButton;
+    private AbstractGameObject selected;
+    private boolean debugDraw = false;
+    private long previousTime = System.currentTimeMillis();
+    private long timeLeft = spawnEvery;
 
     public GameScene(GameRenderer gameRenderer) {
+        skin = AssetLoader.loadSkin();
+
+        timeLabel = new Label("Spawn in: ", skin);
+        timeButton = new TextButton(Long.toString(spawnEvery), skin);
+        Table table = new Table();
+        table.align(Align.bottomRight).add(timeLabel, timeButton);
+        table.setFillParent(true);
+
+        stage = new Stage(new ScreenViewport());
+        stage.addActor(table);
+
         this.gameRenderer = gameRenderer;
         this.gameScenePhysic = new GameScenePhysic();
         this.inputMultiplexer = new InputMultiplexer();
         this.bitmapFont = new BitmapFont();
         this.batch = new SpriteBatch();
 
-        this.model = ModelLoader.loadModel();
+        this.model = AssetLoader.loadModel();
         this.objectConstructors = new ObjectConstructors.Builder(model)
                 .build(PropertyLoader.loadConstructorsFromScene(SCENE_NAME));
-        this.sceneObjectsConstructor = new SceneObjectsConstructor.Builder(objectConstructors)
+        this.sceneObjectsHandler = new SceneObjectsHandler.Builder(objectConstructors)
                 .build(PropertyLoader.loadObjectsFromScene(SCENE_NAME));
 
-        this.gameUnitController = new GameUnitController(sceneObjectsConstructor);
-        this.gameScenePhysic.addListenerWithPredicate(gameUnitController);
+        this.gameUnitController = new GameUnitController(sceneObjectsHandler, this);
+        this.gameScenePhysic.addContactListener(gameUnitController);
 
-        this.sceneObjectsConstructor.getSceneObjects().forEach(gameScenePhysic::addRigidBody);
+        this.sceneObjectsHandler.getSceneObjects().forEach(gameScenePhysic::addRigidBody);
 
         this.gameEnvironment = new GameEnvironment();
         this.gameEnvironment.create();
@@ -76,24 +101,41 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         String positionProp = properties.getProperty("camera-init-position-from");
         String basePlaneProp = properties.getProperty("camera-base-plane");
         this.gameCamera = new GameCamera(
-                sceneObjectsConstructor.getSceneObject(positionProp).transform.getTranslation(tempVector),
-                sceneObjectsConstructor.getSceneObject(basePlaneProp));
+                sceneObjectsHandler.getSceneObject(positionProp).transform.getTranslation(tempVector),
+                sceneObjectsHandler.getSceneObject(basePlaneProp));
 
         this.inputMultiplexer.addProcessor(gameCamera);
+        this.inputMultiplexer.addProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
         gameCamera.update(delta);
         gameUnitController.update();
-        gameRenderer.render(gameCamera, sceneObjectsConstructor.getSceneObjects(), gameEnvironment);
+        gameRenderer.render(gameCamera, sceneObjectsHandler.getSceneObjects(), gameEnvironment);
         gameScenePhysic.update(gameCamera, Math.min(1f / 30f, delta), debugDraw);
-        this.renderOverlay();
+
+        long diff = System.currentTimeMillis() - previousTime;
+        timeLeft = timeLeft - diff;
+
+        timeButton.setText(Long.toString(timeLeft / 1000));
+        previousTime = System.currentTimeMillis();
+
+        if (timeLeft <= 0) {
+            timeLeft = spawnEvery;
+
+            UnitGameObject unitGameObject = gameUnitController.spawnUnit(objectConstructors);
+            gameScenePhysic.addRigidBody(unitGameObject);
+            sceneObjectsHandler.addSceneObject("unit-1-" + UUID.randomUUID(), unitGameObject);
+        }
+        stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
         gameCamera.resize(width, height);
+        gameCamera.update();
+        stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
     }
 
     @Override
@@ -108,16 +150,13 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
         gameScenePhysic.dispose();
         model.dispose();
         objectConstructors.dispose();
-        sceneObjectsConstructor.dispose();
+        sceneObjectsHandler.dispose();
+        stage.dispose();
+        skin.dispose();
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        if (Input.Keys.SPACE == keycode) {
-            UnitGameObject unitGameObject = gameUnitController.spawnUnit(objectConstructors);
-            gameScenePhysic.addRigidBody(unitGameObject);
-            sceneObjectsConstructor.addSceneObject("unit-1-" + UUID.randomUUID(), unitGameObject);
-        }
         if (Input.Keys.Q == keycode) {
             debugDraw = !debugDraw;
         }
@@ -139,7 +178,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        selected = GameIntersectUtils.intersect(tempBoundingBox, gameCamera, sceneObjectsConstructor.getSceneObjects(), screenX, screenY);
+        selected = GameIntersectUtils.intersect(tempBoundingBox, gameCamera, sceneObjectsHandler.getSceneObjects(), screenX, screenY);
         return inputMultiplexer.touchDown(screenX, screenY, pointer, button);
     }
 
@@ -188,5 +227,11 @@ public class GameScene extends ScreenAdapter implements InputProcessor {
 
     private String format(Quaternion quaternion) {
         return String.format(Locale.getDefault(), "%.2f, %.2f, %.2f, %.2f", quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+    }
+
+    @Override
+    public void remove(AbstractGameObject abstractGameObject) {
+        gameScenePhysic.removeRigidBody(abstractGameObject);
+        sceneObjectsHandler.disposeObject(abstractGameObject);
     }
 }
