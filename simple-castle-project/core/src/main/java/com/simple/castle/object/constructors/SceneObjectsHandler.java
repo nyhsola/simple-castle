@@ -34,6 +34,10 @@ public class SceneObjectsHandler {
         sceneGameObjects.put(name, gameObject);
     }
 
+    public boolean contains(String sceneObj) {
+        return sceneGameObjects.containsKey(sceneObj);
+    }
+
     public AbstractGameObject getSceneObject(String name) {
         return sceneGameObjects.get(name);
     }

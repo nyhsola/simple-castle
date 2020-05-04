@@ -1,18 +1,20 @@
 package com.simple.castle.object.constructors.tool;
 
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import com.badlogic.gdx.physics.bullet.collision.btBoxShape;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
-import com.badlogic.gdx.physics.bullet.collision.btSphereShape;
+import com.badlogic.gdx.physics.bullet.Bullet;
+import com.badlogic.gdx.physics.bullet.collision.*;
 
 import java.util.function.Function;
 
 public enum RigidBodies {
     SPHERE(RigidBodies::calculateSphere),
     BASE_BOX(RigidBodies::calculateBaseBox),
-    ADJUSTED_BOX(RigidBodies::calculateAdjustedBox);
+    ADJUSTED_BOX(RigidBodies::calculateAdjustedBox),
+    CONVEX_HULL(RigidBodies::createConvexHullShape),
+    STATIC_NODE_SHAPE(RigidBodies::createStaticNodeShape);
 
     private static final float SCALAR = 0.5f;
 
@@ -45,6 +47,25 @@ public enum RigidBodies {
         Vector3 dimensions = new Vector3();
         boundingBox.getDimensions(dimensions);
         return new btSphereShape(dimensions.scl(SCALAR).x);
+    }
+
+    private static btConvexHullShape createConvexHullShape(Node node) {
+        boolean optimize = false;
+        final Mesh mesh = node.parts.get(0).meshPart.mesh;
+        final btConvexHullShape shape = new btConvexHullShape(mesh.getVerticesBuffer(), mesh.getNumVertices(), mesh.getVertexSize());
+        if (!optimize) return shape;
+
+        final btShapeHull hull = new btShapeHull(shape);
+        hull.buildHull(shape.getMargin());
+        final btConvexHullShape result = new btConvexHullShape(hull);
+
+        shape.dispose();
+        hull.dispose();
+        return result;
+    }
+
+    private static btCollisionShape createStaticNodeShape(Node node) {
+        return Bullet.obtainStaticNodeShape(node, false);
     }
 
     public btCollisionShape calculate(Node node) {

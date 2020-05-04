@@ -20,7 +20,6 @@ public enum Interact {
             case GHOST:
                 return new GhostGameObject(objectConstructor);
         }
-
         throw new AssertionError("No way");
     }
 }
