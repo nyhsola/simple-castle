@@ -16,8 +16,6 @@ public class Player {
     private final List<List<AbstractGameObject>> paths;
     private final Map<String, UnitGameObject> units = new HashMap<>();
 
-    private long previousTimeForUpdateTarget = System.currentTimeMillis();
-
     public Player(String unitType, List<List<AbstractGameObject>> paths) {
         this.unitType = unitType;
         this.paths = paths;
@@ -32,10 +30,7 @@ public class Player {
     }
 
     public void update() {
-        if (System.currentTimeMillis() - previousTimeForUpdateTarget > 200) {
-            units.forEach((s, unitGameObject) -> unitGameObject.updateTarget());
-            previousTimeForUpdateTarget = System.currentTimeMillis();
-        }
+        units.forEach((s, unitGameObject) -> unitGameObject.updateTarget());
     }
 
     public void collisionEvent(UnitGameObject unit, AbstractGameObject gameObject) {

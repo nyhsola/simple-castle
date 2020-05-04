@@ -14,10 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.simple.castle.listener.RemoveListener;
+import com.simple.castle.listener.SceneObjectManager;
 import com.simple.castle.object.constructors.ObjectConstructors;
 import com.simple.castle.object.constructors.SceneObjectsHandler;
-import com.simple.castle.object.unit.UnitGameObject;
 import com.simple.castle.object.unit.absunit.AbstractGameObject;
 import com.simple.castle.render.GameCamera;
 import com.simple.castle.render.GameEnvironment;
@@ -28,11 +27,10 @@ import com.simple.castle.utils.AssetLoader;
 import com.simple.castle.utils.GameIntersectUtils;
 import com.simple.castle.utils.PropertyLoader;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
-public class GameScene extends ScreenAdapter implements InputProcessor, RemoveListener {
+public class GameScene extends ScreenAdapter implements InputProcessor, SceneObjectManager {
 
     public final static String SCENE_NAME = "game";
 
@@ -45,7 +43,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor, RemoveLi
 
     private final GameRenderer gameRenderer;
     private final GameScenePhysic gameScenePhysic;
-    private static final long spawnEvery = 3 * 1000;
     private final InputMultiplexer inputMultiplexer;
 
     private final GameEnvironment gameEnvironment;
@@ -62,14 +59,12 @@ public class GameScene extends ScreenAdapter implements InputProcessor, RemoveLi
     private final TextButton timeButton;
     private AbstractGameObject selected;
     private boolean debugDraw = false;
-    private long previousTime = System.currentTimeMillis();
-    private long timeLeft = spawnEvery;
 
     public GameScene(GameRenderer gameRenderer) {
         skin = AssetLoader.loadSkin();
 
         timeLabel = new Label("Spawn in: ", skin);
-        timeButton = new TextButton(Long.toString(spawnEvery), skin);
+        timeButton = new TextButton(Long.toString(GameUnitController.spawnEvery), skin);
         Table table = new Table();
         table.align(Align.bottomRight).add(timeLabel, timeButton);
         table.setFillParent(true);
@@ -89,7 +84,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor, RemoveLi
         this.sceneObjectsHandler = new SceneObjectsHandler.Builder(objectConstructors)
                 .build(PropertyLoader.loadObjectsFromScene(SCENE_NAME));
 
-        this.gameUnitController = new GameUnitController(sceneObjectsHandler, this);
+        this.gameUnitController = new GameUnitController(objectConstructors, sceneObjectsHandler, this);
         this.gameScenePhysic.addContactListener(gameUnitController);
 
         this.sceneObjectsHandler.getSceneObjects().forEach(gameScenePhysic::addRigidBody);
@@ -114,23 +109,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor, RemoveLi
         gameUnitController.update();
         gameRenderer.render(gameCamera, sceneObjectsHandler.getSceneObjects(), gameEnvironment);
         gameScenePhysic.update(gameCamera, Math.min(1f / 30f, delta), debugDraw);
-
-        long diff = System.currentTimeMillis() - previousTime;
-        timeLeft = timeLeft - diff;
-
-        timeButton.setText(Long.toString(timeLeft / 1000));
-        previousTime = System.currentTimeMillis();
-
-        if (timeLeft <= 0) {
-            timeLeft = spawnEvery;
-
-            List<UnitGameObject> unitGameObjects = gameUnitController.spawnUnits(objectConstructors);
-            unitGameObjects.forEach(gameScenePhysic::addRigidBody);
-            unitGameObjects.forEach(unitGameObject -> sceneObjectsHandler.addSceneObject(
-                    String.valueOf(unitGameObject.body.userData),
-                    unitGameObject
-            ));
-        }
+        timeButton.setText(Long.toString(gameUnitController.getTimeLeft() / 1000));
         stage.draw();
     }
 
@@ -236,5 +215,11 @@ public class GameScene extends ScreenAdapter implements InputProcessor, RemoveLi
     public void remove(AbstractGameObject abstractGameObject) {
         gameScenePhysic.removeRigidBody(abstractGameObject);
         sceneObjectsHandler.disposeObject(abstractGameObject);
+    }
+
+    @Override
+    public void add(AbstractGameObject abstractGameObject) {
+        gameScenePhysic.addRigidBody(abstractGameObject);
+        sceneObjectsHandler.addSceneObject(String.valueOf(abstractGameObject.body.userData), abstractGameObject);
     }
 }

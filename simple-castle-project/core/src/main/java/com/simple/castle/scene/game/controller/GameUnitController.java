@@ -2,7 +2,7 @@ package com.simple.castle.scene.game.controller;
 
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 import com.simple.castle.listener.CollisionEvent;
-import com.simple.castle.listener.RemoveListener;
+import com.simple.castle.listener.SceneObjectManager;
 import com.simple.castle.object.constructors.ObjectConstructors;
 import com.simple.castle.object.constructors.SceneObjectsHandler;
 import com.simple.castle.object.unit.UnitGameObject;
@@ -32,32 +32,35 @@ public class GameUnitController implements CollisionEvent {
             "area-1-3", "area-4-1-1", "area-4-1", "area-4"
     );
 
-    private final RemoveListener removeListener;
+    public static final long spawnEvery = 3 * 1000;
+    private final ObjectConstructors objectConstructors;
+    private final SceneObjectManager sceneObjectManager;
+
     private final List<Player> players;
+    private long timeLeft = spawnEvery;
+    private long previousTime = System.currentTimeMillis();
     private final SceneObjectsHandler sceneObjectsHandler;
 
-    public GameUnitController(SceneObjectsHandler sceneObjectsHandler, RemoveListener removeListener) {
+    public GameUnitController(ObjectConstructors objectConstructors, SceneObjectsHandler sceneObjectsHandler,
+                              SceneObjectManager sceneObjectManager) {
+        this.objectConstructors = objectConstructors;
         this.sceneObjectsHandler = sceneObjectsHandler;
-        players = new ArrayList<>();
+        this.sceneObjectManager = sceneObjectManager;
 
+        // TODO: 5/5/2020 Move SceneObjectsHandler to GameScene, unit-types and paths load from file
+        players = new ArrayList<>();
         players.add(new Player("unit-type-1",
                 toAbsList(sceneObjectsHandler, Stream.of(redLeftPath, redMiddlePath, redRightPath))));
         players.add(new Player("unit-type-2",
                 toAbsList(sceneObjectsHandler, Stream.of(blueRightPath))));
-
-        this.removeListener = removeListener;
     }
 
-    private List<List<AbstractGameObject>> toAbsList(SceneObjectsHandler sceneObjectsHandler, Stream<List<String>> paths) {
-        return paths
-                .map(pathsString -> pathsString.stream()
-                        .map(sceneObjectsHandler::getSceneObject)
-                        .collect(Collectors.toList()))
+    private static List<List<AbstractGameObject>> toAbsList(SceneObjectsHandler sceneObjectsHandler,
+                                                            Stream<List<String>> paths) {
+        return paths.map(pathsString -> pathsString.stream()
+                .map(sceneObjectsHandler::getSceneObject)
+                .collect(Collectors.toList()))
                 .collect(Collectors.toList());
-    }
-
-    public void update() {
-        players.forEach(Player::update);
     }
 
     @Override
@@ -82,28 +85,29 @@ public class GameUnitController implements CollisionEvent {
         }
     }
 
-//    private void castleCollision(String userData1, String userData2) {
-//        UnitGameObject unitGameObject = Stream.of(userData1, userData2)
-//                .map(unitGameObjects::get)
-//                .filter(Objects::nonNull)
-//                .findFirst()
-//                .orElse(null);
-//        AbstractGameObject kinematicObject = Stream.of(userData1, userData2)
-//                .filter(redEnemy::contains)
-//                .map(sceneObjectsHandler::getSceneObject)
-//                .findFirst()
-//                .orElse(null);
-//
-//        if (unitGameObject != null && kinematicObject != null) {
-//            removeListener.remove(kinematicObject);
-//        }
-//    }
+    public void update() {
+        long diff = System.currentTimeMillis() - previousTime;
+        timeLeft = timeLeft - diff;
 
-    public List<UnitGameObject> spawnUnits(ObjectConstructors objectConstructors) {
+        if (timeLeft <= 0) {
+            timeLeft = spawnEvery;
+            List<UnitGameObject> unitGameObjects = this.spawnUnits(objectConstructors);
+            unitGameObjects.forEach(sceneObjectManager::add);
+        }
+        previousTime = System.currentTimeMillis();
+
+        // TODO: 5/5/2020 Check distances between objects
+        players.forEach(Player::update);
+    }
+
+    private List<UnitGameObject> spawnUnits(ObjectConstructors objectConstructors) {
         return players.stream()
                 .map(player -> player.spawnUnitsOnStartPositions(objectConstructors))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
+    public long getTimeLeft() {
+        return timeLeft;
+    }
 }
