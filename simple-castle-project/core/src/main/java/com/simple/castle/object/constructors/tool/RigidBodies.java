@@ -49,6 +49,7 @@ public enum RigidBodies {
         return new btSphereShape(dimensions.scl(SCALAR).x);
     }
 
+    // TODO: 5/4/2020 not working
     private static btConvexHullShape createConvexHullShape(Node node) {
         boolean optimize = false;
         final Mesh mesh = node.parts.get(0).meshPart.mesh;

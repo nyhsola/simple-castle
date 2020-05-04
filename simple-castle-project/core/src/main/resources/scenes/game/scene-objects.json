@@ -15,6 +15,10 @@
     {
       "model": "tree.*",
       "interact": "KINEMATIC"
+    },
+    {
+      "model": "wall-1",
+      "interact": "KINEMATIC"
     }
   ]
 }

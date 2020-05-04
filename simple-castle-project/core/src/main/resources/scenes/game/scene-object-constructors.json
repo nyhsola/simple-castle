@@ -24,6 +24,11 @@
       "nodes-pattern": "tree.*",
       "shape": "ADJUSTED_BOX",
       "mass": 0
+    },
+    {
+      "nodes-pattern": "wall-1",
+      "shape": "STATIC_NODE_SHAPE",
+      "mass": 0
     }
   ]
 }
