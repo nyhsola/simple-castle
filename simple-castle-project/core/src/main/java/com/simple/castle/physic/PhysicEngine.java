@@ -1,4 +1,4 @@
-package com.simple.castle.scene.game.physic;
+package com.simple.castle.physic;
 
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.DebugDrawer;
@@ -10,15 +10,15 @@ import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSol
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
 import com.badlogic.gdx.utils.Disposable;
 import com.simple.castle.listener.CollisionEvent;
-import com.simple.castle.object.unit.absunit.AbstractGameObject;
+import com.simple.castle.object.unit.abs.AbstractGameObject;
 import com.simple.castle.render.GameCamera;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameScenePhysic implements Disposable {
+public class PhysicEngine implements Disposable {
 
-    private final GameScenePhysic.MyContactListener contactListener;
+    private final PhysicEngine.MyContactListener contactListener;
     private final btCollisionConfiguration collisionConfig;
     private final btDispatcher dispatcher;
     private final btBroadphaseInterface broadphase;
@@ -26,8 +26,8 @@ public class GameScenePhysic implements Disposable {
     private final btDynamicsWorld dynamicsWorld;
     private final DebugDrawer debugDrawer;
 
-    public GameScenePhysic() {
-        contactListener = new GameScenePhysic.MyContactListener();
+    public PhysicEngine() {
+        contactListener = new PhysicEngine.MyContactListener();
 
         collisionConfig = new btDefaultCollisionConfiguration();
         dispatcher = new btCollisionDispatcher(collisionConfig);

@@ -3,8 +3,8 @@ package com.simple.castle.scene.game.controller;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.simple.castle.object.constructors.ObjectConstructors;
-import com.simple.castle.object.unit.UnitGameObject;
-import com.simple.castle.object.unit.absunit.AbstractGameObject;
+import com.simple.castle.object.unit.BasicUnit;
+import com.simple.castle.object.unit.abs.AbstractGameObject;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,7 +14,7 @@ public class Player {
 
     private final String unitType;
     private final List<List<AbstractGameObject>> paths;
-    private final Map<String, UnitGameObject> units = new HashMap<>();
+    private final Map<String, BasicUnit> units = new HashMap<>();
 
     public Player(String unitType, List<List<AbstractGameObject>> paths) {
         this.unitType = unitType;
@@ -30,10 +30,10 @@ public class Player {
     }
 
     public void update() {
-        units.forEach((s, unitGameObject) -> unitGameObject.updateTarget());
+        units.forEach((s, basicUnit) -> basicUnit.updateTarget());
     }
 
-    public void collisionEvent(UnitGameObject unit, AbstractGameObject gameObject) {
+    public void collisionEvent(BasicUnit unit, AbstractGameObject gameObject) {
         if (unit != null && gameObject != null) {
             List<AbstractGameObject> path = paths.stream()
                     .filter(gameObjects -> gameObjects.contains(gameObject))
@@ -47,14 +47,14 @@ public class Player {
         }
     }
 
-    public List<UnitGameObject> spawnUnitsOnStartPositions(ObjectConstructors objectConstructors) {
+    public List<BasicUnit> spawnUnitsOnStartPositions(ObjectConstructors objectConstructors) {
         return paths.stream()
                 .map(strings -> strings.stream().findFirst())
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .map(sceneObject -> sceneObject.transform.getTranslation(tempVector).cpy())
                 .map(vector3 -> {
-                    UnitGameObject unit = new UnitGameObject(objectConstructors.getConstructor(unitType));
+                    BasicUnit unit = new BasicUnit(objectConstructors.getConstructor(unitType));
                     unit.body.setWorldTransform(new Matrix4());
                     unit.body.translate(vector3);
                     unit.body.userData = UUID.randomUUID().toString();

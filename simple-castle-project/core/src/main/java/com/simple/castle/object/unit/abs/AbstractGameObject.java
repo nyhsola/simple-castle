@@ -1,9 +1,10 @@
-package com.simple.castle.object.unit.absunit;
+package com.simple.castle.object.unit.abs;
 
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.utils.Disposable;
-import com.simple.castle.object.constructors.ObjectConstructor;
+import com.simple.castle.object.unit.add.MotionState;
+import com.simple.castle.object.unit.add.ObjectConstructor;
 
 public abstract class AbstractGameObject extends ModelInstance implements Disposable {
     public final static short GROUND_FLAG = 1 << 8;

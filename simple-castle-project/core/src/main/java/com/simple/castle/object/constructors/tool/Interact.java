@@ -1,10 +1,10 @@
 package com.simple.castle.object.constructors.tool;
 
-import com.simple.castle.object.constructors.ObjectConstructor;
-import com.simple.castle.object.unit.absunit.AbstractGameObject;
-import com.simple.castle.object.unit.absunit.ActiveGameObject;
-import com.simple.castle.object.unit.absunit.GhostGameObject;
-import com.simple.castle.object.unit.absunit.KinematicGameObject;
+import com.simple.castle.object.unit.abs.AbstractGameObject;
+import com.simple.castle.object.unit.add.ObjectConstructor;
+import com.simple.castle.object.unit.basic.ActiveGameObject;
+import com.simple.castle.object.unit.basic.GhostGameObject;
+import com.simple.castle.object.unit.basic.KinematicGameObject;
 
 public enum Interact {
     ACTIVE,

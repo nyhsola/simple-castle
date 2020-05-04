@@ -17,12 +17,12 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.simple.castle.listener.SceneObjectManager;
 import com.simple.castle.object.constructors.ObjectConstructors;
 import com.simple.castle.object.constructors.SceneObjectsHandler;
-import com.simple.castle.object.unit.absunit.AbstractGameObject;
+import com.simple.castle.object.unit.abs.AbstractGameObject;
+import com.simple.castle.physic.PhysicEngine;
 import com.simple.castle.render.GameCamera;
 import com.simple.castle.render.GameEnvironment;
 import com.simple.castle.render.GameRenderer;
-import com.simple.castle.scene.game.controller.GameUnitController;
-import com.simple.castle.scene.game.physic.GameScenePhysic;
+import com.simple.castle.scene.game.controller.PlayerController;
 import com.simple.castle.utils.AssetLoader;
 import com.simple.castle.utils.GameIntersectUtils;
 import com.simple.castle.utils.PropertyLoader;
@@ -42,7 +42,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
     private final SpriteBatch batch;
 
     private final GameRenderer gameRenderer;
-    private final GameScenePhysic gameScenePhysic;
+    private final PhysicEngine physicEngine;
     private final InputMultiplexer inputMultiplexer;
 
     private final GameEnvironment gameEnvironment;
@@ -55,7 +55,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
     private final Skin skin;
     private final Label timeLabel;
 
-    private final GameUnitController gameUnitController;
+    private final PlayerController playerController;
     private final TextButton timeButton;
     private AbstractGameObject selected;
     private boolean debugDraw = false;
@@ -64,7 +64,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
         skin = AssetLoader.loadSkin();
 
         timeLabel = new Label("Spawn in: ", skin);
-        timeButton = new TextButton(Long.toString(GameUnitController.spawnEvery), skin);
+        timeButton = new TextButton(Long.toString(PlayerController.spawnEvery), skin);
         Table table = new Table();
         table.align(Align.bottomRight).add(timeLabel, timeButton);
         table.setFillParent(true);
@@ -73,7 +73,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
         stage.addActor(table);
 
         this.gameRenderer = gameRenderer;
-        this.gameScenePhysic = new GameScenePhysic();
+        this.physicEngine = new PhysicEngine();
         this.inputMultiplexer = new InputMultiplexer();
         this.bitmapFont = new BitmapFont();
         this.batch = new SpriteBatch();
@@ -84,10 +84,10 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
         this.sceneObjectsHandler = new SceneObjectsHandler.Builder(objectConstructors)
                 .build(PropertyLoader.loadObjectsFromScene(SCENE_NAME));
 
-        this.gameUnitController = new GameUnitController(objectConstructors, sceneObjectsHandler, this);
-        this.gameScenePhysic.addContactListener(gameUnitController);
+        this.playerController = new PlayerController(objectConstructors, sceneObjectsHandler, this);
+        this.physicEngine.addContactListener(playerController);
 
-        this.sceneObjectsHandler.getSceneObjects().forEach(gameScenePhysic::addRigidBody);
+        this.sceneObjectsHandler.getSceneObjects().forEach(physicEngine::addRigidBody);
 
         this.gameEnvironment = new GameEnvironment();
         this.gameEnvironment.create();
@@ -106,10 +106,10 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
     @Override
     public void render(float delta) {
         gameCamera.update(delta);
-        gameUnitController.update();
+        playerController.update();
         gameRenderer.render(gameCamera, sceneObjectsHandler.getSceneObjects(), gameEnvironment);
-        gameScenePhysic.update(gameCamera, Math.min(1f / 30f, delta), debugDraw);
-        timeButton.setText(Long.toString(gameUnitController.getTimeLeft() / 1000));
+        physicEngine.update(gameCamera, Math.min(1f / 30f, delta), debugDraw);
+        timeButton.setText(Long.toString(playerController.getTimeLeft() / 1000));
         stage.draw();
     }
 
@@ -129,7 +129,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
     public void hide() {
         bitmapFont.dispose();
         batch.dispose();
-        gameScenePhysic.dispose();
+        physicEngine.dispose();
         model.dispose();
         objectConstructors.dispose();
         sceneObjectsHandler.dispose();
@@ -213,13 +213,13 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
 
     @Override
     public void remove(AbstractGameObject abstractGameObject) {
-        gameScenePhysic.removeRigidBody(abstractGameObject);
+        physicEngine.removeRigidBody(abstractGameObject);
         sceneObjectsHandler.disposeObject(abstractGameObject);
     }
 
     @Override
     public void add(AbstractGameObject abstractGameObject) {
-        gameScenePhysic.addRigidBody(abstractGameObject);
+        physicEngine.addRigidBody(abstractGameObject);
         sceneObjectsHandler.addSceneObject(String.valueOf(abstractGameObject.body.userData), abstractGameObject);
     }
 }

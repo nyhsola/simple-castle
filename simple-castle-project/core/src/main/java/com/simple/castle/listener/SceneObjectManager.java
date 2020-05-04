@@ -1,6 +1,6 @@
 package com.simple.castle.listener;
 
-import com.simple.castle.object.unit.absunit.AbstractGameObject;
+import com.simple.castle.object.unit.abs.AbstractGameObject;
 
 public interface SceneObjectManager {
     void remove(AbstractGameObject abstractGameObject);

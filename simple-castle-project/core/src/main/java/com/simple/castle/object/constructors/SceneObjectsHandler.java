@@ -1,8 +1,8 @@
 package com.simple.castle.object.constructors;
 
 import com.simple.castle.object.constructors.tool.Interact;
-import com.simple.castle.object.unit.absunit.AbstractGameObject;
-import com.simple.castle.utils.ModelUtils;
+import com.simple.castle.object.unit.abs.AbstractGameObject;
+import com.simple.castle.utils.StringTool;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ public class SceneObjectsHandler {
     private SceneObjectsHandler(ObjectConstructors objectConstructors, List<Map<String, Object>> objects) {
         this.sceneGameObjects = new HashMap<>();
         objects.stream()
-                .map(map -> new Object[]{map.get("interact"), ModelUtils.getValuesByPattern(objectConstructors.getAllConstructors(), (String) map.get("model"))})
+                .map(map -> new Object[]{map.get("interact"), StringTool.getValuesByPattern(objectConstructors.getAllConstructors(), (String) map.get("model"))})
                 .forEach(object ->
                 {
                     Collection<String> strings = (Collection<String>) object[1];

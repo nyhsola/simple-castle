@@ -1,7 +1,7 @@
 package com.simple.castle.render;
 
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.simple.castle.object.unit.absunit.AbstractGameObject;
+import com.simple.castle.object.unit.abs.AbstractGameObject;
 
 import java.util.Collection;
 

@@ -1,4 +1,4 @@
-package com.simple.castle.object.constructors;
+package com.simple.castle.object.unit.add;
 
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.math.Vector3;

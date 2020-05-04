@@ -1,4 +1,4 @@
-package com.simple.castle.object.constructors;
+package com.simple.castle.object.constructors.add;
 
 import java.util.Map;
 

@@ -5,8 +5,8 @@ import com.simple.castle.listener.CollisionEvent;
 import com.simple.castle.listener.SceneObjectManager;
 import com.simple.castle.object.constructors.ObjectConstructors;
 import com.simple.castle.object.constructors.SceneObjectsHandler;
-import com.simple.castle.object.unit.UnitGameObject;
-import com.simple.castle.object.unit.absunit.AbstractGameObject;
+import com.simple.castle.object.unit.BasicUnit;
+import com.simple.castle.object.unit.abs.AbstractGameObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class GameUnitController implements CollisionEvent {
+public class PlayerController implements CollisionEvent {
 
     private static final List<String> redLeftPath = Arrays.asList(
             "area-1-1", "area-1-1-1", "area-2-3", "area-2",
@@ -41,8 +41,8 @@ public class GameUnitController implements CollisionEvent {
     private long previousTime = System.currentTimeMillis();
     private final SceneObjectsHandler sceneObjectsHandler;
 
-    public GameUnitController(ObjectConstructors objectConstructors, SceneObjectsHandler sceneObjectsHandler,
-                              SceneObjectManager sceneObjectManager) {
+    public PlayerController(ObjectConstructors objectConstructors, SceneObjectsHandler sceneObjectsHandler,
+                            SceneObjectManager sceneObjectManager) {
         this.objectConstructors = objectConstructors;
         this.sceneObjectsHandler = sceneObjectsHandler;
         this.sceneObjectManager = sceneObjectManager;
@@ -73,12 +73,12 @@ public class GameUnitController implements CollisionEvent {
             players.forEach(player -> {
                 if (player.isPlayers(userData1) && sceneObjectsHandler.contains(userData2)) {
                     player.collisionEvent(
-                            (UnitGameObject) sceneObjectsHandler.getSceneObject(userData1),
+                            (BasicUnit) sceneObjectsHandler.getSceneObject(userData1),
                             sceneObjectsHandler.getSceneObject(userData2));
                 }
                 if (player.isPlayers(userData2) && sceneObjectsHandler.contains(userData1)) {
                     player.collisionEvent(
-                            (UnitGameObject) sceneObjectsHandler.getSceneObject(userData2),
+                            (BasicUnit) sceneObjectsHandler.getSceneObject(userData2),
                             sceneObjectsHandler.getSceneObject(userData1));
                 }
             });
@@ -91,8 +91,8 @@ public class GameUnitController implements CollisionEvent {
 
         if (timeLeft <= 0) {
             timeLeft = spawnEvery;
-            List<UnitGameObject> unitGameObjects = this.spawnUnits(objectConstructors);
-            unitGameObjects.forEach(sceneObjectManager::add);
+            List<BasicUnit> basicUnits = this.spawnUnits(objectConstructors);
+            basicUnits.forEach(sceneObjectManager::add);
         }
         previousTime = System.currentTimeMillis();
 
@@ -100,7 +100,7 @@ public class GameUnitController implements CollisionEvent {
         players.forEach(Player::update);
     }
 
-    private List<UnitGameObject> spawnUnits(ObjectConstructors objectConstructors) {
+    private List<BasicUnit> spawnUnits(ObjectConstructors objectConstructors) {
         return players.stream()
                 .map(player -> player.spawnUnitsOnStartPositions(objectConstructors))
                 .flatMap(Collection::stream)

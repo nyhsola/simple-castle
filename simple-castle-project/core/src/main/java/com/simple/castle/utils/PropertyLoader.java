@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 public final class PropertyLoader {
 
     private static final String APP_PROPERTIES = "app.properties";
+    private static final String SCENES_FOLDER = "scenes/";
 
     private PropertyLoader() {
     }
@@ -21,7 +22,7 @@ public final class PropertyLoader {
 
         String sceneName = findScene(sceneNameSearch);
 
-        new JSONObject(loadResource("scenes/" + sceneName + "/scene-object-constructors.json"))
+        new JSONObject(loadResource(SCENES_FOLDER + sceneName + "/scene-object-constructors.json"))
                 .getJSONArray("models")
                 .toList()
                 .forEach(model -> gameModels.add(castToMap(model)));
@@ -34,7 +35,7 @@ public final class PropertyLoader {
 
         String sceneName = findScene(sceneNameSearch);
 
-        new JSONObject(loadResource("scenes/" + sceneName + "/scene-objects.json"))
+        new JSONObject(loadResource(SCENES_FOLDER + sceneName + "/scene-objects.json"))
                 .getJSONArray("models")
                 .toList()
                 .forEach(model -> gameModels.add(castToMap(model)));
@@ -44,7 +45,7 @@ public final class PropertyLoader {
 
     public static Properties loadPropertiesFromScene(String sceneNameSearch) {
         String sceneName = findScene(sceneNameSearch);
-        return loadProperties("scenes/" + sceneName + "/scene.properties");
+        return loadProperties(SCENES_FOLDER + sceneName + "/scene.properties");
     }
 
     private static String findScene(String sceneName) {

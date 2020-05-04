@@ -6,7 +6,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
-import com.simple.castle.object.unit.absunit.AbstractGameObject;
+import com.simple.castle.object.unit.abs.AbstractGameObject;
 import com.simple.castle.utils.GameIntersectUtils;
 
 public class GameCamera extends PerspectiveCamera implements InputProcessor {

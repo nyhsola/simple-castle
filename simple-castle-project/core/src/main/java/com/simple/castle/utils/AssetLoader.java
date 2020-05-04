@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.JsonReader;
 
 public final class AssetLoader {
     private static final String MAIN_MODEL = "models/map.g3dj";
+    private static final String UI_UISKIN_JSON = "ui/uiskin.json";
 
     private AssetLoader() {
     }
@@ -18,6 +19,6 @@ public final class AssetLoader {
     }
 
     public static Skin loadSkin() {
-        return new Skin(Gdx.files.internal("ui/uiskin.json"));
+        return new Skin(Gdx.files.internal(UI_UISKIN_JSON));
     }
 }

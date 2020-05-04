@@ -2,12 +2,15 @@ package com.simple.castle.object.constructors;
 
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
+import com.simple.castle.object.constructors.add.GameModelJson;
 import com.simple.castle.object.constructors.tool.RigidBodies;
-import com.simple.castle.utils.ModelUtils;
+import com.simple.castle.object.unit.add.ObjectConstructor;
+import com.simple.castle.utils.StringTool;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class ObjectConstructors {
 
@@ -32,7 +35,10 @@ public class ObjectConstructors {
     private Function<Map<String, Object>, List<GameModelJson>> loadNodesFromModelByPattern(Model mainModel) {
         return map -> {
             GameModelJson dto = new GameModelJson(map);
-            return ModelUtils.getNodesFromModelByPattern(mainModel, dto.getNodesPattern())
+            return StringTool.getValuesByPattern(
+                    StreamSupport.stream(mainModel.nodes.spliterator(), false)
+                            .map(node -> node.id)
+                            .collect(Collectors.toSet()), dto.getNodesPattern())
                     .stream()
                     .map(modelName -> new GameModelJson(modelName, dto.getShape(), dto.getMass(), dto.getInteract()))
                     .collect(Collectors.toList());

@@ -1,10 +1,10 @@
 package com.simple.castle.object.unit;
 
 import com.badlogic.gdx.math.Vector3;
-import com.simple.castle.object.constructors.ObjectConstructor;
-import com.simple.castle.object.unit.absunit.ActiveGameObject;
+import com.simple.castle.object.unit.add.ObjectConstructor;
+import com.simple.castle.object.unit.basic.ActiveGameObject;
 
-public class UnitGameObject extends ActiveGameObject {
+public class BasicUnit extends ActiveGameObject {
 
     private static final int UNIT_DEFAULT_SPEED = 5;
     private static final Vector3 faceDirection = new Vector3(1, 0, 0);
@@ -17,7 +17,7 @@ public class UnitGameObject extends ActiveGameObject {
     private double previousAngle;
     private boolean rotateDirection = false;
 
-    public UnitGameObject(ObjectConstructor objectConstructor) {
+    public BasicUnit(ObjectConstructor objectConstructor) {
         super(objectConstructor);
     }
 
