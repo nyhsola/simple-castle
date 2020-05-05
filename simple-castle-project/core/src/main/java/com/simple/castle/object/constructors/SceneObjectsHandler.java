@@ -38,8 +38,12 @@ public class SceneObjectsHandler {
         sceneGameObjects.put(String.valueOf(gameObject.body.userData), gameObject);
     }
 
-    public boolean contains(String sceneObj) {
-        return sceneGameObjects.containsKey(sceneObj);
+    public boolean contains(AbstractGameObject abstractGameObject) {
+        return contains(String.valueOf(abstractGameObject.body.userData));
+    }
+
+    public boolean contains(String userData) {
+        return sceneGameObjects.containsKey(userData);
     }
 
     public AbstractGameObject getSceneObjectByModelName(String name) {

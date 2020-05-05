@@ -31,7 +31,6 @@ public class BasicUnit extends ActiveGameObject {
             Vector3 unitV = this.transform.getTranslation(tempVector);
             Vector3 targetDirection = movePoint.cpy().sub(unitV).nor();
             this.body.setLinearVelocity(targetDirection.scl(UNIT_DEFAULT_SPEED));
-
             double currentAngle = getAngleBetweenVectors(targetDirection, getModelForwardDirection());
             if (currentAngle <= 0 || currentAngle >= 5) {
                 if (currentAngle - previousAngle > 0) {

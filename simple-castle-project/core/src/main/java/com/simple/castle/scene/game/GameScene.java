@@ -28,7 +28,6 @@ import com.simple.castle.utils.GameIntersectUtils;
 import com.simple.castle.utils.PropertyLoader;
 
 import java.util.Locale;
-import java.util.Properties;
 
 public class GameScene extends ScreenAdapter implements InputProcessor, SceneObjectManager {
 
@@ -53,7 +52,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
     private final SceneObjectsHandler sceneObjectsHandler;
     private final Stage stage;
     private final Skin skin;
-    private final Label timeLabel;
 
     private final PlayerController playerController;
     private final TextButton timeButton;
@@ -63,7 +61,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
     public GameScene(GameRenderer gameRenderer) {
         skin = AssetLoader.loadSkin();
 
-        timeLabel = new Label("Spawn in: ", skin);
+        Label timeLabel = new Label("Spawn in: ", skin);
         timeButton = new TextButton(Long.toString(PlayerController.spawnEvery), skin);
         Table table = new Table();
         table.align(Align.bottomRight).add(timeLabel, timeButton);
@@ -74,17 +72,18 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
 
         this.gameRenderer = gameRenderer;
         this.physicEngine = new PhysicEngine();
-        this.inputMultiplexer = new InputMultiplexer();
         this.bitmapFont = new BitmapFont();
         this.batch = new SpriteBatch();
 
         this.model = AssetLoader.loadModel();
         this.objectConstructors = new ObjectConstructors.Builder(model)
-                .build(PropertyLoader.loadConstructorsFromScene(SCENE_NAME));
+                .build(PropertyLoader.loadConstructors(SCENE_NAME));
         this.sceneObjectsHandler = new SceneObjectsHandler.Builder(objectConstructors)
-                .build(PropertyLoader.loadObjectsFromScene(SCENE_NAME));
+                .build(PropertyLoader.loadObjects(SCENE_NAME));
 
-        this.playerController = new PlayerController(objectConstructors, sceneObjectsHandler, this);
+        this.playerController = new PlayerController.Builder(objectConstructors, this)
+                .build(PropertyLoader.loadPlayers(SCENE_NAME));
+
         this.physicEngine.addContactListener(playerController);
 
         this.sceneObjectsHandler.getSceneObjects().forEach(physicEngine::addRigidBody);
@@ -92,13 +91,10 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
         this.gameEnvironment = new GameEnvironment();
         this.gameEnvironment.create();
 
-        Properties properties = PropertyLoader.loadPropertiesFromScene(GameScene.SCENE_NAME);
-        String positionProp = properties.getProperty("camera-init-position-from");
-        String basePlaneProp = properties.getProperty("camera-base-plane");
-        this.gameCamera = new GameCamera(
-                sceneObjectsHandler.getSceneObjectByModelName(positionProp).transform.getTranslation(tempVector),
-                sceneObjectsHandler.getSceneObjectByModelName(basePlaneProp));
+        this.gameCamera = new GameCamera.Builder(sceneObjectsHandler)
+                .build(PropertyLoader.loadProperties(GameScene.SCENE_NAME));
 
+        this.inputMultiplexer = new InputMultiplexer();
         this.inputMultiplexer.addProcessor(gameCamera);
         this.inputMultiplexer.addProcessor(stage);
     }
@@ -228,5 +224,25 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
     public void add(AbstractGameObject abstractGameObject) {
         physicEngine.addRigidBody(abstractGameObject);
         sceneObjectsHandler.addSceneObject(abstractGameObject);
+    }
+
+    @Override
+    public AbstractGameObject getByUserData(String userData) {
+        return sceneObjectsHandler.getSceneObjectByUserData(userData);
+    }
+
+    @Override
+    public AbstractGameObject getByName(String name) {
+        return sceneObjectsHandler.getSceneObjectByModelName(name);
+    }
+
+    @Override
+    public boolean contains(AbstractGameObject abstractGameObject) {
+        return sceneObjectsHandler.contains(abstractGameObject);
+    }
+
+    @Override
+    public boolean contains(String userData) {
+        return sceneObjectsHandler.contains(userData);
     }
 }

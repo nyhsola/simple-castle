@@ -6,8 +6,11 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
+import com.simple.castle.object.constructors.SceneObjectsHandler;
 import com.simple.castle.object.unit.abs.AbstractGameObject;
 import com.simple.castle.utils.GameIntersectUtils;
+
+import java.util.Properties;
 
 public class GameCamera extends PerspectiveCamera implements InputProcessor {
 
@@ -32,7 +35,7 @@ public class GameCamera extends PerspectiveCamera implements InputProcessor {
 
     private final Vector3 tempVector = new Vector3();
 
-    public GameCamera(Vector3 startObjectPosition, AbstractGameObject ground) {
+    private GameCamera(Vector3 startObjectPosition, AbstractGameObject ground) {
         super(FIELD_OF_VIEW, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         this.basePlane = ground;
         this.position.set(startObjectPosition.x + 10f, startObjectPosition.y + 10f, startObjectPosition.z);
@@ -154,5 +157,22 @@ public class GameCamera extends PerspectiveCamera implements InputProcessor {
         }
         // TODO: 4/16/2020 By holding ctrl, change angle between camera and surface
         return false;
+    }
+
+    public static final class Builder {
+        private final SceneObjectsHandler sceneObjectsHandler;
+
+        public Builder(SceneObjectsHandler sceneObjectsHandler) {
+            this.sceneObjectsHandler = sceneObjectsHandler;
+        }
+
+        public GameCamera build(Properties sceneProperties) {
+            String positionProp = sceneProperties.getProperty("camera-init-position-from");
+            String basePlaneProp = sceneProperties.getProperty("camera-base-plane");
+
+            return new GameCamera(
+                    sceneObjectsHandler.getSceneObjectByModelName(positionProp).transform.getTranslation(new Vector3()),
+                    sceneObjectsHandler.getSceneObjectByModelName(basePlaneProp));
+        }
     }
 }

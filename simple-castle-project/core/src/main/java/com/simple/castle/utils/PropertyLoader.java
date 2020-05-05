@@ -1,55 +1,62 @@
 package com.simple.castle.utils;
 
 import com.google.common.io.CharStreams;
+import com.simple.castle.utils.jsondto.PlayersJson;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 public final class PropertyLoader {
 
-    private static final String APP_PROPERTIES = "app.properties";
     private static final String SCENES_FOLDER = "scenes/";
+    private static final String APP_PROPERTIES = "app.properties";
 
     private PropertyLoader() {
     }
 
-    public static List<Map<String, Object>> loadConstructorsFromScene(String sceneNameSearch) {
-        List<Map<String, Object>> gameModels = new ArrayList<>();
-
-        String sceneName = findScene(sceneNameSearch);
-
-        new JSONObject(loadResource(SCENES_FOLDER + sceneName + "/scene-object-constructors.json"))
-                .getJSONArray("models")
-                .toList()
-                .forEach(model -> gameModels.add(castToMap(model)));
-        return gameModels;
+    public static Properties loadProperties(String fromScene) {
+        return getProperties(SCENES_FOLDER + findScene(fromScene) + "/scene.properties");
     }
 
-    public static List<Map<String, Object>> loadObjectsFromScene(String sceneNameSearch) {
-        List<Map<String, Object>> gameModels = new ArrayList<>();
-        List<String> sceneObjects = new ArrayList<>();
-
-        String sceneName = findScene(sceneNameSearch);
-
-        new JSONObject(loadResource(SCENES_FOLDER + sceneName + "/scene-objects.json"))
-                .getJSONArray("models")
-                .toList()
-                .forEach(model -> gameModels.add(castToMap(model)));
-
-        return gameModels;
+    public static List<Map<String, Object>> loadConstructors(String fromScene) {
+        return loadListMap(SCENES_FOLDER + findScene(fromScene) + "/scene-object-constructors.json",
+                "models");
     }
 
-    public static Properties loadPropertiesFromScene(String sceneNameSearch) {
-        String sceneName = findScene(sceneNameSearch);
-        return loadProperties(SCENES_FOLDER + sceneName + "/scene.properties");
+    public static List<Map<String, Object>> loadObjects(String fromScene) {
+        return loadListMap(SCENES_FOLDER + findScene(fromScene) + "/scene-objects.json",
+                "models");
+    }
+
+    public static List<PlayersJson> loadPlayers(String fromScene) {
+        return loadListMap(SCENES_FOLDER + findScene(fromScene) + "/players.json", "players")
+                .stream()
+                .map(listMap -> {
+                    PlayersJson playersJson = new PlayersJson();
+                    playersJson.setPlayerName((String) listMap.get("player-name"));
+                    playersJson.setUnitType((String) listMap.get("unit-type"));
+                    List<List<String>> paths = castToList(listMap.get("paths"))
+                            .stream()
+                            .map(PropertyLoader::castToMap)
+                            .map(map -> map.get("path"))
+                            .map(path -> (String) path)
+                            .map(pathString -> Arrays.asList(pathString.split(" ")))
+                            .collect(Collectors.toList());
+                    playersJson.setPaths(paths);
+                    return playersJson;
+                })
+                .collect(Collectors.toList());
     }
 
     private static String findScene(String sceneName) {
-        String scenesFile = (String) loadProperties(APP_PROPERTIES).get("scenes-file");
+        String scenesFile = (String) getProperties(APP_PROPERTIES).get("scenes-file");
         return (String) new JSONObject(loadResource(scenesFile))
                 .getJSONArray("scenes")
                 .toList()
@@ -61,7 +68,7 @@ public final class PropertyLoader {
                 .orElseThrow(() -> new AssertionError("Missing scene properties"));
     }
 
-    private static Properties loadProperties(String resource) {
+    private static Properties getProperties(String resource) {
         Properties properties = new Properties();
         try {
             properties.load(loadInputStream(resource));
@@ -69,6 +76,15 @@ public final class PropertyLoader {
         } catch (IOException exception) {
             throw new AssertionError("Missing file", exception);
         }
+    }
+
+    private static List<Map<String, Object>> loadListMap(String jsonFile, String array) {
+        return new JSONObject(loadResource(jsonFile))
+                .getJSONArray(array)
+                .toList()
+                .stream()
+                .map(PropertyLoader::castToMap)
+                .collect(Collectors.toList());
     }
 
     private static String loadResource(String resource) {
@@ -84,7 +100,12 @@ public final class PropertyLoader {
     }
 
     @SuppressWarnings("unchecked")
-    private static HashMap<String, Object> castToMap(Object object) {
-        return ((HashMap<String, Object>) object);
+    private static Map<String, Object> castToMap(Object object) {
+        return ((Map<String, Object>) object);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<Object> castToList(Object object) {
+        return ((List<Object>) object);
     }
 }

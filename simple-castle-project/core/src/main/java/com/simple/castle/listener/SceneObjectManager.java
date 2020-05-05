@@ -6,4 +6,12 @@ public interface SceneObjectManager {
     void remove(AbstractGameObject abstractGameObject);
 
     void add(AbstractGameObject abstractGameObject);
+
+    AbstractGameObject getByName(String name);
+
+    AbstractGameObject getByUserData(String userData);
+
+    boolean contains(AbstractGameObject abstractGameObject);
+
+    boolean contains(String userData);
 }
