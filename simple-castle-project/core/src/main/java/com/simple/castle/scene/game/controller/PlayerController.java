@@ -1,5 +1,6 @@
 package com.simple.castle.scene.game.controller;
 
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 import com.simple.castle.listener.CollisionEvent;
 import com.simple.castle.listener.SceneObjectManager;
@@ -17,6 +18,9 @@ import java.util.stream.Stream;
 
 public class PlayerController implements CollisionEvent {
 
+    public static final long spawnEvery = 1 * 1000;
+    private static final Vector3 tempVector1 = new Vector3();
+
     private static final List<String> redLeftPath = Arrays.asList(
             "area-1-1", "area-1-1-1", "area-2-3", "area-2",
             "area-2-1", "area-2-1-1", "area-3-3", "area-3");
@@ -31,8 +35,7 @@ public class PlayerController implements CollisionEvent {
             "area-2-3", "area-1-1-1", "area-1-1", "area-1",
             "area-1-3", "area-4-1-1", "area-4-1", "area-4"
     );
-
-    public static final long spawnEvery = 3 * 1000;
+    private static final Vector3 tempVector2 = new Vector3();
     private final ObjectConstructors objectConstructors;
     private final SceneObjectManager sceneObjectManager;
 
@@ -58,7 +61,7 @@ public class PlayerController implements CollisionEvent {
     private static List<List<AbstractGameObject>> toAbsList(SceneObjectsHandler sceneObjectsHandler,
                                                             Stream<List<String>> paths) {
         return paths.map(pathsString -> pathsString.stream()
-                .map(sceneObjectsHandler::getSceneObject)
+                .map(sceneObjectsHandler::getSceneObjectByModelName)
                 .collect(Collectors.toList()))
                 .collect(Collectors.toList());
     }
@@ -70,18 +73,18 @@ public class PlayerController implements CollisionEvent {
         if (userDataObj1 instanceof String && userDataObj2 instanceof String) {
             String userData1 = (String) userDataObj1;
             String userData2 = (String) userDataObj2;
-            players.forEach(player -> {
-                if (player.isPlayers(userData1) && sceneObjectsHandler.contains(userData2)) {
-                    player.collisionEvent(
-                            (BasicUnit) sceneObjectsHandler.getSceneObject(userData1),
-                            sceneObjectsHandler.getSceneObject(userData2));
-                }
-                if (player.isPlayers(userData2) && sceneObjectsHandler.contains(userData1)) {
-                    player.collisionEvent(
-                            (BasicUnit) sceneObjectsHandler.getSceneObject(userData2),
-                            sceneObjectsHandler.getSceneObject(userData1));
-                }
-            });
+            if (sceneObjectsHandler.contains(userData1) && sceneObjectsHandler.contains(userData2)) {
+                AbstractGameObject sceneObj1 = sceneObjectsHandler.getSceneObjectByUserData(userData1);
+                AbstractGameObject sceneObj2 = sceneObjectsHandler.getSceneObjectByUserData(userData2);
+                players.forEach(player -> {
+                    if (player.isPlayers(sceneObj1)) {
+                        player.collisionEvent((BasicUnit) sceneObj1, sceneObj2);
+                    }
+                    if (player.isPlayers(sceneObj2)) {
+                        player.collisionEvent((BasicUnit) sceneObj2, sceneObj1);
+                    }
+                });
+            }
         }
     }
 
@@ -94,10 +97,37 @@ public class PlayerController implements CollisionEvent {
             List<BasicUnit> basicUnits = this.spawnUnits(objectConstructors);
             basicUnits.forEach(sceneObjectManager::add);
         }
-        previousTime = System.currentTimeMillis();
 
         // TODO: 5/5/2020 Check distances between objects
         players.forEach(Player::update);
+
+        List<BasicUnit> units = players.stream()
+                .map(Player::getUnits)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        for (int i = 0; i < units.size(); i++) {
+            for (int j = 0; j < units.size(); j++) {
+                if (i != j) {
+                    BasicUnit unit1 = units.get(i);
+                    BasicUnit unit2 = units.get(j);
+
+                    Vector3 unit1P = unit1.body.getWorldTransform().getTranslation(tempVector1);
+                    Vector3 unit2P = unit2.body.getWorldTransform().getTranslation(tempVector2);
+
+                    Player playerWhoseUnitsSameColor = players.stream()
+                            .filter(player -> player.isPlayers(unit1) && player.isPlayers(unit2))
+                            .findAny()
+                            .orElse(null);
+                    float dst = unit1P.dst(unit2P);
+                    if (playerWhoseUnitsSameColor == null) {
+                        unit1.unitNear(unit2, dst);
+                        unit2.unitNear(unit1, dst);
+                    }
+                }
+            }
+        }
+
+        previousTime = System.currentTimeMillis();
     }
 
     private List<BasicUnit> spawnUnits(ObjectConstructors objectConstructors) {

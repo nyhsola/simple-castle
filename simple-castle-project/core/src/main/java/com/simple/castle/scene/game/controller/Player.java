@@ -1,6 +1,5 @@
 package com.simple.castle.scene.game.controller;
 
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.simple.castle.object.constructors.ObjectConstructors;
 import com.simple.castle.object.unit.BasicUnit;
@@ -14,11 +13,18 @@ public class Player {
 
     private final String unitType;
     private final List<List<AbstractGameObject>> paths;
+    private final List<Vector3> initPositions;
     private final Map<String, BasicUnit> units = new HashMap<>();
 
     public Player(String unitType, List<List<AbstractGameObject>> paths) {
         this.unitType = unitType;
         this.paths = paths;
+        this.initPositions = paths.stream()
+                .map(path -> path.stream().findFirst())
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(sceneObject -> sceneObject.transform.getTranslation(tempVector).cpy())
+                .collect(Collectors.toList());
     }
 
     private static AbstractGameObject getNextAvailable(List<AbstractGameObject> list, AbstractGameObject current) {
@@ -30,7 +36,7 @@ public class Player {
     }
 
     public void update() {
-        units.forEach((s, basicUnit) -> basicUnit.updateTarget());
+        units.forEach((s, basicUnit) -> basicUnit.update());
     }
 
     public void collisionEvent(BasicUnit unit, AbstractGameObject gameObject) {
@@ -42,31 +48,25 @@ public class Player {
 
             if (path != null) {
                 AbstractGameObject nextAvailable = getNextAvailable(path, gameObject);
-                unit.setTarget(nextAvailable.transform.getTranslation(tempVector).cpy());
+                Vector3 movePoint = nextAvailable.transform.getTranslation(tempVector).cpy();
+                unit.setMovePoint(movePoint);
             }
         }
     }
 
     public List<BasicUnit> spawnUnitsOnStartPositions(ObjectConstructors objectConstructors) {
-        return paths.stream()
-                .map(strings -> strings.stream().findFirst())
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(sceneObject -> sceneObject.transform.getTranslation(tempVector).cpy())
-                .map(vector3 -> {
-                    BasicUnit unit = new BasicUnit(objectConstructors.getConstructor(unitType));
-                    unit.body.setWorldTransform(new Matrix4());
-                    unit.body.translate(vector3);
-                    unit.body.userData = UUID.randomUUID().toString();
-                    return unit;
-                })
-                .peek(unit -> {
-                    units.put((String) unit.body.userData, unit);
-                })
+        return initPositions
+                .stream()
+                .map(initPosition -> new BasicUnit(objectConstructors.getConstructor(unitType), initPosition))
+                .peek(unit -> units.put((String) unit.body.userData, unit))
                 .collect(Collectors.toList());
     }
 
-    public boolean isPlayers(String objectName) {
-        return units.containsKey(objectName);
+    public boolean isPlayers(AbstractGameObject gameObject) {
+        return units.containsKey(String.valueOf(gameObject.body.userData));
+    }
+
+    public Collection<BasicUnit> getUnits() {
+        return units.values();
     }
 }

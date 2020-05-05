@@ -2,7 +2,7 @@
   "models": [
     {
       "nodes-pattern": "ground",
-      "shape": "STATIC_NODE_SHAPE",
+      "shape": "ADJUSTED_BOX",
       "mass": 0
     },
     {
@@ -17,7 +17,7 @@
     },
     {
       "nodes-pattern": "area-(?:.+)",
-      "shape": "STATIC_NODE_SHAPE",
+      "shape": "ADJUSTED_BOX",
       "mass": 0
     },
     {

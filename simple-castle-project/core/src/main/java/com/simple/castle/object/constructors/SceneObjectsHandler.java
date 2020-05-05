@@ -22,7 +22,11 @@ public class SceneObjectsHandler {
                 {
                     Collection<String> strings = (Collection<String>) object[1];
                     strings.forEach(s ->
-                            sceneGameObjects.put(s, Interact.valueOf((String) object[0]).build(objectConstructors.getConstructor(s))));
+                    {
+                        Interact interactType = Interact.valueOf((String) object[0]);
+                        AbstractGameObject gameObject = interactType.build(objectConstructors.getConstructor(s));
+                        sceneGameObjects.put(String.valueOf(gameObject.body.userData), gameObject);
+                    });
                 });
     }
 
@@ -30,15 +34,23 @@ public class SceneObjectsHandler {
         sceneGameObjects.forEach((s, gameObject) -> gameObject.dispose());
     }
 
-    public void addSceneObject(String name, AbstractGameObject gameObject) {
-        sceneGameObjects.put(name, gameObject);
+    public void addSceneObject(AbstractGameObject gameObject) {
+        sceneGameObjects.put(String.valueOf(gameObject.body.userData), gameObject);
     }
 
     public boolean contains(String sceneObj) {
         return sceneGameObjects.containsKey(sceneObj);
     }
 
-    public AbstractGameObject getSceneObject(String name) {
+    public AbstractGameObject getSceneObjectByModelName(String name) {
+        return sceneGameObjects.values()
+                .stream()
+                .filter(abstractGameObject -> abstractGameObject.nodes.size >= 1 && abstractGameObject.nodes.get(0).id.equals(name))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public AbstractGameObject getSceneObjectByUserData(String name) {
         return sceneGameObjects.get(name);
     }
 
@@ -47,7 +59,7 @@ public class SceneObjectsHandler {
     }
 
     public void disposeObject(AbstractGameObject object) {
-        sceneGameObjects.remove(object.name);
+        sceneGameObjects.remove(String.valueOf(object.body.userData));
         object.dispose();
     }
 

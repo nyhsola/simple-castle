@@ -96,8 +96,8 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
         String positionProp = properties.getProperty("camera-init-position-from");
         String basePlaneProp = properties.getProperty("camera-base-plane");
         this.gameCamera = new GameCamera(
-                sceneObjectsHandler.getSceneObject(positionProp).transform.getTranslation(tempVector),
-                sceneObjectsHandler.getSceneObject(basePlaneProp));
+                sceneObjectsHandler.getSceneObjectByModelName(positionProp).transform.getTranslation(tempVector),
+                sceneObjectsHandler.getSceneObjectByModelName(basePlaneProp));
 
         this.inputMultiplexer.addProcessor(gameCamera);
         this.inputMultiplexer.addProcessor(stage);
@@ -105,10 +105,17 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
 
     @Override
     public void render(float delta) {
+        //Camera
         gameCamera.update(delta);
+
+        //Controllers
         playerController.update();
+
+        //Draw and Physic
         gameRenderer.render(gameCamera, sceneObjectsHandler.getSceneObjects(), gameEnvironment);
         physicEngine.update(gameCamera, Math.min(1f / 30f, delta), debugDraw);
+
+        //Overlay
         timeButton.setText(Long.toString(playerController.getTimeLeft() / 1000));
         stage.draw();
     }
@@ -198,7 +205,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
                     "Position: " + format(selected.body.getWorldTransform().getTranslation(tempVector)) + " " +
                     "Rotation: " + format(selected.body.getWorldTransform().getRotation(tempQuaternion)), 0, 60);
 
-            bitmapFont.draw(batch, selected.name, 0, 80);
+            bitmapFont.draw(batch, String.valueOf(selected.body.userData), 0, 80);
         }
         batch.end();
     }
@@ -220,6 +227,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
     @Override
     public void add(AbstractGameObject abstractGameObject) {
         physicEngine.addRigidBody(abstractGameObject);
-        sceneObjectsHandler.addSceneObject(String.valueOf(abstractGameObject.body.userData), abstractGameObject);
+        sceneObjectsHandler.addSceneObject(abstractGameObject);
     }
 }

@@ -1,5 +1,6 @@
 package com.simple.castle.object.unit;
 
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.simple.castle.object.unit.add.ObjectConstructor;
 import com.simple.castle.object.unit.basic.ActiveGameObject;
@@ -13,18 +14,22 @@ public class BasicUnit extends ActiveGameObject {
 
     private final Vector3 tempVector = new Vector3();
 
-    private Vector3 target;
+    private Vector3 movePoint;
     private double previousAngle;
     private boolean rotateDirection = false;
+    private boolean attackMode = false;
 
-    public BasicUnit(ObjectConstructor objectConstructor) {
+    public BasicUnit(ObjectConstructor objectConstructor, Vector3 initPosition) {
         super(objectConstructor);
+
+        this.body.setWorldTransform(new Matrix4());
+        this.body.translate(initPosition);
     }
 
-    public void updateTarget() {
-        if (target != null) {
+    public void update() {
+        if (movePoint != null && !attackMode) {
             Vector3 unitV = this.transform.getTranslation(tempVector);
-            Vector3 targetDirection = target.cpy().sub(unitV).nor();
+            Vector3 targetDirection = movePoint.cpy().sub(unitV).nor();
             this.body.setLinearVelocity(targetDirection.scl(UNIT_DEFAULT_SPEED));
 
             double currentAngle = getAngleBetweenVectors(targetDirection, getModelForwardDirection());
@@ -44,6 +49,12 @@ public class BasicUnit extends ActiveGameObject {
         }
     }
 
+    public void unitNear(BasicUnit nearUnit, float distance) {
+        if (distance < 5) {
+            attackMode = true;
+        }
+    }
+
     private Vector3 getModelForwardDirection() {
         return this.body.getOrientation().transform(faceDirection.cpy());
     }
@@ -55,11 +66,11 @@ public class BasicUnit extends ActiveGameObject {
         return Math.toDegrees(Math.acos(dot));
     }
 
-    public Vector3 getTarget() {
-        return target;
+    public Vector3 getMovePoint() {
+        return movePoint;
     }
 
-    public void setTarget(Vector3 target) {
-        this.target = target;
+    public void setMovePoint(Vector3 movePoint) {
+        this.movePoint = movePoint;
     }
 }
