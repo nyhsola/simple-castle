@@ -80,19 +80,16 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
                 .build(PropertyLoader.loadConstructors(SCENE_NAME));
         this.sceneObjectsHandler = new SceneObjectsHandler.Builder(objectConstructors)
                 .build(PropertyLoader.loadObjects(SCENE_NAME));
-
         this.playerController = new PlayerController.Builder(objectConstructors, this)
                 .build(PropertyLoader.loadPlayers(SCENE_NAME));
+        this.gameCamera = new GameCamera.Builder(sceneObjectsHandler)
+                .build(PropertyLoader.loadProperties(GameScene.SCENE_NAME));
 
         this.physicEngine.addContactListener(playerController);
-
         this.sceneObjectsHandler.getSceneObjects().forEach(physicEngine::addRigidBody);
 
         this.gameEnvironment = new GameEnvironment();
         this.gameEnvironment.create();
-
-        this.gameCamera = new GameCamera.Builder(sceneObjectsHandler)
-                .build(PropertyLoader.loadProperties(GameScene.SCENE_NAME));
 
         this.inputMultiplexer = new InputMultiplexer();
         this.inputMultiplexer.addProcessor(gameCamera);
