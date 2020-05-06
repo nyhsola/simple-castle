@@ -10,8 +10,8 @@ import com.simple.castle.object.unit.BasicUnit;
 import com.simple.castle.object.unit.abs.AbstractGameObject;
 import com.simple.castle.utils.jsondto.PlayerJson;
 
-import java.util.*;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class PlayerController implements CollisionEvent, Disposable {
@@ -25,19 +25,14 @@ public class PlayerController implements CollisionEvent, Disposable {
     private final SceneObjectManager sceneObjectManager;
     private final List<Player> players;
 
-    private final Timer timer;
-    private final SpawnerTask spawnerTask;
+    private long previousTime = System.currentTimeMillis();
+    private long currentTime = spawnEvery;
 
     private PlayerController(List<Player> players, ObjectConstructors objectConstructors,
                              SceneObjectManager sceneObjectManager) {
         this.objectConstructors = objectConstructors;
         this.sceneObjectManager = sceneObjectManager;
         this.players = players;
-
-        this.spawnerTask = new SpawnerTask();
-
-        this.timer = new Timer(true);
-        this.timer.scheduleAtFixedRate(spawnerTask, 0, spawnEvery);
     }
 
     @Override
@@ -63,53 +58,57 @@ public class PlayerController implements CollisionEvent, Disposable {
     }
 
     public void update() {
-        sceneObjectManager.addAll(spawnerTask.getAndClearSpawnedUnits());
+        long diff = System.currentTimeMillis() - previousTime;
+        currentTime = currentTime - diff;
+        if (currentTime <= 0) {
+            List<BasicUnit> units = players.stream()
+                    .map(player -> player.spawnUnitsOnStartPositions(objectConstructors))
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
+            sceneObjectManager.addAll(units);
+            currentTime = spawnEvery;
+        }
         players.forEach(Player::update);
-
         // TODO: 5/5/2020 Optimize to use in parallel, distance calculations
-//        List<BasicUnit> units = players.stream()
-//                .map(Player::getUnits)
-//                .flatMap(Collection::stream)
-//                .collect(Collectors.toList());
-//        for (int i = 0; i < units.size(); i++) {
-//            for (int j = 0; j < units.size(); j++) {
-//                if (i != j) {
-//                    BasicUnit unit1 = units.get(i);
-//                    BasicUnit unit2 = units.get(j);
-//
-//                    Vector3 unit1P = unit1.body.getWorldTransform().getTranslation(tempVector1);
-//                    Vector3 unit2P = unit2.body.getWorldTransform().getTranslation(tempVector2);
-//
-//                    Player playerWhoseUnitsSameColor = players.stream()
-//                            .filter(player -> player.isPlayers(unit1) && player.isPlayers(unit2))
-//                            .findAny()
-//                            .orElse(null);
-//
-//                    float dst = unit1P.dst(unit2P);
-//                    if (playerWhoseUnitsSameColor == null) {
-//                        unit1.unitNear(unit2, dst);
-//                        unit2.unitNear(unit1, dst);
-//                    }
-//                }
-//            }
-//        }
+//        calculateDistance();
+        previousTime = System.currentTimeMillis();
     }
 
-    private List<BasicUnit> spawnUnits() {
-        return players.stream()
-                .map(player -> player.spawnUnitsOnStartPositions(objectConstructors))
+    private void calculateDistance() {
+        List<BasicUnit> units = players.stream()
+                .map(Player::getUnits)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
+        for (int i = 0; i < units.size(); i++) {
+            for (int j = 0; j < units.size(); j++) {
+                if (i != j) {
+                    BasicUnit unit1 = units.get(i);
+                    BasicUnit unit2 = units.get(j);
+
+                    Vector3 unit1P = unit1.body.getWorldTransform().getTranslation(tempVector1);
+                    Vector3 unit2P = unit2.body.getWorldTransform().getTranslation(tempVector2);
+
+                    Player playerWhoseUnitsSameColor = players.stream()
+                            .filter(player -> player.isPlayers(unit1) && player.isPlayers(unit2))
+                            .findAny()
+                            .orElse(null);
+
+                    float dst = unit1P.dst(unit2P);
+                    if (playerWhoseUnitsSameColor == null) {
+                        unit1.unitNear(unit2, dst);
+                        unit2.unitNear(unit1, dst);
+                    }
+                }
+            }
+        }
     }
 
     public long getTimeLeft() {
-        return spawnEvery - (System.currentTimeMillis() - spawnerTask.previousTime);
+        return currentTime;
     }
 
     @Override
     public void dispose() {
-        timer.cancel();
-        timer.purge();
     }
 
     public static final class Builder {
@@ -136,36 +135,4 @@ public class PlayerController implements CollisionEvent, Disposable {
         }
     }
 
-    private final class SpawnerTask extends TimerTask {
-
-        private final ReentrantLock lock = new ReentrantLock();
-        private List<BasicUnit> basicUnits = new ArrayList<>();
-        private long previousTime = System.currentTimeMillis();
-
-        @Override
-        public void run() {
-            lock.lock();
-            try {
-                basicUnits.addAll(PlayerController.this.spawnUnits());
-            } finally {
-                lock.unlock();
-            }
-            previousTime = System.currentTimeMillis();
-        }
-
-        public List<BasicUnit> getAndClearSpawnedUnits() {
-            if (basicUnits.isEmpty()) {
-                return Collections.emptyList();
-            }
-            lock.lock();
-            List<BasicUnit> ref;
-            try {
-                ref = basicUnits;
-                basicUnits = new ArrayList<>();
-            } finally {
-                lock.unlock();
-            }
-            return ref;
-        }
-    }
 }
