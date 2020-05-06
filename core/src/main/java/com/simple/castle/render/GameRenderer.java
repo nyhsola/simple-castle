@@ -1,9 +1,10 @@
 package com.simple.castle.render;
 
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.simple.castle.object.constructors.SceneObjectsHandler;
 import com.simple.castle.object.unit.abs.AbstractGameObject;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class GameRenderer {
@@ -14,13 +15,9 @@ public class GameRenderer {
         modelBatch = new ModelBatch();
     }
 
-    public void render(GameCamera gameCamera, Collection<AbstractGameObject> gameObjects, GameEnvironment gameEnvironment) {
+    public void render(GameCamera gameCamera, SceneObjectsHandler sceneObjectsHandler, GameEnvironment gameEnvironment) {
         modelBatch.begin(gameCamera);
-        modelBatch.render(
-                gameObjects.stream()
-                        .filter(abstractGameObject -> !abstractGameObject.hide)
-                        .collect(Collectors.toList()),
-                gameEnvironment.getEnvironment());
+        modelBatch.render(sceneObjectsHandler.getDrawObjects(), gameEnvironment.getEnvironment());
         modelBatch.end();
     }
 

@@ -50,6 +50,9 @@ public class BasicUnit extends ActiveGameObject {
                 this.body.setAngularVelocity(Vector3.Zero);
                 this.body.setLinearVelocity(modelForwardDirection.scl(UNIT_DEFAULT_SPEED));
             }
+        } else {
+            this.body.setAngularVelocity(Vector3.Zero);
+            this.body.setLinearVelocity(Vector3.Zero);
         }
     }
 

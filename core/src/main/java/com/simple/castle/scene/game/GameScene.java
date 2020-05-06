@@ -27,15 +27,9 @@ import com.simple.castle.utils.AssetLoader;
 import com.simple.castle.utils.GameIntersectUtils;
 import com.simple.castle.utils.PropertyLoader;
 
-import java.util.Locale;
-
 public class GameScene extends ScreenAdapter implements InputProcessor, SceneObjectManager {
 
     public final static String SCENE_NAME = "game";
-
-    private final Vector3 tempVector = new Vector3();
-    private final Quaternion tempQuaternion = new Quaternion();
-    private final BoundingBox tempBoundingBox = new BoundingBox();
 
     private final BitmapFont bitmapFont;
     private final SpriteBatch batch;
@@ -55,7 +49,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
 
     private final PlayerController playerController;
     private final TextButton timeButton;
-    private AbstractGameObject selected;
     private boolean debugDraw = false;
 
     public GameScene(GameRenderer gameRenderer) {
@@ -105,11 +98,11 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
         playerController.update();
 
         //Draw and Physic
-        gameRenderer.render(gameCamera, sceneObjectsHandler.getSceneObjects(), gameEnvironment);
+        gameRenderer.render(gameCamera, sceneObjectsHandler, gameEnvironment);
         physicEngine.update(gameCamera, Math.min(1f / 30f, delta), debugDraw);
 
         //Overlay
-        timeButton.setText(Long.toString(playerController.getTimeLeft() / 1000));
+        timeButton.setText(Long.toString(playerController.getTimeLeft() / 100));
         stage.draw();
     }
 
@@ -160,7 +153,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        selected = GameIntersectUtils.intersect(tempBoundingBox, gameCamera, sceneObjectsHandler.getSceneObjects(), screenX, screenY);
         return inputMultiplexer.touchDown(screenX, screenY, pointer, button);
     }
 
@@ -182,33 +174,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
     @Override
     public boolean scrolled(int amount) {
         return inputMultiplexer.scrolled(amount);
-    }
-
-    private void renderOverlay() {
-        batch.begin();
-        bitmapFont.draw(batch, "Camera position: " +
-                format(gameCamera.position), 0, 20);
-        if (selected != null) {
-            // TODO: 4/16/2020 Correctly resize text
-            bitmapFont.draw(batch, "Selected (model): " +
-                    "Position: " + format(selected.transform.getTranslation(tempVector)) + " " +
-                    "Rotation: " + format(selected.transform.getRotation(tempQuaternion)), 0, 40);
-
-            bitmapFont.draw(batch, "Selected (physic): " +
-                    "Position: " + format(selected.body.getWorldTransform().getTranslation(tempVector)) + " " +
-                    "Rotation: " + format(selected.body.getWorldTransform().getRotation(tempQuaternion)), 0, 60);
-
-            bitmapFont.draw(batch, String.valueOf(selected.body.userData), 0, 80);
-        }
-        batch.end();
-    }
-
-    private String format(Vector3 vector3) {
-        return String.format(Locale.getDefault(), "%.2f, %.2f, %.2f", vector3.x, vector3.y, vector3.z);
-    }
-
-    private String format(Quaternion quaternion) {
-        return String.format(Locale.getDefault(), "%.2f, %.2f, %.2f, %.2f", quaternion.x, quaternion.y, quaternion.z, quaternion.w);
     }
 
     @Override
