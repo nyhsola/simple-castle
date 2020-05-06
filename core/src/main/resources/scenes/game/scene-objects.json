@@ -1,0 +1,29 @@
+{
+  "scene-objects": [
+    {
+      "model": "ground",
+      "interact": "KINEMATIC",
+      "hide": false
+    },
+    {
+      "model": "castle(?:-\\d)",
+      "interact": "KINEMATIC",
+      "hide": false
+    },
+    {
+      "model": "area-(?:.+)",
+      "interact": "GHOST",
+      "hide": true
+    },
+    {
+      "model": "tree.*",
+      "interact": "KINEMATIC",
+      "hide": false
+    },
+    {
+      "model": "wall-1",
+      "interact": "KINEMATIC",
+      "hide": false
+    }
+  ]
+}

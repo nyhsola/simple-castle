@@ -1,0 +1,34 @@
+{
+  "models": [
+    {
+      "nodes-pattern": "ground",
+      "shape": "ADJUSTED_BOX",
+      "mass": 0
+    },
+    {
+      "nodes-pattern": "unit-type.*",
+      "shape": "BASE_BOX",
+      "mass": 1
+    },
+    {
+      "nodes-pattern": "castle(?:-\\d)",
+      "shape": "ADJUSTED_BOX",
+      "mass": 0
+    },
+    {
+      "nodes-pattern": "area-(?:.+)",
+      "shape": "ADJUSTED_BOX",
+      "mass": 0
+    },
+    {
+      "nodes-pattern": "tree.*",
+      "shape": "ADJUSTED_BOX",
+      "mass": 0
+    },
+    {
+      "nodes-pattern": "wall-1",
+      "shape": "STATIC_NODE_SHAPE",
+      "mass": 0
+    }
+  ]
+}
