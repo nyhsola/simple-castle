@@ -51,7 +51,7 @@ public class PhysicEngine implements Disposable {
     }
 
     public void update(GameCamera camera, float delta, boolean debugDraw) {
-        dynamicsWorld.stepSimulation(delta, 5, 1f / 60f);
+        dynamicsWorld.stepSimulation(Math.min(1f / 30f, delta), 5, 1f / 60f);
         if (debugDraw) {
             debugDrawer.begin(camera);
             dynamicsWorld.debugDrawWorld();

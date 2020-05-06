@@ -58,6 +58,7 @@ public class PlayerController implements CollisionEvent, Disposable {
     }
 
     public void update() {
+        // TODO: 5/7/2020 System to do action on time every 3, 5, 30 sec
         long diff = System.currentTimeMillis() - previousTime;
         currentTime = currentTime - diff;
         if (currentTime <= 0) {

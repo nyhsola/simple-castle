@@ -4,9 +4,6 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.math.Quaternion;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -24,7 +21,6 @@ import com.simple.castle.render.GameEnvironment;
 import com.simple.castle.render.GameRenderer;
 import com.simple.castle.scene.game.controller.PlayerController;
 import com.simple.castle.utils.AssetLoader;
-import com.simple.castle.utils.GameIntersectUtils;
 import com.simple.castle.utils.PropertyLoader;
 
 import java.util.List;
@@ -101,7 +97,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
 
         //Draw and Physic
         gameRenderer.render(gameCamera, sceneObjectsHandler, gameEnvironment);
-        physicEngine.update(gameCamera, Math.min(1f / 30f, delta), debugDraw);
+        physicEngine.update(gameCamera, delta, debugDraw);
 
         //Overlay
         timeButton.setText(Long.toString(playerController.getTimeLeft() / 100));
