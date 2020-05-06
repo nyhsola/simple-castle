@@ -2,7 +2,7 @@ package com.simple.castle.utils.jsondto;
 
 import java.util.List;
 
-public class PlayersJson {
+public class PlayerJson {
     private String playerName;
     private String unitType;
     private List<List<String>> paths;

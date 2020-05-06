@@ -3,6 +3,7 @@ package com.simple.castle.object.constructors;
 import com.simple.castle.object.constructors.tool.Interact;
 import com.simple.castle.object.unit.abs.AbstractGameObject;
 import com.simple.castle.utils.StringTool;
+import com.simple.castle.utils.jsondto.SceneObjectJson;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,20 +15,18 @@ public class SceneObjectsHandler {
     private final Map<String, AbstractGameObject> sceneGameObjects;
 
     @SuppressWarnings("unchecked")
-    private SceneObjectsHandler(ObjectConstructors objectConstructors, List<Map<String, Object>> objects) {
+    private SceneObjectsHandler(ObjectConstructors objectConstructors, List<SceneObjectJson> objects) {
         this.sceneGameObjects = new HashMap<>();
-        objects.stream()
-                .map(map -> new Object[]{map.get("interact"), StringTool.getValuesByPattern(objectConstructors.getAllConstructors(), (String) map.get("model"))})
-                .forEach(object ->
-                {
-                    Collection<String> strings = (Collection<String>) object[1];
-                    strings.forEach(s ->
-                    {
-                        Interact interactType = Interact.valueOf((String) object[0]);
-                        AbstractGameObject gameObject = interactType.build(objectConstructors.getConstructor(s));
-                        sceneGameObjects.put(String.valueOf(gameObject.body.userData), gameObject);
-                    });
-                });
+        objects.forEach(object ->
+        {
+            Collection<String> constructors = StringTool.getValuesByPattern(objectConstructors.getAllConstructors(), object.getModel());
+            constructors.forEach(s -> {
+                Interact interactType = Interact.valueOf(object.getInteract());
+                AbstractGameObject gameObject = interactType.build(objectConstructors.getConstructor(s));
+                gameObject.hide = Boolean.parseBoolean(object.getHide());
+                sceneGameObjects.put(String.valueOf(gameObject.body.userData), gameObject);
+            });
+        });
     }
 
     public void dispose() {
@@ -74,7 +73,7 @@ public class SceneObjectsHandler {
             this.objectConstructors = objectConstructors;
         }
 
-        public SceneObjectsHandler build(List<Map<String, Object>> objects) {
+        public SceneObjectsHandler build(List<SceneObjectJson> objects) {
             return new SceneObjectsHandler(objectConstructors, objects);
         }
     }

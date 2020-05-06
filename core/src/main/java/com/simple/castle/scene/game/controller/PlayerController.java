@@ -7,7 +7,7 @@ import com.simple.castle.listener.SceneObjectManager;
 import com.simple.castle.object.constructors.ObjectConstructors;
 import com.simple.castle.object.unit.BasicUnit;
 import com.simple.castle.object.unit.abs.AbstractGameObject;
-import com.simple.castle.utils.jsondto.PlayersJson;
+import com.simple.castle.utils.jsondto.PlayerJson;
 
 import java.util.Collection;
 import java.util.List;
@@ -118,15 +118,15 @@ public class PlayerController implements CollisionEvent {
             this.sceneObjectManager = sceneObjectManager;
         }
 
-        public PlayerController build(List<PlayersJson> playersJsons) {
-            List<Player> players = playersJsons.stream()
-                    .map(playersJson -> {
-                        List<List<AbstractGameObject>> paths = playersJson.getPaths().stream()
+        public PlayerController build(List<PlayerJson> playerJsons) {
+            List<Player> players = playerJsons.stream()
+                    .map(playerJson -> {
+                        List<List<AbstractGameObject>> paths = playerJson.getPaths().stream()
                                 .map(path -> path.stream()
                                         .map(sceneObjectManager::getByName)
                                         .collect(Collectors.toList()))
                                 .collect(Collectors.toList());
-                        return new Player(playersJson.getUnitType(), paths);
+                        return new Player(playerJson.getUnitType(), paths);
                     })
                     .collect(Collectors.toList());
             return new PlayerController(players, objectConstructors, sceneObjectManager);

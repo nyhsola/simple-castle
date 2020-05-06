@@ -16,6 +16,8 @@ public abstract class AbstractGameObject extends ModelInstance implements Dispos
     public final btRigidBody body;
     public final MotionState motionState;
 
+    public boolean hide = false;
+
     public AbstractGameObject(ObjectConstructor objectConstructor) {
         super(objectConstructor.model, objectConstructor.node, true);
 

@@ -8,17 +8,9 @@ import java.util.stream.Stream;
 
 public class DesktopLauncher {
     public static void main(String[] arg) {
-//		System.setProperty("org.lwjgl.opengl.Window.undecorated", "true");
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        Stream.of(arg)
-                .forEach(value -> {
-                    if (value.contains("height")) {
-                        config.height = Integer.parseInt(value.split("=")[1]);
-                    }
-                    if (value.contains("width")) {
-                        config.width = Integer.parseInt(value.split("=")[1]);
-                    }
-                });
+        config.width = 800;
+        config.height = 600;
         new LwjglApplication(new GameLauncher(), config);
     }
 }

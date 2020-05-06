@@ -1,7 +1,8 @@
 package com.simple.castle.utils;
 
 import com.google.common.io.CharStreams;
-import com.simple.castle.utils.jsondto.PlayersJson;
+import com.simple.castle.utils.jsondto.PlayerJson;
+import com.simple.castle.utils.jsondto.SceneObjectJson;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -30,18 +31,26 @@ public final class PropertyLoader {
                 "models");
     }
 
-    public static List<Map<String, Object>> loadObjects(String fromScene) {
-        return loadListMap(SCENES_FOLDER + findScene(fromScene) + "/scene-objects.json",
-                "models");
+    public static List<SceneObjectJson> loadObjects(String fromScene) {
+        return loadListMap(SCENES_FOLDER + findScene(fromScene) + "/scene-objects.json", "scene-objects")
+                .stream()
+                .map(listMap -> {
+                    SceneObjectJson sceneObjectJson = new SceneObjectJson();
+                    sceneObjectJson.setModel((String) listMap.get("model"));
+                    sceneObjectJson.setInteract((String) listMap.get("interact"));
+                    sceneObjectJson.setHide(String.valueOf(listMap.get("hide")));
+                    return sceneObjectJson;
+                })
+                .collect(Collectors.toList());
     }
 
-    public static List<PlayersJson> loadPlayers(String fromScene) {
+    public static List<PlayerJson> loadPlayers(String fromScene) {
         return loadListMap(SCENES_FOLDER + findScene(fromScene) + "/players.json", "players")
                 .stream()
                 .map(listMap -> {
-                    PlayersJson playersJson = new PlayersJson();
-                    playersJson.setPlayerName((String) listMap.get("player-name"));
-                    playersJson.setUnitType((String) listMap.get("unit-type"));
+                    PlayerJson playerJson = new PlayerJson();
+                    playerJson.setPlayerName((String) listMap.get("player-name"));
+                    playerJson.setUnitType((String) listMap.get("unit-type"));
                     List<List<String>> paths = castToList(listMap.get("paths"))
                             .stream()
                             .map(PropertyLoader::castToMap)
@@ -49,8 +58,8 @@ public final class PropertyLoader {
                             .map(path -> (String) path)
                             .map(pathString -> Arrays.asList(pathString.split(" ")))
                             .collect(Collectors.toList());
-                    playersJson.setPaths(paths);
-                    return playersJson;
+                    playerJson.setPaths(paths);
+                    return playerJson;
                 })
                 .collect(Collectors.toList());
     }
