@@ -2,6 +2,7 @@ package com.simple.castle.scene.game.controller;
 
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
+import com.badlogic.gdx.utils.Disposable;
 import com.simple.castle.listener.CollisionEvent;
 import com.simple.castle.listener.SceneObjectManager;
 import com.simple.castle.object.constructors.ObjectConstructors;
@@ -13,7 +14,7 @@ import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
-public class PlayerController implements CollisionEvent {
+public class PlayerController implements CollisionEvent, Disposable {
 
     public static final long spawnEvery = 3 * 1000;
 
@@ -105,6 +106,12 @@ public class PlayerController implements CollisionEvent {
         return spawnEvery - (System.currentTimeMillis() - spawnerTask.previousTime);
     }
 
+    @Override
+    public void dispose() {
+        timer.cancel();
+        timer.purge();
+    }
+
     public static final class Builder {
         private final ObjectConstructors objectConstructors;
         private final SceneObjectManager sceneObjectManager;
@@ -150,7 +157,6 @@ public class PlayerController implements CollisionEvent {
             if (basicUnits.isEmpty()) {
                 return Collections.emptyList();
             }
-
             lock.lock();
             List<BasicUnit> ref;
             try {

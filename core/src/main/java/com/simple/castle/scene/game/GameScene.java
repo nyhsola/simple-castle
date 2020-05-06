@@ -128,6 +128,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
         sceneObjectsHandler.dispose();
         stage.dispose();
         skin.dispose();
+        playerController.dispose();
     }
 
     @Override
