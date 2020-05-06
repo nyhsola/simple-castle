@@ -35,6 +35,12 @@ public class SceneObjectsHandler {
         this.updateDrawables();
     }
 
+    public void addSceneObjects(List<? extends AbstractGameObject> gameObjects) {
+        gameObjects.forEach(abstractGameObject ->
+                sceneGameObjects.put(String.valueOf(abstractGameObject.body.userData), abstractGameObject));
+        this.updateDrawables();
+    }
+
     public boolean contains(AbstractGameObject abstractGameObject) {
         return contains(String.valueOf(abstractGameObject.body.userData));
     }

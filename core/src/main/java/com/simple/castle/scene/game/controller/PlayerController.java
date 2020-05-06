@@ -63,7 +63,7 @@ public class PlayerController implements CollisionEvent, Disposable {
     }
 
     public void update() {
-        spawnerTask.getAndClearSpawnedUnits().forEach(sceneObjectManager::add);
+        sceneObjectManager.addAll(spawnerTask.getAndClearSpawnedUnits());
         players.forEach(Player::update);
 
         // TODO: 5/5/2020 Optimize to use in parallel, distance calculations

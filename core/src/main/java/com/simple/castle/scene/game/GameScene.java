@@ -27,6 +27,8 @@ import com.simple.castle.utils.AssetLoader;
 import com.simple.castle.utils.GameIntersectUtils;
 import com.simple.castle.utils.PropertyLoader;
 
+import java.util.List;
+
 public class GameScene extends ScreenAdapter implements InputProcessor, SceneObjectManager {
 
     public final static String SCENE_NAME = "game";
@@ -187,6 +189,12 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
     public void add(AbstractGameObject abstractGameObject) {
         physicEngine.addRigidBody(abstractGameObject);
         sceneObjectsHandler.addSceneObject(abstractGameObject);
+    }
+
+    @Override
+    public void addAll(List<? extends AbstractGameObject> abstractGameObjects) {
+        abstractGameObjects.forEach(physicEngine::addRigidBody);
+        sceneObjectsHandler.addSceneObjects(abstractGameObjects);
     }
 
     @Override
