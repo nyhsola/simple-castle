@@ -50,13 +50,14 @@ public class PhysicEngine implements Disposable {
         dynamicsWorld.removeRigidBody(object.body);
     }
 
-    public void update(GameCamera camera, float delta, boolean debugDraw) {
+    public void update(GameCamera camera, float delta) {
         dynamicsWorld.stepSimulation(Math.min(1f / 30f, delta), 5, 1f / 60f);
-        if (debugDraw) {
-            debugDrawer.begin(camera);
-            dynamicsWorld.debugDrawWorld();
-            debugDrawer.end();
-        }
+    }
+
+    public void debugDraw(GameCamera camera) {
+        debugDrawer.begin(camera);
+        dynamicsWorld.debugDrawWorld();
+        debugDrawer.end();
     }
 
     @Override

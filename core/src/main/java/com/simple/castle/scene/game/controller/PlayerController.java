@@ -8,6 +8,7 @@ import com.simple.castle.listener.SceneObjectManager;
 import com.simple.castle.object.constructors.ObjectConstructors;
 import com.simple.castle.object.unit.BasicUnit;
 import com.simple.castle.object.unit.abs.AbstractGameObject;
+import com.simple.castle.scene.game.DoEvery;
 import com.simple.castle.utils.jsondto.PlayerJson;
 
 import java.util.Collection;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class PlayerController implements CollisionEvent, Disposable {
 
     public static final long spawnEvery = 3 * 1000;
+    public static final long triggerDistanceEvery = 3 * 1000;
 
     private static final Vector3 tempVector1 = new Vector3();
     private static final Vector3 tempVector2 = new Vector3();
@@ -25,8 +27,8 @@ public class PlayerController implements CollisionEvent, Disposable {
     private final SceneObjectManager sceneObjectManager;
     private final List<Player> players;
 
-    private long previousTime = System.currentTimeMillis();
-    private long currentTime = spawnEvery;
+    private final DoEvery spawnUnits = new DoEvery(spawnEvery, true);
+    private final DoEvery distanceRecalculate = new DoEvery(triggerDistanceEvery, true);
 
     private PlayerController(List<Player> players, ObjectConstructors objectConstructors,
                              SceneObjectManager sceneObjectManager) {
@@ -58,21 +60,16 @@ public class PlayerController implements CollisionEvent, Disposable {
     }
 
     public void update() {
-        // TODO: 5/7/2020 System to do action on time every 3, 5, 30 sec
-        long diff = System.currentTimeMillis() - previousTime;
-        currentTime = currentTime - diff;
-        if (currentTime <= 0) {
+        spawnUnits.update(() -> {
             List<BasicUnit> units = players.stream()
                     .map(player -> player.spawnUnitsOnStartPositions(objectConstructors))
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());
             sceneObjectManager.addAll(units);
-            currentTime = spawnEvery;
-        }
+        });
         players.forEach(Player::update);
         // TODO: 5/5/2020 Optimize to use in parallel, distance calculations
-//        calculateDistance();
-        previousTime = System.currentTimeMillis();
+//        distanceRecalculate.update(this::calculateDistance);
     }
 
     private void calculateDistance() {
@@ -81,7 +78,7 @@ public class PlayerController implements CollisionEvent, Disposable {
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
         for (int i = 0; i < units.size(); i++) {
-            for (int j = 0; j < units.size(); j++) {
+            for (int j = i; j < units.size(); j++) {
                 if (i != j) {
                     BasicUnit unit1 = units.get(i);
                     BasicUnit unit2 = units.get(j);
@@ -105,7 +102,11 @@ public class PlayerController implements CollisionEvent, Disposable {
     }
 
     public long getTimeLeft() {
-        return currentTime;
+        return spawnUnits.nextCallIn();
+    }
+
+    public long getTotalUnits() {
+        return players.stream().map(Player::getUnits).mapToLong(Collection::size).sum();
     }
 
     @Override

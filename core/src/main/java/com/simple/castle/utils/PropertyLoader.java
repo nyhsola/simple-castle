@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 public final class PropertyLoader {
 
+    // TODO: 5/7/2020 JSON from the box of libgdx
     private static final String SCENES_FOLDER = "scenes/";
     private static final String APP_PROPERTIES = "app.properties";
 

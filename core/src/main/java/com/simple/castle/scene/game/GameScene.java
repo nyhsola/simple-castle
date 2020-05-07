@@ -1,16 +1,7 @@
 package com.simple.castle.scene.game;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.simple.castle.listener.SceneObjectManager;
 import com.simple.castle.object.constructors.ObjectConstructors;
 import com.simple.castle.object.constructors.SceneObjectsHandler;
@@ -29,42 +20,24 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
 
     public final static String SCENE_NAME = "game";
 
-    private final BitmapFont bitmapFont;
-    private final SpriteBatch batch;
-
     private final GameRenderer gameRenderer;
     private final PhysicEngine physicEngine;
     private final InputMultiplexer inputMultiplexer;
-
     private final GameEnvironment gameEnvironment;
     private final GameCamera gameCamera;
-
     private final Model model;
     private final ObjectConstructors objectConstructors;
     private final SceneObjectsHandler sceneObjectsHandler;
-    private final Stage stage;
-    private final Skin skin;
-
     private final PlayerController playerController;
-    private final TextButton timeButton;
+    private final DebugOverlay debugOverlay;
     private boolean debugDraw = false;
+    private boolean info = false;
 
     public GameScene(GameRenderer gameRenderer) {
-        skin = AssetLoader.loadSkin();
-
-        Label timeLabel = new Label("Spawn in: ", skin);
-        timeButton = new TextButton(Long.toString(PlayerController.spawnEvery), skin);
-        Table table = new Table();
-        table.align(Align.bottomRight).add(timeLabel, timeButton);
-        table.setFillParent(true);
-
-        stage = new Stage(new ScreenViewport());
-        stage.addActor(table);
+        this.debugOverlay = new DebugOverlay();
 
         this.gameRenderer = gameRenderer;
         this.physicEngine = new PhysicEngine();
-        this.bitmapFont = new BitmapFont();
-        this.batch = new SpriteBatch();
 
         this.model = AssetLoader.loadModel();
         this.objectConstructors = new ObjectConstructors.Builder(model)
@@ -84,7 +57,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
 
         this.inputMultiplexer = new InputMultiplexer();
         this.inputMultiplexer.addProcessor(gameCamera);
-        this.inputMultiplexer.addProcessor(stage);
     }
 
     @Override
@@ -97,18 +69,26 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
 
         //Draw and Physic
         gameRenderer.render(gameCamera, sceneObjectsHandler, gameEnvironment);
-        physicEngine.update(gameCamera, delta, debugDraw);
+        physicEngine.update(gameCamera, delta);
 
-        //Overlay
-        timeButton.setText(Long.toString(playerController.getTimeLeft() / 100));
-        stage.draw();
+        //Debug
+        if (debugDraw) {
+            physicEngine.debugDraw(gameCamera);
+        }
+        if (info) {
+            debugOverlay.debugInformation.setTimeLeft(playerController.getTimeLeft());
+            debugOverlay.debugInformation.setFps(1.0 / delta);
+            debugOverlay.debugInformation.setTotalUnits(playerController.getTotalUnits());
+            debugOverlay.render();
+        }
     }
 
     @Override
     public void resize(int width, int height) {
         gameCamera.resize(width, height);
         gameCamera.update();
-        stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+
+        debugOverlay.resize(width, height);
     }
 
     @Override
@@ -118,21 +98,21 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
 
     @Override
     public void hide() {
-        bitmapFont.dispose();
-        batch.dispose();
         physicEngine.dispose();
         model.dispose();
         objectConstructors.dispose();
         sceneObjectsHandler.dispose();
-        stage.dispose();
-        skin.dispose();
         playerController.dispose();
+        debugOverlay.dispose();
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        if (Input.Keys.Q == keycode) {
+        if (Input.Keys.F1 == keycode) {
             debugDraw = !debugDraw;
+        }
+        if (Input.Keys.F2 == keycode) {
+            info = !info;
         }
         if (Input.Keys.ESCAPE == keycode) {
             Gdx.app.exit();
@@ -193,6 +173,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
         sceneObjectsHandler.addSceneObjects(abstractGameObjects);
     }
 
+    // TODO: 5/7/2020 Re-work UserData == GameObject, not UUID
     @Override
     public AbstractGameObject getByUserData(String userData) {
         return sceneObjectsHandler.getSceneObjectByUserData(userData);
