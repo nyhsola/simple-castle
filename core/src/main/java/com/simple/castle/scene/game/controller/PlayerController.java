@@ -41,18 +41,16 @@ public class PlayerController implements CollisionEvent, Disposable {
     public void collisionEvent(btCollisionObject object1, btCollisionObject object2) {
         Object userDataObj1 = object1.userData;
         Object userDataObj2 = object2.userData;
-        if (userDataObj1 instanceof String && userDataObj2 instanceof String) {
-            String userData1 = (String) userDataObj1;
-            String userData2 = (String) userDataObj2;
-            if (sceneObjectManager.contains(userData1) && sceneObjectManager.contains(userData2)) {
-                AbstractGameObject sceneObj1 = sceneObjectManager.getByUserData(userData1);
-                AbstractGameObject sceneObj2 = sceneObjectManager.getByUserData(userData2);
+        if (userDataObj1 instanceof AbstractGameObject && userDataObj2 instanceof AbstractGameObject) {
+            AbstractGameObject obj1 = (AbstractGameObject) userDataObj1;
+            AbstractGameObject obj2 = (AbstractGameObject) userDataObj2;
+            if (sceneObjectManager.contains(obj1) && sceneObjectManager.contains(obj2)) {
                 players.forEach(player -> {
-                    if (player.isPlayers(sceneObj1)) {
-                        player.collisionEvent((BasicUnit) sceneObj1, sceneObj2);
+                    if (obj1 instanceof BasicUnit && player.isPlayers((BasicUnit) obj1)) {
+                        player.collisionEvent((BasicUnit) obj1, obj2);
                     }
-                    if (player.isPlayers(sceneObj2)) {
-                        player.collisionEvent((BasicUnit) sceneObj2, sceneObj1);
+                    if (obj2 instanceof BasicUnit && player.isPlayers((BasicUnit) obj2)) {
+                        player.collisionEvent((BasicUnit) obj2, obj1);
                     }
                 });
             }
@@ -127,7 +125,7 @@ public class PlayerController implements CollisionEvent, Disposable {
                     .map(playerJson -> {
                         List<List<AbstractGameObject>> paths = playerJson.getPaths().stream()
                                 .map(path -> path.stream()
-                                        .map(sceneObjectManager::getByName)
+                                        .map(sceneObjectManager::getByModelName)
                                         .collect(Collectors.toList()))
                                 .collect(Collectors.toList());
                         return new Player(playerJson.getUnitType(), paths);

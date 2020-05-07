@@ -11,11 +11,7 @@ public interface SceneObjectManager {
 
     void addAll(List<? extends AbstractGameObject> abstractGameObjects);
 
-    AbstractGameObject getByName(String name);
-
-    AbstractGameObject getByUserData(String userData);
+    AbstractGameObject getByModelName(String name);
 
     boolean contains(AbstractGameObject abstractGameObject);
-
-    boolean contains(String userData);
 }

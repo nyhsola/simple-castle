@@ -158,30 +158,24 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
     @Override
     public void remove(AbstractGameObject abstractGameObject) {
         physicEngine.removeRigidBody(abstractGameObject);
-        sceneObjectsHandler.disposeObject(abstractGameObject);
+        sceneObjectsHandler.remove(abstractGameObject);
     }
 
     @Override
     public void add(AbstractGameObject abstractGameObject) {
         physicEngine.addRigidBody(abstractGameObject);
-        sceneObjectsHandler.addSceneObject(abstractGameObject);
+        sceneObjectsHandler.add(abstractGameObject);
     }
 
     @Override
     public void addAll(List<? extends AbstractGameObject> abstractGameObjects) {
         abstractGameObjects.forEach(physicEngine::addRigidBody);
-        sceneObjectsHandler.addSceneObjects(abstractGameObjects);
-    }
-
-    // TODO: 5/7/2020 Re-work UserData == GameObject, not UUID
-    @Override
-    public AbstractGameObject getByUserData(String userData) {
-        return sceneObjectsHandler.getSceneObjectByUserData(userData);
+        sceneObjectsHandler.addAll(abstractGameObjects);
     }
 
     @Override
-    public AbstractGameObject getByName(String name) {
-        return sceneObjectsHandler.getSceneObjectByModelName(name);
+    public AbstractGameObject getByModelName(String name) {
+        return sceneObjectsHandler.getByName(name);
     }
 
     @Override
@@ -189,8 +183,4 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
         return sceneObjectsHandler.contains(abstractGameObject);
     }
 
-    @Override
-    public boolean contains(String userData) {
-        return sceneObjectsHandler.contains(userData);
-    }
 }

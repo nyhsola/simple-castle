@@ -5,7 +5,10 @@ import com.simple.castle.object.constructors.ObjectConstructors;
 import com.simple.castle.object.unit.BasicUnit;
 import com.simple.castle.object.unit.abs.AbstractGameObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Player {
@@ -14,7 +17,7 @@ public class Player {
     private final String unitType;
     private final List<List<AbstractGameObject>> paths;
     private final List<Vector3> initPositions;
-    private final Map<String, BasicUnit> units = new HashMap<>();
+    private final List<BasicUnit> units = new ArrayList<>();
 
     public Player(String unitType, List<List<AbstractGameObject>> paths) {
         this.unitType = unitType;
@@ -36,7 +39,7 @@ public class Player {
     }
 
     public void update() {
-        units.forEach((s, basicUnit) -> basicUnit.update());
+        units.forEach(BasicUnit::update);
     }
 
     public void collisionEvent(BasicUnit unit, AbstractGameObject gameObject) {
@@ -58,15 +61,15 @@ public class Player {
         return initPositions
                 .stream()
                 .map(initPosition -> new BasicUnit(objectConstructors.getConstructor(unitType), initPosition))
-                .peek(unit -> units.put((String) unit.body.userData, unit))
+                .peek(units::add)
                 .collect(Collectors.toList());
     }
 
-    public boolean isPlayers(AbstractGameObject gameObject) {
-        return units.containsKey(String.valueOf(gameObject.body.userData));
+    public boolean isPlayers(BasicUnit gameObject) {
+        return units.contains(gameObject);
     }
 
     public Collection<BasicUnit> getUnits() {
-        return units.values();
+        return units;
     }
 }

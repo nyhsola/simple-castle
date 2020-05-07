@@ -6,8 +6,6 @@ import com.badlogic.gdx.utils.Disposable;
 import com.simple.castle.object.unit.add.MotionState;
 import com.simple.castle.object.unit.add.ObjectConstructor;
 
-import java.util.UUID;
-
 public abstract class AbstractGameObject extends ModelInstance implements Disposable {
     public final static short GROUND_FLAG = 1 << 8;
     public final static short OBJECT_FLAG = 1 << 9;
@@ -26,7 +24,7 @@ public abstract class AbstractGameObject extends ModelInstance implements Dispos
 
         body = new btRigidBody(objectConstructor.constructionInfo);
         body.setMotionState(motionState);
-        body.userData = UUID.randomUUID().toString();
+        body.userData = this;
     }
 
     @Override

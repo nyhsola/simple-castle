@@ -171,8 +171,8 @@ public class GameCamera extends PerspectiveCamera implements InputProcessor {
             String basePlaneProp = sceneProperties.getProperty("camera-base-plane");
 
             return new GameCamera(
-                    sceneObjectsHandler.getSceneObjectByModelName(positionProp).transform.getTranslation(new Vector3()),
-                    sceneObjectsHandler.getSceneObjectByModelName(basePlaneProp));
+                    sceneObjectsHandler.getByName(positionProp).transform.getTranslation(new Vector3()),
+                    sceneObjectsHandler.getByName(basePlaneProp));
         }
     }
 }
