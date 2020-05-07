@@ -38,7 +38,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
         this.debugOverlay = new DebugOverlay();
 
         this.gameRenderer = gameRenderer;
-        this.physicEngine = new PhysicEngine();
 
         this.model = AssetLoader.loadModel();
         this.objectConstructors = new ObjectConstructors.Builder(model)
@@ -50,6 +49,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
         this.gameCamera = new GameCamera.Builder(sceneObjectsHandler)
                 .build(PropertyLoader.loadProperties(GameScene.SCENE_NAME));
 
+        this.physicEngine = new PhysicEngine(this);
         this.physicEngine.addContactListener(playerController);
         this.sceneObjectsHandler.getSceneObjects().forEach(physicEngine::addRigidBody);
 

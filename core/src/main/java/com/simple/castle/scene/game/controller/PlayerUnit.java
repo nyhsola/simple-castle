@@ -30,30 +30,34 @@ public class PlayerUnit extends ActiveGameObject {
 
     public void update() {
         if (isMoving()) {
-            Vector3 unitV = this.transform.getTranslation(tempVector);
-            Vector3 targetDirection = movePoint.cpy().sub(unitV).nor();
-            Vector3 modelForwardDirection = getModelForwardDirection();
-
-            double currentAngle = getAngleBetweenVectors(targetDirection, modelForwardDirection);
-
-            if (currentAngle <= 0 || currentAngle >= 5) {
-                if (currentAngle - previousAngle > 0) {
-                    rotateDirection = !rotateDirection;
-                }
-                if (rotateDirection) {
-                    this.body.setAngularVelocity(rotateL);
-                } else {
-                    this.body.setAngularVelocity(rotateR);
-                }
-                previousAngle = currentAngle;
-                this.body.setLinearVelocity(modelForwardDirection.scl(UNIT_SPEED_WHEN_ROTATING));
-            } else {
-                this.body.setAngularVelocity(Vector3.Zero);
-                this.body.setLinearVelocity(modelForwardDirection.scl(UNIT_DEFAULT_SPEED));
-            }
+            adjustMoveAndAngle();
         } else {
             this.body.setAngularVelocity(Vector3.Zero);
             this.body.setLinearVelocity(Vector3.Zero);
+        }
+    }
+
+    private void adjustMoveAndAngle() {
+        Vector3 unitV = this.transform.getTranslation(tempVector);
+        Vector3 targetDirection = movePoint.cpy().sub(unitV).nor();
+        Vector3 modelForwardDirection = getModelForwardDirection();
+
+        double currentAngle = getAngleBetweenVectors(targetDirection, modelForwardDirection);
+
+        if (currentAngle <= 0 || currentAngle >= 5) {
+            if (currentAngle - previousAngle > 0) {
+                rotateDirection = !rotateDirection;
+            }
+            if (rotateDirection) {
+                this.body.setAngularVelocity(rotateL);
+            } else {
+                this.body.setAngularVelocity(rotateR);
+            }
+            previousAngle = currentAngle;
+            this.body.setLinearVelocity(modelForwardDirection.scl(UNIT_SPEED_WHEN_ROTATING));
+        } else {
+            this.body.setAngularVelocity(Vector3.Zero);
+            this.body.setLinearVelocity(modelForwardDirection.scl(UNIT_DEFAULT_SPEED));
         }
     }
 

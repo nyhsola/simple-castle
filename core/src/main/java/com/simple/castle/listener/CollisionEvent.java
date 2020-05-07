@@ -1,7 +1,7 @@
 package com.simple.castle.listener;
 
-import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
+import com.simple.castle.object.unit.abs.AbstractGameObject;
 
 public interface CollisionEvent {
-    void collisionEvent(btCollisionObject object1, btCollisionObject object2);
+    void collisionEvent(AbstractGameObject object1, AbstractGameObject object2);
 }

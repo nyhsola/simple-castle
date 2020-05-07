@@ -1,7 +1,6 @@
 package com.simple.castle.scene.game.controller;
 
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 import com.badlogic.gdx.utils.Disposable;
 import com.simple.castle.event.DoEvery;
 import com.simple.castle.listener.CollisionEvent;
@@ -13,6 +12,7 @@ import com.simple.castle.utils.jsondto.PlayerJson;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PlayerController implements CollisionEvent, Disposable {
@@ -26,13 +26,13 @@ public class PlayerController implements CollisionEvent, Disposable {
 
     private final ObjectConstructors objectConstructors;
     private final SceneObjectManager sceneObjectManager;
-    private final List<Player> players;
+    private final Set<Player> players;
 
     private final DoEvery spawnUnits = new DoEvery(spawnEvery, true);
     private final DoEvery distanceRecalculate = new DoEvery(triggerDistanceEvery, true);
     private final DoEvery updateUnits = new DoEvery(updateUnitsEvery, true);
 
-    private PlayerController(List<Player> players, ObjectConstructors objectConstructors,
+    private PlayerController(Set<Player> players, ObjectConstructors objectConstructors,
                              SceneObjectManager sceneObjectManager) {
         this.objectConstructors = objectConstructors;
         this.sceneObjectManager = sceneObjectManager;
@@ -40,23 +40,15 @@ public class PlayerController implements CollisionEvent, Disposable {
     }
 
     @Override
-    public void collisionEvent(btCollisionObject object1, btCollisionObject object2) {
-        Object userDataObj1 = object1.userData;
-        Object userDataObj2 = object2.userData;
-        if (userDataObj1 instanceof AbstractGameObject && userDataObj2 instanceof AbstractGameObject) {
-            AbstractGameObject obj1 = (AbstractGameObject) userDataObj1;
-            AbstractGameObject obj2 = (AbstractGameObject) userDataObj2;
-            if (sceneObjectManager.contains(obj1) && sceneObjectManager.contains(obj2)) {
-                players.forEach(player -> {
-                    if (obj1 instanceof PlayerUnit && player.isPlayers((PlayerUnit) obj1)) {
-                        player.collisionEvent((PlayerUnit) obj1, obj2);
-                    }
-                    if (obj2 instanceof PlayerUnit && player.isPlayers((PlayerUnit) obj2)) {
-                        player.collisionEvent((PlayerUnit) obj2, obj1);
-                    }
-                });
+    public void collisionEvent(AbstractGameObject object1, AbstractGameObject object2) {
+        players.forEach(player -> {
+            if (object1 instanceof PlayerUnit && player.isPlayers((PlayerUnit) object1)) {
+                player.collisionEvent((PlayerUnit) object1, object2);
             }
-        }
+            if (object2 instanceof PlayerUnit && player.isPlayers((PlayerUnit) object2)) {
+                player.collisionEvent((PlayerUnit) object2, object1);
+            }
+        });
     }
 
     public void update() {
@@ -124,7 +116,7 @@ public class PlayerController implements CollisionEvent, Disposable {
         }
 
         public PlayerController build(List<PlayerJson> playerJsons) {
-            List<Player> players = playerJsons.stream()
+            Set<Player> players = playerJsons.stream()
                     .map(playerJson -> {
                         List<List<AbstractGameObject>> paths = playerJson.getPaths().stream()
                                 .map(path -> path.stream()
@@ -133,7 +125,7 @@ public class PlayerController implements CollisionEvent, Disposable {
                                 .collect(Collectors.toList());
                         return new Player(playerJson.getUnitType(), paths, playerJson.getPlayerName());
                     })
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toSet());
             return new PlayerController(players, objectConstructors, sceneObjectManager);
         }
     }

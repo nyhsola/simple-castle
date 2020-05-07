@@ -4,20 +4,17 @@ import com.badlogic.gdx.math.Vector3;
 import com.simple.castle.object.constructors.ObjectConstructors;
 import com.simple.castle.object.unit.abs.AbstractGameObject;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Player {
     private final Vector3 tempVector = new Vector3();
 
+    private final String playerName;
     private final String unitType;
+    private final Set<PlayerUnit> units = new HashSet<>();
     private final List<List<AbstractGameObject>> paths;
     private final List<Vector3> initPositions;
-    private final String playerName;
-    private final List<PlayerUnit> units = new ArrayList<>();
 
     public Player(String unitType, List<List<AbstractGameObject>> paths, String playerName) {
         this.unitType = unitType;
