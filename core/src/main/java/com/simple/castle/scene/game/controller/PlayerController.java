@@ -3,22 +3,23 @@ package com.simple.castle.scene.game.controller;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
 import com.badlogic.gdx.utils.Disposable;
+import com.simple.castle.event.DoEvery;
 import com.simple.castle.listener.CollisionEvent;
 import com.simple.castle.listener.SceneObjectManager;
 import com.simple.castle.object.constructors.ObjectConstructors;
-import com.simple.castle.object.unit.BasicUnit;
 import com.simple.castle.object.unit.abs.AbstractGameObject;
-import com.simple.castle.scene.game.DoEvery;
 import com.simple.castle.utils.jsondto.PlayerJson;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class PlayerController implements CollisionEvent, Disposable {
 
     public static final long spawnEvery = 3 * 1000;
     public static final long triggerDistanceEvery = 3 * 1000;
+    public static final long updateUnitsEvery = 500;
 
     private static final Vector3 tempVector1 = new Vector3();
     private static final Vector3 tempVector2 = new Vector3();
@@ -29,6 +30,7 @@ public class PlayerController implements CollisionEvent, Disposable {
 
     private final DoEvery spawnUnits = new DoEvery(spawnEvery, true);
     private final DoEvery distanceRecalculate = new DoEvery(triggerDistanceEvery, true);
+    private final DoEvery updateUnits = new DoEvery(updateUnitsEvery, true);
 
     private PlayerController(List<Player> players, ObjectConstructors objectConstructors,
                              SceneObjectManager sceneObjectManager) {
@@ -46,11 +48,11 @@ public class PlayerController implements CollisionEvent, Disposable {
             AbstractGameObject obj2 = (AbstractGameObject) userDataObj2;
             if (sceneObjectManager.contains(obj1) && sceneObjectManager.contains(obj2)) {
                 players.forEach(player -> {
-                    if (obj1 instanceof BasicUnit && player.isPlayers((BasicUnit) obj1)) {
-                        player.collisionEvent((BasicUnit) obj1, obj2);
+                    if (obj1 instanceof PlayerUnit && player.isPlayers((PlayerUnit) obj1)) {
+                        player.collisionEvent((PlayerUnit) obj1, obj2);
                     }
-                    if (obj2 instanceof BasicUnit && player.isPlayers((BasicUnit) obj2)) {
-                        player.collisionEvent((BasicUnit) obj2, obj1);
+                    if (obj2 instanceof PlayerUnit && player.isPlayers((PlayerUnit) obj2)) {
+                        player.collisionEvent((PlayerUnit) obj2, obj1);
                     }
                 });
             }
@@ -59,40 +61,41 @@ public class PlayerController implements CollisionEvent, Disposable {
 
     public void update() {
         spawnUnits.update(() -> {
-            List<BasicUnit> units = players.stream()
+            List<PlayerUnit> units = players.stream()
                     .map(player -> player.spawnUnitsOnStartPositions(objectConstructors))
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());
             sceneObjectManager.addAll(units);
         });
-        players.forEach(Player::update);
+        updateUnits.update(() -> players.forEach(Player::update));
         // TODO: 5/5/2020 Optimize to use in parallel, distance calculations
-//        distanceRecalculate.update(this::calculateDistance);
+        distanceRecalculate.update(this::calculateDistance);
     }
 
     private void calculateDistance() {
-        List<BasicUnit> units = players.stream()
+        List<PlayerUnit> units = players.stream()
                 .map(Player::getUnits)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
         for (int i = 0; i < units.size(); i++) {
             for (int j = i; j < units.size(); j++) {
                 if (i != j) {
-                    BasicUnit unit1 = units.get(i);
-                    BasicUnit unit2 = units.get(j);
-
-                    Vector3 unit1P = unit1.body.getWorldTransform().getTranslation(tempVector1);
-                    Vector3 unit2P = unit2.body.getWorldTransform().getTranslation(tempVector2);
-
-                    Player playerWhoseUnitsSameColor = players.stream()
-                            .filter(player -> player.isPlayers(unit1) && player.isPlayers(unit2))
-                            .findAny()
-                            .orElse(null);
-
-                    float dst = unit1P.dst(unit2P);
-                    if (playerWhoseUnitsSameColor == null) {
-                        unit1.unitNear(unit2, dst);
-                        unit2.unitNear(unit1, dst);
+                    PlayerUnit unit1 = units.get(i);
+                    PlayerUnit unit2 = units.get(j);
+                    if (!Objects.equals(unit1.getPlayerName(), unit2.getPlayerName())) {
+                        boolean moving1 = unit1.isMoving();
+                        boolean moving2 = unit2.isMoving();
+                        if (moving1 || moving2) {
+                            Vector3 unit1P = unit1.body.getWorldTransform().getTranslation(tempVector1);
+                            Vector3 unit2P = unit2.body.getWorldTransform().getTranslation(tempVector2);
+                            float dst = unit1P.dst(unit2P);
+                            if (moving1) {
+                                unit1.unitNear(unit2, dst);
+                            }
+                            if (moving2) {
+                                unit2.unitNear(unit1, dst);
+                            }
+                        }
                     }
                 }
             }
@@ -128,7 +131,7 @@ public class PlayerController implements CollisionEvent, Disposable {
                                         .map(sceneObjectManager::getByModelName)
                                         .collect(Collectors.toList()))
                                 .collect(Collectors.toList());
-                        return new Player(playerJson.getUnitType(), paths);
+                        return new Player(playerJson.getUnitType(), paths, playerJson.getPlayerName());
                     })
                     .collect(Collectors.toList());
             return new PlayerController(players, objectConstructors, sceneObjectManager);

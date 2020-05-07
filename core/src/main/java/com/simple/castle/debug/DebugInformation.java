@@ -1,4 +1,4 @@
-package com.simple.castle.scene.game;
+package com.simple.castle.debug;
 
 public class DebugInformation {
     private long timeLeft;

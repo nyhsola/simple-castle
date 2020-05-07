@@ -2,6 +2,7 @@ package com.simple.castle.scene.game;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g3d.Model;
+import com.simple.castle.debug.DebugOverlay;
 import com.simple.castle.listener.SceneObjectManager;
 import com.simple.castle.object.constructors.ObjectConstructors;
 import com.simple.castle.object.constructors.SceneObjectsHandler;
@@ -29,7 +30,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
     private final ObjectConstructors objectConstructors;
     private final SceneObjectsHandler sceneObjectsHandler;
     private final PlayerController playerController;
-    private final DebugOverlay debugOverlay;
+    private final com.simple.castle.debug.DebugOverlay debugOverlay;
     private boolean debugDraw = false;
     private boolean info = false;
 

@@ -1,4 +1,4 @@
-package com.simple.castle.scene.game;
+package com.simple.castle.event;
 
 public class DoEvery {
     private final long every;

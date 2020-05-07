@@ -2,7 +2,6 @@ package com.simple.castle.scene.game.controller;
 
 import com.badlogic.gdx.math.Vector3;
 import com.simple.castle.object.constructors.ObjectConstructors;
-import com.simple.castle.object.unit.BasicUnit;
 import com.simple.castle.object.unit.abs.AbstractGameObject;
 
 import java.util.ArrayList;
@@ -17,9 +16,10 @@ public class Player {
     private final String unitType;
     private final List<List<AbstractGameObject>> paths;
     private final List<Vector3> initPositions;
-    private final List<BasicUnit> units = new ArrayList<>();
+    private final String playerName;
+    private final List<PlayerUnit> units = new ArrayList<>();
 
-    public Player(String unitType, List<List<AbstractGameObject>> paths) {
+    public Player(String unitType, List<List<AbstractGameObject>> paths, String playerName) {
         this.unitType = unitType;
         this.paths = paths;
         this.initPositions = paths.stream()
@@ -28,6 +28,7 @@ public class Player {
                 .map(Optional::get)
                 .map(sceneObject -> sceneObject.transform.getTranslation(tempVector).cpy())
                 .collect(Collectors.toList());
+        this.playerName = playerName;
     }
 
     private static AbstractGameObject getNextAvailable(List<AbstractGameObject> list, AbstractGameObject current) {
@@ -39,10 +40,10 @@ public class Player {
     }
 
     public void update() {
-        units.forEach(BasicUnit::update);
+        units.forEach(PlayerUnit::update);
     }
 
-    public void collisionEvent(BasicUnit unit, AbstractGameObject gameObject) {
+    public void collisionEvent(PlayerUnit unit, AbstractGameObject gameObject) {
         if (unit != null && gameObject != null) {
             List<AbstractGameObject> path = paths.stream()
                     .filter(gameObjects -> gameObjects.contains(gameObject))
@@ -57,19 +58,19 @@ public class Player {
         }
     }
 
-    public List<BasicUnit> spawnUnitsOnStartPositions(ObjectConstructors objectConstructors) {
-        return initPositions
-                .stream()
-                .map(initPosition -> new BasicUnit(objectConstructors.getConstructor(unitType), initPosition))
+    public List<PlayerUnit> spawnUnitsOnStartPositions(ObjectConstructors objectConstructors) {
+        return initPositions.stream()
+                .map(initPosition ->
+                        new PlayerUnit(objectConstructors.getConstructor(unitType), initPosition, playerName))
                 .peek(units::add)
                 .collect(Collectors.toList());
     }
 
-    public boolean isPlayers(BasicUnit gameObject) {
+    public boolean isPlayers(PlayerUnit gameObject) {
         return units.contains(gameObject);
     }
 
-    public Collection<BasicUnit> getUnits() {
+    public Collection<PlayerUnit> getUnits() {
         return units;
     }
 }

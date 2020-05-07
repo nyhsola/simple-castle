@@ -1,11 +1,11 @@
-package com.simple.castle.object.unit;
+package com.simple.castle.scene.game.controller;
 
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.simple.castle.object.unit.add.ObjectConstructor;
 import com.simple.castle.object.unit.basic.ActiveGameObject;
 
-public class BasicUnit extends ActiveGameObject {
+public class PlayerUnit extends ActiveGameObject {
 
     private static final int UNIT_DEFAULT_SPEED = 5;
     private static final int UNIT_SPEED_WHEN_ROTATING = 2;
@@ -14,21 +14,22 @@ public class BasicUnit extends ActiveGameObject {
     private static final Vector3 rotateR = Vector3.Y.cpy().scl(-2f);
 
     private final Vector3 tempVector = new Vector3();
+    private final String playerName;
 
     private Vector3 movePoint;
     private double previousAngle;
     private boolean rotateDirection = false;
     private boolean attackMode = false;
 
-    public BasicUnit(ObjectConstructor objectConstructor, Vector3 initPosition) {
+    public PlayerUnit(ObjectConstructor objectConstructor, Vector3 initPosition, String playerName) {
         super(objectConstructor);
-
+        this.playerName = playerName;
         this.body.setWorldTransform(new Matrix4());
         this.body.translate(initPosition);
     }
 
     public void update() {
-        if (movePoint != null && !attackMode) {
+        if (isMoving()) {
             Vector3 unitV = this.transform.getTranslation(tempVector);
             Vector3 targetDirection = movePoint.cpy().sub(unitV).nor();
             Vector3 modelForwardDirection = getModelForwardDirection();
@@ -56,7 +57,11 @@ public class BasicUnit extends ActiveGameObject {
         }
     }
 
-    public void unitNear(BasicUnit nearUnit, float distance) {
+    public boolean isMoving() {
+        return movePoint != null && !attackMode;
+    }
+
+    public void unitNear(PlayerUnit nearUnit, float distance) {
         if (distance < 5) {
             attackMode = true;
         }
@@ -79,5 +84,9 @@ public class BasicUnit extends ActiveGameObject {
 
     public void setMovePoint(Vector3 movePoint) {
         this.movePoint = movePoint;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 }

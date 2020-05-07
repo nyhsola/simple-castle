@@ -5,15 +5,15 @@ import com.simple.castle.object.unit.abs.AbstractGameObject;
 import com.simple.castle.utils.StringTool;
 import com.simple.castle.utils.jsondto.SceneObjectJson;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 public class SceneObjectsHandler {
 
-    private final List<AbstractGameObject> sceneGameObjects = new ArrayList<>();
-    private final List<AbstractGameObject> drawables = new ArrayList<>();
+    private final Set<AbstractGameObject> sceneGameObjects = new HashSet<>();
+    private final Set<AbstractGameObject> drawables = new HashSet<>();
 
     private SceneObjectsHandler(ObjectConstructors objectConstructors, List<SceneObjectJson> objects) {
         objects.forEach(object -> {
@@ -25,7 +25,7 @@ public class SceneObjectsHandler {
                 this.add(gameObject);
             });
         });
-        this.updateDrawables();
+        sceneGameObjects.stream().filter(abstractGameObject -> !abstractGameObject.hide).forEach(drawables::add);
     }
 
     public void dispose() {
@@ -35,12 +35,14 @@ public class SceneObjectsHandler {
 
     public void add(AbstractGameObject gameObject) {
         sceneGameObjects.add(gameObject);
-        this.updateDrawables();
+        if (!gameObject.hide) {
+            drawables.add(gameObject);
+        }
     }
 
     public void addAll(List<? extends AbstractGameObject> gameObjects) {
         sceneGameObjects.addAll(gameObjects);
-        this.updateDrawables();
+        gameObjects.stream().filter(abstractGameObject -> !abstractGameObject.hide).forEach(drawables::add);
     }
 
     public boolean contains(AbstractGameObject abstractGameObject) {
@@ -66,15 +68,7 @@ public class SceneObjectsHandler {
     public void remove(AbstractGameObject object) {
         sceneGameObjects.remove(object);
         object.dispose();
-        this.updateDrawables();
-    }
-
-    private void updateDrawables() {
-        drawables.clear();
-        List<AbstractGameObject> drawabledCollected = sceneGameObjects.stream()
-                .filter(abstractGameObject -> !abstractGameObject.hide)
-                .collect(Collectors.toList());
-        drawables.addAll(drawabledCollected);
+        drawables.remove(object);
     }
 
     public static final class Builder {

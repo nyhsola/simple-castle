@@ -1,4 +1,4 @@
-package com.simple.castle.scene.game;
+package com.simple.castle.debug;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.simple.castle.event.DoEvery;
 import com.simple.castle.scene.game.controller.PlayerController;
 import com.simple.castle.utils.AssetLoader;
 
@@ -21,7 +22,7 @@ public class DebugOverlay {
     private final TextButton timeButton;
     private final TextButton fpsButton;
     private final TextButton totalUnitsButton;
-    private final DoEvery doEvery = new DoEvery(500);
+    private final com.simple.castle.event.DoEvery doEvery = new DoEvery(500);
 
     public DebugOverlay() {
         skin = AssetLoader.loadSkin();
