@@ -2,42 +2,42 @@ package com.simple.castle.scene.game;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.simple.castle.debug.DebugOverlay;
-import com.simple.castle.listener.SceneObjectManager;
-import com.simple.castle.object.constructors.ObjectConstructors;
-import com.simple.castle.object.constructors.SceneObjectsHandler;
-import com.simple.castle.object.unit.abs.AbstractGameObject;
-import com.simple.castle.physic.PhysicEngine;
-import com.simple.castle.render.GameCamera;
-import com.simple.castle.render.GameEnvironment;
-import com.simple.castle.render.GameRenderer;
+import com.simple.castle.core.debug.DebugOverlay;
+import com.simple.castle.core.manager.SceneManager;
+import com.simple.castle.core.object.constructors.ObjectConstructors;
+import com.simple.castle.core.object.constructors.SceneObjectsHandler;
+import com.simple.castle.core.object.unit.abs.AbstractGameObject;
+import com.simple.castle.core.physic.PhysicEngine;
+import com.simple.castle.core.render.BaseCamera;
+import com.simple.castle.core.render.BaseEnvironment;
+import com.simple.castle.core.render.BaseRenderer;
+import com.simple.castle.core.utils.AssetLoader;
+import com.simple.castle.core.utils.PropertyLoader;
 import com.simple.castle.scene.game.controller.PlayerController;
-import com.simple.castle.utils.AssetLoader;
-import com.simple.castle.utils.PropertyLoader;
 
 import java.util.List;
 
-public class GameScene extends ScreenAdapter implements InputProcessor, SceneObjectManager {
+public class GameScene extends ScreenAdapter implements InputProcessor, SceneManager {
 
     public final static String SCENE_NAME = "game";
 
-    private final GameRenderer gameRenderer;
+    private final BaseRenderer baseRenderer;
     private final PhysicEngine physicEngine;
     private final InputMultiplexer inputMultiplexer;
-    private final GameEnvironment gameEnvironment;
-    private final GameCamera gameCamera;
+    private final BaseEnvironment baseEnvironment;
+    private final BaseCamera baseCamera;
     private final Model model;
     private final ObjectConstructors objectConstructors;
     private final SceneObjectsHandler sceneObjectsHandler;
     private final PlayerController playerController;
-    private final com.simple.castle.debug.DebugOverlay debugOverlay;
+    private final DebugOverlay debugOverlay;
     private boolean debugDraw = false;
     private boolean info = false;
 
-    public GameScene(GameRenderer gameRenderer) {
+    public GameScene(BaseRenderer baseRenderer) {
         this.debugOverlay = new DebugOverlay();
 
-        this.gameRenderer = gameRenderer;
+        this.baseRenderer = baseRenderer;
 
         this.model = AssetLoader.loadModel();
         this.objectConstructors = new ObjectConstructors.Builder(model)
@@ -46,35 +46,35 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
                 .build(PropertyLoader.loadObjects(SCENE_NAME));
         this.playerController = new PlayerController.Builder(objectConstructors, this)
                 .build(PropertyLoader.loadPlayers(SCENE_NAME));
-        this.gameCamera = new GameCamera.Builder(sceneObjectsHandler)
+        this.baseCamera = new BaseCamera.Builder(sceneObjectsHandler)
                 .build(PropertyLoader.loadProperties(GameScene.SCENE_NAME));
 
         this.physicEngine = new PhysicEngine(this);
         this.physicEngine.addContactListener(playerController);
         this.sceneObjectsHandler.getSceneObjects().forEach(physicEngine::addRigidBody);
 
-        this.gameEnvironment = new GameEnvironment();
-        this.gameEnvironment.create();
+        this.baseEnvironment = new BaseEnvironment();
+        this.baseEnvironment.create();
 
         this.inputMultiplexer = new InputMultiplexer();
-        this.inputMultiplexer.addProcessor(gameCamera);
+        this.inputMultiplexer.addProcessor(baseCamera);
     }
 
     @Override
     public void render(float delta) {
         //Camera
-        gameCamera.update(delta);
+        baseCamera.update(delta);
 
         //Controllers
         playerController.update();
 
         //Draw and Physic
-        gameRenderer.render(gameCamera, sceneObjectsHandler, gameEnvironment);
-        physicEngine.update(gameCamera, delta);
+        baseRenderer.render(baseCamera, sceneObjectsHandler, baseEnvironment);
+        physicEngine.update(delta);
 
         //Debug
         if (debugDraw) {
-            physicEngine.debugDraw(gameCamera);
+            physicEngine.debugDraw(baseCamera);
         }
         if (info) {
             debugOverlay.debugInformation.setTimeLeft(playerController.getTimeLeft());
@@ -86,8 +86,8 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
 
     @Override
     public void resize(int width, int height) {
-        gameCamera.resize(width, height);
-        gameCamera.update();
+        baseCamera.resize(width, height);
+        baseCamera.update();
 
         debugOverlay.resize(width, height);
     }

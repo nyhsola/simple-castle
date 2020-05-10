@@ -2,9 +2,7 @@ package com.simple.castle.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.simple.castle.main.GameLauncher;
-
-import java.util.stream.Stream;
+import com.simple.castle.core.main.GameLauncher;
 
 public class DesktopLauncher {
     public static void main(String[] arg) {

@@ -1,18 +1,18 @@
 package com.simple.castle.scene.game.controller;
 
 import com.badlogic.gdx.math.Vector3;
-import com.simple.castle.object.constructors.ObjectConstructors;
-import com.simple.castle.object.unit.abs.AbstractGameObject;
+import com.simple.castle.core.object.constructors.ObjectConstructors;
+import com.simple.castle.core.object.unit.abs.AbstractGameObject;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Player {
     private final Vector3 tempVector = new Vector3();
-
     private final String playerName;
     private final String unitType;
     private final Set<PlayerUnit> units = new HashSet<>();
+
     private final List<List<AbstractGameObject>> paths;
     private final List<Vector3> initPositions;
 
@@ -40,17 +40,15 @@ public class Player {
         units.forEach(PlayerUnit::update);
     }
 
-    public void collisionEvent(PlayerUnit unit, AbstractGameObject gameObject) {
-        if (unit != null && gameObject != null) {
-            List<AbstractGameObject> path = paths.stream()
-                    .filter(gameObjects -> gameObjects.contains(gameObject))
+    public void collisionEvent(PlayerUnit playersUnit, AbstractGameObject anotherObject) {
+        if (playersUnit != null && anotherObject != null) {
+            paths.stream()
+                    .filter(path -> path.contains(anotherObject))
                     .findAny()
-                    .orElse(null);
-
-            if (path != null) {
-                AbstractGameObject nextAvailable = getNextAvailable(path, gameObject);
-                Vector3 movePoint = nextAvailable.transform.getTranslation(tempVector).cpy();
-                unit.setMovePoint(movePoint);
+                    .map(path -> getNextAvailable(path, anotherObject))
+                    .ifPresent(path -> playersUnit.setMovePoint(path.transform.getTranslation(tempVector).cpy()));
+            if (anotherObject instanceof PlayerUnit && !isPlayers((PlayerUnit) anotherObject)) {
+                playersUnit.setDeath(true);
             }
         }
     }
@@ -69,5 +67,11 @@ public class Player {
 
     public Collection<PlayerUnit> getUnits() {
         return units;
+    }
+
+    public Collection<PlayerUnit> getDeadUnitsAndClear() {
+        Set<PlayerUnit> deadUnits = units.stream().filter(PlayerUnit::isDead).collect(Collectors.toSet());
+        units.removeAll(deadUnits);
+        return deadUnits;
     }
 }
