@@ -3,6 +3,7 @@ package com.simple.castle.scene.game.controller;
 import com.badlogic.gdx.math.Vector3;
 import com.simple.castle.core.object.constructors.ObjectConstructors;
 import com.simple.castle.core.object.unit.abs.AbstractGameObject;
+import com.simple.castle.core.utils.CastleListUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,14 +29,6 @@ public class Player {
         this.playerName = playerName;
     }
 
-    private static AbstractGameObject getNextAvailable(List<AbstractGameObject> list, AbstractGameObject current) {
-        int i = list.indexOf(current);
-        if (i >= 0 && i < list.size() - 1) {
-            i += 1;
-        }
-        return list.get(i);
-    }
-
     public void update() {
         units.forEach(PlayerUnit::update);
     }
@@ -45,10 +38,10 @@ public class Player {
             paths.stream()
                     .filter(path -> path.contains(anotherObject))
                     .findAny()
-                    .map(path -> getNextAvailable(path, anotherObject))
+                    .map(path -> CastleListUtils.getNextAvailable(path, anotherObject))
                     .ifPresent(path -> playersUnit.setMovePoint(path.transform.getTranslation(tempVector).cpy()));
             if (anotherObject instanceof PlayerUnit && !isPlayers((PlayerUnit) anotherObject)) {
-                playersUnit.setDeath(true);
+                playersUnit.setDead(true);
             }
         }
     }

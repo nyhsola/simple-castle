@@ -4,11 +4,10 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.simple.castle.core.object.unit.add.ObjectConstructor;
 import com.simple.castle.core.object.unit.basic.ActiveGameObject;
-import com.simple.castle.core.utils.MyMathUtils;
+import com.simple.castle.core.utils.CastleMathUtils;
 
 public class PlayerUnit extends ActiveGameObject {
 
-    private static final int TRIGGER_AREA = 20;
     private static final int DEFAULT_SPEED_MOVEMENT = 5;
     private static final int DEFAULT_SPEED_MOVEMENT_ON_ROTATION = 4;
     private static final float DEFAULT_SPEED_ROTATION = 3;
@@ -21,11 +20,10 @@ public class PlayerUnit extends ActiveGameObject {
     private final String playerName;
 
     private PlayerUnit enemy;
-
     private Vector3 movePoint;
     private double previousAngle;
     private boolean rotateDirection = false;
-    private boolean death = false;
+    private boolean isDead = false;
 
     public PlayerUnit(ObjectConstructor objectConstructor, Vector3 initPosition, String playerName) {
         super(objectConstructor);
@@ -35,7 +33,7 @@ public class PlayerUnit extends ActiveGameObject {
     }
 
     public void enemyDistanceEvent(PlayerUnit enemy, float distance) {
-        if (!enemyExist() && distance < TRIGGER_AREA) {
+        if (!enemyExist()) {
             this.enemy = enemy;
         }
     }
@@ -77,7 +75,7 @@ public class PlayerUnit extends ActiveGameObject {
         Vector3 unitPosition = transform.getTranslation(tempVector);
         Vector3 targetDirection = target.cpy().sub(unitPosition).nor();
 
-        double currentAngle = MyMathUtils.getAngle(targetDirection, linearVelocity);
+        double currentAngle = CastleMathUtils.getAngle(targetDirection, linearVelocity);
 
         if (currentAngle <= 0 || currentAngle >= 10) {
             if (currentAngle - previousAngle > 0) {
@@ -114,10 +112,10 @@ public class PlayerUnit extends ActiveGameObject {
     }
 
     public boolean isDead() {
-        return death;
+        return isDead;
     }
 
-    public void setDeath(boolean death) {
-        this.death = death;
+    public void setDead(boolean dead) {
+        this.isDead = dead;
     }
 }

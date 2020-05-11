@@ -2,8 +2,8 @@ package com.simple.castle.core.utils;
 
 import com.badlogic.gdx.math.Vector3;
 
-public final class MyMathUtils {
-    private MyMathUtils() {
+public final class CastleMathUtils {
+    private CastleMathUtils() {
 
     }
 

@@ -17,9 +17,11 @@ import java.util.stream.Collectors;
 
 public class PlayerController implements CollisionEvent, Disposable {
 
+    public static final long updateUnitsEvery = 100;
+
     public static final long spawnEvery = 3 * 1000;
     public static final long triggerDistanceEvery = 3 * 1000;
-    public static final long updateUnitsEvery = 200;
+    private static final int TRIGGER_AREA = 20;
 
     private static final Vector3 tempVector1 = new Vector3();
     private static final Vector3 tempVector2 = new Vector3();
@@ -83,8 +85,10 @@ public class PlayerController implements CollisionEvent, Disposable {
                         Vector3 unit1P = unit1.body.getWorldTransform().getTranslation(tempVector1);
                         Vector3 unit2P = unit2.body.getWorldTransform().getTranslation(tempVector2);
                         float dst = unit1P.dst(unit2P);
-                        unit1.enemyDistanceEvent(unit2, dst);
-                        unit2.enemyDistanceEvent(unit1, dst);
+                        if (dst <= TRIGGER_AREA) {
+                            unit1.enemyDistanceEvent(unit2, dst);
+                            unit2.enemyDistanceEvent(unit1, dst);
+                        }
                     }
                 }
             }
