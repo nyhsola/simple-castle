@@ -32,7 +32,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneMan
     private final PlayerController playerController;
     private final DebugOverlay debugOverlay;
     private boolean debugDraw = false;
-    private boolean info = false;
+    private boolean infoDraw = false;
 
     public GameScene(BaseRenderer baseRenderer) {
         this.debugOverlay = new DebugOverlay();
@@ -76,7 +76,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneMan
         if (debugDraw) {
             physicEngine.debugDraw(baseCamera);
         }
-        if (info) {
+        if (infoDraw) {
             debugOverlay.debugInformation.setTimeLeft(playerController.getTimeLeft());
             debugOverlay.debugInformation.setFps(1.0 / delta);
             debugOverlay.debugInformation.setTotalUnits(playerController.getTotalUnits());
@@ -113,7 +113,7 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneMan
             debugDraw = !debugDraw;
         }
         if (Input.Keys.F2 == keycode) {
-            info = !info;
+            infoDraw = !infoDraw;
         }
         if (Input.Keys.ESCAPE == keycode) {
             Gdx.app.exit();

@@ -33,4 +33,9 @@ public abstract class AbstractGameObject extends ModelInstance implements Dispos
         motionState.dispose();
     }
 
+
+    public String getNodeName() {
+        return this.nodes.get(0).id;
+    }
+
 }

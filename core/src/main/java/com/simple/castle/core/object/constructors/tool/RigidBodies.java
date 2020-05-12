@@ -13,7 +13,8 @@ public enum RigidBodies {
     SPHERE(RigidBodies::calculateSphere),
     BASE_BOX(RigidBodies::calculateBaseBox),
     ADJUSTED_BOX(RigidBodies::calculateAdjustedBox),
-    CONVEX_HULL(RigidBodies::createConvexHullShape),
+    CONVEX_HULL_OPTIMIZED(node -> createConvexHullShape(node, true)),
+    CONVEX_HULL_NON_OPTIMIZED(node -> createConvexHullShape(node, false)),
     STATIC_NODE_SHAPE(RigidBodies::createStaticNodeShape);
 
     private static final float SCALAR = 0.5f;
@@ -22,6 +23,21 @@ public enum RigidBodies {
 
     RigidBodies(Function<Node, btCollisionShape> function) {
         this.function = function;
+    }
+
+    // TODO: 5/4/2020 not working
+    private static btConvexHullShape createConvexHullShape(Node node, boolean optimize) {
+        final Mesh mesh = node.parts.get(0).meshPart.mesh;
+        final btConvexHullShape shape = new btConvexHullShape(mesh.getVerticesBuffer(), mesh.getNumVertices(), mesh.getVertexSize());
+        if (!optimize) return shape;
+
+        final btShapeHull hull = new btShapeHull(shape);
+        hull.buildHull(shape.getMargin());
+        final btConvexHullShape result = new btConvexHullShape(hull);
+
+        shape.dispose();
+        hull.dispose();
+        return result;
     }
 
     private static btBoxShape calculateBaseBox(Node node) {
@@ -49,27 +65,11 @@ public enum RigidBodies {
         return new btSphereShape(dimensions.scl(SCALAR).x);
     }
 
-    // TODO: 5/4/2020 not working
-    private static btConvexHullShape createConvexHullShape(Node node) {
-        boolean optimize = false;
-        final Mesh mesh = node.parts.get(0).meshPart.mesh;
-        final btConvexHullShape shape = new btConvexHullShape(mesh.getVerticesBuffer(), mesh.getNumVertices(), mesh.getVertexSize());
-        if (!optimize) return shape;
-
-        final btShapeHull hull = new btShapeHull(shape);
-        hull.buildHull(shape.getMargin());
-        final btConvexHullShape result = new btConvexHullShape(hull);
-
-        shape.dispose();
-        hull.dispose();
-        return result;
+    public btCollisionShape calculate(Node node) {
+        return function.apply(node);
     }
 
     private static btCollisionShape createStaticNodeShape(Node node) {
         return Bullet.obtainStaticNodeShape(node, false);
-    }
-
-    public btCollisionShape calculate(Node node) {
-        return function.apply(node);
     }
 }

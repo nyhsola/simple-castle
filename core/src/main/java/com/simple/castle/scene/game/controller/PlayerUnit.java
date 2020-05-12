@@ -8,10 +8,11 @@ import com.simple.castle.core.utils.CastleMathUtils;
 
 public class PlayerUnit extends ActiveGameObject {
 
-    private static final int DEFAULT_SPEED_MOVEMENT = 1;
-    private static final int DEFAULT_SPEED_MOVEMENT_ON_ROTATION = 4;
-    private static final float DEFAULT_SPEED_ROTATION = 3;
+    private static final int DEFAULT_SPEED_ROTATION = 3;
+    private static final int DEFAULT_SPEED_MOVEMENT = 5;
+    private static final int DEFAULT_SPEED_MOVEMENT_ON_ROTATION = 5;
 
+    private static final Vector3 ANGULAR_FACTOR = new Vector3(0, 1, 0);
     private static final Vector3 FACE_DIRECTION = new Vector3(1, 0, 0);
     private static final Vector3 ROTATE_LEFT = Vector3.Y.cpy().scl(DEFAULT_SPEED_ROTATION);
     private static final Vector3 ROTATE_RIGHT = Vector3.Y.cpy().scl(-DEFAULT_SPEED_ROTATION);
@@ -30,6 +31,9 @@ public class PlayerUnit extends ActiveGameObject {
         this.playerName = playerName;
         this.body.setWorldTransform(new Matrix4());
         this.body.translate(initPosition);
+
+        //Disables x and z rotation, so that's like 2D unit
+        this.body.setAngularFactor(ANGULAR_FACTOR);
     }
 
     public void enemyDistanceEvent(PlayerUnit enemy, float distance) {

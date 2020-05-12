@@ -84,6 +84,7 @@ public class PhysicEngine implements Disposable {
             collisionEventList.add(collisionEvent);
         }
 
+        // TODO: 5/12/2020 check colObj0.isStatic() isKinematic() isActive()
         @Override
         public void onContactStarted(btCollisionObject colObj0, btCollisionObject colObj1) {
             Object userDataObj1 = colObj0.userData;
