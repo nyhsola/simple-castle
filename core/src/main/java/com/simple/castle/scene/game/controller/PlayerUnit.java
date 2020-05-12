@@ -8,7 +8,7 @@ import com.simple.castle.core.utils.CastleMathUtils;
 
 public class PlayerUnit extends ActiveGameObject {
 
-    private static final int DEFAULT_SPEED_MOVEMENT = 5;
+    private static final int DEFAULT_SPEED_MOVEMENT = 1;
     private static final int DEFAULT_SPEED_MOVEMENT_ON_ROTATION = 4;
     private static final float DEFAULT_SPEED_ROTATION = 3;
 

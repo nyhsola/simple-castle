@@ -41,7 +41,7 @@ public class Player {
                     .map(path -> CastleListUtils.getNextAvailable(path, anotherObject))
                     .ifPresent(path -> playersUnit.setMovePoint(path.transform.getTranslation(tempVector).cpy()));
             if (anotherObject instanceof PlayerUnit && !isPlayers((PlayerUnit) anotherObject)) {
-                playersUnit.setDead(true);
+//                playersUnit.setDead(true);
             }
         }
     }

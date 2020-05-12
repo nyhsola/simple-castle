@@ -19,7 +19,7 @@ public class PlayerController implements CollisionEvent, Disposable {
 
     public static final long updateUnitsEvery = 100;
 
-    public static final long spawnEvery = 3 * 1000;
+    public static final long spawnEvery = 10 * 1000;
     public static final long triggerDistanceEvery = 1000;
     private static final int TRIGGER_AREA = 20;
 

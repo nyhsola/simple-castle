@@ -19,11 +19,6 @@
       "model": "tree.*",
       "interact": "KINEMATIC",
       "hide": false
-    },
-    {
-      "model": "wall-1",
-      "interact": "KINEMATIC",
-      "hide": false
     }
   ]
 }
