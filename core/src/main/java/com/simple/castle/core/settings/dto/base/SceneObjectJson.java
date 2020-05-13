@@ -1,4 +1,4 @@
-package com.simple.castle.core.utils.jsondto;
+package com.simple.castle.core.settings.dto.base;
 
 public class SceneObjectJson {
     private String model;

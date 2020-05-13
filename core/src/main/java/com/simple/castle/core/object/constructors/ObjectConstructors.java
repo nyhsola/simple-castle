@@ -1,14 +1,12 @@
 package com.simple.castle.core.object.constructors;
 
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
 import com.simple.castle.core.object.constructors.tool.RigidBodies;
 import com.simple.castle.core.object.unit.add.ObjectConstructor;
+import com.simple.castle.core.settings.dto.ObjectConstructorsJson;
 import com.simple.castle.core.utils.StringTool;
-import com.simple.castle.core.utils.jsondto.GameModelJson;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -16,33 +14,26 @@ public class ObjectConstructors {
 
     private final Map<String, ObjectConstructor> constructors = new HashMap<>();
 
-    private ObjectConstructors(Model mainModel, List<Map<String, Object>> constructorsPattern) {
-        List<ObjectConstructor> collectedConstructors = constructorsPattern
+    private ObjectConstructors(Model mainModel, ObjectConstructorsJson objectConstructorsJson) {
+        List<ObjectConstructor> collectedConstructors = objectConstructorsJson.getObjectConstructors()
                 .stream()
-                .map(loadNodesFromModelByPattern(mainModel))
+                .map(objectConstructorJson -> fromPattern(objectConstructorJson.getNodesPattern(), mainModel, objectConstructorJson.getMass(), objectConstructorJson.getShape()))
                 .flatMap(Collection::stream)
-                .map((gameModelJson) -> {
-                            btCollisionShape shape = RigidBodies.valueOf(gameModelJson.getShape())
-                                    .calculate(mainModel.getNode(gameModelJson.getNodesPattern()));
-                            return new ObjectConstructor(mainModel, gameModelJson.getNodesPattern(), shape, gameModelJson.getMass());
-                        }
-                )
                 .collect(Collectors.toList());
-
         collectedConstructors.forEach(constructor -> constructors.put(constructor.node, constructor));
     }
 
-    private Function<Map<String, Object>, List<com.simple.castle.core.utils.jsondto.GameModelJson>> loadNodesFromModelByPattern(Model mainModel) {
-        return map -> {
-            com.simple.castle.core.utils.jsondto.GameModelJson dto = new com.simple.castle.core.utils.jsondto.GameModelJson(map);
-            return StringTool.getValuesByPattern(
-                    StreamSupport.stream(mainModel.nodes.spliterator(), false)
-                            .map(node -> node.id)
-                            .collect(Collectors.toSet()), dto.getNodesPattern())
-                    .stream()
-                    .map(modelName -> new GameModelJson(modelName, dto.getShape(), dto.getMass(), dto.getInteract()))
-                    .collect(Collectors.toList());
-        };
+    private Set<ObjectConstructor> fromPattern(String pattern, Model mainModel, float mass, String shape) {
+        Set<String> nodeIds = StreamSupport.stream(mainModel.nodes.spliterator(), false)
+                .map(node -> node.id)
+                .collect(Collectors.toSet());
+        Collection<String> valuesByPattern = StringTool.getValuesByPattern(nodeIds, pattern);
+        return valuesByPattern.stream().map(id ->
+                new ObjectConstructor(mainModel,
+                        id,
+                        RigidBodies.valueOf(shape).calculate(mainModel.getNode(id)),
+                        mass))
+                .collect(Collectors.toSet());
     }
 
     public void dispose() {
@@ -67,8 +58,8 @@ public class ObjectConstructors {
             this.model = model;
         }
 
-        public ObjectConstructors build(List<Map<String, Object>> constructorsPattern) {
-            return new ObjectConstructors(model, constructorsPattern);
+        public ObjectConstructors build(ObjectConstructorsJson objectConstructorsJson) {
+            return new ObjectConstructors(model, objectConstructorsJson);
         }
     }
 }

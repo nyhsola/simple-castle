@@ -1,27 +1,27 @@
 {
-  "models": [
+  "objectConstructors": [
     {
-      "nodes-pattern": "ground",
+      "nodesPattern": "ground",
       "shape": "STATIC_NODE_SHAPE",
       "mass": 0
     },
     {
-      "nodes-pattern": "unit-type.*",
+      "nodesPattern": "unit-type.*",
       "shape": "BASE_BOX",
       "mass": 1
     },
     {
-      "nodes-pattern": "castle(?:-\\d)",
+      "nodesPattern": "castle(?:-\\d)",
       "shape": "ADJUSTED_BOX",
       "mass": 0
     },
     {
-      "nodes-pattern": "area-(?:.+)",
+      "nodesPattern": "area-(?:.+)",
       "shape": "ADJUSTED_BOX",
       "mass": 0
     },
     {
-      "nodes-pattern": "tree.*",
+      "nodesPattern": "tree.*",
       "shape": "ADJUSTED_BOX",
       "mass": 0
     }

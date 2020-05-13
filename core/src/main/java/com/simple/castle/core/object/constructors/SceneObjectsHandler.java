@@ -2,8 +2,9 @@ package com.simple.castle.core.object.constructors;
 
 import com.simple.castle.core.object.constructors.tool.Interact;
 import com.simple.castle.core.object.unit.abs.AbstractGameObject;
+import com.simple.castle.core.settings.dto.SceneObjectsJson;
+import com.simple.castle.core.settings.dto.base.SceneObjectJson;
 import com.simple.castle.core.utils.StringTool;
-import com.simple.castle.core.utils.jsondto.SceneObjectJson;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -15,7 +16,7 @@ public class SceneObjectsHandler {
     private final Set<AbstractGameObject> sceneGameObjects = new HashSet<>();
     private final Set<AbstractGameObject> drawables = new HashSet<>();
 
-    private SceneObjectsHandler(ObjectConstructors objectConstructors, List<com.simple.castle.core.utils.jsondto.SceneObjectJson> objects) {
+    private SceneObjectsHandler(ObjectConstructors objectConstructors, List<SceneObjectJson> objects) {
         objects.forEach(object -> {
             Collection<String> constructors = StringTool.getValuesByPattern(objectConstructors.getAllConstructors(), object.getModel());
             constructors.forEach(s -> {
@@ -78,8 +79,8 @@ public class SceneObjectsHandler {
             this.objectConstructors = objectConstructors;
         }
 
-        public SceneObjectsHandler build(List<SceneObjectJson> objects) {
-            return new SceneObjectsHandler(objectConstructors, objects);
+        public SceneObjectsHandler build(SceneObjectsJson objects) {
+            return new SceneObjectsHandler(objectConstructors, objects.getSceneObjects());
         }
     }
 }

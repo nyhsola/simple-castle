@@ -1,11 +1,11 @@
-package com.simple.castle.core.utils.jsondto;
+package com.simple.castle.core.settings.dto.base;
 
 import java.util.List;
 
 public class PlayerJson {
     private String playerName;
     private String unitType;
-    private List<List<String>> paths;
+    private List<String> paths;
 
     public String getPlayerName() {
         return playerName;
@@ -23,11 +23,11 @@ public class PlayerJson {
         this.unitType = unitType;
     }
 
-    public List<List<String>> getPaths() {
+    public List<String> getPaths() {
         return paths;
     }
 
-    public void setPaths(List<List<String>> paths) {
+    public void setPaths(List<String> paths) {
         this.paths = paths;
     }
 }

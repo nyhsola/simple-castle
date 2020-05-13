@@ -10,8 +10,6 @@ import com.simple.castle.core.object.constructors.SceneObjectsHandler;
 import com.simple.castle.core.object.unit.abs.AbstractGameObject;
 import com.simple.castle.core.utils.GameIntersectUtils;
 
-import java.util.Properties;
-
 public class BaseCamera extends PerspectiveCamera implements InputProcessor {
 
     public com.simple.castle.core.object.unit.abs.AbstractGameObject basePlane;
@@ -166,13 +164,10 @@ public class BaseCamera extends PerspectiveCamera implements InputProcessor {
             this.sceneObjectsHandler = sceneObjectsHandler;
         }
 
-        public BaseCamera build(Properties sceneProperties) {
-            String positionProp = sceneProperties.getProperty("camera-init-position-from");
-            String basePlaneProp = sceneProperties.getProperty("camera-base-plane");
-
+        public BaseCamera build(String cameraBasePlane, String cameraInitPosition) {
             return new BaseCamera(
-                    sceneObjectsHandler.getByName(positionProp).transform.getTranslation(new Vector3()),
-                    sceneObjectsHandler.getByName(basePlaneProp));
+                    sceneObjectsHandler.getByName(cameraInitPosition).transform.getTranslation(new Vector3()),
+                    sceneObjectsHandler.getByName(cameraBasePlane));
         }
     }
 }

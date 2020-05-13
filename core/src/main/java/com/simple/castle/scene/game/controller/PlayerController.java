@@ -7,12 +7,9 @@ import com.simple.castle.core.event.EveryEvent;
 import com.simple.castle.core.manager.SceneManager;
 import com.simple.castle.core.object.constructors.ObjectConstructors;
 import com.simple.castle.core.object.unit.abs.AbstractGameObject;
-import com.simple.castle.core.utils.jsondto.PlayerJson;
+import com.simple.castle.core.settings.dto.PlayersJson;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PlayerController implements CollisionEvent, Disposable {
@@ -116,15 +113,13 @@ public class PlayerController implements CollisionEvent, Disposable {
             this.sceneManager = sceneManager;
         }
 
-        public PlayerController build(List<PlayerJson> playerJsons) {
-            Set<Player> players = playerJsons.stream()
+        public PlayerController build(PlayersJson playersJson) {
+            Set<Player> players = playersJson.getPlayers().stream()
                     .map(playerJson -> {
-                        List<List<AbstractGameObject>> paths = playerJson.getPaths().stream()
-                                .map(path -> path.stream()
-                                        .map(sceneManager::getByModelName)
-                                        .collect(Collectors.toList()))
+                        List<List<AbstractGameObject>> pathObj = playerJson.getPaths().stream().map(path -> Arrays.asList(path.split(" ")))
+                                .map(path -> path.stream().map(sceneManager::getByModelName).collect(Collectors.toList()))
                                 .collect(Collectors.toList());
-                        return new Player(playerJson.getUnitType(), paths, playerJson.getPlayerName());
+                        return new Player(playerJson.getUnitType(), pathObj, playerJson.getPlayerName());
                     })
                     .collect(Collectors.toSet());
             return new PlayerController(players, objectConstructors, sceneManager);
