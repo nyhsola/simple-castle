@@ -1,22 +1,23 @@
 package com.simple.castle.scene.game.controller;
 
 import com.badlogic.gdx.math.Vector3;
-import com.simple.castle.object.constructors.ObjectConstructors;
-import com.simple.castle.object.unit.BasicUnit;
-import com.simple.castle.object.unit.abs.AbstractGameObject;
+import com.simple.castle.core.object.constructors.ObjectConstructors;
+import com.simple.castle.core.object.unit.abs.AbstractGameObject;
+import com.simple.castle.core.utils.CastleListUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Player {
     private final Vector3 tempVector = new Vector3();
-
+    private final String playerName;
     private final String unitType;
+    private final Set<PlayerUnit> units = new HashSet<>();
+
     private final List<List<AbstractGameObject>> paths;
     private final List<Vector3> initPositions;
-    private final Map<String, BasicUnit> units = new HashMap<>();
 
-    public Player(String unitType, List<List<AbstractGameObject>> paths) {
+    public Player(String unitType, List<List<AbstractGameObject>> paths, String playerName) {
         this.unitType = unitType;
         this.paths = paths;
         this.initPositions = paths.stream()
@@ -25,48 +26,45 @@ public class Player {
                 .map(Optional::get)
                 .map(sceneObject -> sceneObject.transform.getTranslation(tempVector).cpy())
                 .collect(Collectors.toList());
-    }
-
-    private static AbstractGameObject getNextAvailable(List<AbstractGameObject> list, AbstractGameObject current) {
-        int i = list.indexOf(current);
-        if (i >= 0 && i < list.size() - 1) {
-            i += 1;
-        }
-        return list.get(i);
+        this.playerName = playerName;
     }
 
     public void update() {
-        units.forEach((s, basicUnit) -> basicUnit.update());
+        units.forEach(PlayerUnit::update);
     }
 
-    public void collisionEvent(BasicUnit unit, AbstractGameObject gameObject) {
-        if (unit != null && gameObject != null) {
-            List<AbstractGameObject> path = paths.stream()
-                    .filter(gameObjects -> gameObjects.contains(gameObject))
+    public void collisionEvent(PlayerUnit playersUnit, AbstractGameObject anotherObject) {
+        if (playersUnit != null && anotherObject != null) {
+            paths.stream()
+                    .filter(path -> path.contains(anotherObject))
                     .findAny()
-                    .orElse(null);
-
-            if (path != null) {
-                AbstractGameObject nextAvailable = getNextAvailable(path, gameObject);
-                Vector3 movePoint = nextAvailable.transform.getTranslation(tempVector).cpy();
-                unit.setMovePoint(movePoint);
+                    .map(path -> CastleListUtils.getNextAvailable(path, anotherObject))
+                    .ifPresent(path -> playersUnit.setMovePoint(path.transform.getTranslation(tempVector).cpy()));
+            if (anotherObject instanceof PlayerUnit && !isPlayers((PlayerUnit) anotherObject)) {
+                playersUnit.setDead(true);
             }
         }
     }
 
-    public List<BasicUnit> spawnUnitsOnStartPositions(ObjectConstructors objectConstructors) {
-        return initPositions
-                .stream()
-                .map(initPosition -> new BasicUnit(objectConstructors.getConstructor(unitType), initPosition))
-                .peek(unit -> units.put((String) unit.body.userData, unit))
+    public List<PlayerUnit> spawnUnitsOnStartPositions(ObjectConstructors objectConstructors) {
+        return initPositions.stream()
+                .map(initPosition ->
+                        new PlayerUnit(objectConstructors.getConstructor(unitType), initPosition, playerName))
+                .peek(units::add)
                 .collect(Collectors.toList());
     }
 
-    public boolean isPlayers(AbstractGameObject gameObject) {
-        return units.containsKey(String.valueOf(gameObject.body.userData));
+    public boolean isPlayers(PlayerUnit gameObject) {
+        return units.contains(gameObject);
     }
 
-    public Collection<BasicUnit> getUnits() {
-        return units.values();
+    public Collection<PlayerUnit> getUnits() {
+        return units;
+    }
+
+    public Collection<PlayerUnit> getDeadUnitsAndClear() {
+        Set<PlayerUnit> deadUnits = units.stream().filter(PlayerUnit::isDead).collect(Collectors.toSet());
+        units.removeAll(deadUnits);
+        return deadUnits;
     }
 }

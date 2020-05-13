@@ -1,165 +1,129 @@
 package com.simple.castle.scene.game.controller;
 
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
-import com.simple.castle.listener.CollisionEvent;
-import com.simple.castle.listener.SceneObjectManager;
-import com.simple.castle.object.constructors.ObjectConstructors;
-import com.simple.castle.object.unit.BasicUnit;
-import com.simple.castle.object.unit.abs.AbstractGameObject;
-import com.simple.castle.utils.jsondto.PlayerJson;
+import com.badlogic.gdx.utils.Disposable;
+import com.simple.castle.core.event.CollisionEvent;
+import com.simple.castle.core.event.EveryEvent;
+import com.simple.castle.core.manager.SceneManager;
+import com.simple.castle.core.object.constructors.ObjectConstructors;
+import com.simple.castle.core.object.unit.abs.AbstractGameObject;
+import com.simple.castle.core.settings.dto.PlayersJson;
 
 import java.util.*;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
-public class PlayerController implements CollisionEvent {
+public class PlayerController implements CollisionEvent, Disposable {
 
-    public static final long spawnEvery = 3 * 1000;
+    public static final long updateUnitsEvery = 100;
+
+    public static final long spawnEvery = 5 * 1000;
+    public static final long triggerDistanceEvery = 1000;
+    private static final int TRIGGER_AREA = 20;
 
     private static final Vector3 tempVector1 = new Vector3();
     private static final Vector3 tempVector2 = new Vector3();
 
     private final ObjectConstructors objectConstructors;
-    private final SceneObjectManager sceneObjectManager;
-    private final List<Player> players;
+    private final SceneManager sceneManager;
+    private final Set<Player> players;
 
-    private final Timer timer;
-    private final SpawnerTask spawnerTask;
+    private final EveryEvent spawnUnits = new EveryEvent(spawnEvery, true);
+    private final EveryEvent distanceRecalculate = new EveryEvent(triggerDistanceEvery, true);
+    private final EveryEvent updateUnits = new EveryEvent(updateUnitsEvery, true);
 
-    private PlayerController(List<Player> players, ObjectConstructors objectConstructors,
-                             SceneObjectManager sceneObjectManager) {
+    private PlayerController(Set<Player> players, ObjectConstructors objectConstructors,
+                             SceneManager sceneManager) {
         this.objectConstructors = objectConstructors;
-        this.sceneObjectManager = sceneObjectManager;
+        this.sceneManager = sceneManager;
         this.players = players;
-
-        this.spawnerTask = new SpawnerTask();
-
-        this.timer = new Timer(true);
-        this.timer.scheduleAtFixedRate(spawnerTask, 0, spawnEvery);
     }
 
     @Override
-    public void collisionEvent(btCollisionObject object1, btCollisionObject object2) {
-        Object userDataObj1 = object1.userData;
-        Object userDataObj2 = object2.userData;
-        if (userDataObj1 instanceof String && userDataObj2 instanceof String) {
-            String userData1 = (String) userDataObj1;
-            String userData2 = (String) userDataObj2;
-            if (sceneObjectManager.contains(userData1) && sceneObjectManager.contains(userData2)) {
-                AbstractGameObject sceneObj1 = sceneObjectManager.getByUserData(userData1);
-                AbstractGameObject sceneObj2 = sceneObjectManager.getByUserData(userData2);
-                players.forEach(player -> {
-                    if (player.isPlayers(sceneObj1)) {
-                        player.collisionEvent((BasicUnit) sceneObj1, sceneObj2);
+    public void collisionEvent(AbstractGameObject object1, AbstractGameObject object2) {
+        players.forEach(player -> {
+            if (object1 instanceof PlayerUnit && player.isPlayers((PlayerUnit) object1)) {
+                player.collisionEvent((PlayerUnit) object1, object2);
+            }
+            if (object2 instanceof PlayerUnit && player.isPlayers((PlayerUnit) object2)) {
+                player.collisionEvent((PlayerUnit) object2, object1);
+            }
+        });
+    }
+
+    public void update() {
+        spawnUnits.update(() -> {
+            List<PlayerUnit> units = players.stream()
+                    .map(player -> player.spawnUnitsOnStartPositions(objectConstructors))
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
+            sceneManager.addAll(units);
+        });
+        updateUnits.update(() -> players.forEach(Player::update));
+        // TODO: 5/5/2020 Optimize to use in parallel, distance calculations
+        distanceRecalculate.update(this::calculateDistance);
+
+        players.stream()
+                .map(Player::getDeadUnitsAndClear)
+                .flatMap(Collection::stream)
+                .forEach(sceneManager::remove);
+    }
+
+    private void calculateDistance() {
+        List<PlayerUnit> units = players.stream()
+                .map(Player::getUnits)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        for (int i = 0; i < units.size(); i++) {
+            for (int j = i; j < units.size(); j++) {
+                if (i != j) {
+                    PlayerUnit unit1 = units.get(i);
+                    PlayerUnit unit2 = units.get(j);
+                    if (!Objects.equals(unit1.getPlayerName(), unit2.getPlayerName())) {
+                        Vector3 unit1P = unit1.body.getWorldTransform().getTranslation(tempVector1);
+                        Vector3 unit2P = unit2.body.getWorldTransform().getTranslation(tempVector2);
+                        float dst = unit1P.dst(unit2P);
+                        if (dst <= TRIGGER_AREA) {
+                            unit1.enemyDistanceEvent(unit2, dst);
+                            unit2.enemyDistanceEvent(unit1, dst);
+                        }
                     }
-                    if (player.isPlayers(sceneObj2)) {
-                        player.collisionEvent((BasicUnit) sceneObj2, sceneObj1);
-                    }
-                });
+                }
             }
         }
     }
 
-    public void update() {
-        spawnerTask.getAndClearSpawnedUnits().forEach(sceneObjectManager::add);
-        players.forEach(Player::update);
-
-        // TODO: 5/5/2020 Optimize to use in parallel, distance calculations
-//        List<BasicUnit> units = players.stream()
-//                .map(Player::getUnits)
-//                .flatMap(Collection::stream)
-//                .collect(Collectors.toList());
-//        for (int i = 0; i < units.size(); i++) {
-//            for (int j = 0; j < units.size(); j++) {
-//                if (i != j) {
-//                    BasicUnit unit1 = units.get(i);
-//                    BasicUnit unit2 = units.get(j);
-//
-//                    Vector3 unit1P = unit1.body.getWorldTransform().getTranslation(tempVector1);
-//                    Vector3 unit2P = unit2.body.getWorldTransform().getTranslation(tempVector2);
-//
-//                    Player playerWhoseUnitsSameColor = players.stream()
-//                            .filter(player -> player.isPlayers(unit1) && player.isPlayers(unit2))
-//                            .findAny()
-//                            .orElse(null);
-//
-//                    float dst = unit1P.dst(unit2P);
-//                    if (playerWhoseUnitsSameColor == null) {
-//                        unit1.unitNear(unit2, dst);
-//                        unit2.unitNear(unit1, dst);
-//                    }
-//                }
-//            }
-//        }
-    }
-
-    private List<BasicUnit> spawnUnits() {
-        return players.stream()
-                .map(player -> player.spawnUnitsOnStartPositions(objectConstructors))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
-    }
-
     public long getTimeLeft() {
-        return spawnEvery - (System.currentTimeMillis() - spawnerTask.previousTime);
+        return spawnUnits.nextCallIn();
+    }
+
+    public long getTotalUnits() {
+        return players.stream().map(Player::getUnits).mapToLong(Collection::size).sum();
+    }
+
+    @Override
+    public void dispose() {
     }
 
     public static final class Builder {
         private final ObjectConstructors objectConstructors;
-        private final SceneObjectManager sceneObjectManager;
+        private final SceneManager sceneManager;
 
-        public Builder(ObjectConstructors objectConstructors, SceneObjectManager sceneObjectManager) {
+        public Builder(ObjectConstructors objectConstructors, SceneManager sceneManager) {
             this.objectConstructors = objectConstructors;
-            this.sceneObjectManager = sceneObjectManager;
+            this.sceneManager = sceneManager;
         }
 
-        public PlayerController build(List<PlayerJson> playerJsons) {
-            List<Player> players = playerJsons.stream()
+        public PlayerController build(PlayersJson playersJson) {
+            Set<Player> players = playersJson.getPlayers().stream()
                     .map(playerJson -> {
-                        List<List<AbstractGameObject>> paths = playerJson.getPaths().stream()
-                                .map(path -> path.stream()
-                                        .map(sceneObjectManager::getByName)
-                                        .collect(Collectors.toList()))
+                        List<List<AbstractGameObject>> pathObj = playerJson.getPaths().stream().map(path -> Arrays.asList(path.split(" ")))
+                                .map(path -> path.stream().map(sceneManager::getByModelName).collect(Collectors.toList()))
                                 .collect(Collectors.toList());
-                        return new Player(playerJson.getUnitType(), paths);
+                        return new Player(playerJson.getUnitType(), pathObj, playerJson.getPlayerName());
                     })
-                    .collect(Collectors.toList());
-            return new PlayerController(players, objectConstructors, sceneObjectManager);
+                    .collect(Collectors.toSet());
+            return new PlayerController(players, objectConstructors, sceneManager);
         }
     }
 
-    private final class SpawnerTask extends TimerTask {
-
-        private final ReentrantLock lock = new ReentrantLock();
-        private List<BasicUnit> basicUnits = new ArrayList<>();
-        private long previousTime = System.currentTimeMillis();
-
-        @Override
-        public void run() {
-            lock.lock();
-            try {
-                basicUnits.addAll(PlayerController.this.spawnUnits());
-            } finally {
-                lock.unlock();
-            }
-            previousTime = System.currentTimeMillis();
-        }
-
-        public List<BasicUnit> getAndClearSpawnedUnits() {
-            if (basicUnits.isEmpty()) {
-                return Collections.emptyList();
-            }
-
-            lock.lock();
-            List<BasicUnit> ref;
-            try {
-                ref = basicUnits;
-                basicUnits = new ArrayList<>();
-            } finally {
-                lock.unlock();
-            }
-            return ref;
-        }
-    }
 }

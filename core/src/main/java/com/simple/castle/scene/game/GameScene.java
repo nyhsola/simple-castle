@@ -1,116 +1,94 @@
 package com.simple.castle.scene.game;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.math.Quaternion;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.simple.castle.listener.SceneObjectManager;
-import com.simple.castle.object.constructors.ObjectConstructors;
-import com.simple.castle.object.constructors.SceneObjectsHandler;
-import com.simple.castle.object.unit.abs.AbstractGameObject;
-import com.simple.castle.physic.PhysicEngine;
-import com.simple.castle.render.GameCamera;
-import com.simple.castle.render.GameEnvironment;
-import com.simple.castle.render.GameRenderer;
+import com.simple.castle.core.debug.DebugOverlay;
+import com.simple.castle.core.manager.SceneManager;
+import com.simple.castle.core.object.constructors.ObjectConstructors;
+import com.simple.castle.core.object.constructors.SceneObjectsHandler;
+import com.simple.castle.core.object.unit.abs.AbstractGameObject;
+import com.simple.castle.core.physic.PhysicEngine;
+import com.simple.castle.core.render.BaseCamera;
+import com.simple.castle.core.render.BaseEnvironment;
+import com.simple.castle.core.render.BaseRenderer;
+import com.simple.castle.core.utils.AssetLoader;
 import com.simple.castle.scene.game.controller.PlayerController;
-import com.simple.castle.utils.AssetLoader;
-import com.simple.castle.utils.GameIntersectUtils;
-import com.simple.castle.utils.PropertyLoader;
 
-public class GameScene extends ScreenAdapter implements InputProcessor, SceneObjectManager {
+import java.util.List;
+
+public class GameScene extends ScreenAdapter implements InputProcessor, SceneManager {
 
     public final static String SCENE_NAME = "game";
 
-    private final BitmapFont bitmapFont;
-    private final SpriteBatch batch;
-
-    private final GameRenderer gameRenderer;
+    private final BaseRenderer baseRenderer;
     private final PhysicEngine physicEngine;
     private final InputMultiplexer inputMultiplexer;
-
-    private final GameEnvironment gameEnvironment;
-    private final GameCamera gameCamera;
-
+    private final BaseEnvironment baseEnvironment;
+    private final BaseCamera baseCamera;
     private final Model model;
     private final ObjectConstructors objectConstructors;
     private final SceneObjectsHandler sceneObjectsHandler;
-    private final Stage stage;
-    private final Skin skin;
-
     private final PlayerController playerController;
-    private final TextButton timeButton;
+    private final DebugOverlay debugOverlay;
     private boolean debugDraw = false;
+    private boolean infoDraw = false;
 
-    public GameScene(GameRenderer gameRenderer) {
-        skin = AssetLoader.loadSkin();
+    public GameScene(BaseRenderer baseRenderer) {
+        this.debugOverlay = new DebugOverlay();
 
-        Label timeLabel = new Label("Spawn in: ", skin);
-        timeButton = new TextButton(Long.toString(PlayerController.spawnEvery), skin);
-        Table table = new Table();
-        table.align(Align.bottomRight).add(timeLabel, timeButton);
-        table.setFillParent(true);
-
-        stage = new Stage(new ScreenViewport());
-        stage.addActor(table);
-
-        this.gameRenderer = gameRenderer;
-        this.physicEngine = new PhysicEngine();
-        this.bitmapFont = new BitmapFont();
-        this.batch = new SpriteBatch();
+        this.baseRenderer = baseRenderer;
 
         this.model = AssetLoader.loadModel();
         this.objectConstructors = new ObjectConstructors.Builder(model)
-                .build(PropertyLoader.loadConstructors(SCENE_NAME));
+                .build(GameSettings.OBJECT_CONSTRUCTORS_JSON);
         this.sceneObjectsHandler = new SceneObjectsHandler.Builder(objectConstructors)
-                .build(PropertyLoader.loadObjects(SCENE_NAME));
+                .build(GameSettings.SCENE_OBJECTS_JSON);
         this.playerController = new PlayerController.Builder(objectConstructors, this)
-                .build(PropertyLoader.loadPlayers(SCENE_NAME));
-        this.gameCamera = new GameCamera.Builder(sceneObjectsHandler)
-                .build(PropertyLoader.loadProperties(GameScene.SCENE_NAME));
+                .build(GameSettings.PLAYERS_JSON);
+        this.baseCamera = new BaseCamera.Builder(sceneObjectsHandler)
+                .build(GameSettings.CAMERA_BASE_PLANE, GameSettings.CAMERA_INIT_POSITION_FROM);
 
+        this.physicEngine = new PhysicEngine(this);
         this.physicEngine.addContactListener(playerController);
         this.sceneObjectsHandler.getSceneObjects().forEach(physicEngine::addRigidBody);
 
-        this.gameEnvironment = new GameEnvironment();
-        this.gameEnvironment.create();
+        this.baseEnvironment = new BaseEnvironment();
+        this.baseEnvironment.create();
 
         this.inputMultiplexer = new InputMultiplexer();
-        this.inputMultiplexer.addProcessor(gameCamera);
-        this.inputMultiplexer.addProcessor(stage);
+        this.inputMultiplexer.addProcessor(baseCamera);
     }
 
     @Override
     public void render(float delta) {
         //Camera
-        gameCamera.update(delta);
+        baseCamera.update(delta);
 
         //Controllers
         playerController.update();
 
         //Draw and Physic
-        gameRenderer.render(gameCamera, sceneObjectsHandler, gameEnvironment);
-        physicEngine.update(gameCamera, Math.min(1f / 30f, delta), debugDraw);
+        baseRenderer.render(baseCamera, sceneObjectsHandler, baseEnvironment);
+        physicEngine.update(delta);
 
-        //Overlay
-        timeButton.setText(Long.toString(playerController.getTimeLeft() / 100));
-        stage.draw();
+        //Debug
+        if (debugDraw) {
+            physicEngine.debugDraw(baseCamera);
+        }
+        if (infoDraw) {
+            debugOverlay.debugInformation.setTimeLeft(playerController.getTimeLeft());
+            debugOverlay.debugInformation.setFps(1.0 / delta);
+            debugOverlay.debugInformation.setTotalUnits(playerController.getTotalUnits());
+            debugOverlay.render();
+        }
     }
 
     @Override
     public void resize(int width, int height) {
-        gameCamera.resize(width, height);
-        gameCamera.update();
-        stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+        baseCamera.resize(width, height);
+        baseCamera.update();
+
+        debugOverlay.resize(width, height);
     }
 
     @Override
@@ -120,20 +98,21 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
 
     @Override
     public void hide() {
-        bitmapFont.dispose();
-        batch.dispose();
         physicEngine.dispose();
         model.dispose();
         objectConstructors.dispose();
         sceneObjectsHandler.dispose();
-        stage.dispose();
-        skin.dispose();
+        playerController.dispose();
+        debugOverlay.dispose();
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        if (Input.Keys.Q == keycode) {
+        if (Input.Keys.F1 == keycode) {
             debugDraw = !debugDraw;
+        }
+        if (Input.Keys.F2 == keycode) {
+            infoDraw = !infoDraw;
         }
         if (Input.Keys.ESCAPE == keycode) {
             Gdx.app.exit();
@@ -179,23 +158,24 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
     @Override
     public void remove(AbstractGameObject abstractGameObject) {
         physicEngine.removeRigidBody(abstractGameObject);
-        sceneObjectsHandler.disposeObject(abstractGameObject);
+        sceneObjectsHandler.remove(abstractGameObject);
     }
 
     @Override
     public void add(AbstractGameObject abstractGameObject) {
         physicEngine.addRigidBody(abstractGameObject);
-        sceneObjectsHandler.addSceneObject(abstractGameObject);
+        sceneObjectsHandler.add(abstractGameObject);
     }
 
     @Override
-    public AbstractGameObject getByUserData(String userData) {
-        return sceneObjectsHandler.getSceneObjectByUserData(userData);
+    public void addAll(List<? extends AbstractGameObject> abstractGameObjects) {
+        abstractGameObjects.forEach(physicEngine::addRigidBody);
+        sceneObjectsHandler.addAll(abstractGameObjects);
     }
 
     @Override
-    public AbstractGameObject getByName(String name) {
-        return sceneObjectsHandler.getSceneObjectByModelName(name);
+    public AbstractGameObject getByModelName(String name) {
+        return sceneObjectsHandler.getByName(name);
     }
 
     @Override
@@ -203,8 +183,4 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneObj
         return sceneObjectsHandler.contains(abstractGameObject);
     }
 
-    @Override
-    public boolean contains(String userData) {
-        return sceneObjectsHandler.contains(userData);
-    }
 }
