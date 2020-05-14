@@ -3,10 +3,7 @@ package com.simple.castle.core.physic;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.DebugDrawer;
 import com.badlogic.gdx.physics.bullet.collision.*;
-import com.badlogic.gdx.physics.bullet.dynamics.btConstraintSolver;
-import com.badlogic.gdx.physics.bullet.dynamics.btDiscreteDynamicsWorld;
-import com.badlogic.gdx.physics.bullet.dynamics.btDynamicsWorld;
-import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver;
+import com.badlogic.gdx.physics.bullet.dynamics.*;
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
 import com.badlogic.gdx.utils.Disposable;
 import com.simple.castle.core.event.CollisionEvent;
@@ -45,12 +42,12 @@ public class PhysicEngine implements Disposable {
         dynamicsWorld.setDebugDrawer(debugDrawer);
     }
 
-    public void addRigidBody(AbstractGameObject object) {
-        dynamicsWorld.addRigidBody(object.body);
+    public void addRigidBody(btRigidBody object) {
+        dynamicsWorld.addRigidBody(object);
     }
 
-    public void removeRigidBody(AbstractGameObject object) {
-        dynamicsWorld.removeRigidBody(object.body);
+    public void removeRigidBody(btRigidBody object) {
+        dynamicsWorld.removeRigidBody(object);
     }
 
     public void update(float delta) {

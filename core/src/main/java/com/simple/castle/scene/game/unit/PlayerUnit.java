@@ -1,4 +1,4 @@
-package com.simple.castle.scene.game.controller;
+package com.simple.castle.scene.game.unit;
 
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;

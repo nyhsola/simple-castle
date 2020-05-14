@@ -9,7 +9,7 @@ import com.simple.castle.scene.game.GameScene;
 
 public class GameLauncher extends Game {
 
-    private com.simple.castle.core.render.BaseRenderer baseRenderer;
+    private BaseRenderer baseRenderer;
 
     @Override
     public void create() {

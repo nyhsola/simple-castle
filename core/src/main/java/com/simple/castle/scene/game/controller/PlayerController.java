@@ -8,6 +8,8 @@ import com.simple.castle.core.manager.SceneManager;
 import com.simple.castle.core.object.constructors.ObjectConstructors;
 import com.simple.castle.core.object.unit.abs.AbstractGameObject;
 import com.simple.castle.core.settings.dto.PlayersJson;
+import com.simple.castle.scene.game.Player;
+import com.simple.castle.scene.game.unit.PlayerUnit;
 
 import java.util.*;
 import java.util.stream.Collectors;

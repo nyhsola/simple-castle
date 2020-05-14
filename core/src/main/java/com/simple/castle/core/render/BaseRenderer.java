@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.simple.castle.core.object.constructors.SceneObjectsHandler;
 
 public class BaseRenderer {
-
     private final ModelBatch modelBatch;
 
     public BaseRenderer() {

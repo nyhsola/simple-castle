@@ -15,14 +15,14 @@ import java.util.Locale;
 
 public class DebugOverlay {
 
-    public final com.simple.castle.core.debug.DebugInformation debugInformation = new DebugInformation();
+    public final DebugInformation debugInformation = new DebugInformation();
 
     private final Stage stage;
     private final Skin skin;
     private final TextButton timeButton;
     private final TextButton fpsButton;
     private final TextButton totalUnitsButton;
-    private final com.simple.castle.core.event.EveryEvent everyEvent = new EveryEvent(500);
+    private final EveryEvent everyEvent = new EveryEvent(500);
 
     public DebugOverlay() {
         skin = AssetLoader.loadSkin();
