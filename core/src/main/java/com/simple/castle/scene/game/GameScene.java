@@ -2,11 +2,6 @@ package com.simple.castle.scene.game;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.bullet.collision.btBoxShape;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.simple.castle.core.debug.DebugInformation;
 import com.simple.castle.core.debug.DebugOverlay;
 import com.simple.castle.core.manager.SceneManager;
@@ -54,12 +49,12 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneMan
         this.baseCamera = new BaseCamera.Builder(sceneObjectsHandler)
                 .build(GameSettings.CAMERA_BASE_PLANE, GameSettings.CAMERA_INIT_POSITION_FROM);
 
-        this.gameController = new GameController(
-                new MapInitController(),
-                new PlayerController.Builder(objectConstructors, this).build(GameSettings.PLAYERS_JSON));
-
         this.physicEngine = new PhysicEngine(this);
+        this.gameController = new GameController(
+                new MapInitController(physicEngine),
+                new PlayerController.Builder(objectConstructors, this).build(GameSettings.PLAYERS_JSON));
         this.physicEngine.addContactListener(gameController);
+
         this.sceneObjectsHandler.getSceneObjects().forEach(abstractGameObject -> physicEngine.addRigidBody(abstractGameObject.body));
 
         this.baseEnvironment = new BaseEnvironment();
@@ -67,13 +62,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneMan
 
         this.inputMultiplexer = new InputMultiplexer();
         this.inputMultiplexer.addProcessor(baseCamera);
-
-        btRigidBody bodyTest = new btRigidBody(new btRigidBody.btRigidBodyConstructionInfo(
-                0, null, new btBoxShape(new Vector3(10, 10, 10)), Vector3.Zero));
-        Matrix4 translate = bodyTest.getWorldTransform().translate(new Vector3(10, 0, 0));
-        bodyTest.setWorldTransform(translate);
-        bodyTest.setCollisionFlags(bodyTest.getCollisionFlags() | btCollisionObject.CollisionFlags.CF_NO_CONTACT_RESPONSE);
-        this.physicEngine.addRigidBody(bodyTest);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.simple.castle.scene.game.controller;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 import com.simple.castle.core.event.CollisionEvent;
+import com.simple.castle.core.event.Done;
 import com.simple.castle.core.event.EveryEvent;
 import com.simple.castle.core.manager.SceneManager;
 import com.simple.castle.core.object.constructors.ObjectConstructors;
@@ -14,7 +15,7 @@ import com.simple.castle.scene.game.unit.PlayerUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PlayerController implements CollisionEvent, Disposable {
+public class PlayerController implements CollisionEvent, Disposable, Done {
 
     public static final long updateUnitsEvery = 100;
 
@@ -52,6 +53,7 @@ public class PlayerController implements CollisionEvent, Disposable {
         });
     }
 
+    @Override
     public void update() {
         spawnUnits.update(() -> {
             List<PlayerUnit> units = players.stream()
@@ -104,6 +106,11 @@ public class PlayerController implements CollisionEvent, Disposable {
 
     @Override
     public void dispose() {
+    }
+
+    @Override
+    public boolean isDone() {
+        return false;
     }
 
     public static final class Builder {

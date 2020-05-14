@@ -1,6 +1,7 @@
 package com.simple.castle.scene.game.controller;
 
 import com.simple.castle.core.debug.DebugInformation;
+import com.simple.castle.core.event.DoThen;
 import com.simple.castle.core.manager.Controller;
 import com.simple.castle.core.object.unit.abs.AbstractGameObject;
 
@@ -8,17 +9,21 @@ public class GameController implements Controller {
 
     private final DebugInformation debugInformation = new DebugInformation();
 
+    private final DoThen doThen = new DoThen();
+
     private final MapInitController mapInitController;
     private final PlayerController playerController;
 
     public GameController(MapInitController mapInitController, PlayerController playerController) {
         this.mapInitController = mapInitController;
         this.playerController = playerController;
+
+        doThen.then(playerController);
     }
 
     @Override
     public void update() {
-        playerController.update();
+        doThen.update();
     }
 
     @Override
