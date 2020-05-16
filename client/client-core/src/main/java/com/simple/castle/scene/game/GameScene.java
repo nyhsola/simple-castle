@@ -14,7 +14,6 @@ import com.simple.castle.core.render.BaseEnvironment;
 import com.simple.castle.core.render.BaseRenderer;
 import com.simple.castle.core.utils.AssetLoader;
 import com.simple.castle.scene.game.controller.GameController;
-import com.simple.castle.scene.game.controller.MapInitController;
 import com.simple.castle.scene.game.controller.PlayerController;
 
 import java.util.List;
@@ -51,7 +50,6 @@ public class GameScene extends ScreenAdapter implements InputProcessor, SceneMan
 
         this.physicEngine = new PhysicEngine(this);
         this.gameController = new GameController(
-                new MapInitController(physicEngine),
                 new PlayerController.Builder(objectConstructors, this).build(GameSettings.PLAYERS_JSON));
         this.physicEngine.addContactListener(gameController);
 

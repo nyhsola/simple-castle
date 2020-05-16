@@ -1,1 +1,5 @@
-include 'desktop', 'android', 'core', 'blender'
+include 'blender'
+include ':client:android'
+include ':client:desktop'
+include ':client:client-core'
+include ':server:server-core'

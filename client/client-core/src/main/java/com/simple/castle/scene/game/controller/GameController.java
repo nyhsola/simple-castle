@@ -8,14 +8,10 @@ import com.simple.castle.core.object.unit.abs.AbstractGameObject;
 public class GameController implements Controller {
 
     private final DebugInformation debugInformation = new DebugInformation();
-
     private final DoThen doThen = new DoThen();
-
-    private final MapInitController mapInitController;
     private final PlayerController playerController;
 
-    public GameController(MapInitController mapInitController, PlayerController playerController) {
-        this.mapInitController = mapInitController;
+    public GameController(PlayerController playerController) {
         this.playerController = playerController;
 
         doThen.then(playerController);
