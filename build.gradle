@@ -87,5 +87,7 @@ project(":server:server-core") {
         api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
+
+        implementation group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
     }
 }

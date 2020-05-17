@@ -4,11 +4,11 @@ import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.physics.bullet.linearmath.btDefaultMotionState;
 import com.badlogic.gdx.physics.bullet.linearmath.btMotionState;
 
-public class Unit {
+public abstract class Unit {
     protected final btRigidBody body;
     protected final btMotionState motionState;
 
-    public Unit(btRigidBody.btRigidBodyConstructionInfo constructionInfo) {
+    public Unit(final btRigidBody.btRigidBodyConstructionInfo constructionInfo) {
         this.motionState = new btDefaultMotionState();
         this.body = new btRigidBody(constructionInfo);
         this.body.setMotionState(motionState);

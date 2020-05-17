@@ -2,22 +2,29 @@ package com.simple.castle.server;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.graphics.GL20;
 import com.simple.castle.server.main.GameServer;
-import com.simple.castle.server.tcp.TCPListener;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.io.IOException;
+import java.util.Properties;
+
+import static org.mockito.Mockito.mock;
 
 public class Launcher {
 
-    private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    public static void main(String[] args) throws IOException {
+        final Properties properties = new Properties();
+        properties.load(Launcher.class.getResourceAsStream("/server.properties"));
 
-    public static void main(String[] args) {
-        new HeadlessApplication(new GameServer());
-        executorService.submit(new TCPListener());
+        final GameServer listener = new GameServer();
 
-        Gdx.app.log("Server", "Started!");
-
-        // TODO: 5/17/2020 Correctly stop server
+        if (Boolean.parseBoolean(properties.getProperty("headless"))) {
+            Gdx.gl = mock(GL20.class);
+            Gdx.gl20 = mock(GL20.class);
+            new HeadlessApplication(listener);
+        } else {
+            new LwjglApplication(listener);
+        }
     }
 }

@@ -9,7 +9,7 @@ public class PlayerUnit extends ActiveUnit {
 
     private final Vector3 initPosition;
 
-    public PlayerUnit(btRigidBody.btRigidBodyConstructionInfo constructionInfo, Vector3 initPosition) {
+    public PlayerUnit(final btRigidBody.btRigidBodyConstructionInfo constructionInfo, final Vector3 initPosition) {
         super(constructionInfo);
         this.initPosition = initPosition;
 
