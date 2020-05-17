@@ -34,7 +34,7 @@ allprojects {
     }
 }
 
-project(":client:desktop") {
+project(":user:desktop") {
     apply plugin: "java-library"
 
     dependencies {
@@ -45,7 +45,7 @@ project(":client:desktop") {
     }
 }
 
-project(":client:android") {
+project(":user:android") {
     apply plugin: "android"
 
     configurations { natives }
@@ -82,9 +82,22 @@ project(":server:server-core") {
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        api "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
     }
 }
+
+project(":server:server-version") {
+    apply plugin: "java-library"
+
+    dependencies {
+        implementation project(":server:server-core")
+        api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        api "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
+    }
+}
+
