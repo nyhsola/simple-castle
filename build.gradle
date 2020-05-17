@@ -89,15 +89,3 @@ project(":server:server-core") {
         api "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
     }
 }
-
-project(":server:server-version") {
-    apply plugin: "java-library"
-
-    dependencies {
-        implementation project(":server:server-core")
-        api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        api "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
-    }
-}
-
