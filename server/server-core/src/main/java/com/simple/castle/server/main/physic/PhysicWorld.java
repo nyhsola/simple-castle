@@ -2,7 +2,10 @@ package com.simple.castle.server.main.physic;
 
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.*;
-import com.badlogic.gdx.physics.bullet.dynamics.*;
+import com.badlogic.gdx.physics.bullet.dynamics.btConstraintSolver;
+import com.badlogic.gdx.physics.bullet.dynamics.btDiscreteDynamicsWorld;
+import com.badlogic.gdx.physics.bullet.dynamics.btDynamicsWorld;
+import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver;
 import com.badlogic.gdx.utils.Disposable;
 
 public class PhysicWorld implements Disposable {
@@ -24,12 +27,13 @@ public class PhysicWorld implements Disposable {
         dynamicsWorld.setGravity(new Vector3(0, -10f, 0));
     }
 
-    public void addRigidBody(btRigidBody object) {
-        dynamicsWorld.addRigidBody(object);
+    public void addRigidBody(PhysicObject object) {
+        dynamicsWorld.addRigidBody(object.body);
     }
 
-    public void removeRigidBody(btRigidBody object) {
-        dynamicsWorld.removeRigidBody(object);
+    public void removeRigidBody(PhysicObject object) {
+        dynamicsWorld.removeRigidBody(object.body);
+        object.dispose();
     }
 
     public void update(float delta) {
@@ -38,6 +42,11 @@ public class PhysicWorld implements Disposable {
 
     @Override
     public void dispose() {
+        btCollisionObjectArray objectArray = dynamicsWorld.getCollisionObjectArray();
+        for (int i = 0; i < objectArray.size(); i++) {
+            ((Disposable) objectArray.atConst(i).userData).dispose();
+        }
+
         dynamicsWorld.dispose();
         constraintSolver.dispose();
         broadphase.dispose();

@@ -70,9 +70,6 @@ project(":user:android") {
 
 project(":core") {
     apply plugin: "java-library"
-
-    dependencies {
-    }
 }
 
 
@@ -80,6 +77,7 @@ project(":client:client-core") {
     apply plugin: "java-library"
 
     dependencies {
+        implementation project(":core")
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
     }
@@ -89,6 +87,7 @@ project(":server:server-core") {
     apply plugin: "java-library"
 
     dependencies {
+        implementation project(":core")
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
@@ -96,6 +95,6 @@ project(":server:server-core") {
         api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
 
-        implementation group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+        implementation 'org.mockito:mockito-all:1.10.19'
     }
 }
