@@ -68,6 +68,14 @@ project(":user:android") {
     }
 }
 
+project(":core") {
+    apply plugin: "java-library"
+
+    dependencies {
+    }
+}
+
+
 project(":client:client-core") {
     apply plugin: "java-library"
 

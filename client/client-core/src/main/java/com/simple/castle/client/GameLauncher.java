@@ -1,4 +1,4 @@
-package com.simple.castle;
+package com.simple.castle.client;
 
 import com.badlogic.gdx.Game;
 

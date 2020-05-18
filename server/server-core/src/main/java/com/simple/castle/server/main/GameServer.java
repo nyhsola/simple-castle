@@ -7,8 +7,6 @@ public final class GameServer implements ApplicationListener {
     @Override
     public void create() {
         Bullet.init();
-
-
     }
 
     @Override

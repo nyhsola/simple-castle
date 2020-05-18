@@ -18,8 +18,9 @@ public class Launcher {
         properties.load(Launcher.class.getResourceAsStream("/server.properties"));
 
         final GameServer listener = new GameServer();
+        final boolean isHeadless = Boolean.parseBoolean(properties.getProperty("headless"));
 
-        if (Boolean.parseBoolean(properties.getProperty("headless"))) {
+        if (isHeadless) {
             Gdx.gl = mock(GL20.class);
             Gdx.gl20 = mock(GL20.class);
             new HeadlessApplication(listener);
