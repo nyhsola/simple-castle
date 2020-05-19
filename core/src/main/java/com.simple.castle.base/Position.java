@@ -28,4 +28,13 @@ public class Position {
     public void setZ(float z) {
         this.z = z;
     }
+
+    @Override
+    public String toString() {
+        return "Position{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
 }

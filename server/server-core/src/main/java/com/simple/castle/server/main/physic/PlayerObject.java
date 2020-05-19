@@ -4,11 +4,11 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 
-public class PlayerUnit extends ActiveObject {
+public class PlayerObject extends ActiveObject {
     private static final Vector3 ANGULAR_FACTOR = new Vector3(0, 1, 0);
     private final Vector3 initPosition;
 
-    public PlayerUnit(final btRigidBody.btRigidBodyConstructionInfo constructionInfo, final Vector3 initPosition) {
+    public PlayerObject(final btRigidBody.btRigidBodyConstructionInfo constructionInfo, final Vector3 initPosition) {
         super(constructionInfo);
         this.initPosition = initPosition;
 
