@@ -3,7 +3,7 @@ package com.simple.castle.client.main;
 import com.badlogic.gdx.Game;
 import com.simple.castle.client.game.GameScreen;
 
-public class GameLauncher extends Game {
+public class ClientGame extends Game {
     private GameScreen gameScreen;
 
     @Override

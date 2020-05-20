@@ -1,4 +1,4 @@
-package com.simple.castle.server.main.physic;
+package com.simple.castle.server.physic;
 
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
 import com.badlogic.gdx.physics.bullet.linearmath.btDefaultMotionState;

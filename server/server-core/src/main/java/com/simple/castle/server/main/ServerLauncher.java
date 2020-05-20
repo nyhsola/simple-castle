@@ -1,4 +1,4 @@
-package com.simple.castle.server;
+package com.simple.castle.server.main;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -7,7 +7,7 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GL30;
-import com.simple.castle.server.main.SimpleCastleGame;
+import com.simple.castle.server.game.ServerGame;
 import com.simple.castle.server.tcp.ServerListener;
 import com.simple.castle.server.tcp.ServerStarter;
 
@@ -22,7 +22,7 @@ public class ServerLauncher {
         final Application application;
 
         final ServerListener serverListener = new ServerListener();
-        final SimpleCastleGame game = new SimpleCastleGame(serverListener);
+        final ServerGame game = new ServerGame(serverListener);
         final ServerStarter serverStarter = new ServerStarter(serverListener);
         final boolean isGUI = getIsGUI(args);
 

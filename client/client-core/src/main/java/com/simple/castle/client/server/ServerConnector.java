@@ -17,8 +17,8 @@ public class ServerConnector implements Disposable {
         executorService.submit(serverReader);
     }
 
-    public World getNextWorldTick() {
-        return serverReader.getNextWorld();
+    public World getNextWorldTick(long waitMillis) {
+        return serverReader.getNextWorld(waitMillis);
     }
 
     @Override
@@ -26,7 +26,8 @@ public class ServerConnector implements Disposable {
         Gdx.app.log("ServerConnector", "Server reader going to shutdown");
 
         try {
-            if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
+            executorService.shutdown();
+            if (!executorService.awaitTermination(1, TimeUnit.SECONDS)) {
                 executorService.shutdownNow();
             }
         } catch (InterruptedException e) {

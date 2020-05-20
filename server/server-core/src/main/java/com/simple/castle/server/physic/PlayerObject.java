@@ -1,4 +1,4 @@
-package com.simple.castle.server.main.physic;
+package com.simple.castle.server.physic;
 
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;

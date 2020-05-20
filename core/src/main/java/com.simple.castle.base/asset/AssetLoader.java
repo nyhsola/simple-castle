@@ -1,4 +1,4 @@
-package com.simple.castle.server.main.asset;
+package com.simple.castle.base.asset;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.Model;

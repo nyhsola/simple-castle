@@ -70,6 +70,10 @@ project(":user:android") {
 
 project(":core") {
     apply plugin: "java-library"
+
+    dependencies {
+        api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    }
 }
 
 
@@ -78,7 +82,6 @@ project(":client:client-core") {
 
     dependencies {
         implementation project(":core")
-        api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
     }
 }
@@ -88,7 +91,6 @@ project(":server:server-core") {
 
     dependencies {
         implementation project(":core")
-        api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"

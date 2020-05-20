@@ -1,4 +1,4 @@
-package com.simple.castle.server.main.physic;
+package com.simple.castle.server.physic;
 
 interface Flags {
     short GROUND_FLAG = 1 << 8;

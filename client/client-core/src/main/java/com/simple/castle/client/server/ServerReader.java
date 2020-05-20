@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
 
 public class ServerReader implements Runnable {
     private final Socket socket;
@@ -39,8 +40,13 @@ public class ServerReader implements Runnable {
         }
     }
 
-    public World getNextWorld() {
-        return deque.pollLast();
+    public World getNextWorld(long waitMillis) {
+        try {
+            return deque.pollLast(waitMillis, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            Gdx.app.log("ServerReader", "Interrupt during waiting for next world");
+        }
+        return null;
     }
 
     private World readFromServer() {

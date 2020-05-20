@@ -1,4 +1,4 @@
-package com.simple.castle.server.main.physic;
+package com.simple.castle.server.physic;
 
 import com.badlogic.gdx.physics.bullet.collision.Collision;
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
