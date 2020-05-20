@@ -2,7 +2,6 @@ package com.simple.castle.server.main;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.model.Node;
@@ -13,12 +12,9 @@ import com.simple.castle.base.World;
 import com.simple.castle.server.main.asset.AssetLoader;
 import com.simple.castle.server.main.physic.GroundObject;
 import com.simple.castle.server.main.physic.PhysicWorld;
-import com.simple.castle.server.tcp.GameDataListener;
+import com.simple.castle.server.tcp.DataListener;
 
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
-
-public final class GameServer implements ApplicationListener, InputProcessor {
+public final class SimpleCastleGame implements ApplicationListener, InputProcessor {
     private PhysicWorld physicWorld;
     private GroundObject groundObject;
 
@@ -27,12 +23,10 @@ public final class GameServer implements ApplicationListener, InputProcessor {
     private final Filler filler = new Filler();
     private final World world = new World();
 
-    private final BlockingDeque<World> queue = new LinkedBlockingDeque<>();
+    private final DataListener dataListener;
 
-    private final GameDataListener gameDataListener;
-
-    public GameServer(GameDataListener gameDataListener) {
-        this.gameDataListener = gameDataListener;
+    public SimpleCastleGame(DataListener dataListener) {
+        this.dataListener = dataListener;
     }
 
     @Override
@@ -61,7 +55,7 @@ public final class GameServer implements ApplicationListener, InputProcessor {
         physicWorld.update(Gdx.graphics.getDeltaTime());
 
         filler.fillWorld(world, groundObject);
-        gameDataListener.newData(world);
+        dataListener.worldTick(world);
     }
 
     @Override
@@ -81,9 +75,6 @@ public final class GameServer implements ApplicationListener, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
-        if (Input.Keys.ESCAPE == keycode) {
-            Gdx.app.exit();
-        }
         return false;
     }
 

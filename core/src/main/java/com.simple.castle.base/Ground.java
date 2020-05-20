@@ -1,6 +1,8 @@
 package com.simple.castle.base;
 
-public class Ground {
+import java.io.Serializable;
+
+public class Ground implements Serializable {
     private final Position position = new Position();
 
     public Position getPosition() {

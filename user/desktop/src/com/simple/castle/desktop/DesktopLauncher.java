@@ -2,7 +2,7 @@ package com.simple.castle.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.simple.castle.client.GameLauncher;
+import com.simple.castle.client.main.GameLauncher;
 
 public class DesktopLauncher {
     public static void main(String[] arg) {

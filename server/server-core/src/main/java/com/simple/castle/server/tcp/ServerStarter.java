@@ -8,22 +8,27 @@ public class ServerStarter {
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    private final TCPListener task;
+    private final ServerListener serverListener;
 
-    public ServerStarter(TCPListener task) {
-        this.task = task;
+    public ServerStarter(ServerListener serverListener) {
+        this.serverListener = serverListener;
     }
 
     public void start() {
-        executor.submit(task);
+        executor.submit(serverListener);
     }
 
     public void stop() {
         System.out.println("Waiting for shutdown listener");
         try {
+            serverListener.dispose();
+            System.out.println("Disposed");
+
             if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
                 executor.shutdownNow();
             }
+
+            System.out.println("Done");
         } catch (InterruptedException e) {
             System.out.println("Interrupted");
         }
