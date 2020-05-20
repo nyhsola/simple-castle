@@ -1,13 +1,13 @@
 package com.simple.castle.server.tcp;
 
+import com.badlogic.gdx.Gdx;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class ServerStarter {
-
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
-
+    private final ExecutorService serverListenerService = Executors.newSingleThreadExecutor();
     private final ServerListener serverListener;
 
     public ServerStarter(ServerListener serverListener) {
@@ -15,23 +15,22 @@ public class ServerStarter {
     }
 
     public void start() {
-        executor.submit(serverListener);
+        serverListenerService.submit(serverListener);
     }
 
     public void stop() {
-        System.out.println("Waiting for shutdown listener");
+        Gdx.app.log("ServerStarter", "Waiting for shutdown listener");
         try {
+            serverListener.stop();
             serverListener.dispose();
-            System.out.println("Disposed");
-
-            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
-                executor.shutdownNow();
+            serverListenerService.shutdown();
+            if (!serverListenerService.awaitTermination(5, TimeUnit.SECONDS)) {
+                serverListenerService.shutdownNow();
             }
-
-            System.out.println("Done");
         } catch (InterruptedException e) {
-            System.out.println("Interrupted");
+            Gdx.app.log("ServerStarter", e.getMessage());
         }
+        Gdx.app.log("ServerStarter", "Server was stopped");
     }
 
 }

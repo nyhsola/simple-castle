@@ -2,6 +2,7 @@ package com.simple.castle.server.main;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.model.Node;
@@ -43,6 +44,8 @@ public final class SimpleCastleGame implements ApplicationListener, InputProcess
                 new btRigidBody.btRigidBodyConstructionInfo(0, null, collisionShape));
         physicWorld.addRigidBody(
                 groundObject);
+
+        Gdx.input.setInputProcessor(this);
     }
 
     @Override
@@ -70,11 +73,15 @@ public final class SimpleCastleGame implements ApplicationListener, InputProcess
 
     @Override
     public void dispose() {
+        model.dispose();
         physicWorld.dispose();
     }
 
     @Override
     public boolean keyDown(int keycode) {
+        if (Input.Keys.ESCAPE == keycode) {
+            Gdx.app.exit();
+        }
         return false;
     }
 

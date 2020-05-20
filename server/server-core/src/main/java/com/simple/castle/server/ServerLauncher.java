@@ -24,8 +24,9 @@ public class ServerLauncher {
         final ServerListener serverListener = new ServerListener();
         final SimpleCastleGame game = new SimpleCastleGame(serverListener);
         final ServerStarter serverStarter = new ServerStarter(serverListener);
+        final boolean isGUI = getIsGUI(args);
 
-        if (isGUI(args)) {
+        if (isGUI) {
             application = new LwjglApplication(game);
         } else {
             Gdx.gl = mock(GL20.class);
@@ -50,19 +51,20 @@ public class ServerLauncher {
                 serverStarter.stop();
             }
         });
-
         serverStarter.start();
 
-        Scanner scanner = new Scanner(System.in);
-        String next = scanner.next();
-        while (!"stop".equals(next)) {
-            next = scanner.next();
+        if (!isGUI) {
+            Scanner scanner = new Scanner(System.in);
+            String next;
+            do {
+                next = scanner.hasNext() ? scanner.next() : "";
+            } while (!"stop".equals(next));
+            Gdx.app.postRunnable(() -> Gdx.app.exit());
         }
-
-        Gdx.app.exit();
+        Gdx.app.log("ServerLauncher", "Main thread done");
     }
 
-    private static boolean isGUI(String[] args) {
-        return args.length >= 1 && Stream.of(args).noneMatch(arg -> arg.contains("--no-gui"));
+    private static boolean getIsGUI(String[] args) {
+        return args.length == 0 || Stream.of(args).noneMatch(arg -> arg.contains("--no-gui"));
     }
 }

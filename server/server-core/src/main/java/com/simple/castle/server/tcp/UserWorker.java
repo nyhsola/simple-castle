@@ -2,6 +2,7 @@ package com.simple.castle.server.tcp;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.net.Socket;
+import com.badlogic.gdx.utils.Disposable;
 import com.simple.castle.base.World;
 
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.io.ObjectOutputStream;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 
-public class UserWorker implements Runnable {
+public class UserWorker implements Runnable, Disposable {
     private final Socket socket;
     private final BlockingDeque<World> deque = new LinkedBlockingDeque<>();
 
@@ -42,5 +43,10 @@ public class UserWorker implements Runnable {
 
     public void addWorldTick(World world) {
         deque.offerFirst(world);
+    }
+
+    @Override
+    public void dispose() {
+        socket.dispose();
     }
 }

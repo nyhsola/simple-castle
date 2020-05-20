@@ -12,9 +12,9 @@ project.ext.assetsDir = new File("../../user/android/assets")
  * gradle :server:server-core:run -q --console=plain --args='--no-gui'
  */
 task run(dependsOn: classes, type: JavaExec) {
-    standardInput = System.in
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
     workingDir = project.assetsDir
     ignoreExitValue = true
 }
