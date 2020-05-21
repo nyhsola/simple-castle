@@ -8,7 +8,9 @@ import com.simple.castle.server.physic.unit.PhysicObject;
 import java.util.function.Function;
 
 public enum InteractType {
-    ACTIVE(ActiveObject::new), KINEMATIC(KinematicObject::new);
+    ACTIVE(ActiveObject::new),
+    KINEMATIC(KinematicObject::new),
+    GHOST(KinematicObject::new);
 
     private final Function<btRigidBody.btRigidBodyConstructionInfo, PhysicObject> function;
 

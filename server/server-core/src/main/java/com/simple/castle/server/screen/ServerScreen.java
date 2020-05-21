@@ -3,12 +3,9 @@ package com.simple.castle.server.screen;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.math.Vector3;
-import com.simple.castle.base.World;
 import com.simple.castle.base.asset.AssetLoader;
-import com.simple.castle.server.composition.BaseObject;
-import com.simple.castle.server.composition.Constructor;
-import com.simple.castle.server.composition.add.InteractType;
-import com.simple.castle.server.composition.add.PhysicShape;
+import com.simple.castle.server.loader.SceneLoader;
+import com.simple.castle.server.manager.SceneManager;
 import com.simple.castle.server.physic.world.PhysicWorld;
 import com.simple.castle.server.render.BaseCamera;
 import com.simple.castle.server.render.BaseEnvironment;
@@ -27,30 +24,22 @@ public class ServerScreen extends ScreenAdapter implements InputProcessor {
     private final InputMultiplexer inputMultiplexer;
 
     private final PhysicWorld physicWorld;
-    private final List<BaseObject> baseObjects;
-
     private final List<DataListener> dataListeners;
 
-    private final Filler filler = new Filler();
-    private final World world = new World();
+    private final SceneManager sceneManager;
 
     public ServerScreen(BaseRenderer baseRenderer) {
         Model model = new AssetLoader().loadModel();
-        BaseObject baseObject = new BaseObject(new Constructor(model, "ground", InteractType.KINEMATIC, PhysicShape.STATIC));
-        BaseObject baseObject1 = new BaseObject(new Constructor(model, "unit-type-1", InteractType.KINEMATIC, PhysicShape.STATIC));
+        this.sceneManager = new SceneManager(new SceneLoader().loadSceneObjects(model), model);
 
         this.baseRenderer = baseRenderer;
         this.baseEnvironment = new BaseEnvironment();
-        this.baseCamera = new BaseCamera(baseObject1.getModelInstance().transform.getTranslation(new Vector3()));
+        this.baseCamera = new BaseCamera(sceneManager.getObject("ground").getModelInstance().transform.getTranslation(new Vector3()));
 
         this.dataListeners = new ArrayList<>();
 
-        physicWorld = new PhysicWorld();
-        physicWorld.addRigidBody(baseObject.getPhysicObject());
-
-        this.baseObjects = new ArrayList<>();
-        this.baseObjects.add(baseObject);
-        this.baseObjects.add(baseObject1);
+        this.physicWorld = new PhysicWorld();
+        this.sceneManager.getAll().forEach(baseObject -> physicWorld.addRigidBody(baseObject.getPhysicObject()));
 
         inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(baseCamera);
@@ -60,10 +49,7 @@ public class ServerScreen extends ScreenAdapter implements InputProcessor {
     public void render(float delta) {
         baseCamera.update(delta);
         physicWorld.update(delta);
-        baseRenderer.render(baseCamera, baseObjects, baseEnvironment);
-        for (DataListener dataListener : dataListeners) {
-            dataListener.worldTick(world);
-        }
+        baseRenderer.render(baseCamera, sceneManager.getDrawables(), baseEnvironment);
     }
 
     @Override
@@ -76,7 +62,7 @@ public class ServerScreen extends ScreenAdapter implements InputProcessor {
     public void dispose() {
         baseRenderer.dispose();
         physicWorld.dispose();
-        baseObjects.forEach(BaseObject::dispose);
+        sceneManager.dispose();
     }
 
     @Override

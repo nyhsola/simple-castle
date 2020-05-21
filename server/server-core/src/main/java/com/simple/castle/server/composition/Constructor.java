@@ -14,12 +14,16 @@ public class Constructor {
     private final String id;
     private final InteractType interactType;
     private final PhysicShape physicShape;
+    private final Boolean instantiate;
+    private final Boolean hide;
 
-    public Constructor(Model model, String id, InteractType interactType, PhysicShape physicShape) {
+    public Constructor(Model model, String id, InteractType interactType, PhysicShape physicShape, Boolean instantiate, Boolean hide) {
         this.model = model;
         this.id = id;
         this.interactType = interactType;
         this.physicShape = physicShape;
+        this.instantiate = instantiate;
+        this.hide = hide;
     }
 
     public PhysicObject buildPhysic() {
@@ -31,5 +35,17 @@ public class Constructor {
 
     public ModelInstance buildModel() {
         return new ModelInstance(model, id, true);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Boolean getInstantiate() {
+        return instantiate;
+    }
+
+    public Boolean getHide() {
+        return hide;
     }
 }

@@ -1,0 +1,44 @@
+{
+  "sceneObjectsJson": [
+    {
+      "nodePattern": "ground",
+      "shape": "STATIC",
+      "mass": 0,
+      "interact": "KINEMATIC",
+      "instantiate": true,
+      "hide": false
+    },
+    {
+      "nodePattern": "unit-type.*",
+      "shape": "BASE_BOX",
+      "mass": 1,
+      "interact": "ACTIVE",
+      "instantiate": false,
+      "hide": false
+    },
+    {
+      "nodePattern": "castle(?:-\\d)",
+      "shape": "ADJUSTED_BASE_BOX",
+      "mass": 0,
+      "interact": "KINEMATIC",
+      "instantiate": true,
+      "hide": false
+    },
+    {
+      "nodePattern": "area-(?:.+)",
+      "shape": "ADJUSTED_BASE_BOX",
+      "mass": 0,
+      "interact": "GHOST",
+      "instantiate": true,
+      "hide": true
+    },
+    {
+      "nodePattern": "tree.*",
+      "shape": "ADJUSTED_BASE_BOX",
+      "mass": 0,
+      "interact": "KINEMATIC",
+      "instantiate": true,
+      "hide": false
+    }
+  ]
+}

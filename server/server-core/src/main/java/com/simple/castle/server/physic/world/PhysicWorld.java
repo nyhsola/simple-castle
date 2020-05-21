@@ -34,7 +34,6 @@ public class PhysicWorld implements Disposable {
 
     public void removeRigidBody(PhysicObject object) {
         dynamicsWorld.removeRigidBody(object.getBody());
-        object.dispose();
     }
 
     public void update(float delta) {
