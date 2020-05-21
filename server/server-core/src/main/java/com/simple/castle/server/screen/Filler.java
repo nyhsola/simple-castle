@@ -1,9 +1,9 @@
-package com.simple.castle.server.game;
+package com.simple.castle.server.screen;
 
 import com.badlogic.gdx.math.Vector3;
 import com.simple.castle.base.Position;
 import com.simple.castle.base.World;
-import com.simple.castle.server.physic.GroundObject;
+import com.simple.castle.server.physic.unit.GroundObject;
 
 public class Filler {
 

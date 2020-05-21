@@ -16,7 +16,7 @@ public class ServerReader implements Runnable {
     private final Socket socket;
     private final ObjectInputStream inputStream;
 
-    private final BlockingDeque<World> deque = new LinkedBlockingDeque<>();
+    private final BlockingDeque<World> fetchQueue = new LinkedBlockingDeque<>();
 
     public ServerReader(String host, int port) {
         SocketHints socketHints = new SocketHints();
@@ -36,13 +36,13 @@ public class ServerReader implements Runnable {
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
-            deque.offerFirst(readFromServer());
+            fetchQueue.offerFirst(readFromServer());
         }
     }
 
     public World getNextWorld(long waitMillis) {
         try {
-            return deque.pollLast(waitMillis, TimeUnit.MILLISECONDS);
+            return fetchQueue.pollLast(waitMillis, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             Gdx.app.log("ServerReader", "Interrupt during waiting for next world");
         }

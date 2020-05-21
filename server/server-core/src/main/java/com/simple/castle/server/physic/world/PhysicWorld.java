@@ -1,4 +1,4 @@
-package com.simple.castle.server.physic;
+package com.simple.castle.server.physic.world;
 
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.collision.*;
@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.bullet.dynamics.btDiscreteDynamicsWorld;
 import com.badlogic.gdx.physics.bullet.dynamics.btDynamicsWorld;
 import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver;
 import com.badlogic.gdx.utils.Disposable;
+import com.simple.castle.server.physic.unit.PhysicObject;
 
 public class PhysicWorld implements Disposable {
     private final CustomContactListener contactListener;
@@ -28,11 +29,11 @@ public class PhysicWorld implements Disposable {
     }
 
     public void addRigidBody(PhysicObject object) {
-        dynamicsWorld.addRigidBody(object.body);
+        dynamicsWorld.addRigidBody(object.getBody());
     }
 
     public void removeRigidBody(PhysicObject object) {
-        dynamicsWorld.removeRigidBody(object.body);
+        dynamicsWorld.removeRigidBody(object.getBody());
         object.dispose();
     }
 
@@ -42,11 +43,6 @@ public class PhysicWorld implements Disposable {
 
     @Override
     public void dispose() {
-        btCollisionObjectArray objectArray = dynamicsWorld.getCollisionObjectArray();
-        for (int i = 0; i < objectArray.size(); i++) {
-            ((Disposable) objectArray.atConst(i).userData).dispose();
-        }
-
         dynamicsWorld.dispose();
         constraintSolver.dispose();
         broadphase.dispose();

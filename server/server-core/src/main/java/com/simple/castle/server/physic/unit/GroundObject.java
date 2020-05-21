@@ -1,4 +1,4 @@
-package com.simple.castle.server.physic;
+package com.simple.castle.server.physic.unit;
 
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;

@@ -21,10 +21,12 @@ public class ServerLauncher {
     public static void main(String[] args) {
         final Application application;
 
-        final ServerListener serverListener = new ServerListener();
-        final ServerGame game = new ServerGame(serverListener);
-        final ServerStarter serverStarter = new ServerStarter(serverListener);
         final boolean isGUI = getIsGUI(args);
+
+        final ServerListener serverListener = new ServerListener();
+        final ServerGame game = new ServerGame(isGUI, serverListener);
+
+        final ServerStarter serverStarter = new ServerStarter(serverListener);
 
         if (isGUI) {
             application = new LwjglApplication(game);
