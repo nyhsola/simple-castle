@@ -1,9 +1,7 @@
 package com.simple.castle.server.tcp;
 
-import com.simple.castle.base.ModelSend;
-
-import java.util.List;
+import com.simple.castle.base.ServerRespond;
 
 public interface DataListener {
-    void worldTick(List<ModelSend> modelSendList);
+    void worldTick(ServerRespond serverRespond);
 }

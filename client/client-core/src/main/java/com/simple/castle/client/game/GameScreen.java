@@ -5,14 +5,12 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.math.Vector3;
-import com.simple.castle.base.ModelSend;
+import com.simple.castle.base.ServerRespond;
 import com.simple.castle.base.asset.AssetLoader;
 import com.simple.castle.base.render.BaseCamera;
 import com.simple.castle.base.render.BaseEnvironment;
 import com.simple.castle.base.render.BaseRenderer;
 import com.simple.castle.client.server.ServerConnector;
-
-import java.util.List;
 
 public class GameScreen extends ScreenAdapter implements InputProcessor {
     private final BaseRenderer baseRenderer;
@@ -45,7 +43,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
     public void render(float delta) {
         baseCamera.update(delta);
 
-        List<ModelSend> tick = serverConnector.getNextWorldTick(1000 / 60);
+        ServerRespond tick = serverConnector.getNextWorldTick(1000 / 60);
 
         baseRenderer.render(
                 baseCamera,

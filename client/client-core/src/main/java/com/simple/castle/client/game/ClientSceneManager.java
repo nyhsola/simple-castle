@@ -3,10 +3,10 @@ package com.simple.castle.client.game;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.simple.castle.base.ModelSend;
+import com.simple.castle.base.ServerRespond;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ClientSceneManager {
@@ -18,9 +18,9 @@ public class ClientSceneManager {
         this.modelInstances = new HashMap<>();
     }
 
-    public Collection<ModelInstance> updateAndGet(List<ModelSend> modelSends) {
-        if (modelSends != null) {
-            for (ModelSend modelSend : modelSends) {
+    public Collection<ModelInstance> updateAndGet(ServerRespond serverRespond) {
+        if (serverRespond != null && serverRespond.getModelSends() != null) {
+            for (ModelSend modelSend : serverRespond.getModelSends()) {
                 if (!modelInstances.containsKey(modelSend.getId())) {
                     modelInstances.put(modelSend.getId(), new ModelInstance(model, modelSend.getId(), true));
                 }

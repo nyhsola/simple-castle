@@ -3,6 +3,7 @@ package com.simple.castle.server.screen;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.math.Vector3;
+import com.simple.castle.base.ServerRespond;
 import com.simple.castle.base.asset.AssetLoader;
 import com.simple.castle.base.render.BaseCamera;
 import com.simple.castle.base.render.BaseEnvironment;
@@ -28,11 +29,14 @@ public class ServerScreen extends ScreenAdapter implements InputProcessor {
 
     private final Model model;
     private final SceneManager sceneManager;
+    private final ServerRespond serverRespond;
 
     private boolean isDebug = false;
 
     public ServerScreen(BaseRenderer baseRenderer) {
         this.baseRenderer = baseRenderer;
+
+        this.serverRespond = new ServerRespond();
 
         this.model = new AssetLoader().loadModel();
         this.sceneManager = new SceneManager(new SceneLoader().loadSceneObjects(model), model);
@@ -60,7 +64,8 @@ public class ServerScreen extends ScreenAdapter implements InputProcessor {
         }
 
         for (DataListener dataListener : dataListeners) {
-            dataListener.worldTick(sceneManager.getSend());
+            serverRespond.setModelSends(sceneManager.getSend());
+            dataListener.worldTick(serverRespond);
         }
     }
 

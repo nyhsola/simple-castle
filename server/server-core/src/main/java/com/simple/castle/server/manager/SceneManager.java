@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 public class SceneManager implements Disposable {
     private final Map<String, Constructor> constructorMap;
     private final Map<String, BaseObject> baseObjectMap;
-    private final List<ModelSend> modelsSend;
     private final List<ModelInstance> drawables;
+    private final List<ModelSend> modelsSend;
 
     public SceneManager(SceneObjectsJson sceneObjectsJson, Model model) {
         constructorMap = sceneObjectsJson.getSceneObjectsJson()
