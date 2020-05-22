@@ -1,4 +1,4 @@
-package com.simple.castle.server.render;
+package com.simple.castle.base.render;
 
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;

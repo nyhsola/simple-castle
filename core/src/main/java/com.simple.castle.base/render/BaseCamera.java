@@ -1,4 +1,4 @@
-package com.simple.castle.server.render;
+package com.simple.castle.base.render;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -20,10 +20,11 @@ public class BaseCamera extends PerspectiveCamera implements InputProcessor {
     private boolean keyLeftHolds = false;
     private boolean keyRightHolds = false;
 
-    public BaseCamera(Vector3 startObjectPosition) {
+    public BaseCamera(Vector3 startPosition) {
         super(FIELD_OF_VIEW, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        this.position.set(startObjectPosition.x + 10f, startObjectPosition.y + 10f, startObjectPosition.z);
-        this.lookAt(startObjectPosition);
+
+        this.position.set(startPosition.x + 10f, startPosition.y + 10f, startPosition.z);
+        this.lookAt(startPosition);
 
         this.near = NEAR;
         this.far = FAR;

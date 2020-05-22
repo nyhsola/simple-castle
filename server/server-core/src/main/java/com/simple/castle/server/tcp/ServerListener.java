@@ -8,7 +8,7 @@ import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.simple.castle.base.World;
+import com.simple.castle.base.ModelSend;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -95,14 +95,21 @@ public class ServerListener implements Runnable, DataListener, Disposable {
     }
 
     @Override
-    public void worldTick(World world) {
+    public void worldTick(List<ModelSend> modelSendList) {
         if (isRunning) {
-            World newWorld = new World(world);
+            List<ModelSend> dataPrepared = deepCopy(modelSendList);
+
             dataSubmitterService.submit(() -> {
                 for (UserWorker worker : workers) {
-                    worker.addWorldTick(new World(newWorld));
+                    worker.addWorldTick(deepCopy(dataPrepared));
                 }
             });
         }
+    }
+
+    private List<ModelSend> deepCopy(List<ModelSend> data) {
+        List<ModelSend> dataPrepared = new ArrayList<>();
+        data.forEach(modelSend -> dataPrepared.add(new ModelSend(modelSend)));
+        return dataPrepared;
     }
 }

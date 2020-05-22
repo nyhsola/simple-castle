@@ -2,8 +2,9 @@ package com.simple.castle.client.server;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
-import com.simple.castle.base.World;
+import com.simple.castle.base.ModelSend;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -17,7 +18,7 @@ public class ServerConnector implements Disposable {
         executorService.submit(serverReader);
     }
 
-    public World getNextWorldTick(long waitMillis) {
+    public List<ModelSend> getNextWorldTick(long waitMillis) {
         return serverReader.getNextWorld(waitMillis);
     }
 

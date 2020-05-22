@@ -4,10 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
-import com.simple.castle.base.World;
+import com.simple.castle.base.ModelSend;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.List;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +17,7 @@ public class ServerReader implements Runnable {
     private final Socket socket;
     private final ObjectInputStream inputStream;
 
-    private final BlockingDeque<World> fetchQueue = new LinkedBlockingDeque<>();
+    private final BlockingDeque<List<ModelSend>> fetchQueue = new LinkedBlockingDeque<>();
 
     public ServerReader(String host, int port) {
         SocketHints socketHints = new SocketHints();
@@ -40,7 +41,7 @@ public class ServerReader implements Runnable {
         }
     }
 
-    public World getNextWorld(long waitMillis) {
+    public List<ModelSend> getNextWorld(long waitMillis) {
         try {
             return fetchQueue.pollLast(waitMillis, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
@@ -49,10 +50,10 @@ public class ServerReader implements Runnable {
         return null;
     }
 
-    private World readFromServer() {
-        World world;
+    private List<ModelSend> readFromServer() {
+        List<ModelSend> world;
         try {
-            world = (World) inputStream.readObject();
+            world = (List<ModelSend>) inputStream.readObject();
         } catch (IOException | ClassNotFoundException exception) {
             world = null;
         }
