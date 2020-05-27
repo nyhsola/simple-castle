@@ -3,8 +3,8 @@ package com.simple.castle.client.main;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.simple.castle.base.render.BaseRenderer;
 import com.simple.castle.client.game.GameScreen;
+import com.simple.castle.core.render.BaseRenderer;
 
 public class ClientGame extends Game {
     private BaseRenderer baseRenderer;

@@ -4,23 +4,21 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.physics.bullet.Bullet;
-import com.simple.castle.base.render.BaseRenderer;
+import com.simple.castle.core.ServerState;
+import com.simple.castle.core.render.BaseRenderer;
 import com.simple.castle.server.screen.ServerScreen;
-import com.simple.castle.server.tcp.DataListener;
 
 import static org.mockito.Mockito.mock;
 
 public final class ServerGame extends Game {
 
     private final boolean isGUI;
-    private final DataListener dataListener;
 
     private BaseRenderer baseRenderer;
     private ServerScreen serverScreen;
 
-    public ServerGame(boolean isGUI, DataListener dataListener) {
+    public ServerGame(boolean isGUI) {
         this.isGUI = isGUI;
-        this.dataListener = dataListener;
     }
 
     @Override
@@ -28,7 +26,6 @@ public final class ServerGame extends Game {
         Bullet.init();
         baseRenderer = new BaseRenderer(isGUI ? new ModelBatch() : mock(ModelBatch.class));
         serverScreen = new ServerScreen(baseRenderer);
-        serverScreen.addDataListener(dataListener);
 
         this.setScreen(serverScreen);
 
@@ -42,4 +39,7 @@ public final class ServerGame extends Game {
         baseRenderer.dispose();
     }
 
+    public ServerState getState() {
+        return new ServerState(serverScreen.getState());
+    }
 }

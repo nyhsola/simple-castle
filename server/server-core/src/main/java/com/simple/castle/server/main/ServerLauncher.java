@@ -22,11 +22,8 @@ public class ServerLauncher {
         final Application application;
 
         final boolean isGUI = getIsGUI(args);
-
-        final ServerListener serverListener = new ServerListener();
-        final ServerGame game = new ServerGame(isGUI, serverListener);
-
-        final ServerStarter serverStarter = new ServerStarter(serverListener);
+        final ServerGame game = new ServerGame(isGUI);
+        final ServerStarter serverStarter = new ServerStarter(new ServerListener(game));
 
         if (isGUI) {
             application = new LwjglApplication(game);

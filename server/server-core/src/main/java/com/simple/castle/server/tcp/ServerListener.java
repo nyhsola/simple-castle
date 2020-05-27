@@ -8,59 +8,54 @@ import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.simple.castle.base.ServerRespond;
+import com.simple.castle.server.game.ServerGame;
+import com.simple.castle.server.user.UserWorker;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class ServerListener implements Runnable, DataListener, Disposable {
+public class ServerListener implements Runnable, Disposable {
     private static final int MAX_USERS = 4;
 
     private final ExecutorService userWorkersService = Executors.newFixedThreadPool(MAX_USERS);
-    private final ExecutorService dataSubmitterService = Executors.newSingleThreadExecutor();
+    private final Set<UserWorker> workers = Collections.synchronizedSet(new HashSet<>());
 
-    private final List<UserWorker> workers = Collections.synchronizedList(new ArrayList<>());
+    private final ServerGame serverGame;
 
+    private final ServerSocketHints serverSocketHints = new ServerSocketHints();
+    private final SocketHints socketHints = new SocketHints();
     private ServerSocket serverSocket = null;
+
     private boolean isRunning = false;
 
-    public ServerListener() {
+    public ServerListener(ServerGame serverGame) {
+        this.serverGame = serverGame;
+        this.serverSocketHints.acceptTimeout = 0;
     }
 
     @Override
     public void run() {
-        isRunning = true;
-
         Gdx.app.log("ServerListener", "Server going to wait for clients");
-        final ServerSocketHints serverSocketHints = new ServerSocketHints();
-        serverSocketHints.acceptTimeout = 0;
 
-        SocketHints socketHints = new SocketHints();
-
+        isRunning = true;
         serverSocket = Gdx.net.newServerSocket(Net.Protocol.TCP, 9090, serverSocketHints);
 
         while (isRunning && !Thread.currentThread().isInterrupted()) {
             Gdx.app.log("ServerListener", "Wait for next connection...");
 
-            Socket socket = null;
             try {
-                socket = serverSocket.accept(socketHints);
+                Socket socket = serverSocket.accept(socketHints);
+                UserWorker worker = new UserWorker(socket, serverGame);
+                workers.add(worker);
+                userWorkersService.submit(worker);
             } catch (GdxRuntimeException exception) {
                 Gdx.app.log("ServerListener", "Socket accept error");
             }
-
-            if (socket != null && socket.isConnected()) {
-                UserWorker worker = new UserWorker(socket);
-
-                workers.add(worker);
-                userWorkersService.submit(worker);
-            }
         }
-
         Gdx.app.log("ServerListener", "End of listening");
     }
 
@@ -71,11 +66,6 @@ public class ServerListener implements Runnable, DataListener, Disposable {
             userWorkersService.shutdown();
             if (!userWorkersService.awaitTermination(1, TimeUnit.SECONDS)) {
                 userWorkersService.shutdownNow();
-            }
-
-            dataSubmitterService.shutdown();
-            if (!dataSubmitterService.awaitTermination(1, TimeUnit.SECONDS)) {
-                dataSubmitterService.shutdownNow();
             }
 
             for (UserWorker userWorker : workers) {
@@ -91,19 +81,6 @@ public class ServerListener implements Runnable, DataListener, Disposable {
         if (serverSocket != null) {
             Gdx.app.log("ServerListener", "Server socket disposed");
             serverSocket.dispose();
-        }
-    }
-
-    @Override
-    public void worldTick(ServerRespond serverRespond) {
-        if (isRunning) {
-            ServerRespond dataPrepared = new ServerRespond(serverRespond);
-
-            dataSubmitterService.submit(() -> {
-                for (UserWorker worker : workers) {
-                    worker.addWorldTick(new ServerRespond(dataPrepared));
-                }
-            });
         }
     }
 

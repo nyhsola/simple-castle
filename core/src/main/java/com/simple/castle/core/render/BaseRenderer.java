@@ -1,4 +1,4 @@
-package com.simple.castle.base.render;
+package com.simple.castle.core.render;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;

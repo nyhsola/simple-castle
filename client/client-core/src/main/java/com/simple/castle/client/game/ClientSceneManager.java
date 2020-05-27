@@ -2,8 +2,8 @@ package com.simple.castle.client.game;
 
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.simple.castle.base.ModelSend;
-import com.simple.castle.base.ServerRespond;
+import com.simple.castle.core.ModelSend;
+import com.simple.castle.core.ServerState;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,11 +18,13 @@ public class ClientSceneManager {
         this.modelInstances = new HashMap<>();
     }
 
-    public Collection<ModelInstance> updateAndGet(ServerRespond serverRespond) {
-        if (serverRespond != null && serverRespond.getModelSends() != null) {
-            for (ModelSend modelSend : serverRespond.getModelSends()) {
+    public Collection<ModelInstance> updateAndGet(ServerState serverState) {
+        if (serverState != null && serverState.getModelSends() != null) {
+            for (ModelSend modelSend : serverState.getModelSends()) {
                 if (!modelInstances.containsKey(modelSend.getId())) {
-                    modelInstances.put(modelSend.getId(), new ModelInstance(model, modelSend.getId(), true));
+                    ModelInstance value = new ModelInstance(model, modelSend.getId(), true);
+                    value.transform.set(modelSend.getMatrix4());
+                    modelInstances.put(modelSend.getId(), value);
                 }
             }
         }

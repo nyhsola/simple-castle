@@ -2,18 +2,17 @@ package com.simple.castle.server.screen;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
-import com.simple.castle.base.ServerRespond;
-import com.simple.castle.base.asset.AssetLoader;
-import com.simple.castle.base.render.BaseCamera;
-import com.simple.castle.base.render.BaseEnvironment;
-import com.simple.castle.base.render.BaseRenderer;
+import com.simple.castle.core.ModelSend;
+import com.simple.castle.core.asset.AssetLoader;
+import com.simple.castle.core.render.BaseCamera;
+import com.simple.castle.core.render.BaseEnvironment;
+import com.simple.castle.core.render.BaseRenderer;
 import com.simple.castle.server.loader.SceneLoader;
 import com.simple.castle.server.manager.SceneManager;
 import com.simple.castle.server.physic.world.PhysicWorld;
-import com.simple.castle.server.tcp.DataListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ServerScreen extends ScreenAdapter implements InputProcessor {
@@ -25,27 +24,23 @@ public class ServerScreen extends ScreenAdapter implements InputProcessor {
     private final InputMultiplexer inputMultiplexer;
 
     private final PhysicWorld physicWorld;
-    private final List<DataListener> dataListeners;
 
     private final Model model;
     private final SceneManager sceneManager;
-    private final ServerRespond serverRespond;
 
     private boolean isDebug = false;
 
     public ServerScreen(BaseRenderer baseRenderer) {
         this.baseRenderer = baseRenderer;
 
-        this.serverRespond = new ServerRespond();
-
         this.model = new AssetLoader().loadModel();
         this.sceneManager = new SceneManager(new SceneLoader().loadSceneObjects(model), model);
         this.baseEnvironment = new BaseEnvironment();
 
-        Vector3 ground = sceneManager.getObject("ground").getModelInstance().transform.getTranslation(new Vector3());
-        this.baseCamera = new BaseCamera(ground);
+        ModelInstance groundObject = sceneManager.getObject("ground").getModelInstance();
+        Vector3 ground = groundObject.transform.getTranslation(new Vector3());
+        this.baseCamera = new BaseCamera(ground, groundObject);
 
-        this.dataListeners = new ArrayList<>();
         this.physicWorld = new PhysicWorld();
         this.sceneManager.getAll().forEach(baseObject -> physicWorld.addRigidBody(baseObject.getPhysicObject()));
 
@@ -63,10 +58,6 @@ public class ServerScreen extends ScreenAdapter implements InputProcessor {
             physicWorld.debugDraw(baseCamera);
         }
 
-        for (DataListener dataListener : dataListeners) {
-            serverRespond.setModelSends(sceneManager.getSend());
-            dataListener.worldTick(serverRespond);
-        }
     }
 
     @Override
@@ -131,7 +122,7 @@ public class ServerScreen extends ScreenAdapter implements InputProcessor {
         return inputMultiplexer.scrolled(amount);
     }
 
-    public void addDataListener(DataListener dataListener) {
-        this.dataListeners.add(dataListener);
+    public List<ModelSend> getState() {
+        return sceneManager.getSend();
     }
 }

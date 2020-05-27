@@ -1,10 +1,13 @@
-package com.simple.castle.base.render;
+package com.simple.castle.core.render;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
+import com.simple.castle.core.IntersectUtils;
 
 public class BaseCamera extends PerspectiveCamera implements InputProcessor {
 
@@ -20,8 +23,14 @@ public class BaseCamera extends PerspectiveCamera implements InputProcessor {
     private boolean keyLeftHolds = false;
     private boolean keyRightHolds = false;
 
-    public BaseCamera(Vector3 startPosition) {
+    private ModelInstance plane;
+    private boolean mouseDragged = false;
+    private float previousX;
+    private float previousY;
+
+    public BaseCamera(Vector3 startPosition, ModelInstance plane) {
         super(FIELD_OF_VIEW, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        this.plane = plane;
 
         this.position.set(startPosition.x + 10f, startPosition.y + 10f, startPosition.z);
         this.lookAt(startPosition);
@@ -93,16 +102,34 @@ public class BaseCamera extends PerspectiveCamera implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (plane != null && button == Input.Buttons.LEFT) {
+            mouseDragged = true;
+            Vector3 vector3 = IntersectUtils.intersectPositionPoint(new BoundingBox(), this, plane, screenX, screenY);
+            if (vector3 != null) {
+                previousX = vector3.x;
+                previousY = vector3.z;
+            }
+        }
         return false;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        mouseDragged = false;
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        if (plane != null && mouseDragged) {
+            Vector3 vector3 = IntersectUtils.intersectPositionPoint(new BoundingBox(), this, plane, screenX, screenY);
+            if (vector3 != null) {
+                final float deltaX = previousX - vector3.x;
+                final float deltaY = previousY - vector3.z;
+                position.x += deltaX;
+                position.z += deltaY;
+            }
+        }
         return false;
     }
 

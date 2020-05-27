@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.bullet.dynamics.btDynamicsWorld;
 import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver;
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw;
 import com.badlogic.gdx.utils.Disposable;
-import com.simple.castle.base.render.BaseCamera;
+import com.simple.castle.core.render.BaseCamera;
 import com.simple.castle.server.physic.unit.PhysicObject;
 
 public class PhysicWorld implements Disposable {

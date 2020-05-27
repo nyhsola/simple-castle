@@ -1,16 +1,15 @@
 package com.simple.castle.client.game;
 
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.math.Vector3;
-import com.simple.castle.base.ServerRespond;
-import com.simple.castle.base.asset.AssetLoader;
-import com.simple.castle.base.render.BaseCamera;
-import com.simple.castle.base.render.BaseEnvironment;
-import com.simple.castle.base.render.BaseRenderer;
-import com.simple.castle.client.server.ServerConnector;
+import com.badlogic.gdx.net.SocketHints;
+import com.simple.castle.core.ServerState;
+import com.simple.castle.core.api.ServerApi;
+import com.simple.castle.core.asset.AssetLoader;
+import com.simple.castle.core.render.BaseCamera;
+import com.simple.castle.core.render.BaseEnvironment;
+import com.simple.castle.core.render.BaseRenderer;
 
 public class GameScreen extends ScreenAdapter implements InputProcessor {
     private final BaseRenderer baseRenderer;
@@ -19,7 +18,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
 
     private final ClientSceneManager clientSceneManager;
 
-    private final ServerConnector serverConnector;
+    private final ServerApi serverApi;
     private final Model model;
 
     private final InputMultiplexer inputMultiplexer;
@@ -28,12 +27,12 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
         this.model = new AssetLoader().loadModel();
 
         this.baseRenderer = baseRenderer;
-        this.baseCamera = new BaseCamera(new Vector3(10, 10, 10));
+        this.baseCamera = new BaseCamera(new Vector3(10, 10, 10), null);
         this.baseEnvironment = new BaseEnvironment();
 
         this.clientSceneManager = new ClientSceneManager(model);
 
-        this.serverConnector = new ServerConnector("127.0.0.1", 9090);
+        this.serverApi = new ServerApi(Gdx.net.newClientSocket(Net.Protocol.TCP, "127.0.0.1", 9090, new SocketHints()));
 
         this.inputMultiplexer = new InputMultiplexer();
         this.inputMultiplexer.addProcessor(baseCamera);
@@ -43,14 +42,11 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
     public void render(float delta) {
         baseCamera.update(delta);
 
-        ServerRespond tick = serverConnector.getNextWorldTick(1000 / 60);
+        ServerState tick = serverApi.getPositions();
 
-        baseRenderer.render(
-                baseCamera,
-                clientSceneManager.updateAndGet(tick),
-                baseEnvironment);
+        Gdx.app.log("GameScreen", tick.toString());
 
-//        Gdx.app.log("GameScreen", String.valueOf(tick));
+        baseRenderer.render(baseCamera, clientSceneManager.updateAndGet(tick), baseEnvironment);
     }
 
     @Override
@@ -61,7 +57,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor {
 
     @Override
     public void dispose() {
-        serverConnector.dispose();
+        serverApi.dispose();
         model.dispose();
         baseRenderer.dispose();
     }
