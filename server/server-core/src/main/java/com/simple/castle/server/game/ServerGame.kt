@@ -1,45 +1,32 @@
-package com.simple.castle.server.game;
+package com.simple.castle.server.game
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.physics.bullet.Bullet;
-import com.simple.castle.core.ServerState;
-import com.simple.castle.core.render.BaseRenderer;
-import com.simple.castle.server.screen.GameScreen;
+import com.badlogic.gdx.Game
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.g3d.ModelBatch
+import com.badlogic.gdx.physics.bullet.Bullet
+import com.simple.castle.core.ServerState
+import com.simple.castle.core.render.BaseRenderer
+import com.simple.castle.server.screen.GameScreen
 
-import static org.mockito.Mockito.mock;
+class ServerGame(private val batchSupplier: (() -> ModelBatch)) : Game() {
+    private var baseRenderer: BaseRenderer? = null
+    private var gameScreen: GameScreen? = null
 
-public final class ServerGame extends Game {
-
-    private final boolean isGUI;
-
-    private BaseRenderer baseRenderer;
-    private GameScreen gameScreen;
-
-    public ServerGame(boolean isGUI) {
-        this.isGUI = isGUI;
+    override fun create() {
+        Bullet.init()
+        baseRenderer = BaseRenderer(batchSupplier.invoke())
+        gameScreen = GameScreen(baseRenderer)
+        setScreen(gameScreen)
+        Gdx.input.inputProcessor = gameScreen
     }
 
-    @Override
-    public void create() {
-        Bullet.init();
-        baseRenderer = new BaseRenderer(isGUI ? new ModelBatch() : mock(ModelBatch.class));
-        gameScreen = new GameScreen(baseRenderer);
-
-        this.setScreen(gameScreen);
-
-        Gdx.input.setInputProcessor(gameScreen);
+    override fun dispose() {
+        super.dispose()
+        gameScreen!!.dispose()
+        baseRenderer!!.dispose()
     }
 
-    @Override
-    public void dispose() {
-        super.dispose();
-        gameScreen.dispose();
-        baseRenderer.dispose();
-    }
+    val state: ServerState
+        get() = ServerState(gameScreen!!.state)
 
-    public ServerState getState() {
-        return new ServerState(gameScreen.getState());
-    }
 }
