@@ -24,6 +24,7 @@ public class ClientGame extends Game {
     public void dispose() {
         super.dispose();
         gameScreen.dispose();
+        baseRenderer.dispose();
     }
 
 }

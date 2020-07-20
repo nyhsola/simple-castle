@@ -43,8 +43,7 @@ public class SceneManager implements Disposable {
 
         modelsSend = Collections.synchronizedList(baseObjectMap.values().stream()
                 .filter(baseObject -> !baseObject.getHide())
-                .map(baseObject
-                        -> new ModelSend(baseObject.getId(), baseObject.getModelInstance().transform))
+                .map(baseObject -> new ModelSend(baseObject.getId(), baseObject.getModelInstance().transform))
                 .collect(Collectors.toList()));
     }
 

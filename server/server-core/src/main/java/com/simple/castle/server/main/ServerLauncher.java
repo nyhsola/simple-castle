@@ -21,7 +21,9 @@ public class ServerLauncher {
     public static void main(String[] args) {
         final Application application;
 
-        final boolean isGUI = getIsGUI(args);
+        final boolean isGUI = isGUI(args);
+        final boolean isServer = isServer(args);
+
         final ServerGame game = new ServerGame(isGUI);
         final ServerStarter serverStarter = new ServerStarter(new ServerListener(game));
 
@@ -32,6 +34,10 @@ public class ServerLauncher {
             Gdx.gl20 = mock(GL20.class);
             Gdx.gl30 = mock(GL30.class);
             application = new HeadlessApplication(game);
+        }
+
+        if (isServer) {
+            serverStarter.start();
         }
 
         application.addLifecycleListener(new LifecycleListener() {
@@ -50,7 +56,6 @@ public class ServerLauncher {
                 serverStarter.stop();
             }
         });
-        serverStarter.start();
 
         if (!isGUI) {
             Scanner scanner = new Scanner(System.in);
@@ -63,7 +68,11 @@ public class ServerLauncher {
         Gdx.app.log("ServerLauncher", "Main thread done");
     }
 
-    private static boolean getIsGUI(String[] args) {
+    private static boolean isGUI(String[] args) {
         return args.length == 0 || Stream.of(args).noneMatch(arg -> arg.contains("--no-gui"));
+    }
+
+    private static boolean isServer(String[] args) {
+        return args.length != 0 && Stream.of(args).anyMatch(arg -> arg.contains("--server"));
     }
 }

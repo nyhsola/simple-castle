@@ -17,7 +17,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class SceneLoader {
+public final class SceneLoader {
+    private static final Json JSON = new Json();
+
+    private SceneLoader() {
+    }
+
     private static String loadData(String path) {
         try {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(ServerGame.class.getResourceAsStream(path), StandardCharsets.UTF_8))) {
@@ -34,18 +39,20 @@ public class SceneLoader {
                 .collect(Collectors.toList());
     }
 
-    public SceneObjectsJson loadSceneObjects(Model model) {
+    public static SceneObjectsJson loadSceneObjects(Model model) {
         Set<String> nodeNames = extractAllNodeNames(model);
-        SceneObjectsJson sceneObjectsJson = new Json().fromJson(SceneObjectsJson.class, loadData("/game-scene-objects.json"));
-        sceneObjectsJson.setSceneObjectsJson(
-                sceneObjectsJson.getSceneObjectsJson().stream()
-                        .map(extractImplicitNodeNames(nodeNames))
-                        .flatMap(Collection::stream)
-                        .collect(Collectors.toList()));
+        SceneObjectsJson sceneObjectsJson = JSON.fromJson(SceneObjectsJson.class, loadData("/game-scene-objects.json"));
+
+        List<SceneObjectJson> extracted = sceneObjectsJson.getSceneObjectsJson().stream()
+                .map(extractImplicitNodeNames(nodeNames))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
+        sceneObjectsJson.setSceneObjectsJson(extracted);
         return sceneObjectsJson;
     }
 
-    private Function<SceneObjectJson, List<SceneObjectJson>> extractImplicitNodeNames(Set<String> nodeNames) {
+    private static Function<SceneObjectJson, List<SceneObjectJson>> extractImplicitNodeNames(Set<String> nodeNames) {
         return sceneObjectJson -> {
             Collection<String> nodes = getValuesByPattern(nodeNames, sceneObjectJson.getNodePattern());
             return nodes.stream().map(implicitNode -> {
@@ -56,7 +63,7 @@ public class SceneLoader {
         };
     }
 
-    private Set<String> extractAllNodeNames(Model model) {
+    private static Set<String> extractAllNodeNames(Model model) {
         return StreamSupport.stream(model.nodes.spliterator(), false)
                 .map(node -> node.id)
                 .collect(Collectors.toSet());

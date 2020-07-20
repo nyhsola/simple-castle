@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.simple.castle.core.ServerState;
 import com.simple.castle.core.render.BaseRenderer;
-import com.simple.castle.server.screen.ServerScreen;
+import com.simple.castle.server.screen.GameScreen;
 
 import static org.mockito.Mockito.mock;
 
@@ -15,7 +15,7 @@ public final class ServerGame extends Game {
     private final boolean isGUI;
 
     private BaseRenderer baseRenderer;
-    private ServerScreen serverScreen;
+    private GameScreen gameScreen;
 
     public ServerGame(boolean isGUI) {
         this.isGUI = isGUI;
@@ -25,21 +25,21 @@ public final class ServerGame extends Game {
     public void create() {
         Bullet.init();
         baseRenderer = new BaseRenderer(isGUI ? new ModelBatch() : mock(ModelBatch.class));
-        serverScreen = new ServerScreen(baseRenderer);
+        gameScreen = new GameScreen(baseRenderer);
 
-        this.setScreen(serverScreen);
+        this.setScreen(gameScreen);
 
-        Gdx.input.setInputProcessor(serverScreen);
+        Gdx.input.setInputProcessor(gameScreen);
     }
 
     @Override
     public void dispose() {
         super.dispose();
-        serverScreen.dispose();
+        gameScreen.dispose();
         baseRenderer.dispose();
     }
 
     public ServerState getState() {
-        return new ServerState(serverScreen.getState());
+        return new ServerState(gameScreen.getState());
     }
 }

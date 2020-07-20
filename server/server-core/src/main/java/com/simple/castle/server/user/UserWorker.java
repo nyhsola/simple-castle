@@ -22,7 +22,7 @@ public class UserWorker implements Runnable, Disposable {
         Gdx.app.log("UserWorker", "User connected, starting transfer data");
         NetTool netTool = new NetTool(socket);
         while (!Thread.currentThread().isInterrupted() && socket.isConnected()) {
-            process(netTool);
+//            process(netTool);
         }
     }
 
