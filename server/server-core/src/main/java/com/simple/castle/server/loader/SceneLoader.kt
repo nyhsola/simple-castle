@@ -26,7 +26,7 @@ object SceneLoader {
 
     private fun getValuesByPattern(modelNames: Set<String>, pattern: String?): Collection<String> {
         return modelNames.stream()
-                .filter { nodes: String -> nodes.matches(Regex.fromLiteral(pattern!!)) }
+                .filter { nodes: String -> nodes.matches(Regex(pattern!!)) }
                 .collect(Collectors.toList())
     }
 
