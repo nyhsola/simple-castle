@@ -6,11 +6,11 @@ import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader
 import com.badlogic.gdx.utils.JsonReader
 
 class AssetLoader {
-    fun loadModel(): Model {
-        return LOADER.loadModel(Gdx.files.internal("models/map.g3dj"))
-    }
-
     companion object {
         private val LOADER = G3dModelLoader(JsonReader())
+    }
+
+    fun loadModel(): Model {
+        return LOADER.loadModel(Gdx.files.internal("models/map.g3dj"))
     }
 }

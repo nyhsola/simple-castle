@@ -1,7 +1,9 @@
-package com.simple.castle.server.physic.unit;
+package com.simple.castle.server.kt.physic
 
-interface Flags {
-    short GROUND_FLAG = 1 << 8;
-    short OBJECT_FLAG = 1 << 9;
-    short ALL_FLAG = -1;
+internal interface Flags {
+    companion object {
+        const val GROUND_FLAG = (1 shl 8.toShort().toInt()).toShort()
+        const val OBJECT_FLAG = (1 shl 9.toShort().toInt()).toShort()
+        const val ALL_FLAG: Short = -1
+    }
 }

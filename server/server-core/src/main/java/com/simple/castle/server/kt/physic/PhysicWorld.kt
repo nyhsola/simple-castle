@@ -10,7 +10,6 @@ import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSol
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw
 import com.badlogic.gdx.utils.Disposable
 import com.simple.castle.core.kt.render.BaseCamera
-import com.simple.castle.server.physic.unit.PhysicObject
 import java.util.function.Consumer
 
 class PhysicWorld(private val physicObjects: List<PhysicObject?>) : Disposable {

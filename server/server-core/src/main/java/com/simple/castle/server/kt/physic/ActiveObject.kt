@@ -1,13 +1,12 @@
-package com.simple.castle.server.physic.unit;
+package com.simple.castle.server.kt.physic
 
-import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
+import com.badlogic.gdx.physics.bullet.collision.btCollisionObject
+import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody
 
-public class ActiveObject extends PhysicObject {
-    public ActiveObject(final btRigidBody.btRigidBodyConstructionInfo constructionInfo) {
-        super(constructionInfo);
-        this.body.setCollisionFlags(this.body.getCollisionFlags() | btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK);
-        this.body.setContactCallbackFlag(Flags.OBJECT_FLAG);
-        this.body.setContactCallbackFilter(Flags.GROUND_FLAG);
+class ActiveObject(constructionInfo: btRigidBody.btRigidBodyConstructionInfo) : PhysicObject(constructionInfo) {
+    init {
+        body.collisionFlags = body.collisionFlags or btCollisionObject.CollisionFlags.CF_CUSTOM_MATERIAL_CALLBACK
+        body.contactCallbackFlag = Flags.OBJECT_FLAG.toInt()
+        body.contactCallbackFilter = Flags.GROUND_FLAG.toInt()
     }
 }

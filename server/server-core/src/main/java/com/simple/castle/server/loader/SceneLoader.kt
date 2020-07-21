@@ -1,71 +1,60 @@
-package com.simple.castle.server.loader;
+package com.simple.castle.server.loader
 
-import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.utils.Json;
-import com.simple.castle.server.kt.game.ServerGame;
-import com.simple.castle.server.loader.json.SceneObjectJson;
-import com.simple.castle.server.loader.json.SceneObjectsJson;
+import com.badlogic.gdx.graphics.g3d.Model
+import com.badlogic.gdx.graphics.g3d.model.Node
+import com.badlogic.gdx.utils.Json
+import com.simple.castle.server.kt.game.ServerGame
+import com.simple.castle.server.loader.json.SceneObjectJson
+import com.simple.castle.server.loader.json.SceneObjectsJson
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
+import java.nio.charset.StandardCharsets
+import java.util.function.Function
+import java.util.stream.Collectors
+import java.util.stream.StreamSupport
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-public final class SceneLoader {
-    private static final Json JSON = new Json();
-
-    private SceneLoader() {
-    }
-
-    private static String loadData(String path) {
+object SceneLoader {
+    private val JSON = Json()
+    private fun loadData(path: String): String {
         try {
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(ServerGame.class.getResourceAsStream(path), StandardCharsets.UTF_8))) {
-                return br.lines().collect(Collectors.joining(System.lineSeparator()));
-            }
-        } catch (IOException exception) {
-            throw new AssertionError("Missing such props", exception);
+            BufferedReader(InputStreamReader(ServerGame::class.java.getResourceAsStream(path), StandardCharsets.UTF_8)).use { br -> return br.lines().collect(Collectors.joining(System.lineSeparator())) }
+        } catch (exception: IOException) {
+            throw AssertionError("Missing such props", exception)
         }
     }
 
-    private static Collection<String> getValuesByPattern(Set<String> modelNames, String pattern) {
+    private fun getValuesByPattern(modelNames: Set<String>, pattern: String?): Collection<String> {
         return modelNames.stream()
-                .filter(nodes -> nodes.matches(pattern))
-                .collect(Collectors.toList());
+                .filter { nodes: String -> nodes.matches(Regex.fromLiteral(pattern!!)) }
+                .collect(Collectors.toList())
     }
 
-    public static SceneObjectsJson loadSceneObjects(Model model) {
-        Set<String> nodeNames = extractAllNodeNames(model);
-        SceneObjectsJson sceneObjectsJson = JSON.fromJson(SceneObjectsJson.class, loadData("/game-scene-objects.json"));
-
-        List<SceneObjectJson> extracted = sceneObjectsJson.getSceneObjectsJson().stream()
+    fun loadSceneObjects(model: Model): SceneObjectsJson {
+        val nodeNames = extractAllNodeNames(model)
+        val sceneObjectsJson = JSON.fromJson(SceneObjectsJson::class.java, loadData("/game-scene-objects.json"))
+        val extracted = sceneObjectsJson.sceneObjectsJson!!.stream()
                 .map(extractImplicitNodeNames(nodeNames))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
-
-        sceneObjectsJson.setSceneObjectsJson(extracted);
-        return sceneObjectsJson;
+                .flatMap { obj: List<SceneObjectJson?> -> obj.stream() }
+                .collect(Collectors.toList())
+        sceneObjectsJson.sceneObjectsJson = extracted
+        return sceneObjectsJson
     }
 
-    private static Function<SceneObjectJson, List<SceneObjectJson>> extractImplicitNodeNames(Set<String> nodeNames) {
-        return sceneObjectJson -> {
-            Collection<String> nodes = getValuesByPattern(nodeNames, sceneObjectJson.getNodePattern());
-            return nodes.stream().map(implicitNode -> {
-                SceneObjectJson sceneObjectJsonNew = new SceneObjectJson(sceneObjectJson);
-                sceneObjectJsonNew.setNodePattern(implicitNode);
-                return sceneObjectJsonNew;
-            }).collect(Collectors.toList());
-        };
+    private fun extractImplicitNodeNames(nodeNames: Set<String>): Function<SceneObjectJson?, List<SceneObjectJson>> {
+        return Function { sceneObjectJson: SceneObjectJson? ->
+            val nodes = getValuesByPattern(nodeNames, sceneObjectJson!!.nodePattern)
+            nodes.stream().map { implicitNode: String? ->
+                val sceneObjectJsonNew = SceneObjectJson(sceneObjectJson)
+                sceneObjectJsonNew.nodePattern = implicitNode
+                sceneObjectJsonNew
+            }.collect(Collectors.toList())
+        }
     }
 
-    private static Set<String> extractAllNodeNames(Model model) {
+    private fun extractAllNodeNames(model: Model): Set<String> {
         return StreamSupport.stream(model.nodes.spliterator(), false)
-                .map(node -> node.id)
-                .collect(Collectors.toSet());
+                .map { node: Node -> node.id }
+                .collect(Collectors.toSet())
     }
 }

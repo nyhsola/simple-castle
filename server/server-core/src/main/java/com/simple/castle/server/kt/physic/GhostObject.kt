@@ -1,11 +1,10 @@
-package com.simple.castle.server.physic.unit;
+package com.simple.castle.server.kt.physic
 
-import com.badlogic.gdx.physics.bullet.collision.btCollisionObject;
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
+import com.badlogic.gdx.physics.bullet.collision.btCollisionObject
+import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody
 
-public class GhostObject extends PhysicObject {
-    public GhostObject(final btRigidBody.btRigidBodyConstructionInfo constructionInfo) {
-        super(constructionInfo);
-        this.body.setCollisionFlags(this.body.getCollisionFlags() | btCollisionObject.CollisionFlags.CF_NO_CONTACT_RESPONSE);
+class GhostObject(constructionInfo: btRigidBody.btRigidBodyConstructionInfo) : PhysicObject(constructionInfo) {
+    init {
+        body.collisionFlags = body.collisionFlags or btCollisionObject.CollisionFlags.CF_NO_CONTACT_RESPONSE
     }
 }

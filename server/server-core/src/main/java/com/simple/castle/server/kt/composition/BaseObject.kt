@@ -2,7 +2,7 @@ package com.simple.castle.server.kt.composition
 
 import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.utils.Disposable
-import com.simple.castle.server.physic.unit.PhysicObject
+import com.simple.castle.server.kt.physic.PhysicObject
 
 open class BaseObject(constructor: Constructor) : Disposable {
     private val id: String?

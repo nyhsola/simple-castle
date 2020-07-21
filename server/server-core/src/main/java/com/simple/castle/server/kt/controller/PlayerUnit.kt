@@ -11,6 +11,23 @@ class PlayerUnit(constructor: Constructor?, initPosition: Vector3?, val playerNa
     private var previousAngle = 0.0
     private var rotateDirection = false
     var isDead = false
+
+    companion object {
+        private const val DEFAULT_SPEED_ROTATION = 3
+        private const val DEFAULT_SPEED_MOVEMENT = 5
+        private const val DEFAULT_SPEED_MOVEMENT_ON_ROTATION = 5
+        private val ANGULAR_FACTOR = Vector3(0.0f, 1.0f, 0.0f)
+        private val FACE_DIRECTION = Vector3(1.0f, 0.0f, 0.0f)
+        private val ROTATE_LEFT = Vector3.Y.cpy().scl(DEFAULT_SPEED_ROTATION.toFloat())
+        private val ROTATE_RIGHT = Vector3.Y.cpy().scl(-DEFAULT_SPEED_ROTATION.toFloat())
+    }
+
+    init {
+        physicObject!!.body.worldTransform = Matrix4()
+        physicObject.body.translate(initPosition)
+        physicObject.body.angularFactor = ANGULAR_FACTOR
+    }
+
     fun update() {
         if (movePoint != null) {
             val linearVelocity = linearVelocity
@@ -61,19 +78,4 @@ class PlayerUnit(constructor: Constructor?, initPosition: Vector3?, val playerNa
         return Math.toDegrees(Math.acos(dot.toDouble()))
     }
 
-    companion object {
-        private const val DEFAULT_SPEED_ROTATION = 3
-        private const val DEFAULT_SPEED_MOVEMENT = 5
-        private const val DEFAULT_SPEED_MOVEMENT_ON_ROTATION = 5
-        private val ANGULAR_FACTOR = Vector3(0.0f, 1.0f, 0.0f)
-        private val FACE_DIRECTION = Vector3(1.0f, 0.0f, 0.0f)
-        private val ROTATE_LEFT = Vector3.Y.cpy().scl(DEFAULT_SPEED_ROTATION.toFloat())
-        private val ROTATE_RIGHT = Vector3.Y.cpy().scl(-DEFAULT_SPEED_ROTATION.toFloat())
-    }
-
-    init {
-        physicObject!!.body.worldTransform = Matrix4()
-        physicObject.body.translate(initPosition)
-        physicObject.body.angularFactor = ANGULAR_FACTOR
-    }
 }

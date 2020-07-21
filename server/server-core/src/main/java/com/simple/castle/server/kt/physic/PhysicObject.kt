@@ -1,36 +1,23 @@
-package com.simple.castle.server.physic.unit;
+package com.simple.castle.server.kt.physic
 
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
-import com.badlogic.gdx.physics.bullet.linearmath.btDefaultMotionState;
-import com.badlogic.gdx.physics.bullet.linearmath.btMotionState;
-import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody
+import com.badlogic.gdx.physics.bullet.linearmath.btDefaultMotionState
+import com.badlogic.gdx.physics.bullet.linearmath.btMotionState
+import com.badlogic.gdx.utils.Disposable
 
-public abstract class PhysicObject implements Disposable {
-    private final btRigidBody.btRigidBodyConstructionInfo constructionInfo;
-    protected final btRigidBody body;
-    protected final btMotionState motionState;
-
-    PhysicObject(final btRigidBody.btRigidBodyConstructionInfo constructionInfo) {
-        this.constructionInfo = constructionInfo;
-        this.motionState = new btDefaultMotionState();
-        this.body = new btRigidBody(constructionInfo);
-        this.body.setMotionState(motionState);
-
-        this.body.userData = this;
+abstract class PhysicObject internal constructor(private val constructionInfo: btRigidBody.btRigidBodyConstructionInfo) : Disposable {
+    val body: btRigidBody
+    val motionState: btMotionState
+    override fun dispose() {
+        motionState.dispose()
+        constructionInfo.dispose()
+        body.dispose()
     }
 
-    @Override
-    public void dispose() {
-        motionState.dispose();
-        constructionInfo.dispose();
-        body.dispose();
-    }
-
-    public btRigidBody getBody() {
-        return body;
-    }
-
-    public btMotionState getMotionState() {
-        return motionState;
+    init {
+        motionState = btDefaultMotionState()
+        body = btRigidBody(constructionInfo)
+        body.motionState = motionState
+        body.userData = this
     }
 }

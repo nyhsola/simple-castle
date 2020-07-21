@@ -8,9 +8,9 @@ import com.simple.castle.core.kt.render.BaseCamera
 import com.simple.castle.core.kt.render.BaseEnvironment
 import com.simple.castle.core.kt.render.BaseRenderer
 import com.simple.castle.core.kt.screen.BaseScreen
+import com.simple.castle.server.kt.manager.SceneManager
 import com.simple.castle.server.kt.physic.PhysicWorld
 import com.simple.castle.server.loader.SceneLoader
-import com.simple.castle.server.manager.SceneManager
 
 class GameScreen(private val baseRenderer: BaseRenderer) : BaseScreen() {
     private val model: Model = AssetLoader().loadModel()
@@ -21,7 +21,7 @@ class GameScreen(private val baseRenderer: BaseRenderer) : BaseScreen() {
     private var isDebug = false
 
     init {
-        baseCamera = BaseCamera(sceneManager.getObject("ground").modelInstance)
+        baseCamera = BaseCamera(sceneManager.getObject("ground")?.modelInstance)
         physicWorld = PhysicWorld(sceneManager.all.map { baseObject -> baseObject.physicObject })
         inputMultiplexer.addProcessor(baseCamera)
     }
@@ -30,9 +30,7 @@ class GameScreen(private val baseRenderer: BaseRenderer) : BaseScreen() {
         baseCamera.update(delta)
         physicWorld.update(delta)
         baseRenderer.render(baseCamera, sceneManager.drawables, baseEnvironment)
-        if (isDebug) {
-            physicWorld.debugDraw(baseCamera)
-        }
+        if (isDebug) physicWorld.debugDraw(baseCamera)
     }
 
     override fun resize(width: Int, height: Int) {
