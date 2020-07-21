@@ -1,7 +1,7 @@
-package com.simple.castle.server.json;
+package com.simple.castle.server.loader.json;
 
-import com.simple.castle.server.composition.add.InteractType;
-import com.simple.castle.server.composition.add.PhysicShape;
+import com.simple.castle.server.kt.composition.InteractType;
+import com.simple.castle.server.kt.composition.PhysicShape;
 
 public class SceneObjectJson {
     private String nodePattern;

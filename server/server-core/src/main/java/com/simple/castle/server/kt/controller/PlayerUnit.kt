@@ -1,101 +1,79 @@
-package com.simple.castle.server.controller;
+package com.simple.castle.server.kt.controller
 
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector3;
-import com.simple.castle.server.composition.BaseObject;
-import com.simple.castle.server.composition.Constructor;
+import com.badlogic.gdx.math.Matrix4
+import com.badlogic.gdx.math.Vector3
+import com.simple.castle.server.kt.composition.BaseObject
+import com.simple.castle.server.kt.composition.Constructor
 
-public class PlayerUnit extends BaseObject {
-
-    private static final int DEFAULT_SPEED_ROTATION = 3;
-    private static final int DEFAULT_SPEED_MOVEMENT = 5;
-    private static final int DEFAULT_SPEED_MOVEMENT_ON_ROTATION = 5;
-
-    private static final Vector3 ANGULAR_FACTOR = new Vector3(0, 1, 0);
-    private static final Vector3 FACE_DIRECTION = new Vector3(1, 0, 0);
-    private static final Vector3 ROTATE_LEFT = Vector3.Y.cpy().scl(DEFAULT_SPEED_ROTATION);
-    private static final Vector3 ROTATE_RIGHT = Vector3.Y.cpy().scl(-DEFAULT_SPEED_ROTATION);
-
-    private final Vector3 tempVector = new Vector3();
-    private final String playerName;
-
-    private Vector3 movePoint;
-    private double previousAngle;
-    private boolean rotateDirection = false;
-    private boolean isDead = false;
-
-    public PlayerUnit(Constructor constructor, Vector3 initPosition, String playerName) {
-        super(constructor);
-        this.playerName = playerName;
-
-        this.getPhysicObject().getBody().setWorldTransform(new Matrix4());
-        this.getPhysicObject().getBody().translate(initPosition);
-        this.getPhysicObject().getBody().setAngularFactor(ANGULAR_FACTOR);
-    }
-
-    public void update() {
+class PlayerUnit(constructor: Constructor?, initPosition: Vector3?, val playerName: String) : BaseObject(constructor!!) {
+    private val tempVector = Vector3()
+    private var movePoint: Vector3? = null
+    private var previousAngle = 0.0
+    private var rotateDirection = false
+    var isDead = false
+    fun update() {
         if (movePoint != null) {
-            Vector3 linearVelocity = getLinearVelocity();
-            Vector3 angularVelocity = getAngularVelocity(movePoint, linearVelocity);
-            if (Vector3.Zero.equals(angularVelocity)) {
-                linearVelocity.scl(DEFAULT_SPEED_MOVEMENT);
+            val linearVelocity = linearVelocity
+            val angularVelocity = getAngularVelocity(movePoint!!, linearVelocity)
+            if (Vector3.Zero == angularVelocity) {
+                linearVelocity.scl(DEFAULT_SPEED_MOVEMENT.toFloat())
             } else {
-                linearVelocity.scl(DEFAULT_SPEED_MOVEMENT_ON_ROTATION);
+                linearVelocity.scl(DEFAULT_SPEED_MOVEMENT_ON_ROTATION.toFloat())
             }
-            this.getPhysicObject().getBody().setLinearVelocity(linearVelocity);
-            this.getPhysicObject().getBody().setAngularVelocity(angularVelocity);
+            physicObject!!.body.linearVelocity = linearVelocity
+            physicObject.body.angularVelocity = angularVelocity
         } else {
-            this.getPhysicObject().getBody().setLinearVelocity(Vector3.Zero);
-            this.getPhysicObject().getBody().setAngularVelocity(Vector3.Zero);
+            physicObject!!.body.linearVelocity = Vector3.Zero
+            physicObject.body.angularVelocity = Vector3.Zero
         }
     }
 
-
-    private Vector3 getAngularVelocity(Vector3 target, Vector3 linearVelocity) {
-        Vector3 angularVelocity = Vector3.Zero;
-        Vector3 unitPosition = getModelInstance().transform.getTranslation(tempVector);
-        Vector3 targetDirection = target.cpy().sub(unitPosition).nor();
-
-        double currentAngle = getAngle(targetDirection, linearVelocity);
-
+    private fun getAngularVelocity(target: Vector3, linearVelocity: Vector3): Vector3 {
+        var angularVelocity = Vector3.Zero
+        val unitPosition = modelInstance!!.transform.getTranslation(tempVector)
+        val targetDirection = target.cpy().sub(unitPosition).nor()
+        val currentAngle = getAngle(targetDirection, linearVelocity)
         if (currentAngle <= 0 || currentAngle >= 10) {
             if (currentAngle - previousAngle > 0) {
-                rotateDirection = !rotateDirection;
+                rotateDirection = !rotateDirection
             }
-            if (rotateDirection) {
-                angularVelocity = ROTATE_LEFT;
+            angularVelocity = if (rotateDirection) {
+                ROTATE_LEFT
             } else {
-                angularVelocity = ROTATE_RIGHT;
+                ROTATE_RIGHT
             }
-            previousAngle = currentAngle;
+            previousAngle = currentAngle
         }
-        return angularVelocity;
+        return angularVelocity
     }
 
-    private Vector3 getLinearVelocity() {
-        return this.getPhysicObject().getBody().getOrientation().transform(FACE_DIRECTION.cpy());
+    private val linearVelocity: Vector3
+        private get() = physicObject!!.body.orientation.transform(FACE_DIRECTION.cpy())
+
+    fun setMovePoint(movePoint: Vector3?) {
+        this.movePoint = movePoint
     }
 
-    public void setMovePoint(Vector3 movePoint) {
-        this.movePoint = movePoint;
+    private fun getAngle(a: Vector3, b: Vector3): Double {
+        val norA = b.cpy().nor()
+        val norB = a.cpy().nor()
+        val dot = norB.dot(norA)
+        return Math.toDegrees(Math.acos(dot.toDouble()))
     }
 
-    public String getPlayerName() {
-        return playerName;
+    companion object {
+        private const val DEFAULT_SPEED_ROTATION = 3
+        private const val DEFAULT_SPEED_MOVEMENT = 5
+        private const val DEFAULT_SPEED_MOVEMENT_ON_ROTATION = 5
+        private val ANGULAR_FACTOR = Vector3(0.0f, 1.0f, 0.0f)
+        private val FACE_DIRECTION = Vector3(1.0f, 0.0f, 0.0f)
+        private val ROTATE_LEFT = Vector3.Y.cpy().scl(DEFAULT_SPEED_ROTATION.toFloat())
+        private val ROTATE_RIGHT = Vector3.Y.cpy().scl(-DEFAULT_SPEED_ROTATION.toFloat())
     }
 
-    public boolean isDead() {
-        return isDead;
-    }
-
-    public void setDead(boolean dead) {
-        this.isDead = dead;
-    }
-
-    private double getAngle(Vector3 a, Vector3 b) {
-        Vector3 norA = b.cpy().nor();
-        Vector3 norB = a.cpy().nor();
-        float dot = norB.dot(norA);
-        return Math.toDegrees(Math.acos(dot));
+    init {
+        physicObject!!.body.worldTransform = Matrix4()
+        physicObject.body.translate(initPosition)
+        physicObject.body.angularFactor = ANGULAR_FACTOR
     }
 }

@@ -1,6 +1,6 @@
 package com.simple.castle.client.game;
 
-import com.simple.castle.core.screen.BaseScreen;
+import com.simple.castle.core.kt.screen.BaseScreen;
 
 public class GameScreen extends BaseScreen {
 //    private final BaseRenderer baseRenderer;

@@ -1,51 +1,45 @@
-package com.simple.castle.core.api;
+package com.simple.castle.core.kt.api
 
-import com.badlogic.gdx.net.Socket;
+import com.badlogic.gdx.net.Socket
+import java.io.IOException
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
-public class NetTool {
-
-    private final ObjectInputStream inputStream;
-    private final ObjectOutputStream outputStream;
-
-    public NetTool(Socket socket) {
-        ObjectInputStream inputStream = null;
-        ObjectOutputStream outputStream = null;
-
-        try {
-            outputStream = new ObjectOutputStream(socket.getOutputStream());
-            inputStream = new ObjectInputStream(socket.getInputStream());
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-
-        this.inputStream = inputStream;
-        this.outputStream = outputStream;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> T read() {
-        T readObject = null;
+class NetTool(socket: Socket) {
+    private val inputStream: ObjectInputStream?
+    private val outputStream: ObjectOutputStream?
+    fun <T> read(): T? {
+        var readObject: T? = null
         try {
             if (inputStream != null) {
-                readObject = (T) inputStream.readObject();
+                readObject = inputStream.readObject() as T
             }
-        } catch (IOException | ClassNotFoundException exception) {
-            exception.printStackTrace();
+        } catch (exception: IOException) {
+            exception.printStackTrace()
+        } catch (exception: ClassNotFoundException) {
+            exception.printStackTrace()
         }
-        return readObject;
+        return readObject
     }
 
-    public <T> void write(T object) {
+    fun <T> write(`object`: T) {
         try {
-            if (outputStream != null) {
-                outputStream.writeObject(object);
-            }
-        } catch (IOException exception) {
-            exception.printStackTrace();
+            outputStream?.writeObject(`object`)
+        } catch (exception: IOException) {
+            exception.printStackTrace()
         }
+    }
+
+    init {
+        var inputStream: ObjectInputStream? = null
+        var outputStream: ObjectOutputStream? = null
+        try {
+            outputStream = ObjectOutputStream(socket.outputStream)
+            inputStream = ObjectInputStream(socket.inputStream)
+        } catch (exception: IOException) {
+            exception.printStackTrace()
+        }
+        this.inputStream = inputStream
+        this.outputStream = outputStream
     }
 }

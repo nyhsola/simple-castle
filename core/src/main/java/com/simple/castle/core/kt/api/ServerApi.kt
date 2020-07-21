@@ -1,27 +1,21 @@
-package com.simple.castle.core.api;
+package com.simple.castle.core.kt.api
 
-import com.badlogic.gdx.net.Socket;
-import com.badlogic.gdx.utils.Disposable;
-import com.simple.castle.core.ServerState;
+import com.badlogic.gdx.net.Socket
+import com.badlogic.gdx.utils.Disposable
 
-public class ServerApi implements Disposable {
-    private final Socket socket;
-    private NetTool netTool;
-
-    public ServerApi(Socket socket) {
-        this.socket = socket;
-    }
-
-    public ServerState getPositions() {
-        if (netTool == null) {
-            netTool = new NetTool(socket);
+class ServerApi(private val socket: Socket) : Disposable {
+    private var netTool: NetTool? = null
+    val positions: ServerState?
+        get() {
+            if (netTool == null) {
+                netTool = NetTool(socket)
+            }
+            netTool!!.write<Byte>(ServerCommands.GET_CURRENT_POSITIONS)
+            return netTool!!.read<ServerState>()
         }
-        netTool.write(ServerCommands.GET_CURRENT_POSITIONS);
-        return netTool.read();
+
+    override fun dispose() {
+        socket.dispose()
     }
 
-    @Override
-    public void dispose() {
-        socket.dispose();
-    }
 }

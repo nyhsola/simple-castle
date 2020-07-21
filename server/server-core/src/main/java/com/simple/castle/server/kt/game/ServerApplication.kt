@@ -56,7 +56,6 @@ class ServerApplication private constructor(builder: Builder) {
                 Gdx.app.postRunnable(Gdx.app::exit)
             }
         })
-
     }
 
     class Builder {

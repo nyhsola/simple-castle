@@ -1,24 +1,21 @@
-package com.simple.castle.server.composition.add;
+package com.simple.castle.server.kt.composition
 
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody;
-import com.simple.castle.server.physic.unit.ActiveObject;
-import com.simple.castle.server.physic.unit.KinematicObject;
-import com.simple.castle.server.physic.unit.PhysicObject;
+import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody
+import com.simple.castle.server.physic.unit.ActiveObject
+import com.simple.castle.server.physic.unit.KinematicObject
+import com.simple.castle.server.physic.unit.PhysicObject
+import java.util.function.Function
 
-import java.util.function.Function;
+enum class InteractType(private val function: Function<btRigidBody.btRigidBodyConstructionInfo, PhysicObject>) {
+    ACTIVE(Function<btRigidBody.btRigidBodyConstructionInfo, PhysicObject>
+    { constructionInfo: btRigidBody.btRigidBodyConstructionInfo? -> ActiveObject(constructionInfo) }),
+    KINEMATIC(Function<btRigidBody.btRigidBodyConstructionInfo, PhysicObject>
+    { constructionInfo: btRigidBody.btRigidBodyConstructionInfo? -> KinematicObject(constructionInfo) }),
+    GHOST(Function<btRigidBody.btRigidBodyConstructionInfo, PhysicObject>
+    { constructionInfo: btRigidBody.btRigidBodyConstructionInfo? -> KinematicObject(constructionInfo) });
 
-public enum InteractType {
-    ACTIVE(ActiveObject::new),
-    KINEMATIC(KinematicObject::new),
-    GHOST(KinematicObject::new);
-
-    private final Function<btRigidBody.btRigidBodyConstructionInfo, PhysicObject> function;
-
-    InteractType(Function<btRigidBody.btRigidBodyConstructionInfo, PhysicObject> function) {
-        this.function = function;
+    fun build(info: btRigidBody.btRigidBodyConstructionInfo): PhysicObject {
+        return function.apply(info)
     }
 
-    public PhysicObject build(btRigidBody.btRigidBodyConstructionInfo info) {
-        return function.apply(info);
-    }
 }

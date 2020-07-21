@@ -4,18 +4,18 @@ import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g3d.ModelBatch
 import com.badlogic.gdx.physics.bullet.Bullet
-import com.simple.castle.core.render.BaseRenderer
+import com.simple.castle.core.kt.render.BaseRenderer
 import com.simple.castle.server.kt.screen.GameScreen
 
-class ServerGame(private val batchSupplier: (() -> ModelBatch)) : Game() {
-    private var baseRenderer: BaseRenderer? = null
-    private var gameScreen: GameScreen? = null
+class ServerGame(private val modelBatchSupplier: (() -> ModelBatch)) : Game() {
+    private lateinit var baseRenderer: BaseRenderer
+    private lateinit var gameScreen: GameScreen
 
     override fun create() {
         Bullet.init()
 
-        baseRenderer = BaseRenderer(batchSupplier.invoke())
-        gameScreen = GameScreen(baseRenderer!!)
+        baseRenderer = BaseRenderer(modelBatchSupplier.invoke())
+        gameScreen = GameScreen(baseRenderer)
 
         setScreen(gameScreen)
 
@@ -24,8 +24,8 @@ class ServerGame(private val batchSupplier: (() -> ModelBatch)) : Game() {
 
     override fun dispose() {
         super.dispose()
-        gameScreen!!.dispose()
-        baseRenderer!!.dispose()
+        gameScreen.dispose()
+        baseRenderer.dispose()
     }
 
 }

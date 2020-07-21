@@ -2,9 +2,9 @@ package com.simple.castle.server.loader;
 
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.utils.Json;
-import com.simple.castle.server.json.SceneObjectJson;
-import com.simple.castle.server.json.SceneObjectsJson;
 import com.simple.castle.server.kt.game.ServerGame;
+import com.simple.castle.server.loader.json.SceneObjectJson;
+import com.simple.castle.server.loader.json.SceneObjectsJson;
 
 import java.io.BufferedReader;
 import java.io.IOException;

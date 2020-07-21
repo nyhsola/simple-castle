@@ -1,48 +1,44 @@
-package com.simple.castle.server.composition.add;
+package com.simple.castle.server.kt.composition
 
-import com.badlogic.gdx.graphics.g3d.model.Node;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
-import com.badlogic.gdx.physics.bullet.Bullet;
-import com.badlogic.gdx.physics.bullet.collision.btBoxShape;
-import com.badlogic.gdx.physics.bullet.collision.btCollisionShape;
+import com.badlogic.gdx.graphics.g3d.model.Node
+import com.badlogic.gdx.math.Vector3
+import com.badlogic.gdx.math.collision.BoundingBox
+import com.badlogic.gdx.physics.bullet.Bullet
+import com.badlogic.gdx.physics.bullet.collision.btBoxShape
+import com.badlogic.gdx.physics.bullet.collision.btCollisionShape
+import java.util.function.Function
 
-import java.util.function.Function;
+enum class PhysicShape(private val function: Function<Node, btCollisionShape>) {
+    STATIC(Function<Node, btCollisionShape> { node: Node -> calculateStaticNodeShape(node) }),
+    BASE_BOX(Function<Node, btCollisionShape> { node: Node -> calculateBaseBox(node) }),
+    ADJUSTED_BASE_BOX(Function<Node, btCollisionShape> { node: Node -> calculateAdjustedBox(node) });
 
-public enum PhysicShape {
-    STATIC(PhysicShape::calculateStaticNodeShape),
-    BASE_BOX(PhysicShape::calculateBaseBox),
-    ADJUSTED_BASE_BOX(PhysicShape::calculateAdjustedBox);
-
-    private static final float SCALAR = 0.5f;
-    private final Function<Node, btCollisionShape> function;
-
-    PhysicShape(Function<Node, btCollisionShape> function) {
-        this.function = function;
+    fun build(node: Node): btCollisionShape {
+        return function.apply(node)
     }
 
-    private static btCollisionShape calculateStaticNodeShape(Node node) {
-        return Bullet.obtainStaticNodeShape(node, false);
+    companion object {
+        private const val SCALAR = 0.5f
+        private fun calculateStaticNodeShape(node: Node): btCollisionShape {
+            return Bullet.obtainStaticNodeShape(node, false)
+        }
+
+        private fun calculateBaseBox(node: Node): btBoxShape {
+            val temp = BoundingBox()
+            val boundingBox = node.calculateBoundingBox(temp)
+            val dimensions = Vector3()
+            boundingBox.getDimensions(dimensions)
+            val max = Math.max(dimensions.x, dimensions.z)
+            return btBoxShape(Vector3(max, dimensions.y, max).scl(SCALAR))
+        }
+
+        private fun calculateAdjustedBox(node: Node): btBoxShape {
+            val temp = BoundingBox()
+            val boundingBox = node.calculateBoundingBox(temp)
+            val dimensions = Vector3()
+            boundingBox.getDimensions(dimensions)
+            return btBoxShape(dimensions.scl(SCALAR))
+        }
     }
 
-    private static btBoxShape calculateBaseBox(Node node) {
-        final BoundingBox temp = new BoundingBox();
-        BoundingBox boundingBox = node.calculateBoundingBox(temp);
-        Vector3 dimensions = new Vector3();
-        boundingBox.getDimensions(dimensions);
-        float max = Math.max(dimensions.x, dimensions.z);
-        return new btBoxShape(new Vector3(max, dimensions.y, max).scl(SCALAR));
-    }
-
-    private static btBoxShape calculateAdjustedBox(Node node) {
-        final BoundingBox temp = new BoundingBox();
-        BoundingBox boundingBox = node.calculateBoundingBox(temp);
-        Vector3 dimensions = new Vector3();
-        boundingBox.getDimensions(dimensions);
-        return new btBoxShape(dimensions.scl(SCALAR));
-    }
-
-    public btCollisionShape build(Node node) {
-        return this.function.apply(node);
-    }
 }

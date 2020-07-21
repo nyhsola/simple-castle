@@ -1,147 +1,134 @@
-package com.simple.castle.core.render;
+package com.simple.castle.core.kt.render
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.math.collision.BoundingBox;
-import com.simple.castle.core.IntersectUtils;
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
+import com.badlogic.gdx.InputProcessor
+import com.badlogic.gdx.graphics.PerspectiveCamera
+import com.badlogic.gdx.graphics.g3d.ModelInstance
+import com.badlogic.gdx.math.Vector3
+import com.badlogic.gdx.math.collision.BoundingBox
+import com.simple.castle.core.kt.utils.IntersectUtils
 
-public class BaseCamera extends PerspectiveCamera implements InputProcessor {
-
-    private static final int FIELD_OF_VIEW = 67;
-    private static final float CAMERA_SPEED = 25;
-    private static final float NEAR = 1f;
-    private static final float FAR = 300f;
-
-    private final Vector3 tempVector = new Vector3();
-
-    private boolean keyUpHolds = false;
-    private boolean keyDownHolds = false;
-    private boolean keyLeftHolds = false;
-    private boolean keyRightHolds = false;
-
-    private ModelInstance plane;
-    private boolean mouseDragged = false;
-    private float previousX;
-    private float previousY;
-
-    public BaseCamera(Vector3 startPosition, ModelInstance plane) {
-        super(FIELD_OF_VIEW, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        this.plane = plane;
-
-        this.position.set(startPosition.x + 10f, startPosition.y + 10f, startPosition.z);
-        this.lookAt(startPosition);
-
-        this.near = NEAR;
-        this.far = FAR;
+class BaseCamera(private val plane: ModelInstance?)
+    : PerspectiveCamera(FIELD_OF_VIEW.toFloat(), Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat()), InputProcessor {
+    companion object {
+        private const val FIELD_OF_VIEW = 67
+        private const val CAMERA_SPEED = 25f
+        private const val NEAR = 1f
+        private const val FAR = 300f
     }
 
-    public void resize(int width, int height) {
-        viewportWidth = width;
-        viewportHeight = height;
+    init {
+        val startPosition = plane?.transform?.getTranslation(Vector3())
+        position[startPosition!!.x + 10f, startPosition.y + 10f] = startPosition.z
+        this.lookAt(startPosition)
+        near = NEAR
+        far = FAR
     }
 
-    public void update(float delta) {
-        float cameraSpeed = CAMERA_SPEED * delta;
+    private val tempVector = Vector3()
+    private var keyUpHolds = false
+    private var keyDownHolds = false
+    private var keyLeftHolds = false
+    private var keyRightHolds = false
+    private var mouseDragged = false
+    private var previousX = 0f
+    private var previousY = 0f
+
+    fun resize(width: Int, height: Int) {
+        viewportWidth = width.toFloat()
+        viewportHeight = height.toFloat()
+    }
+
+    fun update(delta: Float) {
+        val cameraSpeed = CAMERA_SPEED * delta
         if (keyUpHolds) {
-            position.x = position.x - cameraSpeed;
+            position.x = position.x - cameraSpeed
         }
         if (keyDownHolds) {
-            position.x = position.x + cameraSpeed;
+            position.x = position.x + cameraSpeed
         }
         if (keyRightHolds) {
-            position.z = position.z - cameraSpeed;
+            position.z = position.z - cameraSpeed
         }
         if (keyLeftHolds) {
-            position.z = position.z + cameraSpeed;
+            position.z = position.z + cameraSpeed
         }
-        super.update();
+        super.update()
     }
 
-    @Override
-    public boolean keyDown(int keycode) {
+    override fun keyDown(keycode: Int): Boolean {
         if (Input.Keys.UP == keycode || Input.Keys.W == keycode) {
-            keyUpHolds = true;
+            keyUpHolds = true
         }
         if (Input.Keys.DOWN == keycode || Input.Keys.S == keycode) {
-            keyDownHolds = true;
+            keyDownHolds = true
         }
         if (Input.Keys.LEFT == keycode || Input.Keys.A == keycode) {
-            keyLeftHolds = true;
+            keyLeftHolds = true
         }
         if (Input.Keys.RIGHT == keycode || Input.Keys.D == keycode) {
-            keyRightHolds = true;
+            keyRightHolds = true
         }
-        return false;
+        return false
     }
 
-    @Override
-    public boolean keyUp(int keycode) {
+    override fun keyUp(keycode: Int): Boolean {
         if (Input.Keys.UP == keycode || Input.Keys.W == keycode) {
-            keyUpHolds = false;
+            keyUpHolds = false
         }
         if (Input.Keys.DOWN == keycode || Input.Keys.S == keycode) {
-            keyDownHolds = false;
+            keyDownHolds = false
         }
         if (Input.Keys.LEFT == keycode || Input.Keys.A == keycode) {
-            keyLeftHolds = false;
+            keyLeftHolds = false
         }
         if (Input.Keys.RIGHT == keycode || Input.Keys.D == keycode) {
-            keyRightHolds = false;
+            keyRightHolds = false
         }
-        return false;
+        return false
     }
 
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
+    override fun keyTyped(character: Char): Boolean {
+        return false
     }
 
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+    override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         if (plane != null && button == Input.Buttons.LEFT) {
-            mouseDragged = true;
-            Vector3 vector3 = IntersectUtils.intersectPositionPoint(new BoundingBox(), this, plane, screenX, screenY);
+            mouseDragged = true
+            val vector3 = IntersectUtils.intersectPositionPoint(BoundingBox(), this, plane, screenX, screenY)
             if (vector3 != null) {
-                previousX = vector3.x;
-                previousY = vector3.z;
+                previousX = vector3.x
+                previousY = vector3.z
             }
         }
-        return false;
+        return false
     }
 
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        mouseDragged = false;
-        return false;
+    override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+        mouseDragged = false
+        return false
     }
 
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
+    override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
         if (plane != null && mouseDragged) {
-            Vector3 vector3 = IntersectUtils.intersectPositionPoint(new BoundingBox(), this, plane, screenX, screenY);
+            val vector3 = IntersectUtils.intersectPositionPoint(BoundingBox(), this, plane, screenX, screenY)
             if (vector3 != null) {
-                final float deltaX = previousX - vector3.x;
-                final float deltaY = previousY - vector3.z;
-                position.x += deltaX;
-                position.z += deltaY;
+                val deltaX = previousX - vector3.x
+                val deltaY = previousY - vector3.z
+                position.x += deltaX
+                position.z += deltaY
             }
         }
-        return false;
+        return false
     }
 
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
+    override fun mouseMoved(screenX: Int, screenY: Int): Boolean {
+        return false
     }
 
-    @Override
-    public boolean scrolled(int amount) {
-        translate(tempVector.set(direction).scl(amount));
-        return false;
+    override fun scrolled(amount: Int): Boolean {
+        translate(tempVector.set(direction).scl(amount.toFloat()))
+        return false
     }
-
 }

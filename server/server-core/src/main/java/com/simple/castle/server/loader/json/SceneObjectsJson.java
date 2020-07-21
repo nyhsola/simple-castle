@@ -1,4 +1,4 @@
-package com.simple.castle.server.json;
+package com.simple.castle.server.loader.json;
 
 import java.util.List;
 

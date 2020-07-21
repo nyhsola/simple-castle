@@ -1,5 +1,7 @@
-package com.simple.castle.core.api;
+package com.simple.castle.core.kt.api
 
-public interface ServerCommands {
-    Byte GET_CURRENT_POSITIONS = 1;
+interface ServerCommands {
+    companion object {
+        const val GET_CURRENT_POSITIONS: Byte = 1
+    }
 }

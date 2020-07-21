@@ -3,13 +3,11 @@ package com.simple.castle.server.manager;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.utils.Disposable;
-import com.simple.castle.core.ModelSend;
-import com.simple.castle.server.composition.BaseObject;
-import com.simple.castle.server.composition.Constructor;
-import com.simple.castle.server.json.SceneObjectsJson;
+import com.simple.castle.server.kt.composition.BaseObject;
+import com.simple.castle.server.kt.composition.Constructor;
+import com.simple.castle.server.loader.json.SceneObjectsJson;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -19,7 +17,6 @@ public class SceneManager implements Disposable {
     private final Map<String, Constructor> constructorMap;
     private final Map<String, BaseObject> baseObjectMap;
     private final List<ModelInstance> drawables;
-    private final List<ModelSend> modelsSend;
 
     public SceneManager(SceneObjectsJson sceneObjectsJson, Model model) {
         constructorMap = sceneObjectsJson.getSceneObjectsJson()
@@ -41,10 +38,6 @@ public class SceneManager implements Disposable {
                 .filter(baseObject -> !baseObject.getHide())
                 .map(BaseObject::getModelInstance).collect(Collectors.toList());
 
-        modelsSend = Collections.synchronizedList(baseObjectMap.values().stream()
-                .filter(baseObject -> !baseObject.getHide())
-                .map(baseObject -> new ModelSend(baseObject.getId(), baseObject.getModelInstance().transform))
-                .collect(Collectors.toList()));
     }
 
     public BaseObject getObject(String id) {
