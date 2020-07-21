@@ -2,8 +2,8 @@ package com.simple.castle.server
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
 import com.badlogic.gdx.graphics.g3d.ModelBatch
-import com.simple.castle.server.game.ServerApplication
-import com.simple.castle.server.game.ServerGame
+import com.simple.castle.server.kt.game.ServerApplication
+import com.simple.castle.server.kt.game.ServerGame
 
 object ServerLauncher {
     @JvmStatic

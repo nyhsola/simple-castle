@@ -1,87 +1,71 @@
-package com.simple.castle.server.tcp;
+package com.simple.castle.server.kt.core
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Net;
-import com.badlogic.gdx.net.ServerSocket;
-import com.badlogic.gdx.net.ServerSocketHints;
-import com.badlogic.gdx.net.Socket;
-import com.badlogic.gdx.net.SocketHints;
-import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.simple.castle.server.game.ServerGame;
-import com.simple.castle.server.user.UserWorker;
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Net
+import com.badlogic.gdx.net.ServerSocket
+import com.badlogic.gdx.net.ServerSocketHints
+import com.badlogic.gdx.net.SocketHints
+import com.badlogic.gdx.utils.Disposable
+import com.badlogic.gdx.utils.GdxRuntimeException
+import com.simple.castle.server.kt.game.ServerGame
+import java.util.*
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+class ServerListener(private val serverGame: ServerGame?) : Runnable, Disposable {
+    private val userWorkersService = Executors.newFixedThreadPool(MAX_USERS)
+    private val workers = Collections.synchronizedSet(HashSet<UserWorker>())
+    private val serverSocketHints = ServerSocketHints()
+    private val socketHints = SocketHints()
+    private var serverSocket: ServerSocket? = null
+    private var isRunning = false
 
-public class ServerListener implements Runnable, Disposable {
-    private static final int MAX_USERS = 4;
-
-    private final ExecutorService userWorkersService = Executors.newFixedThreadPool(MAX_USERS);
-    private final Set<UserWorker> workers = Collections.synchronizedSet(new HashSet<>());
-
-    private final ServerGame serverGame;
-
-    private final ServerSocketHints serverSocketHints = new ServerSocketHints();
-    private final SocketHints socketHints = new SocketHints();
-    private ServerSocket serverSocket = null;
-
-    private boolean isRunning = false;
-
-    public ServerListener(ServerGame serverGame) {
-        this.serverGame = serverGame;
-        this.serverSocketHints.acceptTimeout = 0;
-    }
-
-    @Override
-    public void run() {
-        Gdx.app.log("ServerListener", "Server going to wait for clients");
-
-        isRunning = true;
-        serverSocket = Gdx.net.newServerSocket(Net.Protocol.TCP, 9090, serverSocketHints);
-
-        while (isRunning && !Thread.currentThread().isInterrupted()) {
-            Gdx.app.log("ServerListener", "Wait for next connection...");
-
+    override fun run() {
+        Gdx.app.log("ServerListener", "Server going to wait for clients")
+        isRunning = true
+        serverSocket = Gdx.net.newServerSocket(Net.Protocol.TCP, 9090, serverSocketHints)
+        while (isRunning && !Thread.currentThread().isInterrupted) {
+            Gdx.app.log("ServerListener", "Wait for next connection...")
             try {
-                Socket socket = serverSocket.accept(socketHints);
-                UserWorker worker = new UserWorker(socket, serverGame);
-                workers.add(worker);
-                userWorkersService.submit(worker);
-            } catch (GdxRuntimeException exception) {
-                Gdx.app.log("ServerListener", "Socket accept error");
+                val socket = serverSocket!!.accept(socketHints)
+                val worker = UserWorker(socket, serverGame)
+                workers.add(worker)
+                userWorkersService.submit(worker)
+            } catch (exception: GdxRuntimeException) {
+                Gdx.app.log("ServerListener", "Socket accept error")
             }
         }
-        Gdx.app.log("ServerListener", "End of listening");
+        Gdx.app.log("ServerListener", "End of listening")
     }
 
-    public void stop() {
-        isRunning = false;
+    fun stop() {
+        isRunning = false
         try {
-            Gdx.app.log("ServerListener", "Server going to shutdown user workers");
-            userWorkersService.shutdown();
+            Gdx.app.log("ServerListener", "Server going to shutdown user workers")
+            userWorkersService.shutdown()
             if (!userWorkersService.awaitTermination(1, TimeUnit.SECONDS)) {
-                userWorkersService.shutdownNow();
+                userWorkersService.shutdownNow()
             }
-
-            for (UserWorker userWorker : workers) {
-                userWorker.dispose();
+            for (userWorker in workers) {
+                userWorker.dispose()
             }
-        } catch (InterruptedException e) {
-            Gdx.app.error("ServerListener", "Interrupted: " + e.getMessage());
+        } catch (e: InterruptedException) {
+            Gdx.app.error("ServerListener", "Interrupted: " + e.message)
         }
     }
 
-    @Override
-    public void dispose() {
+    override fun dispose() {
         if (serverSocket != null) {
-            Gdx.app.log("ServerListener", "Server socket disposed");
-            serverSocket.dispose();
+            Gdx.app.log("ServerListener", "Server socket disposed")
+            serverSocket!!.dispose()
         }
     }
 
+    companion object {
+        private const val MAX_USERS = 4
+    }
+
+    init {
+        serverSocketHints.acceptTimeout = 0
+    }
 }

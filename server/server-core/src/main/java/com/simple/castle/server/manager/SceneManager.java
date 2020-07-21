@@ -59,10 +59,6 @@ public class SceneManager implements Disposable {
         return baseObjectMap.values();
     }
 
-    public List<ModelSend> getSend() {
-        return modelsSend;
-    }
-
     @Override
     public void dispose() {
         baseObjectMap.values().forEach(BaseObject::dispose);

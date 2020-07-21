@@ -84,6 +84,7 @@ project(":user:server") {
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
         api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        implementation 'org.mockito:mockito-all:1.10.19'
     }
 }
 
