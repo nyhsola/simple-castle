@@ -5,8 +5,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.utils.Disposable
 import com.simple.castle.server.kt.composition.BaseObject
 import com.simple.castle.server.kt.composition.Constructor
-import com.simple.castle.server.loader.json.SceneObjectsJson
-import java.util.function.Consumer
+import com.simple.castle.server.kt.loader.json.SceneObjectsJson
 
 class SceneManager(sceneObjectsJson: SceneObjectsJson, model: Model?) : Disposable {
     private val constructorMap: Map<String, Constructor>
@@ -43,6 +42,6 @@ class SceneManager(sceneObjectsJson: SceneObjectsJson, model: Model?) : Disposab
     }
 
     override fun dispose() {
-        baseObjectMap.values.forEach(Consumer { obj: BaseObject -> obj.dispose() })
+        baseObjectMap.values.forEach { obj: BaseObject -> obj.dispose() }
     }
 }

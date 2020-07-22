@@ -1,5 +1,3 @@
-apply plugin: "kotlin"
-
 sourceCompatibility = JavaVersion.VERSION_11
 sourceSets.main.java.srcDirs = [ "src/" ]
 sourceSets.main.resources.srcDirs = ["../android/assets"]

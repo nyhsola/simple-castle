@@ -1,13 +1,11 @@
-package com.simple.castle.client.main;
+package com.simple.castle.client.main
 
-import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Game
 
-public class ClientGame extends Game {
-//    private BaseRenderer baseRenderer;
-//    private GameScreen gameScreen;
-
-    @Override
-    public void create() {
+class ClientGame : Game() {
+    //    private BaseRenderer baseRenderer;
+    //    private GameScreen gameScreen;
+    override fun create() {
 //        baseRenderer = new BaseRenderer(new ModelBatch());
 //
 //        gameScreen = new GameScreen(baseRenderer);
@@ -16,11 +14,9 @@ public class ClientGame extends Game {
 //        Gdx.input.setInputProcessor(gameScreen);
     }
 
-    @Override
-    public void dispose() {
+    override fun dispose() {
 //        super.dispose();
 //        gameScreen.dispose();
 //        baseRenderer.dispose();
     }
-
 }

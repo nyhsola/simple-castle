@@ -1,4 +1,4 @@
-package com.simple.castle.server.loader.json
+package com.simple.castle.server.kt.loader.json
 
 import com.simple.castle.server.kt.composition.InteractType
 import com.simple.castle.server.kt.composition.PhysicShape

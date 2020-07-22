@@ -8,9 +8,9 @@ import com.simple.castle.core.kt.render.BaseCamera
 import com.simple.castle.core.kt.render.BaseEnvironment
 import com.simple.castle.core.kt.render.BaseRenderer
 import com.simple.castle.core.kt.screen.BaseScreen
+import com.simple.castle.server.kt.loader.SceneLoader
 import com.simple.castle.server.kt.manager.SceneManager
 import com.simple.castle.server.kt.physic.PhysicWorld
-import com.simple.castle.server.loader.SceneLoader
 
 class GameScreen(private val baseRenderer: BaseRenderer) : BaseScreen() {
     private val model: Model = AssetLoader().loadModel()

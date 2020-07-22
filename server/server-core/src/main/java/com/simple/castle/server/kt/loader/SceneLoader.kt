@@ -1,11 +1,11 @@
-package com.simple.castle.server.loader
+package com.simple.castle.server.kt.loader
 
 import com.badlogic.gdx.graphics.g3d.Model
 import com.badlogic.gdx.graphics.g3d.model.Node
 import com.badlogic.gdx.utils.Json
 import com.simple.castle.server.kt.game.ServerGame
-import com.simple.castle.server.loader.json.SceneObjectJson
-import com.simple.castle.server.loader.json.SceneObjectsJson
+import com.simple.castle.server.kt.loader.json.SceneObjectJson
+import com.simple.castle.server.kt.loader.json.SceneObjectsJson
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
