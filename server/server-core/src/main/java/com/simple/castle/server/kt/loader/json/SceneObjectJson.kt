@@ -3,22 +3,10 @@ package com.simple.castle.server.kt.loader.json
 import com.simple.castle.server.kt.composition.InteractType
 import com.simple.castle.server.kt.composition.PhysicShape
 
-class SceneObjectJson {
-    var nodePattern: String? = null
-    var shape: PhysicShape? = null
-    var mass: Float? = null
-    var interact: InteractType? = null
-    var instantiate: Boolean? = null
-    var hide: Boolean? = null
 
-    constructor() {}
-    constructor(sceneObjectJson: SceneObjectJson?) {
-        nodePattern = sceneObjectJson!!.nodePattern
-        shape = sceneObjectJson.shape
-        mass = sceneObjectJson.mass
-        interact = sceneObjectJson.interact
-        instantiate = sceneObjectJson.instantiate
-        hide = sceneObjectJson.hide
-    }
-
-}
+data class SceneObjectJson(var nodePattern: String = "",
+                           var shape: PhysicShape = PhysicShape.STATIC,
+                           var mass: Float = 0.0f,
+                           var interact: InteractType = InteractType.GHOST,
+                           var instantiate: Boolean = false,
+                           var hide: Boolean = true)

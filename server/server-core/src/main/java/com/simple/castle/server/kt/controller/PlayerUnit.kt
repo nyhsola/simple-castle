@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector3
 import com.simple.castle.server.kt.composition.BaseObject
 import com.simple.castle.server.kt.composition.Constructor
+import kotlin.math.acos
 
 class PlayerUnit(constructor: Constructor?, initPosition: Vector3?, val playerName: String) : BaseObject(constructor!!) {
     private val tempVector = Vector3()
@@ -23,7 +24,7 @@ class PlayerUnit(constructor: Constructor?, initPosition: Vector3?, val playerNa
     }
 
     init {
-        physicObject!!.body.worldTransform = Matrix4()
+        physicObject.body.worldTransform = Matrix4()
         physicObject.body.translate(initPosition)
         physicObject.body.angularFactor = ANGULAR_FACTOR
     }
@@ -37,17 +38,17 @@ class PlayerUnit(constructor: Constructor?, initPosition: Vector3?, val playerNa
             } else {
                 linearVelocity.scl(DEFAULT_SPEED_MOVEMENT_ON_ROTATION.toFloat())
             }
-            physicObject!!.body.linearVelocity = linearVelocity
+            physicObject.body.linearVelocity = linearVelocity
             physicObject.body.angularVelocity = angularVelocity
         } else {
-            physicObject!!.body.linearVelocity = Vector3.Zero
+            physicObject.body.linearVelocity = Vector3.Zero
             physicObject.body.angularVelocity = Vector3.Zero
         }
     }
 
     private fun getAngularVelocity(target: Vector3, linearVelocity: Vector3): Vector3 {
         var angularVelocity = Vector3.Zero
-        val unitPosition = modelInstance!!.transform.getTranslation(tempVector)
+        val unitPosition = modelInstance.transform.getTranslation(tempVector)
         val targetDirection = target.cpy().sub(unitPosition).nor()
         val currentAngle = getAngle(targetDirection, linearVelocity)
         if (currentAngle <= 0 || currentAngle >= 10) {
@@ -65,7 +66,7 @@ class PlayerUnit(constructor: Constructor?, initPosition: Vector3?, val playerNa
     }
 
     private val linearVelocity: Vector3
-        private get() = physicObject!!.body.orientation.transform(FACE_DIRECTION.cpy())
+        get() = physicObject.body.orientation.transform(FACE_DIRECTION.cpy())
 
     fun setMovePoint(movePoint: Vector3?) {
         this.movePoint = movePoint
@@ -75,7 +76,7 @@ class PlayerUnit(constructor: Constructor?, initPosition: Vector3?, val playerNa
         val norA = b.cpy().nor()
         val norB = a.cpy().nor()
         val dot = norB.dot(norA)
-        return Math.toDegrees(Math.acos(dot.toDouble()))
+        return Math.toDegrees(acos(dot.toDouble()))
     }
 
 }

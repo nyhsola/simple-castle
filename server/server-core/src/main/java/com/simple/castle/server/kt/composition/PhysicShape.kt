@@ -40,5 +40,4 @@ enum class PhysicShape(private val function: Function<Node, btCollisionShape>) {
             return btBoxShape(dimensions.scl(SCALAR))
         }
     }
-
 }

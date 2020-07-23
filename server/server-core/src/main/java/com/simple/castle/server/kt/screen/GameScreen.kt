@@ -8,6 +8,7 @@ import com.simple.castle.core.kt.render.BaseCamera
 import com.simple.castle.core.kt.render.BaseEnvironment
 import com.simple.castle.core.kt.render.BaseRenderer
 import com.simple.castle.core.kt.screen.BaseScreen
+import com.simple.castle.server.kt.controller.PlayerController
 import com.simple.castle.server.kt.loader.SceneLoader
 import com.simple.castle.server.kt.manager.SceneManager
 import com.simple.castle.server.kt.physic.PhysicWorld
@@ -17,8 +18,9 @@ class GameScreen(private val baseRenderer: BaseRenderer) : BaseScreen() {
     private val baseEnvironment: BaseEnvironment = BaseEnvironment()
     private val sceneLoader: SceneLoader = SceneLoader(model)
     private val sceneManager: SceneManager = SceneManager(sceneLoader.loadSceneObjects(), model)
-    private val baseCamera: BaseCamera = BaseCamera(sceneManager.getObject("ground")?.modelInstance)
     private val physicWorld: PhysicWorld = PhysicWorld(sceneManager.all.map { baseObject -> baseObject.physicObject })
+    private val baseCamera: BaseCamera = BaseCamera(sceneManager.getObject("ground")?.modelInstance)
+    private val playerController: PlayerController = PlayerController(sceneLoader.loadPlayers(), sceneManager, physicWorld)
     private var isDebug = false
 
     init {
@@ -50,6 +52,9 @@ class GameScreen(private val baseRenderer: BaseRenderer) : BaseScreen() {
         }
         if (Input.Keys.F1 == keycode) {
             isDebug = !isDebug
+        }
+        if (Input.Keys.ENTER == keycode) {
+            playerController.spawn()
         }
         return super.keyDown(keycode)
     }

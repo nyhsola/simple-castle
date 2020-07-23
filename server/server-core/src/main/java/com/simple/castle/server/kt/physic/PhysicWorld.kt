@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw
 import com.badlogic.gdx.utils.Disposable
 import com.simple.castle.core.kt.render.BaseCamera
 import java.util.function.Consumer
+import kotlin.math.min
 
 class PhysicWorld(private val physicObjects: List<PhysicObject?>) : Disposable {
     private val contactListener: CustomContactListener
@@ -44,7 +45,7 @@ class PhysicWorld(private val physicObjects: List<PhysicObject?>) : Disposable {
     }
 
     fun update(delta: Float) {
-        dynamicsWorld.stepSimulation(Math.min(1f / 30f, delta), 5, 1f / 60f)
+        dynamicsWorld.stepSimulation(min(1f / 30f, delta), 5, 1f / 60f)
     }
 
     fun debugDraw(camera: BaseCamera?) {

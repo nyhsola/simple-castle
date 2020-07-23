@@ -17,5 +17,4 @@ enum class InteractType(private val function: Function<btRigidBody.btRigidBodyCo
     fun build(info: btRigidBody.btRigidBodyConstructionInfo): PhysicObject {
         return function.apply(info)
     }
-
 }
