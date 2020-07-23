@@ -18,7 +18,7 @@ class SceneLoader(model: Model) {
 
         return sceneObjectsJson
                 .map { any -> any as SceneObjectJson }
-                .map { sceneObjectJson -> Pair(sceneObjectJson, getValuesByPattern(sceneObjectJson.nodePattern!!)) }
+                .map { sceneObjectJson -> Pair(sceneObjectJson, getValuesByPattern(sceneObjectJson.nodePattern)) }
                 .map { pair -> pair.second.map { nodeName -> pair.first.copy(nodePattern = nodeName) } }
                 .flatten()
     }
