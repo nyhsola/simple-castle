@@ -10,16 +10,15 @@ object ServerLauncher {
     fun main(args: Array<String>) {
         System.setProperty("org.lwjgl.opengl.Window.undecorated", "true")
 
-        ServerApplication.Builder()
-                .enableGUI(isGUI(args))
-                .enableServer(isServer(args))
-                .setConf(LwjglApplicationConfiguration().apply {
+        ServerApplication(
+                isGUI = isGUI(args),
+                isServer = isServer(args),
+                gameSupplier = { modelBatchSupplier: () -> ModelBatch -> ServerGame(modelBatchSupplier) },
+                conf = LwjglApplicationConfiguration().apply {
                     fullscreen = false
                     width = LwjglApplicationConfiguration.getDesktopDisplayMode().width
                     height = LwjglApplicationConfiguration.getDesktopDisplayMode().height
                 })
-                .setGameSupplier { modelBatchSupplier: () -> ModelBatch -> ServerGame(modelBatchSupplier) }
-                .build()
                 .run()
     }
 

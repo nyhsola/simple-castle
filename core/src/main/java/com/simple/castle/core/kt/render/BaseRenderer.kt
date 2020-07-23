@@ -7,10 +7,13 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch
 import com.badlogic.gdx.graphics.g3d.ModelInstance
 
 class BaseRenderer(private val modelBatch: ModelBatch) {
-    fun render(camera: Camera?, baseObjectList: Collection<ModelInstance>?, baseEnvironment: BaseEnvironment) {
-        Gdx.gl.glViewport(0, 0, Gdx.graphics.width, Gdx.graphics.height)
-        Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1f)
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
+    fun render(camera: Camera, baseObjectList: Collection<ModelInstance>, baseEnvironment: BaseEnvironment) {
+        Gdx.gl.apply {
+            glViewport(0, 0, Gdx.graphics.width, Gdx.graphics.height)
+            glClearColor(0.3f, 0.3f, 0.3f, 1f)
+            glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
+        }
+
         modelBatch.begin(camera)
         modelBatch.render(baseObjectList, baseEnvironment.environment)
         modelBatch.end()

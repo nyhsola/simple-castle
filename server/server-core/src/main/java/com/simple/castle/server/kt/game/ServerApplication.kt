@@ -13,20 +13,11 @@ import com.simple.castle.server.kt.core.ServerListener
 import com.simple.castle.server.kt.core.ServerStarter
 import org.mockito.Mockito
 
-class ServerApplication private constructor(builder: Builder) {
-    private var gameSupplier: ((() -> ModelBatch) -> ServerGame)? = null
-    private var conf: LwjglApplicationConfiguration? = null
-    private var isGUI: Boolean = true
-    private var isServer: Boolean = false
-
-    init {
-        apply {
-            isGUI = builder.isGUI
-            isServer = builder.isServer
-            gameSupplier = builder.gameSupplier
-            conf = builder.conf
-        }
-    }
+class ServerApplication(
+        private var isGUI: Boolean = true,
+        private var isServer: Boolean = false,
+        private var gameSupplier: ((() -> ModelBatch) -> ServerGame)? = null,
+        private var conf: LwjglApplicationConfiguration? = null) {
 
     fun run() {
         if (!isGUI) {
@@ -56,19 +47,6 @@ class ServerApplication private constructor(builder: Builder) {
                 Gdx.app.postRunnable(Gdx.app::exit)
             }
         })
-    }
-
-    class Builder {
-        var gameSupplier: ((() -> ModelBatch) -> ServerGame)? = null
-        var conf: LwjglApplicationConfiguration? = null
-        var isGUI: Boolean = true
-        var isServer: Boolean = false
-
-        fun setGameSupplier(gameSupplier: (() -> ModelBatch) -> ServerGame) = apply { this.gameSupplier = gameSupplier }
-        fun setConf(conf: LwjglApplicationConfiguration) = apply { this.conf = conf }
-        fun enableGUI(isGUI: Boolean) = apply { this.isGUI = isGUI }
-        fun enableServer(isServer: Boolean) = apply { this.isServer = isServer }
-        fun build() = ServerApplication(this)
     }
 
 }

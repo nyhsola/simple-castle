@@ -7,7 +7,8 @@ import com.simple.castle.server.kt.composition.BaseObject
 import com.simple.castle.server.kt.composition.Constructor
 import com.simple.castle.server.kt.loader.json.SceneObjectsJson
 
-class SceneManager(sceneObjectsJson: SceneObjectsJson, model: Model?) : Disposable {
+class SceneManager(sceneObjectsJson: SceneObjectsJson,
+                   model: Model?) : Disposable {
     private val constructorMap: Map<String, Constructor>
     private val baseObjectMap: Map<String, BaseObject>
     val drawables: List<ModelInstance>

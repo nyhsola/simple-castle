@@ -8,14 +8,11 @@ import com.simple.castle.core.kt.render.BaseRenderer
 import com.simple.castle.server.kt.screen.GameScreen
 
 class ServerGame(private val modelBatchSupplier: (() -> ModelBatch)) : Game() {
-    private lateinit var baseRenderer: BaseRenderer
-    private lateinit var gameScreen: GameScreen
+    private val baseRenderer: BaseRenderer by lazy { BaseRenderer(modelBatchSupplier.invoke()) }
+    private val gameScreen: GameScreen by lazy { GameScreen(baseRenderer) }
 
     override fun create() {
         Bullet.init()
-
-        baseRenderer = BaseRenderer(modelBatchSupplier.invoke())
-        gameScreen = GameScreen(baseRenderer)
 
         setScreen(gameScreen)
 

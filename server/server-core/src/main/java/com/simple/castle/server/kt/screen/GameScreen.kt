@@ -15,14 +15,13 @@ import com.simple.castle.server.kt.physic.PhysicWorld
 class GameScreen(private val baseRenderer: BaseRenderer) : BaseScreen() {
     private val model: Model = AssetLoader().loadModel()
     private val baseEnvironment: BaseEnvironment = BaseEnvironment()
-    private val sceneManager: SceneManager = SceneManager(SceneLoader.loadSceneObjects(model), model)
-    private val baseCamera: BaseCamera
-    private val physicWorld: PhysicWorld
+    private val sceneLoader: SceneLoader = SceneLoader(model)
+    private val sceneManager: SceneManager = SceneManager(sceneLoader.loadSceneObjects(), model)
+    private val baseCamera: BaseCamera = BaseCamera(sceneManager.getObject("ground")?.modelInstance)
+    private val physicWorld: PhysicWorld = PhysicWorld(sceneManager.all.map { baseObject -> baseObject.physicObject })
     private var isDebug = false
 
     init {
-        baseCamera = BaseCamera(sceneManager.getObject("ground")?.modelInstance)
-        physicWorld = PhysicWorld(sceneManager.all.map { baseObject -> baseObject.physicObject })
         inputMultiplexer.addProcessor(baseCamera)
     }
 
