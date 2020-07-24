@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.utils.Disposable
 import com.simple.castle.server.kt.composition.BaseObject
 import com.simple.castle.server.kt.composition.Constructor
-import com.simple.castle.server.kt.loader.json.SceneObjectJson
+import com.simple.castle.server.kt.loader.SceneObjectJson
 
 class SceneManager(sceneObjectsJson: List<SceneObjectJson>,
                    model: Model) : Disposable {

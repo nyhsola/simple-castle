@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.bullet.Bullet
 import com.badlogic.gdx.physics.bullet.collision.btBoxShape
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape
 import java.util.function.Function
+import kotlin.math.max
 
 enum class PhysicShape(private val function: Function<Node, btCollisionShape>) {
     STATIC(Function<Node, btCollisionShape> { node: Node -> calculateStaticNodeShape(node) }),
@@ -28,7 +29,7 @@ enum class PhysicShape(private val function: Function<Node, btCollisionShape>) {
             val boundingBox = node.calculateBoundingBox(temp)
             val dimensions = Vector3()
             boundingBox.getDimensions(dimensions)
-            val max = Math.max(dimensions.x, dimensions.z)
+            val max = max(dimensions.x, dimensions.z)
             return btBoxShape(Vector3(max, dimensions.y, max).scl(SCALAR))
         }
 

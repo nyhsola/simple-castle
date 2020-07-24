@@ -8,10 +8,6 @@ abstract class PhysicObject internal constructor(private val constructionInfo: b
     val body: btRigidBody = btRigidBody(constructionInfo)
     val motionState: MotionState = MotionState()
 
-    init {
-        body.userData = this
-    }
-
     override fun dispose() {
         motionState.dispose()
         constructionInfo.dispose()

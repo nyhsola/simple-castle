@@ -13,31 +13,28 @@ import com.simple.castle.core.kt.render.BaseCamera
 import java.util.function.Consumer
 import kotlin.math.min
 
-class PhysicWorld(private val physicObjects: List<PhysicObject?>) : Disposable {
-    private val contactListener: CustomContactListener
-    private val collisionConfig: btCollisionConfiguration
-    private val dispatcher: btDispatcher
-    private val broadPhase: btBroadphaseInterface
-    private val constraintSolver: btConstraintSolver
-    private val dynamicsWorld: btDynamicsWorld
-    private val debugDrawer: DebugDrawer
+class PhysicWorld(physicObjects: List<PhysicObject>) : Disposable {
+    private val contactListener: CustomContactListener = CustomContactListener()
+    private val collisionConfig: btCollisionConfiguration = btDefaultCollisionConfiguration()
+    private val dispatcher: btDispatcher = btCollisionDispatcher(collisionConfig)
+    private val broadPhase: btBroadphaseInterface = btDbvtBroadphase()
+    private val constraintSolver: btConstraintSolver = btSequentialImpulseConstraintSolver()
+    private val customDebugDrawer: DebugDrawer = DebugDrawer()
+            .apply {
+                debugMode = btIDebugDraw.DebugDrawModes.DBG_MAX_DEBUG_DRAW_MODE
+            }
+    private val dynamicsWorld: btDynamicsWorld = btDiscreteDynamicsWorld(dispatcher, broadPhase, constraintSolver, collisionConfig)
+            .apply {
+                gravity = Vector3(0.0f, -10f, 0f)
+                debugDrawer = customDebugDrawer
+            }
 
     init {
-        contactListener = CustomContactListener()
-        collisionConfig = btDefaultCollisionConfiguration()
-        dispatcher = btCollisionDispatcher(collisionConfig)
-        broadPhase = btDbvtBroadphase()
-        constraintSolver = btSequentialImpulseConstraintSolver()
-        dynamicsWorld = btDiscreteDynamicsWorld(dispatcher, broadPhase, constraintSolver, collisionConfig)
-        dynamicsWorld.gravity = Vector3(0.0f, -10f, 0f)
-        debugDrawer = DebugDrawer()
-        debugDrawer.debugMode = btIDebugDraw.DebugDrawModes.DBG_MAX_DEBUG_DRAW_MODE
-        dynamicsWorld.debugDrawer = debugDrawer
         physicObjects.forEach(Consumer { physicObject -> addRigidBody(physicObject) })
     }
 
-    fun addRigidBody(`object`: PhysicObject?) {
-        dynamicsWorld.addRigidBody(`object`?.body)
+    fun addRigidBody(`object`: PhysicObject) {
+        dynamicsWorld.addRigidBody(`object`.body)
     }
 
     fun removeRigidBody(`object`: PhysicObject) {
@@ -48,10 +45,10 @@ class PhysicWorld(private val physicObjects: List<PhysicObject?>) : Disposable {
         dynamicsWorld.stepSimulation(min(1f / 30f, delta), 5, 1f / 60f)
     }
 
-    fun debugDraw(camera: BaseCamera?) {
-        debugDrawer.begin(camera)
+    fun debugDraw(camera: BaseCamera) {
+        customDebugDrawer.begin(camera)
         dynamicsWorld.debugDrawWorld()
-        debugDrawer.end()
+        customDebugDrawer.end()
     }
 
     override fun dispose() {

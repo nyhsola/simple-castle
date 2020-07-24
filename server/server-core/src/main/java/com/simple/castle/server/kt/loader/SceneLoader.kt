@@ -2,8 +2,6 @@ package com.simple.castle.server.kt.loader
 
 import com.badlogic.gdx.graphics.g3d.Model
 import com.badlogic.gdx.utils.Json
-import com.simple.castle.server.kt.loader.json.PlayerJson
-import com.simple.castle.server.kt.loader.json.SceneObjectJson
 
 class SceneLoader(model: Model) {
     private val json = Json()

@@ -12,8 +12,8 @@ open class BaseObject(constructor: Constructor) : Disposable {
     var hide: Boolean
 
     init {
-        physicObject.motionState.transform = modelInstance.transform;
-        physicObject.body.motionState = physicObject.motionState;
+        physicObject.motionState.transform = modelInstance.transform
+        physicObject.body.motionState = physicObject.motionState
         hide = constructor.hide
         if (constructor.mass != 0.0f) {
             physicObject.body.collisionShape.calculateLocalInertia(constructor.mass, Vector3.Zero)

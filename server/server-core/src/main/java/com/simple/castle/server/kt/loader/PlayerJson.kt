@@ -1,4 +1,4 @@
-package com.simple.castle.server.kt.loader.json
+package com.simple.castle.server.kt.loader
 
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonValue
