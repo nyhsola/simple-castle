@@ -13,7 +13,8 @@ import com.simple.castle.core.kt.render.BaseCamera
 import java.util.function.Consumer
 import kotlin.math.min
 
-class PhysicWorld(physicObjects: List<PhysicObject>) : Disposable {
+class PhysicWorld(private val collisionEvent: CollisionEvent,
+                  physicObjects: List<PhysicObject>) : Disposable {
     private val contactListener: CustomContactListener = CustomContactListener()
     private val collisionConfig: btCollisionConfiguration = btDefaultCollisionConfiguration()
     private val dispatcher: btDispatcher = btCollisionDispatcher(collisionConfig)
@@ -61,8 +62,9 @@ class PhysicWorld(physicObjects: List<PhysicObject>) : Disposable {
     }
 
     private inner class CustomContactListener : ContactListener() {
-        // TODO: 5/12/2020 check colObj0.isStatic() isKinematic() isActive()
-        override fun onContactStarted(colObj0: btCollisionObject, colObj1: btCollisionObject) {}
+        override fun onContactStarted(colObj0: btCollisionObject, colObj1: btCollisionObject) {
+            collisionEvent.onContactStarted(colObj0, colObj1);
+        }
     }
 
 }

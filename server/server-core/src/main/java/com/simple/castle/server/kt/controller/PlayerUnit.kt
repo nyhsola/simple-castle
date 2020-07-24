@@ -68,7 +68,7 @@ class PlayerUnit(constructor: Constructor?, initPosition: Vector3?, val playerNa
     private val linearVelocity: Vector3
         get() = physicObject.body.orientation.transform(FACE_DIRECTION.cpy())
 
-    fun setMovePoint(movePoint: Vector3?) {
+    fun setMovePoint(movePoint: Vector3) {
         this.movePoint = movePoint
     }
 
