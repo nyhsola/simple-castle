@@ -27,12 +27,12 @@ class SceneManager(sceneObjectsJson: List<SceneObjectJson>,
                             sceneObjectJson.instantiate,
                             sceneObjectJson.hide)
                 }
-                .associateBy(keySelector = { constructor -> constructor.id }, valueTransform = { constructor -> constructor })
+                .associateBy(keySelector = { constructor -> constructor.nodeName }, valueTransform = { constructor -> constructor })
                 .toMutableMap()
 
         baseObjectMap = constructorMap.entries
                 .filter { entry -> entry.value.instantiate }
-                .associateBy(keySelector = { entry -> entry.key }, valueTransform = { entry -> BaseObject(entry.value) })
+                .associateBy(keySelector = { entry -> entry.key }, valueTransform = { entry -> BaseObject(entry.value.nodeName, entry.value) })
                 .toMutableMap()
 
         drawables = baseObjectMap.values
@@ -54,8 +54,8 @@ class SceneManager(sceneObjectsJson: List<SceneObjectJson>,
         return baseObjectMap[id]
     }
 
-    fun getConstructor(id: String): Constructor? {
-        return constructorMap[id]
+    fun getConstructor(nodeName: String): Constructor? {
+        return constructorMap[nodeName]
     }
 
     override fun dispose() {

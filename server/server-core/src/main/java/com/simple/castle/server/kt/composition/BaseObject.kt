@@ -5,8 +5,9 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 import com.simple.castle.server.kt.physic.PhysicObject
 
-open class BaseObject(constructor: Constructor) : Disposable {
-    val id: String = constructor.id
+@Suppress("LeakingThis")
+open class BaseObject(val id: String, constructor: Constructor) : Disposable {
+    val nodeName: String = constructor.nodeName
     val physicObject: PhysicObject = constructor.buildPhysic()
     val modelInstance: ModelInstance = constructor.buildModel()
     var hide: Boolean
@@ -18,6 +19,7 @@ open class BaseObject(constructor: Constructor) : Disposable {
         if (constructor.mass != 0.0f) {
             physicObject.body.collisionShape.calculateLocalInertia(constructor.mass, Vector3.Zero)
         }
+        physicObject.body.userData = this
     }
 
     override fun dispose() {

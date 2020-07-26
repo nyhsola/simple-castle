@@ -6,20 +6,20 @@ import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody
 import com.simple.castle.server.kt.physic.PhysicObject
 
 class Constructor(private val model: Model,
-                  val id: String,
+                  val nodeName: String,
                   private val interactType: InteractType,
                   val mass: Float,
                   private val physicShape: PhysicShape,
                   val instantiate: Boolean,
                   val hide: Boolean) {
     fun buildPhysic(): PhysicObject {
-        val node = model.getNode(id)
+        val node = model.getNode(nodeName)
         val shape = physicShape.build(node)
         val info: btRigidBody.btRigidBodyConstructionInfo = btRigidBody.btRigidBodyConstructionInfo(mass, null, shape)
         return interactType.build(info)
     }
 
     fun buildModel(): ModelInstance {
-        return ModelInstance(model, id, true)
+        return ModelInstance(model, nodeName, true)
     }
 }

@@ -17,8 +17,8 @@ class Player(private val playerName: String,
 
     fun spawnOnStartPositions() {
         startPositions
-                .map { startPosition -> PlayerUnit(sceneManager.getConstructor(unitType), startPosition, playerName) }
-                .onEach { playerUnit -> units[UUID.randomUUID().toString()] = playerUnit }
+                .map { startPosition -> PlayerUnit(UUID.randomUUID().toString(), sceneManager.getConstructor(unitType)!!, startPosition) }
+                .onEach { playerUnit -> units[playerUnit.id] = playerUnit }
                 .forEach { playerUnit ->
                     run {
                         sceneManager.addObjects(playerUnit)
@@ -29,5 +29,9 @@ class Player(private val playerName: String,
 
     fun update() {
         units.values.forEach { playerUnit -> playerUnit.update() }
+    }
+
+    fun onContactStarted(baseObject1: BaseObject, baseObject2: BaseObject) {
+
     }
 }

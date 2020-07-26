@@ -6,7 +6,7 @@ import com.simple.castle.server.kt.composition.BaseObject
 import com.simple.castle.server.kt.composition.Constructor
 import kotlin.math.acos
 
-class PlayerUnit(constructor: Constructor?, initPosition: Vector3?, val playerName: String) : BaseObject(constructor!!) {
+class PlayerUnit(id: String, constructor: Constructor, initPosition: Vector3?) : BaseObject(id, constructor) {
     private val tempVector = Vector3()
     private var movePoint: Vector3? = null
     private var previousAngle = 0.0
