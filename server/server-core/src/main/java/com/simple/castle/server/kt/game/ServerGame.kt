@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g3d.ModelBatch
 import com.badlogic.gdx.physics.bullet.Bullet
-import com.simple.castle.core.kt.render.BaseRenderer
+import com.simple.castle.server.kt.render.BaseRenderer
 import com.simple.castle.server.kt.screen.GameScreen
 
 class ServerGame(private val modelBatchSupplier: (() -> ModelBatch)) : Game() {

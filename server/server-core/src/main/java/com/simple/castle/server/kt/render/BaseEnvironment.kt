@@ -1,4 +1,4 @@
-package com.simple.castle.core.kt.render
+package com.simple.castle.server.kt.render
 
 import com.badlogic.gdx.graphics.g3d.Environment
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute

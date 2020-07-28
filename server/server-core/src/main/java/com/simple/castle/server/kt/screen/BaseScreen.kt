@@ -1,4 +1,4 @@
-package com.simple.castle.core.kt.screen
+package com.simple.castle.server.kt.screen
 
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.InputProcessor

@@ -4,8 +4,6 @@ import com.badlogic.gdx.math.Vector3
 import com.simple.castle.server.kt.composition.BaseObject
 import com.simple.castle.server.kt.manager.SceneManager
 import com.simple.castle.server.kt.physic.PhysicWorld
-import java.util.*
-import kotlin.collections.HashMap
 
 class Player(private val playerName: String,
              private val unitType: String,
@@ -17,7 +15,7 @@ class Player(private val playerName: String,
 
     fun spawnOnStartPositions() {
         startPositions
-                .map { startPosition -> PlayerUnit(UUID.randomUUID().toString(), sceneManager.getConstructor(unitType)!!, startPosition) }
+                .map { startPosition -> PlayerUnit(sceneManager.getConstructor(unitType)!!, startPosition) }
                 .onEach { playerUnit -> units[playerUnit.id] = playerUnit }
                 .forEach { playerUnit ->
                     run {
@@ -32,6 +30,19 @@ class Player(private val playerName: String,
     }
 
     fun onContactStarted(baseObject1: BaseObject, baseObject2: BaseObject) {
+        if (baseObject1.id in units) {
+            move(baseObject1 as PlayerUnit, baseObject2)
+        }
 
+        if (baseObject2.id in units) {
+            move(baseObject2 as PlayerUnit, baseObject1)
+        }
+    }
+
+    private fun move(unit: PlayerUnit, area: BaseObject) {
+        if (area in path.flatten()) {
+            val nextPoint = path.flatten()[path.flatten().indexOf(area) + 1]
+            unit.setMovePoint(nextPoint.modelInstance.transform.getTranslation(Vector3()))
+        }
     }
 }

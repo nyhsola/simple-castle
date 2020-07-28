@@ -4,16 +4,16 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.g3d.Model
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject
-import com.simple.castle.core.kt.asset.AssetLoader
-import com.simple.castle.core.kt.render.BaseCamera
-import com.simple.castle.core.kt.render.BaseEnvironment
-import com.simple.castle.core.kt.render.BaseRenderer
 import com.simple.castle.core.kt.screen.BaseScreen
+import com.simple.castle.server.kt.asset.AssetLoader
 import com.simple.castle.server.kt.controller.PlayerController
 import com.simple.castle.server.kt.loader.SceneLoader
 import com.simple.castle.server.kt.manager.SceneManager
 import com.simple.castle.server.kt.physic.CollisionEvent
 import com.simple.castle.server.kt.physic.PhysicWorld
+import com.simple.castle.server.kt.render.BaseCamera
+import com.simple.castle.server.kt.render.BaseEnvironment
+import com.simple.castle.server.kt.render.BaseRenderer
 
 class GameScreen(private val baseRenderer: BaseRenderer) : BaseScreen(), CollisionEvent {
     private val model: Model = AssetLoader().loadModel()
@@ -30,6 +30,7 @@ class GameScreen(private val baseRenderer: BaseRenderer) : BaseScreen(), Collisi
     }
 
     override fun render(delta: Float) {
+        playerController.update()
         baseCamera.update(delta)
         physicWorld.update(delta)
         baseRenderer.render(baseCamera, sceneManager.drawables, baseEnvironment)

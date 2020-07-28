@@ -1,4 +1,4 @@
-package com.simple.castle.core.kt.asset
+package com.simple.castle.server.kt.asset
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g3d.Model

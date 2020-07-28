@@ -1,4 +1,4 @@
-package com.simple.castle.core.kt.render
+package com.simple.castle.server.kt.render
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Camera

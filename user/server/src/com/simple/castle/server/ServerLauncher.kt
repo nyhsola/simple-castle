@@ -8,7 +8,7 @@ import com.simple.castle.server.kt.game.ServerGame
 object ServerLauncher {
     @JvmStatic
     fun main(args: Array<String>) {
-        System.setProperty("org.lwjgl.opengl.Window.undecorated", "true")
+//        System.setProperty("org.lwjgl.opengl.Window.undecorated", "true")
 
         ServerApplication(
                 isGUI = isGUI(args),

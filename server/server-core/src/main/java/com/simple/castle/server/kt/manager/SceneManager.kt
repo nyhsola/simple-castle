@@ -32,7 +32,7 @@ class SceneManager(sceneObjectsJson: List<SceneObjectJson>,
 
         baseObjectMap = constructorMap.entries
                 .filter { entry -> entry.value.instantiate }
-                .associateBy(keySelector = { entry -> entry.key }, valueTransform = { entry -> BaseObject(entry.value.nodeName, entry.value) })
+                .associateBy(keySelector = { entry -> entry.key }, valueTransform = { entry -> BaseObject(entry.value) })
                 .toMutableMap()
 
         drawables = baseObjectMap.values

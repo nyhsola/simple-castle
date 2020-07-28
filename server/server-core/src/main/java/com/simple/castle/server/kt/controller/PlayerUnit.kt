@@ -6,7 +6,7 @@ import com.simple.castle.server.kt.composition.BaseObject
 import com.simple.castle.server.kt.composition.Constructor
 import kotlin.math.acos
 
-class PlayerUnit(id: String, constructor: Constructor, initPosition: Vector3?) : BaseObject(id, constructor) {
+class PlayerUnit(constructor: Constructor, initPosition: Vector3?) : BaseObject(constructor) {
     private val tempVector = Vector3()
     private var movePoint: Vector3? = null
     private var previousAngle = 0.0
@@ -30,24 +30,24 @@ class PlayerUnit(id: String, constructor: Constructor, initPosition: Vector3?) :
     }
 
     fun update() {
-        if (movePoint != null) {
-            val linearVelocity = linearVelocity
-            val angularVelocity = getAngularVelocity(movePoint!!, linearVelocity)
-            if (Vector3.Zero == angularVelocity) {
-                linearVelocity.scl(DEFAULT_SPEED_MOVEMENT.toFloat())
-            } else {
-                linearVelocity.scl(DEFAULT_SPEED_MOVEMENT_ON_ROTATION.toFloat())
-            }
-            physicObject.body.linearVelocity = linearVelocity
-            physicObject.body.angularVelocity = angularVelocity
-        } else {
-            physicObject.body.linearVelocity = Vector3.Zero
-            physicObject.body.angularVelocity = Vector3.Zero
-        }
+//        if (movePoint != null) {
+//            val linearVelocity = linearVelocity
+//            val angularVelocity = getAngularVelocity(movePoint!!, linearVelocity)
+//            if (Vector3.Zero == angularVelocity) {
+//                linearVelocity.scl(DEFAULT_SPEED_MOVEMENT.toFloat())
+//            } else {
+//                linearVelocity.scl(DEFAULT_SPEED_MOVEMENT_ON_ROTATION.toFloat())
+//            }
+//            physicObject.body.linearVelocity = linearVelocity
+//            physicObject.body.angularVelocity = angularVelocity
+//        } else {
+//            physicObject.body.linearVelocity = Vector3.Zero.cpy()
+//            physicObject.body.angularVelocity = Vector3.Zero.cpy()
+//        }
     }
 
     private fun getAngularVelocity(target: Vector3, linearVelocity: Vector3): Vector3 {
-        var angularVelocity = Vector3.Zero
+        var angularVelocity = Vector3.Zero.cpy()
         val unitPosition = modelInstance.transform.getTranslation(tempVector)
         val targetDirection = target.cpy().sub(unitPosition).nor()
         val currentAngle = getAngle(targetDirection, linearVelocity)

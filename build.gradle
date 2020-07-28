@@ -79,7 +79,6 @@ project(":user:server") {
     apply plugin: "kotlin"
 
     dependencies {
-        implementation project(":core")
         implementation project(":server:server-core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
@@ -103,7 +102,6 @@ project(":client:client-core") {
     apply plugin: "kotlin"
 
     dependencies {
-        implementation project(":core")
         api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
         api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     }
@@ -113,13 +111,13 @@ project(":server:server-core") {
     apply plugin: "kotlin"
 
     dependencies {
-        implementation project(":core")
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-bullet-platform:$gdxVersion:natives-desktop"
         api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        implementation "com.badlogicgames.ashley:ashley:1.7.3"
         implementation 'org.mockito:mockito-all:1.10.19'
     }
 }

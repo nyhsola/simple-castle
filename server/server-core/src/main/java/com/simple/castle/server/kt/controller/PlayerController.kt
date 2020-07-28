@@ -12,7 +12,6 @@ import java.util.*
 class PlayerController(playersJson: List<PlayerJson>,
                        private val sceneManager: SceneManager,
                        private val physicWorld: PhysicWorld) : CollisionEvent {
-    private val temp: Vector3 = Vector3()
     private val players: List<Player>
 
     init {
@@ -22,7 +21,7 @@ class PlayerController(playersJson: List<PlayerJson>,
             val startPositions = pathsObject
                     .map { list -> list.first() }
                     .filter { baseObject -> Objects.nonNull(baseObject) }
-                    .mapNotNull { baseObject -> baseObject.modelInstance.transform.getTranslation(temp).cpy() }
+                    .mapNotNull { baseObject -> baseObject.modelInstance.transform.getTranslation(Vector3()) }
             Player(playerJson.playerName, playerJson.unitType, pathsObject, startPositions, sceneManager, physicWorld)
         }
     }
@@ -36,8 +35,8 @@ class PlayerController(playersJson: List<PlayerJson>,
     }
 
     override fun onContactStarted(colObj0: btCollisionObject, colObj1: btCollisionObject) {
-        val baseObject1: BaseObject? = if (colObj0 is BaseObject) colObj0.userData as BaseObject else null
-        val baseObject2: BaseObject? = if (colObj1 is BaseObject) colObj1.userData as BaseObject else null
+        val baseObject1: BaseObject? = if (colObj0.userData is BaseObject) colObj0.userData as BaseObject else null
+        val baseObject2: BaseObject? = if (colObj1.userData is BaseObject) colObj1.userData as BaseObject else null
 
         if (baseObject1 != null && baseObject2 != null) {
             players.forEach { player -> player.onContactStarted(baseObject1, baseObject2) }

@@ -1,4 +1,4 @@
-package com.simple.castle.core.kt.render
+package com.simple.castle.server.kt.render
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.PerspectiveCamera
 import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.math.collision.BoundingBox
-import com.simple.castle.core.kt.utils.IntersectUtils
+import com.simple.castle.server.kt.utils.IntersectUtils
 
 class BaseCamera(private val plane: ModelInstance?)
     : PerspectiveCamera(FIELD_OF_VIEW.toFloat(), Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat()), InputProcessor {

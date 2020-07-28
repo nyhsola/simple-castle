@@ -1,10 +1,10 @@
-package com.simple.castle.core.kt.utils
+package com.simple.castle.server.kt.utils
 
 import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.math.Intersector
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.math.collision.BoundingBox
-import com.simple.castle.core.kt.render.BaseCamera
+import com.simple.castle.server.kt.render.BaseCamera
 
 object IntersectUtils {
     fun intersectPositionPoint(tmp: BoundingBox?, baseCamera: BaseCamera, modelInstance: ModelInstance, touchedX: Int, touchedY: Int): Vector3? {

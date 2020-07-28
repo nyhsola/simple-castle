@@ -4,10 +4,12 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 import com.simple.castle.server.kt.physic.PhysicObject
+import java.util.*
 
 @Suppress("LeakingThis")
-open class BaseObject(val id: String, constructor: Constructor) : Disposable {
+open class BaseObject(constructor: Constructor) : Disposable {
     val nodeName: String = constructor.nodeName
+    val id: String = UUID.randomUUID().toString()
     val physicObject: PhysicObject = constructor.buildPhysic()
     val modelInstance: ModelInstance = constructor.buildModel()
     var hide: Boolean
