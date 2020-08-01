@@ -1,15 +1,14 @@
 package com.simple.castle.server
 
+import castle.server.ashley.screen.ServerApplication
+import castle.server.ashley.screen.ServerGame
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
 import com.badlogic.gdx.graphics.g3d.ModelBatch
-import com.simple.castle.server.kt.game.ServerApplication
-import com.simple.castle.server.kt.game.ServerGame
 
 object ServerLauncher {
     @JvmStatic
     fun main(args: Array<String>) {
 //        System.setProperty("org.lwjgl.opengl.Window.undecorated", "true")
-
         ServerApplication(
                 isGUI = isGUI(args),
                 isServer = isServer(args),

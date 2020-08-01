@@ -1,9 +1,9 @@
 package com.simple.castle.android
 
 import android.os.Bundle
+import castle.client.ClientGame
 import com.badlogic.gdx.backends.android.AndroidApplication
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration
-import com.simple.castle.client.main.ClientGame
 
 class AndroidLauncher : AndroidApplication() {
     override fun onCreate(savedInstanceState: Bundle?) {
