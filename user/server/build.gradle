@@ -5,7 +5,7 @@ sourceSets.main.resources.srcDirs = ["../android/assets"]
 project.ext.mainClassName = "com.simple.castle.server.ServerLauncher"
 project.ext.assetsDir = new File("../android/assets")
 
-task run(dependsOn: classes, type: JavaExec) {
+task run(dependsOn: ['classes', ':blender:buildModel'], type: JavaExec) {
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in

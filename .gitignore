@@ -6,5 +6,6 @@ build/
 
 local.properties
 
-**/blender-project/map.fbx
-**/blender-project/map.g3dj
+**/blender-project/*.fbx
+**/blender-project/*.g3dj
+**/blender-project/*.blend1

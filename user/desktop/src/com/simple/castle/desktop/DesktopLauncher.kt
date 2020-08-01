@@ -1,8 +1,8 @@
 package com.simple.castle.desktop
 
+import castle.client.ClientGame
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
-import com.simple.castle.client.main.ClientGame
 
 object DesktopLauncher {
     @JvmStatic
