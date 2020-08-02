@@ -20,24 +20,20 @@ class CameraControlSystem(private val camera: Camera) : SystemAdapter() {
         if (keyLeft || keyRight || keyDown || keyUp) {
             val cameraSpeed = CAMERA_SPEED * deltaTime
             if (keyLeft) {
-                tempVector.set(camera.direction)
-                val vector = tempVector.rotate(camera.up, 90f).scl(cameraSpeed)
-                camera.position.add(vector.x, 0f, vector.z)
+                tempVector.set(camera.direction).rotate(camera.up, 90f).scl(cameraSpeed)
+                camera.position.add(tempVector.x, 0f, tempVector.z)
             }
             if (keyRight) {
-                tempVector.set(camera.direction)
-                val vector = tempVector.rotate(camera.up, -90f).scl(cameraSpeed)
-                camera.position.add(vector.x, 0f, vector.z)
+                tempVector.set(camera.direction).rotate(camera.up, -90f).scl(cameraSpeed)
+                camera.position.add(tempVector.x, 0f, tempVector.z)
             }
             if (keyDown) {
-                tempVector.set(camera.direction)
-                val vector = tempVector.scl(cameraSpeed)
-                camera.position.sub(vector.x, 0f, vector.z)
+                tempVector.set(camera.direction).scl(cameraSpeed)
+                camera.position.sub(tempVector.x, 0f, tempVector.z)
             }
             if (keyUp) {
-                tempVector.set(camera.direction)
-                val vector = tempVector.scl(cameraSpeed)
-                camera.position.add(vector.x, 0f, vector.z)
+                tempVector.set(camera.direction).scl(cameraSpeed)
+                camera.position.add(tempVector.x, 0f, tempVector.z)
             }
             camera.update()
         }
