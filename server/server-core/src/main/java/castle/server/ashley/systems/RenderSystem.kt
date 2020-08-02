@@ -1,7 +1,10 @@
 package castle.server.ashley.systems
 
+import castle.server.ashley.component.PositionComponent
 import castle.server.ashley.component.RenderComponent
-import com.badlogic.ashley.core.ComponentMapper
+import com.badlogic.ashley.core.Engine
+import com.badlogic.ashley.core.Entity
+import com.badlogic.ashley.core.EntityListener
 import com.badlogic.ashley.core.Family
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Camera
@@ -11,9 +14,20 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch
 
 class RenderSystem(private val camera: Camera,
                    private val environment: Environment,
-                   private val modelBatch: ModelBatch) : IteratingSystemAdapter(Family.all(RenderComponent::class.java).get()) {
-    companion object {
-        val renderMapper: ComponentMapper<RenderComponent> = ComponentMapper.getFor(RenderComponent::class.java)
+                   private val modelBatch: ModelBatch) : IteratingSystemAdapter(Family.all(PositionComponent::class.java, RenderComponent::class.java).get()), EntityListener {
+
+    override fun addedToEngine(engine: Engine) {
+        engine.addEntityListener(family, this)
+        super.addedToEngine(engine)
+    }
+
+    override fun entityRemoved(entity: Entity) {
+    }
+
+    override fun entityAdded(entity: Entity) {
+        val positionComponent = PositionComponent.mapper.get(entity)
+        val renderComponent = RenderComponent.mapper.get(entity)
+        renderComponent.modelInstance.transform = positionComponent.matrix4
     }
 
     override fun render(delta: Float) {
@@ -24,7 +38,7 @@ class RenderSystem(private val camera: Camera,
         }
         modelBatch.begin(camera)
         for (i in 0 until entities.size()) {
-            val renderComponent = renderMapper.get(entities[i])
+            val renderComponent = RenderComponent.mapper.get(entities[i])
             if (!renderComponent.hide) modelBatch.render(renderComponent.modelInstance, environment)
         }
         modelBatch.end()

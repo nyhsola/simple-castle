@@ -6,26 +6,41 @@ import com.badlogic.gdx.math.Vector3
 
 class CameraControlSystem(private val camera: Camera) : SystemAdapter() {
     companion object {
-        private const val CAMERA_SPEED = 25f
+        private const val CAMERA_SPEED = 30f
     }
 
     private val tempVector = Vector3()
-    private var currentKey = 0
-    private var mouseDragged = false
+
+    private var keyLeft = false
+    private var keyRight = false
+    private var keyDown = false
+    private var keyUp = false
 
     override fun update(deltaTime: Float) {
-        val cameraSpeed = CAMERA_SPEED * deltaTime
-        when (currentKey) {
-            Input.Keys.UP, Input.Keys.W -> camera.position.x = camera.position.x - cameraSpeed
-            Input.Keys.DOWN, Input.Keys.S -> camera.position.x = camera.position.x + cameraSpeed
-            Input.Keys.LEFT, Input.Keys.A -> camera.position.z = camera.position.z + cameraSpeed
-            Input.Keys.RIGHT, Input.Keys.D -> camera.position.z = camera.position.z - cameraSpeed
-            Input.Keys.Q -> camera.rotateAround(Vector3.Zero, Vector3(0f, 0f, 1f), 1f)
-            Input.Keys.E -> camera.rotateAround(Vector3.Zero, Vector3(0f, 0f, 1f), -1f)
-            Input.Keys.SHIFT_LEFT -> camera.position.add(camera.up)
-            Input.Keys.CONTROL_LEFT -> camera.position.sub(camera.up)
+        if (keyLeft || keyRight || keyDown || keyUp) {
+            val cameraSpeed = CAMERA_SPEED * deltaTime
+            if (keyLeft) {
+                tempVector.set(camera.direction)
+                val vector = tempVector.rotate(camera.up, 90f).scl(cameraSpeed)
+                camera.position.add(vector.x, 0f, vector.z)
+            }
+            if (keyRight) {
+                tempVector.set(camera.direction)
+                val vector = tempVector.rotate(camera.up, -90f).scl(cameraSpeed)
+                camera.position.add(vector.x, 0f, vector.z)
+            }
+            if (keyDown) {
+                tempVector.set(camera.direction)
+                val vector = tempVector.scl(cameraSpeed)
+                camera.position.sub(vector.x, 0f, vector.z)
+            }
+            if (keyUp) {
+                tempVector.set(camera.direction)
+                val vector = tempVector.scl(cameraSpeed)
+                camera.position.add(vector.x, 0f, vector.z)
+            }
+            camera.update()
         }
-        camera.update()
     }
 
     override fun resize(width: Int, height: Int) {
@@ -36,48 +51,29 @@ class CameraControlSystem(private val camera: Camera) : SystemAdapter() {
         camera.update()
     }
 
-    override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-//        mouseDragged = false
-        return false
-    }
-
     override fun scrolled(amount: Int): Boolean {
         camera.translate(tempVector.set(camera.direction).scl(amount.toFloat()))
+        camera.update()
         return false
     }
 
     override fun keyUp(keycode: Int): Boolean {
-        currentKey = Input.Keys.ANY_KEY
-        return false
-    }
-
-    override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
-//        if (mouseDragged) {
-//            val vector3 = IntersectUtils.intersectPositionPoint(BoundingBox(), camera, ground, screenX, screenY)
-//            if (vector3 != null) {
-//                val deltaX = previousX - vector3.x
-//                val deltaY = previousY - vector3.z
-//                camera.position.x += deltaX
-//                camera.position.z += deltaY
-//            }
-//        }
+        when (keycode) {
+            Input.Keys.A, Input.Keys.LEFT -> keyLeft = false
+            Input.Keys.D, Input.Keys.RIGHT -> keyRight = false
+            Input.Keys.S, Input.Keys.DOWN -> keyDown = false
+            Input.Keys.W, Input.Keys.UP -> keyUp = false
+        }
         return false
     }
 
     override fun keyDown(keycode: Int): Boolean {
-        currentKey = keycode
-        return false
-    }
-
-    override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-//        if (button == Input.Buttons.LEFT) {
-//            mouseDragged = true
-//            val vector3 = IntersectUtils.intersectPositionPoint(BoundingBox(), camera, ground, screenX, screenY)
-//            if (vector3 != null) {
-//                previousX = vector3.x
-//                previousY = vector3.z
-//            }
-//        }
+        when (keycode) {
+            Input.Keys.A, Input.Keys.LEFT -> keyLeft = true
+            Input.Keys.D, Input.Keys.R -> keyRight = true
+            Input.Keys.S, Input.Keys.DOWN -> keyDown = true
+            Input.Keys.W, Input.Keys.UP -> keyUp = true
+        }
         return false
     }
 

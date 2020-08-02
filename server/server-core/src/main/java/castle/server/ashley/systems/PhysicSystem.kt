@@ -1,8 +1,11 @@
 package castle.server.ashley.systems
 
 import castle.server.ashley.component.PhysicComponent
-import castle.server.ashley.component.RenderComponent
-import com.badlogic.ashley.core.*
+import castle.server.ashley.component.PositionComponent
+import com.badlogic.ashley.core.Engine
+import com.badlogic.ashley.core.Entity
+import com.badlogic.ashley.core.EntityListener
+import com.badlogic.ashley.core.Family
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.math.Vector3
@@ -15,10 +18,7 @@ import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSol
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw
 import kotlin.math.min
 
-class PhysicSystem(private val camera: Camera) : IteratingSystemAdapter(Family.all(PhysicComponent::class.java).get()), EntityListener {
-    companion object {
-        val physicMapper: ComponentMapper<PhysicComponent> = ComponentMapper.getFor(PhysicComponent::class.java)
-    }
+class PhysicSystem(private val camera: Camera) : IteratingSystemAdapter(Family.all(PositionComponent::class.java, PhysicComponent::class.java).get()), EntityListener {
 
     private val contactListener: CustomContactListener = CustomContactListener()
     private val collisionConfig: btCollisionConfiguration = btDefaultCollisionConfiguration()
@@ -56,32 +56,24 @@ class PhysicSystem(private val camera: Camera) : IteratingSystemAdapter(Family.a
     }
 
     override fun addedToEngine(engine: Engine) {
-        engine.addEntityListener(Family.all(RenderComponent::class.java, PhysicComponent::class.java).get(), this)
+        engine.addEntityListener(Family.all(PositionComponent::class.java, PhysicComponent::class.java).get(), this)
         super.addedToEngine(engine)
     }
 
     override fun entityRemoved(entity: Entity) {
-        val physicObject = physicMapper.get(entity).physicObject
+        val physicObject = PhysicComponent.mapper.get(entity).physicObject
         dynamicsWorld.removeRigidBody(physicObject.body)
     }
 
     override fun entityAdded(entity: Entity) {
-        val renderComponent = RenderSystem.renderMapper.get(entity).modelInstance
-        val physicComponent = physicMapper.get(entity)
-        val physicObject = physicComponent.physicObject
-
-        physicObject.motionState.transform = renderComponent.transform
-        physicObject.body.motionState = physicObject.motionState
-
-        if (physicComponent.mass != 0.0f) {
-            physicObject.body.collisionShape.calculateLocalInertia(physicComponent.mass, Vector3.Zero.cpy())
-        }
-
-        dynamicsWorld.addRigidBody(physicObject.body)
+        val positionComponent = PositionComponent.mapper.get(entity)
+        val physicComponent = PhysicComponent.mapper.get(entity)
+        PhysicComponent.link(positionComponent, physicComponent)
+        dynamicsWorld.addRigidBody(physicComponent.physicObject.body)
     }
 
     override fun dispose() {
-        entities.forEach(action = { entity -> physicMapper.get(entity).dispose() })
+        entities.forEach(action = { entity -> PhysicComponent.mapper.get(entity).dispose() })
         dynamicsWorld.dispose()
         constraintSolver.dispose()
         broadPhase.dispose()
