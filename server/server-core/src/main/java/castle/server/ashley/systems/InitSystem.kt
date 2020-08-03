@@ -8,7 +8,7 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 
 class InitSystem(private val constructorManager: ConstructorManager) : SystemAdapter() {
-    override fun addedToEngine(engine: Engine?) {
+    override fun addedToEngine(engine: Engine) {
         init()
         super.addedToEngine(engine)
     }
@@ -30,6 +30,7 @@ class InitSystem(private val constructorManager: ConstructorManager) : SystemAda
 
                         val physicComponent = PhysicComponent.createComponent(engine, entry.value)
                         entity.add(physicComponent)
+
                         engine.addEntity(entity)
                     }
                 }

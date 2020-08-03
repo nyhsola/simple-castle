@@ -38,10 +38,10 @@ class GameScreen(modelBatch: ModelBatch) : InputScreenAdapter() {
 
     init {
         customEngine.apply {
-            addSystem(InitSystem(constructorManager))
             addSystem(CameraControlSystem(camera))
             addSystem(RenderSystem(camera, environment, modelBatch))
             addSystem(PhysicSystem(camera))
+            addSystem(InitSystem(constructorManager))
         }
     }
 
