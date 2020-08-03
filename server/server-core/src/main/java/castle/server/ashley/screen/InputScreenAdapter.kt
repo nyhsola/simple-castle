@@ -64,6 +64,7 @@ abstract class InputScreenAdapter protected constructor() : InputProcessor, Scre
     }
 
     override fun dispose() {
+        customEngine.removeAllEntities()
         customEngine.dispose()
     }
 }

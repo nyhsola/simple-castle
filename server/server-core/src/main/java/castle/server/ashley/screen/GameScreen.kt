@@ -1,14 +1,11 @@
 package castle.server.ashley.screen
 
-import castle.server.ashley.component.PhysicComponent
-import castle.server.ashley.component.PositionComponent
-import castle.server.ashley.component.RenderComponent
 import castle.server.ashley.systems.CameraControlSystem
+import castle.server.ashley.systems.InitSystem
 import castle.server.ashley.systems.PhysicSystem
 import castle.server.ashley.systems.RenderSystem
 import castle.server.ashley.utils.AssetLoader
 import castle.server.ashley.utils.SceneLoader
-import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Camera
@@ -41,12 +38,11 @@ class GameScreen(modelBatch: ModelBatch) : InputScreenAdapter() {
 
     init {
         customEngine.apply {
+            addSystem(InitSystem(constructorManager))
             addSystem(CameraControlSystem(camera))
             addSystem(RenderSystem(camera, environment, modelBatch))
             addSystem(PhysicSystem(camera))
         }
-
-        addInitObjects()
     }
 
     override fun keyDown(keycode: Int): Boolean {
@@ -57,30 +53,8 @@ class GameScreen(modelBatch: ModelBatch) : InputScreenAdapter() {
     }
 
     override fun dispose() {
-        customEngine.removeAllEntities()
         model.dispose()
         super.dispose()
     }
 
-    private fun addInitObjects() {
-        constructorManager.constructorMap
-                .asIterable()
-                .filter { entry -> entry.value.instantiate }
-                .forEach { entry ->
-                    run {
-                        val entity: Entity = customEngine.createEntity()
-                        val positionComponent = PositionComponent.createComponent(customEngine, entry.value)
-                        entity.add(positionComponent)
-
-                        if (!entry.value.hide) {
-                            val renderComponent = RenderComponent.createComponent(customEngine, entry.value)
-                            entity.add(renderComponent)
-                        }
-
-                        val physicComponent = PhysicComponent.createComponent(customEngine, entry.value)
-                        entity.add(physicComponent)
-                        customEngine.addEntity(entity)
-                    }
-                }
-    }
 }

@@ -4,7 +4,7 @@ import castle.server.ashley.physic.Constructor
 import castle.server.ashley.physic.PhysicObject
 import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.ComponentMapper
-import com.badlogic.ashley.core.PooledEngine
+import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 
@@ -19,7 +19,7 @@ class PhysicComponent : Component, Disposable {
     companion object {
         val mapper: ComponentMapper<PhysicComponent> = ComponentMapper.getFor(PhysicComponent::class.java)
 
-        fun createComponent(engine: PooledEngine, constructor: Constructor): PhysicComponent {
+        fun createComponent(engine: Engine, constructor: Constructor): PhysicComponent {
             val physicComponent: PhysicComponent = engine.createComponent(PhysicComponent::class.java)
             physicComponent.physicObject = constructor.getPhysicObject()
             physicComponent.mass = constructor.mass

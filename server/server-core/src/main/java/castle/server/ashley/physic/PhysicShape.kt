@@ -10,9 +10,9 @@ import java.util.function.Function
 import kotlin.math.max
 
 enum class PhysicShape(private val function: Function<Node, btCollisionShape>) {
-    STATIC(Function<Node, btCollisionShape> { node: Node -> calculateStaticNodeShape(node) }),
-    BASE_BOX(Function<Node, btCollisionShape> { node: Node -> calculateBaseBox(node) }),
-    ADJUSTED_BASE_BOX(Function<Node, btCollisionShape> { node: Node -> calculateAdjustedBox(node) });
+    STATIC(Function<Node, btCollisionShape> { node -> calculateStaticNodeShape(node) }),
+    BASE_BOX(Function<Node, btCollisionShape> { node -> calculateBaseBox(node) }),
+    ADJUSTED_BASE_BOX(Function<Node, btCollisionShape> { node -> calculateAdjustedBox(node) });
 
     fun build(node: Node): btCollisionShape {
         return function.apply(node)

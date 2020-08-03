@@ -27,7 +27,7 @@ class RenderSystem(private val camera: Camera,
     override fun entityAdded(entity: Entity) {
         val positionComponent = PositionComponent.mapper.get(entity)
         val renderComponent = RenderComponent.mapper.get(entity)
-        renderComponent.modelInstance.transform = positionComponent.matrix4
+        RenderComponent.link(positionComponent, renderComponent)
     }
 
     override fun render(delta: Float) {
