@@ -16,6 +16,6 @@ class ConstructorManager(sceneObjectsJson: List<SceneObjectJson>, model: Model) 
                         sceneObjectJson.hide,
                         sceneObjectJson.animation)
             }
-            .associateBy(keySelector = { constructor -> constructor.nodes }, valueTransform = { constructor -> constructor })
+            .associateBy(keySelector = { constructor -> constructor.nodesStr }, valueTransform = { constructor -> constructor })
             .toMap()
 }

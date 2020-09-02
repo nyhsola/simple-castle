@@ -15,7 +15,7 @@ class RenderComponent : Component {
 
         fun createComponent(engine: Engine, constructor: Constructor): RenderComponent {
             val renderComponent: RenderComponent = engine.createComponent(RenderComponent::class.java)
-            renderComponent.modelInstance = constructor.getModel()
+            renderComponent.modelInstance = constructor.getRenderModel()
             renderComponent.hide = constructor.hide
             return renderComponent
         }

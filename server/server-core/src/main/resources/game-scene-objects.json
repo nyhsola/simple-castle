@@ -1,5 +1,12 @@
 [
   {
+    "nodes": "n-unit-type-bones,n-unit-type-model",
+    "shape": "ADJUSTED_BASE_BOX",
+    "interact": "KINEMATIC",
+    "instantiate": true,
+    "animation": "n-unit-type-bones|walk"
+  },
+  {
     "nodes": "ground",
     "interact": "KINEMATIC",
     "instantiate": true
@@ -24,18 +31,6 @@
   },
   {
     "nodes": "tree.*",
-    "shape": "ADJUSTED_BASE_BOX",
-    "interact": "KINEMATIC",
-    "instantiate": true
-  },
-  {
-    "nodes": "n-unit-type-model",
-    "shape": "ADJUSTED_BASE_BOX",
-    "interact": "KINEMATIC",
-    "instantiate": true
-  },
-  {
-    "nodes": "testarm,cubetestarm",
     "shape": "ADJUSTED_BASE_BOX",
     "interact": "KINEMATIC",
     "instantiate": true
