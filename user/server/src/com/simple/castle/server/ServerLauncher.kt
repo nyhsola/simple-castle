@@ -3,7 +3,6 @@ package com.simple.castle.server
 import castle.server.ashley.screen.ServerApplication
 import castle.server.ashley.screen.ServerGame
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
-import com.badlogic.gdx.graphics.g3d.ModelBatch
 
 object ServerLauncher {
     @JvmStatic
@@ -12,7 +11,7 @@ object ServerLauncher {
         ServerApplication(
                 isGUI = isGUI(args),
                 isServer = isServer(args),
-                gameSupplier = { modelBatchSupplier: () -> ModelBatch -> ServerGame(modelBatchSupplier) },
+                gameSupplier = ::ServerGame,
                 conf = LwjglApplicationConfiguration().apply {
                     fullscreen = false
                     width = LwjglApplicationConfiguration.getDesktopDisplayMode().width

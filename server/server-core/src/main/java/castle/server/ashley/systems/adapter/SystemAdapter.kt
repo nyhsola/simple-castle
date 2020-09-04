@@ -1,4 +1,4 @@
-package castle.server.ashley.systems
+package castle.server.ashley.systems.adapter
 
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.InputProcessor

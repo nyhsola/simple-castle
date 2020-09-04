@@ -2,6 +2,7 @@ package castle.server.ashley.systems
 
 import castle.server.ashley.component.PhysicComponent
 import castle.server.ashley.component.PositionComponent
+import castle.server.ashley.systems.adapter.IteratingSystemAdapter
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.EntityListener
@@ -82,7 +83,7 @@ class PhysicSystem(private val camera: Camera) : IteratingSystemAdapter(Family.a
         contactListener.dispose()
     }
 
-    private inner class CustomContactListener : ContactListener() {
+    private class CustomContactListener : ContactListener() {
         override fun onContactStarted(colObj0: btCollisionObject, colObj1: btCollisionObject) {
         }
     }
