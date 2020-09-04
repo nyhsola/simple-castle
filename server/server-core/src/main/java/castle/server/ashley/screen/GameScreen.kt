@@ -41,6 +41,7 @@ class GameScreen(modelBatch: ModelBatch) : InputScreenAdapter() {
             addSystem(AnimationSystem())
             addSystem(DebugSystem(camera))
             addSystem(InitSystem(constructorManager))
+            addSystem(UnitSpawnerSystem(1f, constructorManager))
         }
     }
 

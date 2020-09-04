@@ -28,7 +28,10 @@ class PhysicComponent : Component, Disposable {
 
         fun link(positionComponent: PositionComponent, physicComponent: PhysicComponent) {
             val physicObject = physicComponent.physicObject
-            physicObject.body.motionState.setWorldTransform(positionComponent.matrix4)
+
+            physicObject.motionState.transform = positionComponent.matrix4
+            physicObject.body.motionState = physicObject.motionState
+
             if (physicComponent.mass != 0.0f) {
                 physicObject.body.collisionShape.calculateLocalInertia(physicComponent.mass, Vector3.Zero.cpy())
             }

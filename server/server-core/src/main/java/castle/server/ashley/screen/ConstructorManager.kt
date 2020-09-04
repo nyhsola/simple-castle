@@ -14,8 +14,9 @@ class ConstructorManager(sceneObjectsJson: List<SceneObjectJson>, model: Model) 
                         sceneObjectJson.shape,
                         sceneObjectJson.instantiate,
                         sceneObjectJson.hide,
+                        sceneObjectJson.armature,
                         sceneObjectJson.animation)
             }
-            .associateBy(keySelector = { constructor -> constructor.nodesStr }, valueTransform = { constructor -> constructor })
+            .associateBy(keySelector = { constructor -> constructor.node }, valueTransform = { constructor -> constructor })
             .toMap()
 }

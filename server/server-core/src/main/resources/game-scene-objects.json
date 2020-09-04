@@ -1,15 +1,11 @@
 [
   {
-    "nodes": "n-unit-type-bones,n-unit-type-model",
+    "nodes": "n-unit-type-model",
     "shape": "ADJUSTED_BASE_BOX",
-    "interact": "KINEMATIC",
-    "instantiate": true,
-    "animation": "n-unit-type-bones|walk"
-  },
-  {
-    "nodes": "ground",
-    "interact": "KINEMATIC",
-    "instantiate": true
+    "interact": "ACTIVE",
+    "armature": "n-unit-type-bones",
+    "animation": "n-unit-type-bones|walk",
+    "mass": 1
   },
   {
     "nodes": "unit-type.*",
@@ -26,12 +22,20 @@
   {
     "nodes": "area-(?:.+)",
     "shape": "ADJUSTED_BASE_BOX",
-    "instantiate": true,
+    "instantiate": false,
     "hide": true
   },
   {
     "nodes": "tree.*",
     "shape": "ADJUSTED_BASE_BOX",
+    "interact": "KINEMATIC",
+    "instantiate": true
+  },
+  {
+    "nodes": "sp.*"
+  },
+  {
+    "nodes": "ground",
     "interact": "KINEMATIC",
     "instantiate": true
   }

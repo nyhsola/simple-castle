@@ -10,4 +10,5 @@ data class SceneObjectJson(var nodes: String = "",
                            var interact: InteractType = InteractType.GHOST,
                            var instantiate: Boolean = false,
                            var hide: Boolean = false,
+                           var armature: String = "",
                            var animation: String = "")

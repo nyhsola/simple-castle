@@ -2,6 +2,7 @@ package castle.server.ashley.systems
 
 import castle.server.ashley.component.AnimationComponent
 import castle.server.ashley.component.RenderComponent
+import castle.server.ashley.systems.adapter.IteratingSystemAdapter
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.EntityListener

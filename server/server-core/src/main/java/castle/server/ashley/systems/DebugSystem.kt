@@ -3,6 +3,7 @@ package castle.server.ashley.systems
 import castle.server.ashley.component.PhysicComponent
 import castle.server.ashley.component.PositionComponent
 import castle.server.ashley.component.RenderComponent
+import castle.server.ashley.systems.adapter.IteratingSystemAdapter
 import castle.server.ashley.utils.AssetLoader
 import castle.server.ashley.utils.IntersectUtils
 import com.badlogic.ashley.core.Family
@@ -67,7 +68,7 @@ class DebugSystem(private val camera: Camera) : IteratingSystemAdapter(
             val physicComponent = PhysicComponent.mapper.get(entity)
 
             val position = positionComponent.matrix4
-            val nodePosition = renderComponent.modelInstance.getNode(PositionComponent.getRootNode(positionComponent.nodeName)).globalTransform
+            val nodePosition = renderComponent.modelInstance.getNode(positionComponent.nodeName).globalTransform
             val matrix4 = Matrix4()
             physicComponent.physicObject.body.getWorldTransform(matrix4)
 

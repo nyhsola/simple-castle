@@ -1,5 +1,6 @@
 package castle.server.ashley.systems
 
+import castle.server.ashley.systems.adapter.SystemAdapter
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.math.Vector3
