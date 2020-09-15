@@ -1,6 +1,7 @@
 Setup
 =====
-Update `\blender\paths.properties` according your Blender app location  
+Update `sc\blender\paths.properties` according your Blender app location. 
+When saving project file, use File > External Data > Automatically Pack Into .blend option
 
 Build
 =====
