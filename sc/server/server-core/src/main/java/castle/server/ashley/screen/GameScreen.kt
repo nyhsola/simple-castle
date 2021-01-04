@@ -1,27 +1,22 @@
 package castle.server.ashley.screen
 
-import castle.server.ashley.service.ConstructorManagerService
+import castle.server.ashley.service.HighLevelGameEventService
 import castle.server.ashley.service.PlayerService
 import castle.server.ashley.systems.*
-import castle.server.ashley.utils.AssetLoader
-import castle.server.ashley.utils.SceneLoader
+import castle.server.ashley.utils.ResourceManager
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.PerspectiveCamera
 import com.badlogic.gdx.graphics.g3d.Environment
-import com.badlogic.gdx.graphics.g3d.Model
 import com.badlogic.gdx.graphics.g3d.ModelBatch
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight
 import com.badlogic.gdx.math.Vector3
 
-
 class GameScreen(modelBatch: ModelBatch) : InputScreenAdapter() {
-    private val model: Model = AssetLoader().loadModel()
-    private val sceneLoader: SceneLoader = SceneLoader(model)
-    private val constructorManagerService: ConstructorManagerService = ConstructorManagerService(sceneLoader.loadSceneObjects(), model)
-    private val playerService: PlayerService = PlayerService(sceneLoader.loadPlayers())
+    private val resourceManager: ResourceManager = ResourceManager()
+    private val playerService: PlayerService = PlayerService(resourceManager)
     private val camera: Camera = PerspectiveCamera().apply {
         near = 1f
         far = 300f
@@ -42,12 +37,10 @@ class GameScreen(modelBatch: ModelBatch) : InputScreenAdapter() {
             addSystem(RenderSystem(camera, environment, modelBatch))
             addSystem(PhysicSystem(camera))
             addSystem(AnimationSystem())
-            addSystem(DebugSystem(camera))
-            addSystem(PlayerSystem(constructorManagerService))
-            addSystem(UnitControlSystem())
+            addSystem(DebugSystem(resourceManager, camera))
 
             // Should be the last
-            addSystem(InitSystem(constructorManagerService, playerService))
+            addSystem(GameCycleSystem(HighLevelGameEventService(playerService)))
         }
     }
 
@@ -59,7 +52,7 @@ class GameScreen(modelBatch: ModelBatch) : InputScreenAdapter() {
     }
 
     override fun dispose() {
-        model.dispose()
+        resourceManager.dispose()
         super.dispose()
     }
 
