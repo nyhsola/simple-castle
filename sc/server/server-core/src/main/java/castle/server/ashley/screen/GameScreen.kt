@@ -1,5 +1,6 @@
 package castle.server.ashley.screen
 
+import castle.server.ashley.service.HighLevelGameEventService
 import castle.server.ashley.service.PlayerService
 import castle.server.ashley.systems.*
 import castle.server.ashley.utils.ResourceManager
@@ -39,7 +40,7 @@ class GameScreen(modelBatch: ModelBatch) : InputScreenAdapter() {
             addSystem(DebugSystem(resourceManager, camera))
 
             // Should be the last
-            addSystem(GameCycleSystem(playerService))
+            addSystem(GameCycleSystem(HighLevelGameEventService(playerService)))
         }
     }
 

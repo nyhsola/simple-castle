@@ -1,11 +1,13 @@
 Setup
 =====
-Update `sc\blender\paths.properties` according your Blender app location. 
+Update `sc\blender\paths.properties` according your Blender app location. Or skip model package task
+by `-x :blender:buildModel`
 When saving project file, use File > External Data > Automatically Pack Into .blend option
 
 Build
 =====
-Currently, `:blender:buildModel` task works only on Windows. To make this work you'll need to install VC 2015 Redistributable Package (For https://github.com/libgdx/fbx-conv)  
+Currently, `:blender:buildModel` task works only on Windows. To make this work you'll need to install VC 2015
+Redistributable Package (For making fbx-conv work - https://github.com/libgdx/fbx-conv)
 
 Launch
 ======

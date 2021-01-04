@@ -4,6 +4,7 @@ import castle.server.ashley.component.AnimationComponent
 import castle.server.ashley.component.PhysicComponent
 import castle.server.ashley.component.PositionComponent
 import castle.server.ashley.component.RenderComponent
+import castle.server.ashley.utils.json.SceneObjectJson
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.graphics.g3d.Model
@@ -12,17 +13,18 @@ import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody
 import com.badlogic.gdx.utils.Array
 
-class Constructor(private val model: Model,
-                  val node: String,
-                  private var collisionFlag: String,
-                  var collisionFilterGroup: Int,
-                  var collisionFilterMask: List<Int>,
-                  val mass: Float,
-                  private val physicShape: PhysicShape,
-                  val instantiate: Boolean,
-                  val hide: Boolean,
-                  private val armature: String,
-                  var animation: String) {
+class Constructor(private val model: Model, sceneObjectJson: SceneObjectJson) {
+    private var collisionFlag: String = sceneObjectJson.collisionFlag
+    private val physicShape: PhysicShape = sceneObjectJson.shape
+    private val armature: String = sceneObjectJson.armature
+    private var collisionFilterMask: List<Int> = sceneObjectJson.collisionFilterMask
+
+    val node: String = sceneObjectJson.nodes
+    var collisionFilterGroup: Int = sceneObjectJson.collisionFilterGroup
+    val mass: Float = sceneObjectJson.mass
+    val instantiate: Boolean = sceneObjectJson.instantiate
+    val hide: Boolean = sceneObjectJson.hide
+    var animation: String = sceneObjectJson.animation
 
     fun getPhysicObject(): PhysicObject {
         val shape = physicShape.build(getModel())
