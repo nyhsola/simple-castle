@@ -4,8 +4,8 @@ import castle.server.ashley.component.PhysicComponent
 import castle.server.ashley.component.PositionComponent
 import castle.server.ashley.component.RenderComponent
 import castle.server.ashley.systems.adapter.IteratingSystemAdapter
-import castle.server.ashley.utils.AssetLoader
 import castle.server.ashley.utils.IntersectUtils
+import castle.server.ashley.utils.ResourceManager
 import com.badlogic.ashley.core.Family
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.math.Matrix4
@@ -20,16 +20,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 
-class DebugSystem(private val camera: Camera) : IteratingSystemAdapter(
-        Family.all(
-                PositionComponent::class.java,
-                RenderComponent::class.java,
-                PhysicComponent::class.java).get()) {
+class DebugSystem(
+    private val resourceManager: ResourceManager,
+    private val camera: Camera
+) : IteratingSystemAdapter(
+    Family.all(
+        PositionComponent::class.java,
+        RenderComponent::class.java,
+        PhysicComponent::class.java
+    ).get()
+) {
 
     private val tempBoundingBox = BoundingBox()
 
     private var stage: Stage
-    private var skin: Skin = AssetLoader().loadSkin()
+    private var skin: Skin = resourceManager.skin
     private var timeButton: TextButton
 
     init {
