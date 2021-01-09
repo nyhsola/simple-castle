@@ -1,7 +1,6 @@
 Setup
 =====
-Update `sc\blender\paths.properties` according your Blender app location. Or skip model package task
-by `-x :blender:buildModel`
+Update `sc\blender\paths.properties` according your Blender app location. Use task `:blender:buildModel` to update model
 When saving project file, use File > External Data > Automatically Pack Into .blend option
 
 Build

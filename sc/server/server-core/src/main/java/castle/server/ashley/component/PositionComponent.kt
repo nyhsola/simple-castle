@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.ComponentMapper
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector3
+import java.util.*
 
 class PositionComponent : Component {
     lateinit var matrix4: Matrix4
@@ -19,6 +20,13 @@ class PositionComponent : Component {
             val positionComponent: PositionComponent = engine.createComponent(PositionComponent::class.java)
             positionComponent.matrix4 = constructor.getTransform()
             positionComponent.nodeName = constructor.node
+            return positionComponent
+        }
+
+        fun createComponent(engine: Engine, matrix4: Matrix4): PositionComponent {
+            val positionComponent: PositionComponent = engine.createComponent(PositionComponent::class.java)
+            positionComponent.matrix4 = matrix4
+            positionComponent.nodeName = "generated-${UUID.randomUUID()}"
             return positionComponent
         }
     }

@@ -20,16 +20,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 
-class DebugSystem(
-    private val resourceManager: ResourceManager,
-    private val camera: Camera
-) : IteratingSystemAdapter(
-    Family.all(
-        PositionComponent::class.java,
+class DebugSystem(private val resourceManager: ResourceManager, private val camera: Camera) : IteratingSystemAdapter(Family.all(PositionComponent::class.java,
         RenderComponent::class.java,
-        PhysicComponent::class.java
-    ).get()
-) {
+        PhysicComponent::class.java).get()) {
 
     private val tempBoundingBox = BoundingBox()
 
@@ -77,11 +70,9 @@ class DebugSystem(
             val matrix4 = Matrix4()
             physicComponent.physicObject.body.getWorldTransform(matrix4)
 
-            val text = "${positionComponent.nodeName} " +
-                    System.lineSeparator() +
-                    "Position: ${position.getTranslation(Vector3())} ${position.getRotation(Quaternion())} " +
-                    System.lineSeparator() +
-                    "Node position: ${nodePosition.getTranslation(Vector3())} ${nodePosition.getRotation(Quaternion())}"
+            val text = "${positionComponent.nodeName} " + System.lineSeparator() + "Position: ${position.getTranslation(Vector3())} ${
+                position.getRotation(Quaternion())
+            } " + System.lineSeparator() + "Node position: ${nodePosition.getTranslation(Vector3())} ${nodePosition.getRotation(Quaternion())}"
 
             timeButton.setText(text)
         } else {

@@ -1,13 +1,12 @@
 package castle.server.ashley.screen
 
+import castle.server.ashley.creator.GUICreator
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.g3d.ModelBatch
 import com.badlogic.gdx.physics.bullet.Bullet
 
-class ServerGame(modelBatchSupplier: (() -> ModelBatch)) : Game() {
-    private val modelBatch: ModelBatch by lazy { modelBatchSupplier.invoke() }
-    private val gameScreen: GameScreen by lazy { GameScreen(modelBatch) }
+class ServerGame(guiCreator: GUICreator) : Game() {
+    private val gameScreen: GameScreen by lazy { GameScreen(guiCreator) }
 
     override fun create() {
         Bullet.init()
@@ -18,7 +17,6 @@ class ServerGame(modelBatchSupplier: (() -> ModelBatch)) : Game() {
     override fun dispose() {
         super.dispose()
         gameScreen.dispose()
-        modelBatch.dispose()
     }
 
 }

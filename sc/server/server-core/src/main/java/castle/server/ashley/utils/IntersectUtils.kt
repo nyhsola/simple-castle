@@ -24,14 +24,11 @@ object IntersectUtils {
     fun intersect(camera: Camera, gameObjectList: Iterable<Entity>, touchedY: Float, touchedX: Float, temp: BoundingBox): Entity? {
         val pickRay: Ray = camera.getPickRay(touchedX, touchedY)
         val intersection = Vector3()
-        return StreamSupport.stream(gameObjectList.spliterator(), false)
-                .filter { entity ->
-                    val modelInstance = RenderComponent.mapper.get(entity).modelInstance
-                    val boundingBox: BoundingBox = modelInstance.calculateBoundingBox(temp)
-                    boundingBox.mul(modelInstance.transform)
-                    Intersector.intersectRayBounds(pickRay, boundingBox, intersection)
-                }
-                .findFirst()
-                .orElse(null)
+        return StreamSupport.stream(gameObjectList.spliterator(), false).filter { entity ->
+            val modelInstance = RenderComponent.mapper.get(entity).modelInstance
+            val boundingBox: BoundingBox = modelInstance.calculateBoundingBox(temp)
+            boundingBox.mul(modelInstance.transform)
+            Intersector.intersectRayBounds(pickRay, boundingBox, intersection)
+        }.findFirst().orElse(null)
     }
 }
