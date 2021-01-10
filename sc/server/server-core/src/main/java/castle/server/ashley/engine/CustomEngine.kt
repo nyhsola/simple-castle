@@ -42,8 +42,8 @@ class CustomEngine : PooledEngine(), InputProcessor, Screen {
         return inputMultiplexer.keyTyped(character)
     }
 
-    override fun scrolled(amount: Int): Boolean {
-        return inputMultiplexer.scrolled(amount)
+    override fun scrolled(amountX: Float, amountY: Float): Boolean {
+        return inputMultiplexer.scrolled(amountX, amountY)
     }
 
     override fun keyUp(keycode: Int): Boolean {

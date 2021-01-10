@@ -28,24 +28,17 @@ class ResourceManager : Disposable {
     }
 
     private fun loadSceneObjects(): List<SceneObjectJson> {
-        val sceneObjectsJson = json.fromJson(
-            List::class.java,
-            SceneObjectJson::class.java,
-            SceneLoader::class.java.getResource("/game-scene-objects.json").readText()
-        )
-        return sceneObjectsJson
-            .map { any -> any as SceneObjectJson }
-            .map { sceneObjectJson -> Pair(sceneObjectJson, getValuesByPattern(sceneObjectJson.nodes)) }
-            .map { pair -> pair.second.map { nodeName -> pair.first.copy(nodes = nodeName) } }
-            .flatten()
+        val sceneObjectsJson = json.fromJson(List::class.java,
+                SceneObjectJson::class.java,
+                SceneLoader::class.java.getResource("/game-scene-objects.json").readText())
+        return sceneObjectsJson.map { any -> any as SceneObjectJson }
+                .map { sceneObjectJson -> Pair(sceneObjectJson, getValuesByPattern(sceneObjectJson.nodes)) }
+                .map { pair -> pair.second.map { nodeName -> pair.first.copy(nodes = nodeName) } }.flatten()
     }
 
     private fun loadPlayers(): List<PlayerJson> {
-        return json.fromJson(
-            List::class.java,
-            PlayerJson::class.java,
-            SceneLoader::class.java.getResource("/players.json").readText()
-        ).map { any -> any as PlayerJson }
+        return json.fromJson(List::class.java, PlayerJson::class.java, SceneLoader::class.java.getResource("/players.json").readText())
+                .map { any -> any as PlayerJson }
     }
 
     private fun getValuesByPattern(pattern: String): Collection<String> {
@@ -54,5 +47,7 @@ class ResourceManager : Disposable {
 
     override fun dispose() {
         model.dispose()
+        skin.dispose()
+
     }
 }

@@ -1,8 +1,7 @@
 Setup
 =====
-Update `sc\blender\paths.properties` according your Blender app location. Or skip model package task
-by `-x :blender:buildModel`
-When saving project file, use File > External Data > Automatically Pack Into .blend option
+Update `sc\blender\paths.properties` according your Blender app location. Use task `:blender:buildModel` to update
+model. When saving project file, use File > External Data > Automatically Pack Into .blend option
 
 Build
 =====
@@ -11,12 +10,12 @@ Redistributable Package (For making fbx-conv work - https://github.com/libgdx/fb
 
 Launch
 ======
-Use `:user:server:run` task to run application  
+Use `:server:run` task to run application
 
 ESC - Exit game  
 F1 - Enable/Disable debug mode  
 Arrow keys/WASD - Move your camera  
-Mouse wheel - Move the camera away  
+Mouse wheel - Move the camera away
 
 Screenshots
 ===========

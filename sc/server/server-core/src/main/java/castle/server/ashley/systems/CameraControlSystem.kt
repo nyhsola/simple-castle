@@ -48,8 +48,8 @@ class CameraControlSystem(private val camera: Camera) : SystemAdapter() {
         camera.update()
     }
 
-    override fun scrolled(amount: Int): Boolean {
-        camera.translate(tempVector.set(camera.direction).scl(amount.toFloat()))
+    override fun scrolled(amountX: Float, amountY: Float): Boolean {
+        camera.translate(tempVector.set(camera.direction).scl(amountY))
         camera.update()
         return false
     }

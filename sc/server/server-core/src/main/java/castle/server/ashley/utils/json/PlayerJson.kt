@@ -3,9 +3,7 @@ package castle.server.ashley.utils.json
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonValue
 
-data class PlayerJson(var unitType: String = "",
-                      var spawnRate: Float = 1f,
-                      var paths: List<List<String>> = emptyList()) : Json.Serializable {
+data class PlayerJson(var unitType: String = "", var spawnRate: Float = 1f, var paths: List<List<String>> = emptyList()) : Json.Serializable {
     override fun write(json: Json?) {
         throw AssertionError("No need to write")
     }

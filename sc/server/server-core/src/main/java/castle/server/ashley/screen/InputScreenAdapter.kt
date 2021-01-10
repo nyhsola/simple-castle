@@ -35,8 +35,8 @@ abstract class InputScreenAdapter protected constructor() : InputProcessor, Scre
         return customEngine.mouseMoved(screenX, screenY)
     }
 
-    override fun scrolled(amount: Int): Boolean {
-        return customEngine.scrolled(amount)
+    override fun scrolled(amountX: Float, amountY: Float): Boolean {
+        return customEngine.scrolled(amountX, amountY)
     }
 
     override fun hide() {

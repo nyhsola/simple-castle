@@ -20,7 +20,7 @@ class RenderComponent : Component {
             return renderComponent
         }
 
-        fun link(positionComponent: PositionComponent, renderComponent: RenderComponent) {
+        fun linkPosition(positionComponent: PositionComponent, renderComponent: RenderComponent) {
             renderComponent.modelInstance.transform = positionComponent.matrix4
         }
     }

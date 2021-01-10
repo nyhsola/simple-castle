@@ -4,10 +4,8 @@ import com.badlogic.gdx.physics.bullet.collision.btCollisionObject
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody
 import com.badlogic.gdx.utils.Disposable
 
-class PhysicObject internal constructor(private val constructionInfo: btRigidBody.btRigidBodyConstructionInfo,
-                                        collisionFlag: String,
-                                        var collisionFilterGroupParam: Int,
-                                        val collisionFilterMaskList: List<Int>) : Disposable {
+class PhysicObject internal constructor(private val constructionInfo: btRigidBody.btRigidBodyConstructionInfo, collisionFlag: String,
+                                        collisionFilterGroupParam: Int, collisionFilterMaskList: List<Int>) : Disposable {
     val body: btRigidBody
     val motionState = MotionState()
     val collisionFilterMask: Int
@@ -26,5 +24,6 @@ class PhysicObject internal constructor(private val constructionInfo: btRigidBod
         body.dispose()
     }
 
-    private fun getCollisionFlag(collisionFlag: String) = if (collisionFlag.isEmpty()) 0 else btCollisionObject.CollisionFlags::class.java.getField(collisionFlag).getInt(null)
+    private fun getCollisionFlag(collisionFlag: String) = if (collisionFlag.isEmpty()) 0 else btCollisionObject.CollisionFlags::class.java.getField(
+            collisionFlag).getInt(null)
 }
