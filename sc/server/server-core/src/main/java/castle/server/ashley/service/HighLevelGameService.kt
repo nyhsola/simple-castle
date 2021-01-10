@@ -7,7 +7,7 @@ class HighLevelGameService(private val mapService: MapService, private val playe
         playerService.createGameEnvironment(engine)
         playerService.initializePlayers(engine)
 
-        mapService.printMap(engine)
+        mapService.createMinimap(engine)
     }
 
     fun tick(engine: Engine, deltaTime: Float) {

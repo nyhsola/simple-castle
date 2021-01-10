@@ -9,7 +9,7 @@ class ServerGame(guiCreator: GUICreator) : Game() {
     private val gameScreen: GameScreen by lazy { GameScreen(guiCreator) }
 
     override fun create() {
-        Bullet.init()
+        Bullet.init(false, false)
         setScreen(gameScreen)
         Gdx.input.inputProcessor = gameScreen
     }
