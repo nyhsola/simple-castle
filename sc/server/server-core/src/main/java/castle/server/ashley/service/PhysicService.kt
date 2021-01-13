@@ -4,12 +4,12 @@ import castle.server.ashley.component.PhysicComponent
 import castle.server.ashley.component.PositionComponent
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.graphics.Camera
+import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.bullet.DebugDrawer
 import com.badlogic.gdx.physics.bullet.collision.*
 import com.badlogic.gdx.physics.bullet.dynamics.btConstraintSolver
 import com.badlogic.gdx.physics.bullet.dynamics.btDiscreteDynamicsWorld
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody
 import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw
 import kotlin.math.min
@@ -25,7 +25,8 @@ class PhysicService(private val camera: Camera) {
     private val dynamicsWorld: btDiscreteDynamicsWorld = btDiscreteDynamicsWorld(dispatcher, broadPhase, constraintSolver, collisionConfig).apply {
         gravity = Vector3(0.0f, -10f, 0f); debugDrawer = customDebugDrawer
     }
-    private val tempArray = IntArray(1)
+    private val tempGhost = btGhostObject()
+    private val anyHitCallback = AnyHitCallback()
 
     var isDebug: Boolean = false
 
@@ -42,17 +43,17 @@ class PhysicService(private val camera: Camera) {
     }
 
     fun removeEntity(entity: Entity) {
-        val physicObject = PhysicComponent.mapper.get(entity).physicObject
+        val physicObject = PhysicComponent.mapper.get(entity).physicInstance
         dynamicsWorld.removeRigidBody(physicObject.body)
     }
 
     fun addEntity(entity: Entity) {
         val positionComponent = PositionComponent.mapper.get(entity)
         val physicComponent = PhysicComponent.mapper.get(entity)
-        PhysicComponent.link(positionComponent, physicComponent)
-        dynamicsWorld.addRigidBody(physicComponent.physicObject.body,
-                physicComponent.physicObject.collisionFilterGroup,
-                physicComponent.physicObject.collisionFilterMask)
+        PhysicComponent.linkPosition(positionComponent, physicComponent)
+        dynamicsWorld.addRigidBody(physicComponent.physicInstance.body,
+                physicComponent.physicInstance.collisionFilterGroup,
+                physicComponent.physicInstance.collisionFilterMask)
     }
 
     fun dispose(entities: Iterable<Entity>) {
@@ -62,63 +63,31 @@ class PhysicService(private val camera: Camera) {
         broadPhase.dispose()
         dispatcher.dispose()
         collisionConfig.dispose()
+        tempGhost.dispose()
+        anyHitCallback.dispose()
     }
 
-    fun hasCollisions(collisionObject: btRigidBody): Boolean {
-        dynamicsWorld.dispatcher.dispatchAllCollisionPairs(broadPhase.overlappingPairCache, dynamicsWorld.dispatchInfo, dynamicsWorld.dispatcher)
-        val pairArray = dynamicsWorld.broadphase.overlappingPairCache.overlappingPairArray
-        return pairArray.getCollisionObjectsValue(tempArray, collisionObject) > 0
+    fun hasCollisions(position: Vector3, halfBox: Vector3): Boolean {
+        val shape = btBoxShape(halfBox)
+        tempGhost.collisionShape = shape
+        tempGhost.worldTransform = Matrix4().setTranslation(position)
+        dynamicsWorld.collisionWorld.contactTest(tempGhost, anyHitCallback)
+        shape.dispose()
+        return anyHitCallback.isAnyHit
     }
 
-/*
-        This should work, need to find out
-        dynamicsWorld.addRigidBody(collisionObject)
-        dynamicsWorld.dispatcher.dispatchAllCollisionPairs(
-            broadPhase.overlappingPairCache,
-            dynamicsWorld.dispatchInfo,
-            dynamicsWorld.dispatcher
-        )
-        val pairArray = dynamicsWorld.broadphase.overlappingPairCache.overlappingPairArray
-        val pairArraySize = pairArray.size()
-        if (pairArraySize > 0) {
-            val intArr = IntArray(pairArraySize)
-            val obj = com.badlogic.gdx.utils.Array<btCollisionObject>(5)
-            val arr = pairArray.getCollisionObjects(obj, collisionObject, intArr)
-            if (arr.size > 0) {
-                print("Collisions with $collisionObject - ${arr.size}")
+    internal class AnyHitCallback : ContactResultCallback() {
+        var isAnyHit: Boolean = false
+            get() {
+                val saved = field
+                isAnyHit = false
+                return saved
             }
-        }
-        dynamicsWorld.removeRigidBody(collisionObject)
 
-        Check all combinations
-        val size = arr.size()
-        for (i in 0 until size) {
-            val pair = arr.at(i)
-            val proxy1 = btBroadphaseProxy.obtain(pair.pProxy0.cPointer, false)
-            val proxy2 = btBroadphaseProxy.obtain(pair.pProxy1.cPointer, false)
-            val collisionPair = dynamicsWorld.pairCache.findPair(proxy1, proxy2)
-            val algorithm = collisionPair.algorithm
-            if (algorithm != null) {
-                val manifoldArray = btPersistentManifoldArray()
-                algorithm.getAllContactManifolds(manifoldArray)
-                val manifoldArraySize = manifoldArray.size()
-                for (j in 0 until manifoldArraySize) {
-                    val manifold = manifoldArray.atConst(j)
-                    if (manifold != null && manifold.body0 != null && manifold.body1 != null) {
-                        val data0 = manifold.body0.userData
-                        val data1 = manifold.body1.userData
-
-                        if (data0 == "ghost-test" || data1 == "ghost-test") {
-                            print(1)
-                        }
-                    }
-                }
-            }
+        override fun addSingleResult(cp: btManifoldPoint?, colObj0Wrap: btCollisionObjectWrapper?, partId0: Int, index0: Int,
+                                     colObj1Wrap: btCollisionObjectWrapper?, partId1: Int, index1: Int): Float {
+            isAnyHit = true
+            return 0.0f
         }
     }
-    private class CustomContactListener : ContactListener() {
-        override fun onContactStarted(colObj0: btCollisionObject, colObj1: btCollisionObject) {
-        }
-    }
- */
 }

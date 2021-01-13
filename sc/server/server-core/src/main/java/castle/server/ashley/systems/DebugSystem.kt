@@ -8,9 +8,6 @@ import castle.server.ashley.utils.IntersectUtils
 import castle.server.ashley.utils.ResourceManager
 import com.badlogic.ashley.core.Family
 import com.badlogic.gdx.graphics.Camera
-import com.badlogic.gdx.math.Matrix4
-import com.badlogic.gdx.math.Quaternion
-import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.math.collision.BoundingBox
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Label
@@ -20,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 
-class DebugSystem(private val resourceManager: ResourceManager, private val camera: Camera) : IteratingSystemAdapter(Family.all(PositionComponent::class.java,
+class DebugSystem(resourceManager: ResourceManager, private val camera: Camera) : IteratingSystemAdapter(Family.all(PositionComponent::class.java,
         RenderComponent::class.java,
         PhysicComponent::class.java).get()) {
 
@@ -59,26 +56,6 @@ class DebugSystem(private val resourceManager: ResourceManager, private val came
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val entity = IntersectUtils.intersect(camera, entities, screenY.toFloat(), screenX.toFloat(), tempBoundingBox)
-
-        if (entity != null) {
-            val positionComponent = PositionComponent.mapper.get(entity)
-            val renderComponent = RenderComponent.mapper.get(entity)
-            val physicComponent = PhysicComponent.mapper.get(entity)
-
-            val position = positionComponent.matrix4
-            val nodePosition = renderComponent.modelInstance.getNode(positionComponent.nodeName).globalTransform
-            val matrix4 = Matrix4()
-            physicComponent.physicObject.body.getWorldTransform(matrix4)
-
-            val text = "${positionComponent.nodeName} " + System.lineSeparator() + "Position: ${position.getTranslation(Vector3())} ${
-                position.getRotation(Quaternion())
-            } " + System.lineSeparator() + "Node position: ${nodePosition.getTranslation(Vector3())} ${nodePosition.getRotation(Quaternion())}"
-
-            timeButton.setText(text)
-        } else {
-            timeButton.setText("")
-        }
-
         return super.touchUp(screenX, screenY, pointer, button)
     }
 }
