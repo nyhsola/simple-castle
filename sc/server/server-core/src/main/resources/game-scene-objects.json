@@ -1,5 +1,24 @@
 [
   {
+    "nodes": "ground",
+    "collisionFilterGroup": 8,
+    "collisionFilterMask": [
+      -1
+    ],
+    "collisionFlag": "CF_KINEMATIC_OBJECT",
+    "instantiate": true
+  },
+  {
+    "nodes": "tree.*",
+    "shape": "ADJUSTED_BASE_BOX",
+    "instantiate": true
+  },
+  {
+    "nodes": "castle(?:-\\d)",
+    "shape": "ADJUSTED_BASE_BOX",
+    "instantiate": true
+  },
+  {
     "nodes": "n-unit-type-model",
     "shape": "ADJUSTED_BASE_BOX",
     "armature": "n-unit-type-bones",
@@ -11,31 +30,7 @@
     ]
   },
   {
-    "nodes": "castle(?:-\\d)",
-    "shape": "ADJUSTED_BASE_BOX",
-    "instantiate": true
-  },
-  {
     "nodes": "area-(?:.+)",
-    "shape": "ADJUSTED_BASE_BOX",
-    "instantiate": false,
-    "hide": true
-  },
-  {
-    "nodes": "tree.*",
-    "shape": "ADJUSTED_BASE_BOX",
-    "instantiate": true
-  },
-  {
-    "nodes": "sp.*"
-  },
-  {
-    "nodes": "ground",
-    "collisionFilterGroup": 8,
-    "collisionFilterMask": [
-      -1
-    ],
-    "collisionFlag": "CF_KINEMATIC_OBJECT",
-    "instantiate": true
+    "shape": "ADJUSTED_BASE_BOX"
   }
 ]

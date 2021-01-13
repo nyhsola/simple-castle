@@ -14,6 +14,7 @@ project.ext.assetsDir = new File("../../android/assets")
 dependencies {
     implementation "com.badlogicgames.ashley:ashley:1.7.3"
     implementation 'org.mockito:mockito-all:1.10.19'
+    implementation "com.badlogicgames.gdx:gdx-ai:1.8.1"
     api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     api "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
     api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
@@ -23,6 +24,7 @@ dependencies {
 }
 
 task run(dependsOn: classes, type: JavaExec) {
+    jvmArgs("--illegal-access=deny")
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
@@ -31,6 +33,7 @@ task run(dependsOn: classes, type: JavaExec) {
 }
 
 task debug(dependsOn: classes, type: JavaExec) {
+    jvmArgs("--illegal-access=deny")
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in

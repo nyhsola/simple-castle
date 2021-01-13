@@ -1,12 +1,14 @@
 package castle.server.ashley.screen
 
 import castle.server.ashley.creator.GUICreator
-import castle.server.ashley.service.HighLevelGameService
-import castle.server.ashley.service.MapService
+import castle.server.ashley.event.EventContext
+import castle.server.ashley.event.EventQueue
+import castle.server.ashley.service.MiniMapService
 import castle.server.ashley.service.PhysicService
 import castle.server.ashley.service.PlayerService
 import castle.server.ashley.systems.*
 import castle.server.ashley.utils.ResourceManager
+import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Camera
@@ -17,10 +19,6 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight
 import com.badlogic.gdx.math.Vector3
 
 class GameScreen(guiCreator: GUICreator) : InputScreenAdapter() {
-    companion object {
-        private const val GAME_TICK_PERIOD = 1f
-    }
-
     private val resourceManager: ResourceManager = ResourceManager()
     private val camera: Camera = PerspectiveCamera().apply {
         near = 1f
@@ -37,9 +35,12 @@ class GameScreen(guiCreator: GUICreator) : InputScreenAdapter() {
     }
 
     init {
+        val eventQueue = EventQueue()
+        val signal = Signal<EventContext>().apply { add(eventQueue) }
+
         val physicService = PhysicService(camera)
-        val playerService = PlayerService(resourceManager, physicService)
-        val mapService = MapService(playerService, physicService)
+        val playerService = PlayerService(resourceManager)
+        val miniMapService = MiniMapService(playerService, physicService)
 
         customEngine.apply {
             addSystem(CameraControlSystem(camera))
@@ -47,7 +48,7 @@ class GameScreen(guiCreator: GUICreator) : InputScreenAdapter() {
             addSystem(PhysicSystem(physicService))
             addSystem(AnimationSystem())
             addSystem(DebugSystem(resourceManager, camera))
-            addSystem(GameCycleSystem(HighLevelGameService(mapService, playerService), GAME_TICK_PERIOD))
+            addSystem(GameCycleSystem(miniMapService, playerService, eventQueue, signal))
         }
     }
 

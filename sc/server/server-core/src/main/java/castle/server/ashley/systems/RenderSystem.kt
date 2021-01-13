@@ -64,7 +64,6 @@ class RenderSystem(private val camera: Camera, private val environment: Environm
             glEnable(GL20.GL_DEPTH_TEST)
         }
 
-
         shapeRenderer.begin()
         for (i in 0 until entities.size()) {
             if (ShapeComponent.mapper.has(entities[i])) {
@@ -81,7 +80,7 @@ class RenderSystem(private val camera: Camera, private val environment: Environm
         for (i in 0 until entities.size()) {
             if (RenderComponent.mapper.has(entities[i])) {
                 val renderComponent = RenderComponent.mapper.get(entities[i])
-                if (!renderComponent.hide) modelBatch.render(renderComponent.modelInstance, environment)
+                modelBatch.render(renderComponent.modelInstance, environment)
             }
         }
         modelBatch.end()
