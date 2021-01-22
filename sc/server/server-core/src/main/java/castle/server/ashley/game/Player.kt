@@ -3,14 +3,16 @@ package castle.server.ashley.game
 import castle.server.ashley.physic.Constructor
 import castle.server.ashley.utils.json.PlayerJson
 import com.badlogic.ashley.core.Engine
+import com.badlogic.gdx.utils.Disposable
 
-class Player(playerJson: PlayerJson, private val constructorMap: Map<String, Constructor>) {
+class Player(playerJson: PlayerJson, private val constructorMap: Map<String, Constructor>) : Disposable {
     private val paths: List<List<String>> = playerJson.paths
     private val baseUnits: MutableList<MovingUnit> = ArrayList()
     private val unitType: String = playerJson.unitType
     private val spawnRate: Float = playerJson.spawnRate
     private var accumulate: Float = 0.0f
 
+    // TODO: 1/19/2021 move engine to constructor
     fun update(engine: Engine, delta: Float) {
         accumulate += delta
         while (accumulate >= spawnRate) {
@@ -24,5 +26,9 @@ class Player(playerJson: PlayerJson, private val constructorMap: Map<String, Con
         val paths = path.map { constructorMap[it]!!.getMatrix4() }
         val baseUnit = MovingUnit(engine, constructorMap[unitType]!!, paths)
         baseUnits.add(baseUnit)
+    }
+
+    override fun dispose() {
+        baseUnits.forEach { it.dispose() }
     }
 }

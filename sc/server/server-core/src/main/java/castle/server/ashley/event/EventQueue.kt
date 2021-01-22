@@ -5,7 +5,7 @@ import com.badlogic.ashley.signals.Signal
 import java.util.*
 
 class EventQueue : Listener<EventContext> {
-    private val eventTypeQueue: PriorityQueue<EventContext> = PriorityQueue();
+    private val eventTypeQueue: PriorityQueue<EventContext> = PriorityQueue()
 
     fun poll(): EventContext {
         return eventTypeQueue.poll()

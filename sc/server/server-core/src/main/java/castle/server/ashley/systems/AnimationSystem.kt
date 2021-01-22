@@ -9,7 +9,6 @@ import com.badlogic.ashley.core.EntityListener
 import com.badlogic.ashley.core.Family
 
 class AnimationSystem : IteratingSystemAdapter(Family.all(AnimationComponent::class.java, RenderComponent::class.java).get()), EntityListener {
-
     override fun addedToEngine(engine: Engine) {
         engine.addEntityListener(Family.all(AnimationComponent::class.java, RenderComponent::class.java).get(), this)
         super.addedToEngine(engine)

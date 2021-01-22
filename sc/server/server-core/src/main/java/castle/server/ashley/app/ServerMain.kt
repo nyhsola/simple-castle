@@ -1,11 +1,12 @@
-package castle.server.ashley.screen
+package castle.server.ashley.app
 
 import castle.server.ashley.creator.GUICreator
+import castle.server.ashley.screen.GameScreen
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.physics.bullet.Bullet
 
-class ServerGame(guiCreator: GUICreator) : Game() {
+class ServerMain(guiCreator: GUICreator) : Game() {
     private val gameScreen: GameScreen by lazy { GameScreen(guiCreator) }
 
     override fun create() {

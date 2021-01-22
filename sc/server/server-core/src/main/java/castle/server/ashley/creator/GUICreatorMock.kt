@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch
 import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.scenes.scene2d.Stage
 import org.mockito.Mockito
 
 class GUICreatorMock : GUICreator {
@@ -18,6 +19,10 @@ class GUICreatorMock : GUICreator {
 
     override fun createShapeRenderer(): ShapeRenderer {
         return Mockito.mock(ShapeRenderer::class.java)
+    }
+
+    override fun createStage(): Stage {
+        return Mockito.mock(Stage::class.java)
     }
 
     override fun createDecalBatch(groupStrategy: GroupStrategy): DecalBatch {
