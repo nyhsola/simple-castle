@@ -1,21 +1,25 @@
-Setup
+Build Model
 =====
-Update `sc\blender\paths.properties` according your Blender app location. Use task `:blender:buildModel` to update
-model. When saving project file, use File > External Data > Automatically Pack Into .blend option
+Use task `:blender:buildModel` to update model. It packs map.blend model into the game (`sc\android\assets\models`).
 
-Build
-=====
-Currently, `:blender:buildModel` task works only on Windows. To make this work you'll need to install VC 2015
-Redistributable Package (For making fbx-conv work - https://github.com/libgdx/fbx-conv)
+### Notes:
+
+* Task works only on Windows
+* Before usage update `sc\blender\paths.properties` according your Blender app location
+* When saving project file in Blender, mark option File > External Data > Automatically Pack Into .blend.
+* To make this work you'll need to install VC 2015 Redistributable Package (See https://github.com/libgdx/fbx-conv)
 
 Launch
 ======
 Use `:server:run` task to run application
 
-ESC - Exit game  
-F1 - Enable/Disable debug mode  
+### Keyboard:  
+ESC - Exit game
 Arrow keys/WASD - Move your camera  
 Mouse wheel - Move the camera away
+
+### Chat commands:  
+physic - Enable\Disable physic borders
 
 Screenshots
 ===========

@@ -3,7 +3,6 @@ package castle.server.ashley.service
 import castle.server.ashley.component.PhysicComponent
 import castle.server.ashley.component.PositionComponent
 import com.badlogic.ashley.core.Entity
-import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.bullet.DebugDrawer
@@ -14,7 +13,7 @@ import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSol
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw
 import kotlin.math.min
 
-class PhysicService(private val camera: Camera) {
+class PhysicService(private val cameraService: CameraService) {
     private val collisionConfig: btCollisionConfiguration = btDefaultCollisionConfiguration()
     private val dispatcher: btDispatcher = btCollisionDispatcher(collisionConfig)
     private val broadPhase: btBroadphaseInterface = btDbvtBroadphase()
@@ -32,7 +31,7 @@ class PhysicService(private val camera: Camera) {
 
     fun renderDebug() {
         if (isDebug) {
-            customDebugDrawer.begin(camera)
+            customDebugDrawer.begin(cameraService.getCurrentCamera().camera)
             dynamicsWorld.debugDrawWorld()
             customDebugDrawer.end()
         }
@@ -56,8 +55,7 @@ class PhysicService(private val camera: Camera) {
                 physicComponent.physicInstance.collisionFilterMask)
     }
 
-    fun dispose(entities: Iterable<Entity>) {
-        entities.forEach(action = { entity -> PhysicComponent.mapper.get(entity).dispose() })
+    fun dispose() {
         dynamicsWorld.dispose()
         constraintSolver.dispose()
         broadPhase.dispose()
@@ -68,6 +66,7 @@ class PhysicService(private val camera: Camera) {
     }
 
     fun hasCollisions(position: Vector3, halfBox: Vector3): Boolean {
+        // TODO: 1/20/2021 Remove box creation each time
         val shape = btBoxShape(halfBox)
         tempGhost.collisionShape = shape
         tempGhost.worldTransform = Matrix4().setTranslation(position)

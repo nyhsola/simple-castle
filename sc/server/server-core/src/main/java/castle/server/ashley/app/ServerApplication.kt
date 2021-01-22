@@ -1,4 +1,4 @@
-package castle.server.ashley.screen
+package castle.server.ashley.app
 
 import castle.server.ashley.creator.GUICreatorImpl
 import castle.server.ashley.creator.GUICreatorMock
@@ -18,13 +18,13 @@ class ServerApplication(private var isGUI: Boolean = true, private var isServer:
         val application: Application
         if (isGUI) {
             val guiCreator = GUICreatorImpl()
-            application = LwjglApplication(ServerGame(guiCreator), conf)
+            application = LwjglApplication(ServerMain(guiCreator), conf)
         } else {
             val guiCreator = GUICreatorMock()
             Gdx.gl = Mockito.mock(GL20::class.java)
             Gdx.gl20 = Mockito.mock(GL20::class.java)
             Gdx.gl30 = Mockito.mock(GL30::class.java)
-            application = HeadlessApplication(ServerGame(guiCreator))
+            application = HeadlessApplication(ServerMain(guiCreator))
         }
 
         if (isServer) {

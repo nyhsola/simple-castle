@@ -48,6 +48,5 @@ class ResourceManager : Disposable {
     override fun dispose() {
         model.dispose()
         skin.dispose()
-
     }
 }
