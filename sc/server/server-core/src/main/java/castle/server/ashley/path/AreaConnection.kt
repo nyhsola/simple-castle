@@ -4,7 +4,7 @@ import com.badlogic.gdx.ai.pfa.Connection
 import com.badlogic.gdx.math.Vector2
 
 class AreaConnection(private val from: Area, private val to: Area) : Connection<Area> {
-    private val cost: Float = Vector2.dst(from.indexPosition.x, from.indexPosition.y, to.indexPosition.x, to.indexPosition.y)
+    private val cost: Float = Vector2.dst(from.x.toFloat(), from.y.toFloat(), to.x.toFloat(), to.y.toFloat()).toInt().toFloat()
 
     override fun getCost(): Float {
         return cost

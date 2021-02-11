@@ -1,5 +1,6 @@
 package castle.server.ashley.utils
 
+import castle.server.ashley.physic.Constructor
 import castle.server.ashley.utils.json.PlayerJson
 import castle.server.ashley.utils.json.SceneObjectJson
 import com.badlogic.gdx.Gdx
@@ -16,7 +17,8 @@ class ResourceManager : Disposable {
 
     val model: Model = loadModel()
     val skin: Skin = loadSkin()
-    val sceneObjectsJson: List<SceneObjectJson> = loadSceneObjects()
+    val constructorMap: Map<String, Constructor> =
+        loadSceneObjects().map { sceneObjectJson -> Constructor(model, sceneObjectJson) }.associateBy(keySelector = { constructor -> constructor.node }).toMap()
     val players: List<PlayerJson> = loadPlayers()
 
     private fun loadModel(): Model {
@@ -28,17 +30,17 @@ class ResourceManager : Disposable {
     }
 
     private fun loadSceneObjects(): List<SceneObjectJson> {
-        val sceneObjectsJson = json.fromJson(List::class.java,
-                SceneObjectJson::class.java,
-                SceneLoader::class.java.getResource("/game-scene-objects.json").readText())
+        val sceneObjectsJson = json.fromJson(
+            List::class.java, SceneObjectJson::class.java, SceneLoader::class.java.getResource("/game-scene-objects.json").readText()
+        )
         return sceneObjectsJson.map { any -> any as SceneObjectJson }
-                .map { sceneObjectJson -> Pair(sceneObjectJson, getValuesByPattern(sceneObjectJson.nodes)) }
-                .map { pair -> pair.second.map { nodeName -> pair.first.copy(nodes = nodeName) } }.flatten()
+            .map { sceneObjectJson -> Pair(sceneObjectJson, getValuesByPattern(sceneObjectJson.nodes)) }
+            .map { pair -> pair.second.map { nodeName -> pair.first.copy(nodes = nodeName) } }.flatten()
     }
 
     private fun loadPlayers(): List<PlayerJson> {
         return json.fromJson(List::class.java, PlayerJson::class.java, SceneLoader::class.java.getResource("/players.json").readText())
-                .map { any -> any as PlayerJson }
+            .map { any -> any as PlayerJson }
     }
 
     private fun getValuesByPattern(pattern: String): Collection<String> {

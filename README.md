@@ -1,6 +1,6 @@
 Build Model
 =====
-Use task `:blender:buildModel` to update model. It packs map.blend model into the game (`sc\android\assets\models`).
+Use task `:blender:buildModel` to update model. It packs **map.blend** model into the game (`sc\android\assets\models`).
 
 ### Notes:
 
@@ -11,10 +11,10 @@ Use task `:blender:buildModel` to update model. It packs map.blend model into th
 
 Launch
 ======
-Use `:server:run` task to run application
+Use `:sc:server:server-core:run` task to run application  
 
 ### Keyboard:  
-ESC - Exit game
+ESC - Exit game  
 Arrow keys/WASD - Move your camera  
 Mouse wheel - Move the camera away
 

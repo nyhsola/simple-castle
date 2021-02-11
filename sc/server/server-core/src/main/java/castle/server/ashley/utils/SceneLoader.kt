@@ -14,17 +14,17 @@ class SceneLoader(model: Model) {
     }
 
     fun loadSceneObjects(): List<SceneObjectJson> {
-        val sceneObjectsJson = json.fromJson(List::class.java,
-                SceneObjectJson::class.java,
-                SceneLoader::class.java.getResource("/game-scene-objects.json").readText())
+        val sceneObjectsJson = json.fromJson(
+            List::class.java, SceneObjectJson::class.java, SceneLoader::class.java.getResource("/game-scene-objects.json").readText()
+        )
 
         return sceneObjectsJson.map { any -> any as SceneObjectJson }
-                .map { sceneObjectJson -> Pair(sceneObjectJson, getValuesByPattern(sceneObjectJson.nodes)) }
-                .map { pair -> pair.second.map { nodeName -> pair.first.copy(nodes = nodeName) } }.flatten()
+            .map { sceneObjectJson -> Pair(sceneObjectJson, getValuesByPattern(sceneObjectJson.nodes)) }
+            .map { pair -> pair.second.map { nodeName -> pair.first.copy(nodes = nodeName) } }.flatten()
     }
 
     fun loadPlayers(): List<PlayerJson> {
         return json.fromJson(List::class.java, PlayerJson::class.java, SceneLoader::class.java.getResource("/players.json").readText())
-                .map { any -> any as PlayerJson }
+            .map { any -> any as PlayerJson }
     }
 }

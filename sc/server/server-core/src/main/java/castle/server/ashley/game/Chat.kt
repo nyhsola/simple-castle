@@ -7,6 +7,7 @@ import castle.server.ashley.event.EventType
 import castle.server.ashley.utils.ResourceManager
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.signals.Signal
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
@@ -35,18 +36,23 @@ class Chat(private val engine: Engine, guiCreator: GUICreator, signal: Signal<Ev
     private val chatHistory: MutableList<String> = ArrayList()
     private val chatPoll: PriorityQueue<String> = PriorityQueue();
 
+    var debugEnabled: Boolean = false
+        set(value) {
+            table.setDebug(value, value)
+            field = value
+        }
+
     init {
         textArea.color.a = 0.7f
         label.color.a = 0.7f
         textField.color.a = 0.7f
 
         textArea.isDisabled = true
-        textArea.setPrefRows(3f)
 
-        table.add(textArea).fill().colspan(3)
+        table.add(textArea).fill().colspan(2).width(Gdx.graphics.width * 0.25f).height(Gdx.graphics.height * 0.25f)
         table.row()
         table.add(label).fill()
-        table.add(textField).fill()
+        table.add(textField).fill().expandX()
 
         table.align(Align.bottomLeft)
 
@@ -58,18 +64,18 @@ class Chat(private val engine: Engine, guiCreator: GUICreator, signal: Signal<Ev
 
         textField.addListener(object : FocusListener() {
             override fun keyboardFocusChanged(event: FocusEvent, actor: Actor, focused: Boolean) {
-                if (focused) signal.dispatch(EventContext(EventType.CHAT_FOCUSED))
+                if (focused) {
+                    signal.dispatch(EventContext(EventType.CHAT_FOCUSED))
+                }
             }
         })
 
         textField.addListener(object : InputListener() {
             override fun keyDown(event: InputEvent, keycode: Int): Boolean {
                 if (keycode == Input.Keys.ENTER) {
-                    stage.unfocus(textField)
-                    chatHistory.add(textField.text)
-                    chatPoll.add(textField.text)
+                    typeMessage(textField.text)
                     textField.text = ""
-                    textArea.text = chatHistory.takeLast(3).joinToString(separator = "\n") { "User: $it" }
+                    stage.unfocus(textField)
                 }
                 if (keycode == Input.Keys.TAB) {
                     stage.unfocus(textField)
@@ -89,8 +95,10 @@ class Chat(private val engine: Engine, guiCreator: GUICreator, signal: Signal<Ev
         })
     }
 
-    fun setDebug(enable: Boolean) {
-        table.setDebug(enable, enable)
+    fun typeMessage(message: String) {
+        chatHistory.add(message)
+        chatPoll.add(message)
+        textArea.text = chatHistory.takeLast(textArea.linesShowing).joinToString(separator = "\n") { ": $it" }
     }
 
     fun pollAllMessages(): Array<String> {

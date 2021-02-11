@@ -1,4 +1,4 @@
-package castle.server.ashley.systems
+package castle.server.ashley.systems.render
 
 import castle.server.ashley.component.PositionComponent
 import castle.server.ashley.component.RenderComponent
@@ -13,8 +13,11 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g3d.ModelBatch
 
-class ModelRenderSystem(guiCreator: GUICreator, private val cameraService: CameraService) : IteratingSystemAdapter(Family.all(PositionComponent::class.java,
-        RenderComponent::class.java).get()), EntityListener {
+class ModelRenderSystem(guiCreator: GUICreator, private val cameraService: CameraService) : IteratingSystemAdapter(
+    Family.all(
+        PositionComponent::class.java, RenderComponent::class.java
+    ).get()
+), EntityListener {
 
     private val modelBatch: ModelBatch = guiCreator.createModelBatch()
 

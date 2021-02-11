@@ -10,7 +10,7 @@ import com.badlogic.ashley.core.EntityListener
 import com.badlogic.ashley.core.Family
 
 class PhysicSystem(private val physicService: PhysicService) : EntityListener,
-        IteratingSystemAdapter(Family.all(PositionComponent::class.java, PhysicComponent::class.java).get()) {
+    IteratingSystemAdapter(Family.all(PositionComponent::class.java, PhysicComponent::class.java).get()) {
     override fun addedToEngine(engine: Engine) {
         engine.addEntityListener(Family.all(PositionComponent::class.java, PhysicComponent::class.java).get(), this)
         super.addedToEngine(engine)

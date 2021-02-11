@@ -14,8 +14,11 @@ import kotlin.math.max
 
 
 enum class PhysicShape(private val function: Function<ModelInstance, btCollisionShape>) {
-    STATIC(Function<ModelInstance, btCollisionShape> { node -> calculateStaticNodeShape(node) }),
-    BASE_BOX(Function<ModelInstance, btCollisionShape> { node -> calculateBaseBox(node) }),
+    STATIC(Function<ModelInstance, btCollisionShape> { node -> calculateStaticNodeShape(node) }), BASE_BOX(Function<ModelInstance, btCollisionShape> { node ->
+        calculateBaseBox(
+            node
+        )
+    }),
     ADJUSTED_BASE_BOX(Function<ModelInstance, btCollisionShape> { node -> calculateAdjustedBox(node) });
 
     fun build(modelInstance: ModelInstance): btCollisionShape {
