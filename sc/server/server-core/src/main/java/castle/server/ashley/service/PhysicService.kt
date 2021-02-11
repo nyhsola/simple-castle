@@ -25,12 +25,13 @@ class PhysicService(private val cameraService: CameraService) {
         gravity = Vector3(0.0f, -10f, 0f); debugDrawer = customDebugDrawer
     }
     private val tempGhost = btGhostObject()
+    private val tempMatrix = Matrix4()
     private val anyHitCallback = AnyHitCallback()
 
-    var isDebug: Boolean = false
+    var debugEnabled: Boolean = false
 
     fun renderDebug() {
-        if (isDebug) {
+        if (debugEnabled) {
             customDebugDrawer.begin(cameraService.getCurrentCamera().camera)
             dynamicsWorld.debugDrawWorld()
             customDebugDrawer.end()
@@ -50,9 +51,9 @@ class PhysicService(private val cameraService: CameraService) {
         val positionComponent = PositionComponent.mapper.get(entity)
         val physicComponent = PhysicComponent.mapper.get(entity)
         PhysicComponent.linkPosition(positionComponent, physicComponent)
-        dynamicsWorld.addRigidBody(physicComponent.physicInstance.body,
-                physicComponent.physicInstance.collisionFilterGroup,
-                physicComponent.physicInstance.collisionFilterMask)
+        dynamicsWorld.addRigidBody(
+            physicComponent.physicInstance.body, physicComponent.physicInstance.collisionFilterGroup, physicComponent.physicInstance.collisionFilterMask
+        )
     }
 
     fun dispose() {
@@ -65,13 +66,10 @@ class PhysicService(private val cameraService: CameraService) {
         anyHitCallback.dispose()
     }
 
-    fun hasCollisions(position: Vector3, halfBox: Vector3): Boolean {
-        // TODO: 1/20/2021 Remove box creation each time
-        val shape = btBoxShape(halfBox)
+    fun hasCollisions(position: Vector3, shape: btCollisionShape): Boolean {
         tempGhost.collisionShape = shape
-        tempGhost.worldTransform = Matrix4().setTranslation(position)
+        tempGhost.worldTransform = tempMatrix.setTranslation(position)
         dynamicsWorld.collisionWorld.contactTest(tempGhost, anyHitCallback)
-        shape.dispose()
         return anyHitCallback.isAnyHit
     }
 
@@ -83,8 +81,15 @@ class PhysicService(private val cameraService: CameraService) {
                 return saved
             }
 
-        override fun addSingleResult(cp: btManifoldPoint?, colObj0Wrap: btCollisionObjectWrapper?, partId0: Int, index0: Int,
-                                     colObj1Wrap: btCollisionObjectWrapper?, partId1: Int, index1: Int): Float {
+        override fun addSingleResult(
+            cp: btManifoldPoint?,
+            colObj0Wrap: btCollisionObjectWrapper?,
+            partId0: Int,
+            index0: Int,
+            colObj1Wrap: btCollisionObjectWrapper?,
+            partId1: Int,
+            index1: Int
+        ): Float {
             isAnyHit = true
             return 0.0f
         }

@@ -1,4 +1,4 @@
-package castle.server.ashley.systems
+package castle.server.ashley.systems.render
 
 import castle.server.ashley.component.StageComponent
 import castle.server.ashley.systems.adapter.IteratingInputSystemAdapter
@@ -18,18 +18,18 @@ class StageRenderSystem : IteratingInputSystemAdapter(family.get()), EntityListe
     }
 
     override fun entityAdded(entity: Entity) {
-        val stageComponent = StageComponent.MAPPER.get(entity)
+        val stageComponent = StageComponent.mapper.get(entity)
         addInputProcessor(stageComponent.stage)
     }
 
     override fun entityRemoved(entity: Entity) {
-        val stageComponent = StageComponent.MAPPER.get(entity)
+        val stageComponent = StageComponent.mapper.get(entity)
         removeInputProcessor(stageComponent.stage)
     }
 
     override fun render(delta: Float) {
         for (i in 0 until entities.size()) {
-            val stageComponent = StageComponent.MAPPER.get(entities[i])
+            val stageComponent = StageComponent.mapper.get(entities[i])
             stageComponent.stage.act(delta)
             stageComponent.stage.draw()
         }

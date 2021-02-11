@@ -23,6 +23,14 @@ class AreaGraph : IndexedGraph<Area> {
         areas.add(area)
     }
 
+    fun getArea(x: Int, y: Int): Area {
+        return areas.first { it.x == x && it.y == y }
+    }
+
+    fun getAreaOrNull(x: Int, y: Int): Area? {
+        return areas.firstOrNull() { it.x == x && it.y == y }
+    }
+
     fun connect(from: Area, to: Area) {
         val areaConnection = AreaConnection(from, to)
         if (!map.containsKey(from)) {

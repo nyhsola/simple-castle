@@ -1,31 +1,30 @@
 package castle.server.ashley.game
 
-import castle.server.ashley.physic.Constructor
+import castle.server.ashley.service.GameContext
 import castle.server.ashley.utils.json.PlayerJson
-import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.utils.Disposable
 
-class Player(playerJson: PlayerJson, private val constructorMap: Map<String, Constructor>) : Disposable {
+class Player(playerJson: PlayerJson, private val gameContext: GameContext) : Disposable {
     private val paths: List<List<String>> = playerJson.paths
-    private val baseUnits: MutableList<MovingUnit> = ArrayList()
+    private val baseUnits: MutableList<MovableUnit> = ArrayList()
     private val unitType: String = playerJson.unitType
     private val spawnRate: Float = playerJson.spawnRate
     private var accumulate: Float = 0.0f
 
-    // TODO: 1/19/2021 move engine to constructor
-    fun update(engine: Engine, delta: Float) {
+    fun update(delta: Float) {
         accumulate += delta
         while (accumulate >= spawnRate) {
             accumulate -= spawnRate
-            paths.forEach { createUnit(engine, it) }
+            paths.forEach { createUnit(it) }
         }
         baseUnits.forEach { it.update(delta) }
     }
 
-    private fun createUnit(engine: Engine, path: List<String>) {
-        val paths = path.map { constructorMap[it]!!.getMatrix4() }
-        val baseUnit = MovingUnit(engine, constructorMap[unitType]!!, paths)
-        baseUnits.add(baseUnit)
+    private fun createUnit(path: List<String>) {
+        val paths = path.map { gameContext.resourceManager.constructorMap[it]!!.getMatrix4() }
+        val movableUnit = MovableUnit(gameContext.resourceManager.constructorMap[unitType]!!, paths, gameContext)
+        gameContext.engine.addEntity(movableUnit.entity)
+        baseUnits.add(movableUnit)
     }
 
     override fun dispose() {

@@ -8,6 +8,6 @@ class StageComponent : Component {
     lateinit var stage: Stage
 
     companion object {
-        val MAPPER: ComponentMapper<StageComponent> = ComponentMapper.getFor(StageComponent::class.java)
+        val mapper: ComponentMapper<StageComponent> = ComponentMapper.getFor(StageComponent::class.java)
     }
 }

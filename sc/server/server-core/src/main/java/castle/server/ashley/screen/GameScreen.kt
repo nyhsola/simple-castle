@@ -3,9 +3,16 @@ package castle.server.ashley.screen
 import castle.server.ashley.creator.GUICreator
 import castle.server.ashley.event.EventContext
 import castle.server.ashley.service.CameraService
-import castle.server.ashley.service.GameCreator
+import castle.server.ashley.service.MapService
 import castle.server.ashley.service.PhysicService
-import castle.server.ashley.systems.*
+import castle.server.ashley.systems.AnimationSystem
+import castle.server.ashley.systems.CameraControlSystem
+import castle.server.ashley.systems.GameCycleSystem
+import castle.server.ashley.systems.PhysicSystem
+import castle.server.ashley.systems.render.Line3DRenderSystem
+import castle.server.ashley.systems.render.ModelRenderSystem
+import castle.server.ashley.systems.render.RectRenderSystem
+import castle.server.ashley.systems.render.StageRenderSystem
 import castle.server.ashley.utils.ResourceManager
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Gdx
@@ -19,16 +26,17 @@ class GameScreen(guiCreator: GUICreator) : InputScreenAdapter() {
 
         val cameraService = CameraService()
         val physicService = PhysicService(cameraService)
-        val gameCreator = GameCreator(resourceManager, guiCreator, physicService, signal)
+        val mapService = MapService(physicService)
 
         customEngine.apply {
             addSystem(CameraControlSystem(cameraService))
             addSystem(ModelRenderSystem(guiCreator, cameraService))
-            addSystem(ShapeRenderSystem(guiCreator))
+            addSystem(RectRenderSystem(guiCreator))
+            addSystem(Line3DRenderSystem(guiCreator, cameraService))
             addSystem(StageRenderSystem())
             addSystem(PhysicSystem(physicService))
             addSystem(AnimationSystem())
-            addSystem(GameCycleSystem(gameCreator, physicService, cameraService, signal))
+            addSystem(GameCycleSystem(resourceManager, guiCreator, mapService, physicService, cameraService, signal))
         }
     }
 
