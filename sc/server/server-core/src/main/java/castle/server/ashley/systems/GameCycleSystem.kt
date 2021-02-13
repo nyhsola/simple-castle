@@ -63,7 +63,7 @@ class GameCycleSystem(
             if (message == "debug-physic") {
                 physicService.debugEnabled = !physicService.debugEnabled
             }
-            if (message == "debug-chat") {
+            if (message == "debug-ui") {
                 gameManager.chat.debugEnabled = !gameManager.chat.debugEnabled
             }
         }

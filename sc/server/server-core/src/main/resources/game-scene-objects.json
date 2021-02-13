@@ -19,10 +19,8 @@
     "instantiate": true
   },
   {
-    "nodes": "n-unit-type-model",
+    "nodes": "unit-warrior",
     "shape": "ADJUSTED_BASE_BOX",
-    "armature": "n-unit-type-bones",
-    "animation": "n-unit-type-bones|walk",
     "mass": 1,
     "collisionFilterGroup": 9,
     "collisionFilterMask": [

@@ -8,3 +8,4 @@ for arg in sys.argv:
         folder = arg.split("=")[1]
 
 bpy.ops.export_scene.fbx(filepath=folder + '/map.fbx', axis_forward='-Z', axis_up='Y', global_scale=0.01, bake_space_transform=True)
+bpy.ops.file.unpack_all(method='WRITE_LOCAL')
