@@ -1,6 +1,6 @@
 [
   {
-    "unitType": "n-unit-type-model",
+    "unitType": "unit-warrior",
     "spawnRate": 3,
     "paths": [
       [
@@ -32,7 +32,7 @@
     ]
   },
   {
-    "unitType": "n-unit-type-model",
+    "unitType": "unit-warrior",
     "spawnRate": 5,
     "paths": [
       [
@@ -64,7 +64,7 @@
     ]
   },
   {
-    "unitType": "n-unit-type-model",
+    "unitType": "unit-warrior",
     "spawnRate": 10,
     "paths": [
       [
@@ -96,7 +96,7 @@
     ]
   },
   {
-    "unitType": "n-unit-type-model",
+    "unitType": "unit-warrior",
     "spawnRate": 25,
     "paths": [
       [

@@ -20,7 +20,17 @@ class Minimap(engine: Engine, gameMap: GameMap) {
     init {
         pieces = ArrayList()
 
-        val miniMap = gameMap.flatMap
+        val miniMap = gameMap.flatMap.map { it.toMutableList() }.toMutableList()
+
+        for (i in miniMap.indices) {
+            for (j in miniMap[i].indices) {
+                if (i > j) {
+                    val temp = miniMap[i][j]
+                    miniMap[i][j] = miniMap[j][i]
+                    miniMap[j][i] = temp
+                }
+            }
+        }
 
         val pointWidth = miniMapWidth / miniMap.size
         val pointHeight = miniMapHeight / miniMap[0].size

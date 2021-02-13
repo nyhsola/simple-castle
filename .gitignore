@@ -7,7 +7,3 @@ build/
 *.iml
 
 local.properties
-
-**/blender-project/*.fbx
-**/blender-project/*.g3dj
-**/blender-project/*.blend1

@@ -19,8 +19,9 @@ Arrow keys/WASD - Move your camera
 Mouse wheel - Move the camera away
 
 ### Chat commands:  
-physic - Enable\Disable physic borders
+debug-physic - Enable\Disable physic shape borders
+debug-ui - Enable\Disable ui borders
 
 Screenshots
 ===========
-![screenshot-example](/demo/screenshot-1.png)
+![screenshot-example](/demo/screenshot-1.jpg)
