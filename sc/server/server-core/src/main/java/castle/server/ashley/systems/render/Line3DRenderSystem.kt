@@ -1,9 +1,9 @@
 package castle.server.ashley.systems.render
 
-import castle.server.ashley.component.Line3DComponent
-import castle.server.ashley.creator.GUICreator
+import castle.server.ashley.app.creator.GUICreator
 import castle.server.ashley.service.CameraService
 import castle.server.ashley.systems.adapter.IteratingSystemAdapter
+import castle.server.ashley.systems.component.Line3DComponent
 import com.badlogic.ashley.core.Family
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 

@@ -1,7 +1,7 @@
 package castle.server.ashley.game
 
-import castle.server.ashley.path.Area
-import castle.server.ashley.path.AreaGraph
+import castle.server.ashley.game.path.Area
+import castle.server.ashley.game.path.AreaGraph
 import castle.server.ashley.service.MapService
 import castle.server.ashley.utils.ResourceManager
 import com.badlogic.gdx.ai.pfa.GraphPath
@@ -70,16 +70,6 @@ class GameMap(mapService: MapService, resourceManager: ResourceManager) {
         return areaGraph.findPath(toArea(from), toArea(to))
     }
 
-    fun toArea(position: Vector3): Area {
-        val width = boxScan.x * 2
-        val depth = boxScan.z * 2
-
-        val x = (abs(from.x + position.x) / width).toInt()
-        val z = (abs(from.z + position.z) / depth).toInt()
-
-        return areaGraph.getArea(x, z)
-    }
-
     fun toFlatPosition(area: Area): Vector2 {
         val width = boxScan.x * 2
         val depth = boxScan.z * 2
@@ -95,6 +85,16 @@ class GameMap(mapService: MapService, resourceManager: ResourceManager) {
         if (areaGraph.getAreaOrNull(positionArea.x, positionArea.y + 1) == area) return true
         if (areaGraph.getAreaOrNull(positionArea.x, positionArea.y - 1) == area) return true
         return false
+    }
+
+    private fun toArea(position: Vector3): Area {
+        val width = boxScan.x * 2
+        val depth = boxScan.z * 2
+
+        val x = (abs(from.x + position.x) / width).toInt()
+        val z = (abs(from.z + position.z) / depth).toInt()
+
+        return areaGraph.getArea(x, z)
     }
 
 }

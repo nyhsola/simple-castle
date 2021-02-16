@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Family
 import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.InputProcessor
 
-abstract class IteratingInputSystemAdapter(family: Family?) : IteratingSystemAdapter(family) {
+abstract class IteratingInputSystemAdapter(family: Family) : IteratingSystemAdapter(family) {
     private val inputMultiplexer = InputMultiplexer()
 
     protected fun addInputProcessor(inputProcessor: InputProcessor) {
@@ -48,7 +48,7 @@ abstract class IteratingInputSystemAdapter(family: Family?) : IteratingSystemAda
         return inputMultiplexer.touchDown(screenX, screenY, pointer, button)
     }
 
-    override fun processEntity(entity: Entity?, deltaTime: Float) {
+    override fun processEntity(entity: Entity, deltaTime: Float) {
 
     }
 }

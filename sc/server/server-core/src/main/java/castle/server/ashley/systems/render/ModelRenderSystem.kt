@@ -1,10 +1,10 @@
 package castle.server.ashley.systems.render
 
-import castle.server.ashley.component.PositionComponent
-import castle.server.ashley.component.RenderComponent
-import castle.server.ashley.creator.GUICreator
+import castle.server.ashley.app.creator.GUICreator
 import castle.server.ashley.service.CameraService
 import castle.server.ashley.systems.adapter.IteratingSystemAdapter
+import castle.server.ashley.systems.component.PositionComponent
+import castle.server.ashley.systems.component.RenderComponent
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.EntityListener
@@ -32,7 +32,7 @@ class ModelRenderSystem(guiCreator: GUICreator, private val cameraService: Camer
     override fun entityAdded(entity: Entity) {
         val positionComponent = PositionComponent.mapper.get(entity)
         val renderComponent = RenderComponent.mapper.get(entity)
-        RenderComponent.linkPosition(positionComponent, renderComponent)
+        RenderComponent.link(positionComponent, renderComponent)
     }
 
     override fun render(delta: Float) {

@@ -1,8 +1,8 @@
 package castle.server.ashley.service
 
-import castle.server.ashley.creator.GUICreator
-import castle.server.ashley.event.EventContext
+import castle.server.ashley.app.creator.GUICreator
 import castle.server.ashley.game.*
+import castle.server.ashley.game.event.EventContext
 import castle.server.ashley.utils.ResourceManager
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.signals.Signal
