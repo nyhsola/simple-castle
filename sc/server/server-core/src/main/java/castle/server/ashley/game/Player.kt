@@ -1,5 +1,6 @@
 package castle.server.ashley.game
 
+import castle.server.ashley.game.unit.MovableUnit
 import castle.server.ashley.service.GameContext
 import castle.server.ashley.utils.json.PlayerJson
 import com.badlogic.gdx.utils.Disposable

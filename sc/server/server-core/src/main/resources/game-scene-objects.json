@@ -19,7 +19,14 @@
     "instantiate": true
   },
   {
-    "nodes": "unit-warrior",
+    "nodes": "castle(?:-\\d)(?:-\\w)",
+    "shape": "ADJUSTED_BASE_BOX",
+    "instantiate": true
+  },
+  {
+    "nodes": "unit-warrior-model",
+    "armature": "unit-warrior",
+    "animation": "unit-warrior|walk",
     "shape": "ADJUSTED_BASE_BOX",
     "mass": 1,
     "collisionFilterGroup": 9,

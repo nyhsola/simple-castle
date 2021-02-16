@@ -1,7 +1,7 @@
 package castle.server.ashley.app
 
-import castle.server.ashley.creator.GUICreatorImpl
-import castle.server.ashley.creator.GUICreatorMock
+import castle.server.ashley.app.creator.GUICreatorImpl
+import castle.server.ashley.app.creator.GUICreatorMock
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.LifecycleListener

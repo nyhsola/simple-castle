@@ -1,6 +1,6 @@
 package castle.server.ashley.utils
 
-import castle.server.ashley.component.RenderComponent
+import castle.server.ashley.systems.component.RenderComponent
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.graphics.g3d.ModelInstance

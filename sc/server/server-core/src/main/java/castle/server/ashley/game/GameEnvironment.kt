@@ -1,5 +1,6 @@
 package castle.server.ashley.game
 
+import castle.server.ashley.game.unit.GameObject
 import castle.server.ashley.utils.ResourceManager
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.utils.Disposable

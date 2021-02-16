@@ -1,8 +1,8 @@
 package castle.server.ashley.systems
 
-import castle.server.ashley.component.AnimationComponent
-import castle.server.ashley.component.RenderComponent
 import castle.server.ashley.systems.adapter.IteratingSystemAdapter
+import castle.server.ashley.systems.component.AnimationComponent
+import castle.server.ashley.systems.component.RenderComponent
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.EntityListener
@@ -23,7 +23,7 @@ class AnimationSystem : IteratingSystemAdapter(Family.all(AnimationComponent::cl
         AnimationComponent.postConstruct(renderComponent, animationComponent)
     }
 
-    override fun processEntity(entity: Entity?, deltaTime: Float) {
+    override fun processEntity(entity: Entity, deltaTime: Float) {
         AnimationComponent.mapper.get(entity).animationController.update(deltaTime)
     }
 }

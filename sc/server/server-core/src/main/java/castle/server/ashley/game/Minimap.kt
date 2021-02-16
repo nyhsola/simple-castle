@@ -1,6 +1,6 @@
 package castle.server.ashley.game
 
-import castle.server.ashley.component.RectComponent
+import castle.server.ashley.systems.component.RectComponent
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2

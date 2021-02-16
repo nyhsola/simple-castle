@@ -1,6 +1,5 @@
 package castle.server.ashley.utils
 
-import castle.server.ashley.physic.Constructor
 import castle.server.ashley.utils.json.PlayerJson
 import castle.server.ashley.utils.json.SceneObjectJson
 import com.badlogic.gdx.Gdx
@@ -15,7 +14,7 @@ class ResourceManager : Disposable {
     private val loader = G3dModelLoader(JsonReader())
     private val json = Json()
 
-    val model: Model = loadModel()
+    private val model: Model = loadModel()
     val skin: Skin = loadSkin()
     val constructorMap: Map<String, Constructor> =
         loadSceneObjects().map { sceneObjectJson -> Constructor(model, sceneObjectJson) }.associateBy(keySelector = { constructor -> constructor.node }).toMap()

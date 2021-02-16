@@ -1,7 +1,7 @@
 package castle.server.ashley.service
 
-import castle.server.ashley.component.PhysicComponent
-import castle.server.ashley.component.PositionComponent
+import castle.server.ashley.systems.component.PhysicComponent
+import castle.server.ashley.systems.component.PositionComponent
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector3
@@ -50,7 +50,7 @@ class PhysicService(private val cameraService: CameraService) {
     fun addEntity(entity: Entity) {
         val positionComponent = PositionComponent.mapper.get(entity)
         val physicComponent = PhysicComponent.mapper.get(entity)
-        PhysicComponent.linkPosition(positionComponent, physicComponent)
+        PhysicComponent.link(positionComponent, physicComponent)
         dynamicsWorld.addRigidBody(
             physicComponent.physicInstance.body, physicComponent.physicInstance.collisionFilterGroup, physicComponent.physicInstance.collisionFilterMask
         )

@@ -1,9 +1,9 @@
 package castle.server.ashley.systems
 
-import castle.server.ashley.creator.GUICreator
-import castle.server.ashley.event.EventContext
-import castle.server.ashley.event.EventQueue
-import castle.server.ashley.event.EventType
+import castle.server.ashley.app.creator.GUICreator
+import castle.server.ashley.game.event.EventContext
+import castle.server.ashley.game.event.EventQueue
+import castle.server.ashley.game.event.EventType
 import castle.server.ashley.service.CameraService
 import castle.server.ashley.service.GameManager
 import castle.server.ashley.service.MapService

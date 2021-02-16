@@ -1,7 +1,7 @@
 package castle.server.ashley.app
 
-import castle.server.ashley.creator.GUICreator
-import castle.server.ashley.screen.GameScreen
+import castle.server.ashley.app.creator.GUICreator
+import castle.server.ashley.app.screen.GameScreen
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.physics.bullet.Bullet
