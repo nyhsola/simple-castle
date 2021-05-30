@@ -1,0 +1,3 @@
+task buildModel(type: Exec) {
+    commandLine = ['cmd', '/c', 'build-model.bat']
+}

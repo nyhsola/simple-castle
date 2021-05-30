@@ -1,6 +1,6 @@
 How to run
 ======
-Use `gradlew :server:server-core:run` task to run application
+Use `gradlew :server:server-launcher:run` task to run application
 
 How to pack blender model into the game
 ======
@@ -8,8 +8,9 @@ How to pack blender model into the game
 Use task `gradlew :blender:buildModel` to update model. It packs **map.blend** model into the game.
 
 ### Notes:
+
 * Task works only on Windows
-* Before usage update `sc/blender/paths.properties` according your Blender app location
+* Before usage update `blender/paths.properties` according your Blender app location
 * When saving project file in Blender, mark option File > External Data > Automatically Pack Into .blend.
 * To make this work you'll need to install VC 2015 Redistributable Package (See https://github.com/libgdx/fbx-conv)
 

@@ -1,0 +1,58 @@
+[
+  {
+    "nodes": "ground",
+    "collisionFilterGroup": 8,
+    "collisionFilterMask": [
+      -1
+    ],
+    "collisionFlag": "CF_KINEMATIC_OBJECT",
+    "instantiate": true
+  },
+  {
+    "nodes": "tree.*",
+    "shape": "ADJUSTED_BASE_BOX",
+    "instantiate": true
+  },
+  {
+    "nodes": "castle(?:-\\d)",
+    "shape": "ADJUSTED_BASE_BOX",
+    "instantiate": true,
+    "collisionFilterGroup": 9,
+    "collisionFilterMask": [
+      8
+    ]
+  },
+  {
+    "nodes": "barrel(?:-\\d+)",
+    "shape": "ADJUSTED_BASE_BOX",
+    "instantiate": true,
+    "collisionFilterGroup": 9,
+    "collisionFilterMask": [
+      8
+    ]
+  },
+  {
+    "nodes": "castle(?:-\\d)(?:-\\w)",
+    "shape": "ADJUSTED_BASE_BOX",
+    "instantiate": true,
+    "collisionFilterGroup": 9,
+    "collisionFilterMask": [
+      8
+    ]
+  },
+  {
+    "nodes": "unit-warrior-model",
+    "armature": "unit-warrior",
+    "animation": "unit-warrior|walk",
+    "shape": "ADJUSTED_BASE_BOX",
+    "mass": 1,
+    "collisionFilterGroup": 9,
+    "collisionFilterMask": [
+      8
+    ]
+  },
+  {
+    "nodes": "area-(?:.+)",
+    "shape": "ADJUSTED_BASE_BOX"
+  }
+]

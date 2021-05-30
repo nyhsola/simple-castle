@@ -1,3 +1,0 @@
-include 'blender'
-include 'android'
-include 'server:server-core'
