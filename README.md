@@ -1,6 +1,6 @@
 How to run
 ======
-Use `gradlew :server:server-launcher:run` task to run application
+Use `gradlew :server:launcher:run` task to run application
 
 How to pack blender model into the game
 ======
@@ -17,14 +17,17 @@ Use task `gradlew :blender:buildModel` to update model. It packs **map.blend** m
 Other:
 ======
 
-### Controls:  
+### Controls:
+
 ESC - Exit game  
 Arrow keys/WASD - Move your camera  
 Mouse wheel - Move the camera away
 
-### Chat commands:  
+### Chat commands:
+
 debug-physic - Enable/Disable physic shape borders  
 debug-ui - Enable/Disable ui borders
 
-### Screenshots
-![screenshot-example](/demo/screenshot-1.jpg)
+### Demo
+
+![gif-example](/demo/gif-1.gif)
