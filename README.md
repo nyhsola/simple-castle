@@ -1,6 +1,6 @@
 How to run
 ======
-Use `gradlew :server:server-launcher:run` task to run application
+Use `gradlew :server:launcher:run` task to run application
 
 How to pack blender model into the game
 ======

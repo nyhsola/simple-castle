@@ -1,0 +1,31 @@
+apply plugin: "kotlin"
+
+targetCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_11
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceSets.main.java.srcDirs = ["src/main/kotlin"]
+sourceSets.main.resources.srcDirs += ["../../android/assets"]
+
+project.ext.mainClassName = "castle.server.ashley.app.ServerLauncher"
+project.ext.assetsDir = new File("../../android/assets")
+
+task run(dependsOn: classes, type: JavaExec) {
+    jvmArgs("--illegal-access=deny")
+    main = project.mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    workingDir = project.assetsDir
+    ignoreExitValue = true
+}
+
+task debug(dependsOn: classes, type: JavaExec) {
+    jvmArgs("--illegal-access=deny")
+    main = project.mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    standardInput = System.in
+    workingDir = project.assetsDir
+    ignoreExitValue = true
+    debug = true
+}
