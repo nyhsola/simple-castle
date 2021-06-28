@@ -7,7 +7,9 @@ import castle.server.ashley.game.obj.unit.MovableUnit
 import castle.server.ashley.utils.json.PlayerJson
 import com.badlogic.gdx.utils.Disposable
 
-class Player(playerJson: PlayerJson, private val gameContext: GameContext) : Disposable {
+class Player(playerJson: PlayerJson,
+             private val gameContext: GameContext,
+             private val gameMap: GameMap) : Disposable {
     private val paths: List<List<String>> = playerJson.paths
     private val baseUnits: MutableList<MovableUnit> = ArrayList()
     private val unitType: String = playerJson.unitType
@@ -29,7 +31,7 @@ class Player(playerJson: PlayerJson, private val gameContext: GameContext) : Dis
 
     private fun createUnit(path: List<String>) {
         val paths = path.map { gameContext.resourceManager.constructorMap[it]!!.getMatrix4() }
-        val movableUnit = AttackUnit(paths, gameContext.resourceManager.constructorMap[unitType]!!, gameContext)
+        val movableUnit = AttackUnit(paths, gameContext.resourceManager.constructorMap[unitType]!!, gameContext, gameMap)
         baseUnits.add(movableUnit)
     }
 

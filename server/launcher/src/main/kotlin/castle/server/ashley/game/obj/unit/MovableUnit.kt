@@ -2,6 +2,7 @@ package castle.server.ashley.game.obj.unit
 
 import castle.server.ashley.game.GameContext
 import castle.server.ashley.game.obj.DebugLine
+import castle.server.ashley.game.obj.GameMap
 import castle.server.ashley.game.path.Area
 import castle.server.ashley.system.component.AnimationComponent
 import castle.server.ashley.utils.Constructor
@@ -16,9 +17,10 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector3
 
 open class MovableUnit(
-    constructor: Constructor,
-    private val gameContext: GameContext,
-) : GameObject(constructor, gameContext.engine) {
+        constructor: Constructor,
+        gameContext: GameContext,
+        private val gameMap: GameMap
+) : GameObject(constructor, gameContext) {
     companion object {
         const val speedScalar: Float = 5f
     }
@@ -44,6 +46,10 @@ open class MovableUnit(
         stateMachine.update()
     }
 
+    fun stand() {
+        stateMachine.changeState(MovableUnitState.STAND)
+    }
+
     fun walkTo(position: Vector3) {
         nextPoint.set(position)
         stateMachine.changeState(MovableUnitState.WALK)
@@ -56,7 +62,7 @@ open class MovableUnit(
 
     private fun calculatePath() {
         positionInGraph = 0
-        graphPath = gameContext.gameMap.getPath(unitPosition, nextPoint)
+        graphPath = gameMap.getPath(unitPosition, nextPoint)
     }
 
     private fun updateMove() {
@@ -90,18 +96,17 @@ open class MovableUnit(
     }
 
     private fun setInitialRotation() {
-        if (graphPath.count <= 0) {
+        if (positionInGraph !in 0..graphPath.count) {
             return
         }
         val currentUnitPosition = unitPosition
         updateNextPosition(currentUnitPosition)
 
         val targetFlat = graphPath.get(positionInGraph).position
-        val target = tempVector2.set(targetFlat.x, currentUnitPosition.y, targetFlat.y)
-        val direction = tempVector3.set(target).sub(currentUnitPosition).nor().scl(speedScalar)
+        val target = tempVector2.set(targetFlat.x, unitPosition.y, targetFlat.y)
+        val direction = tempVector3.set(target).sub(currentUnitPosition)
         val faceDirection = orientation.transform(tempVector4.set(defaultFaceDirection))
         val angle = MathHelper.getAngle(direction, faceDirection)
-
         if (angle !in 0.0..5.0) {
             val faceDirectionL = orientation.transform(tempVector5.set(defaultFaceDirectionL))
             val faceDirectionR = orientation.transform(tempVector6.set(defaultFaceDirectionR))
@@ -119,7 +124,7 @@ open class MovableUnit(
         if (positionInGraph + 1 >= graphPath.count) {
             return
         }
-        if (gameContext.gameMap.isInRangeOfArea(unitPosition, graphPath[positionInGraph])) {
+        if (gameMap.isInRangeOfArea(unitPosition, graphPath[positionInGraph])) {
             positionInGraph++
         }
     }

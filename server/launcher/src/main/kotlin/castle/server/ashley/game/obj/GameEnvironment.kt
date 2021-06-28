@@ -1,14 +1,13 @@
 package castle.server.ashley.game.obj
 
+import castle.server.ashley.game.GameContext
 import castle.server.ashley.game.obj.unit.GameObject
-import castle.server.ashley.utils.ResourceManager
-import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.utils.Disposable
 
-class GameEnvironment(engine: Engine, resourceManager: ResourceManager) : Disposable {
-    private val environment: List<GameObject> = resourceManager.constructorMap
+class GameEnvironment(gameContext: GameContext) : Disposable {
+    private val environment: List<GameObject> = gameContext.resourceManager.constructorMap
         .filter { entry -> entry.value.instantiate }
-        .map { entry -> GameObject(entry.value, engine) }
+        .map { entry -> GameObject(entry.value, gameContext) }
 
     override fun dispose() {
         environment.forEach { it.dispose() }

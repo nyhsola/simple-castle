@@ -4,8 +4,9 @@ import castle.server.ashley.game.GameContext
 import castle.server.ashley.game.obj.unit.GameObject
 import com.badlogic.gdx.utils.Disposable
 
-class Players(gameContext: GameContext) : Disposable {
-    private val players: List<Player> = gameContext.resourceManager.players.map { Player(it, gameContext) }
+class Players(gameContext: GameContext,
+              private val gameMap: GameMap) : Disposable {
+    private val players: List<Player> = gameContext.resourceManager.players.map { Player(it, gameContext, gameMap) }
 
     fun update(delta: Float) {
         players.forEach { it.update(delta) }

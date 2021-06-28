@@ -1,10 +1,10 @@
 package castle.server.ashley.game.obj.unit
 
+import castle.server.ashley.game.GameContext
 import castle.server.ashley.system.component.PhysicComponent
 import castle.server.ashley.system.component.PositionComponent
 import castle.server.ashley.system.component.RenderComponent
 import castle.server.ashley.utils.Constructor
-import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Quaternion
@@ -12,8 +12,8 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 
 open class GameObject(
-    constructor: Constructor,
-    private val engine: Engine
+        constructor: Constructor,
+        private val gameContext: GameContext,
 ) : Disposable {
     protected companion object {
         val defaultFaceDirection: Vector3 = Vector3(1f, 0f, 0f)
@@ -24,10 +24,10 @@ open class GameObject(
         val zero: Vector3 = Vector3(0f, 0f, 0f)
     }
 
-    val entity: Entity = engine.createEntity()
-    private val positionComponent: PositionComponent = engine.createComponent(PositionComponent::class.java).apply { entity.add(this) }
-    private val renderComponent: RenderComponent = engine.createComponent(RenderComponent::class.java).apply { entity.add(this) }
-    private val physicComponent: PhysicComponent = engine.createComponent(PhysicComponent::class.java).apply { entity.add(this) }
+    val entity: Entity = gameContext.engine.createEntity()
+    private val positionComponent: PositionComponent = gameContext.engine.createComponent(PositionComponent::class.java).apply { entity.add(this) }
+    private val renderComponent: RenderComponent = gameContext.engine.createComponent(RenderComponent::class.java).apply { entity.add(this) }
+    private val physicComponent: PhysicComponent = gameContext.engine.createComponent(PhysicComponent::class.java).apply { entity.add(this) }
     private val tempVector: Vector3 = Vector3()
     private val tempQuaternion: Quaternion = Quaternion()
 
@@ -36,7 +36,7 @@ open class GameObject(
         renderComponent.modelInstance = constructor.getModelInstance()
         physicComponent.physicInstance = constructor.getPhysicInstance()
         physicComponent.physicInstance.body.userData = constructor.node
-        engine.addEntity(entity)
+        gameContext.engine.addEntity(entity)
     }
 
     val worldTransform: Matrix4
@@ -64,7 +64,7 @@ open class GameObject(
         }
 
     override fun dispose() {
-        engine.removeEntity(entity)
+        gameContext.engine.removeEntity(entity)
         physicComponent.physicInstance.dispose()
     }
 }

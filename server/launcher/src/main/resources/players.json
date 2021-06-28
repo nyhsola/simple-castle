@@ -1,7 +1,7 @@
 [
   {
     "unitType": "unit-warrior-model",
-    "spawnRate": 5,
+    "spawnRate": 1,
     "paths": [
       [
         "area-1-1",

@@ -20,22 +20,23 @@ import com.badlogic.gdx.ai.msg.MessageManager
 import com.badlogic.gdx.utils.Disposable
 
 class GameManager(
-    engine: Engine,
-    guiCreator: GUICreator,
-    private val physicService: PhysicService,
-    private val cameraService: CameraService
+        engine: Engine,
+        guiCreator: GUICreator,
+        private val physicService: PhysicService,
+        private val cameraService: CameraService
 ) : Disposable {
     private val resourceManager: ResourceManager = ResourceManager()
     private val scanService = ScanService(physicService)
-    private val gameEnvironment = GameEnvironment(engine, resourceManager)
+    private val gameContext: GameContext = GameContext(engine, resourceManager)
+
+    private val gameEnvironment = GameEnvironment(gameContext)
     private val gameMap: GameMap = GameMap(engine, Gdx.graphics.width, Gdx.graphics.height, scanService, resourceManager)
-    private val gameContext: GameContext = GameContext(engine, resourceManager, gameMap)
 
     private val eventQueue = EventQueue()
     private val signal = Signal<EventContext>().apply { this.add(eventQueue) }
 
     private val chat = Chat(engine, guiCreator, signal, resourceManager)
-    private val players: Players = Players(gameContext)
+    private val players: Players = Players(gameContext, gameMap)
 
     fun update(delta: Float) {
         proceedEvents()

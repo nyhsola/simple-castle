@@ -6,6 +6,5 @@ import com.badlogic.ashley.core.Engine
 
 data class GameContext(
     val engine: Engine,
-    val resourceManager: ResourceManager,
-    val gameMap: GameMap
+    val resourceManager: ResourceManager
 )
