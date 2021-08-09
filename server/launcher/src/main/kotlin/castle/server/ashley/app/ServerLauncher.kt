@@ -1,6 +1,6 @@
 package castle.server.ashley.app
 
-import castle.server.ashley.app.creator.GUICreatorImpl
+import castle.core.common.creator.GUIConfigImpl
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
@@ -19,7 +19,7 @@ object ServerLauncher {
 
         Bullet.init(false, false)
 
-        LwjglApplication(ServerGame(GUICreatorImpl()), conf)
+        LwjglApplication(ServerGame(GUIConfigImpl()), conf)
 
         Runtime.getRuntime()
             .addShutdownHook(object : Thread() {

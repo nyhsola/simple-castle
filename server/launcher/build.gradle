@@ -11,6 +11,12 @@ sourceSets.main.resources.srcDirs += ["../../android/assets"]
 project.ext.mainClassName = "castle.server.ashley.app.ServerLauncher"
 project.ext.assetsDir = new File("../../android/assets")
 
+dependencies {
+    implementation project(":core:common")
+    implementation project(":core:physic")
+    implementation project(":core:game")
+}
+
 task run(dependsOn: classes, type: JavaExec) {
     jvmArgs("--illegal-access=deny")
     main = project.mainClassName

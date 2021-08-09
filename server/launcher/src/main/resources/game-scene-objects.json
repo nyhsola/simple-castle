@@ -1,12 +1,14 @@
 [
   {
     "nodes": "ground",
+    "instantiate": true,
     "collisionFilterGroup": 8,
     "collisionFilterMask": [
       -1
     ],
-    "collisionFlag": "CF_KINEMATIC_OBJECT",
-    "instantiate": true
+    "collisionFlag": [
+      "CF_KINEMATIC_OBJECT"
+    ]
   },
   {
     "nodes": "tree.*",
@@ -46,13 +48,22 @@
     "animation": "unit-warrior|walk",
     "shape": "ADJUSTED_BASE_BOX",
     "mass": 1,
-    "collisionFilterGroup": 9,
+    "collisionFilterGroup": 3,
     "collisionFilterMask": [
       8
     ]
   },
   {
     "nodes": "area-(?:.+)",
-    "shape": "ADJUSTED_BASE_BOX"
+    "shape": "ADJUSTED_BASE_BOX",
+    "hide": false,
+    "instantiate": true,
+    "collisionFilterGroup": 8,
+    "collisionFilterMask": [
+      3
+    ],
+    "collisionFlag": [
+      "CF_KINEMATIC_OBJECT", "CF_NO_CONTACT_RESPONSE"
+    ]
   }
 ]

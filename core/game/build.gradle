@@ -1,0 +1,11 @@
+apply plugin: "kotlin"
+
+targetCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_11
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+dependencies {
+    implementation project(":core:common")
+    implementation project(":core:physic")
+}
