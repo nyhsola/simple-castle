@@ -6,6 +6,7 @@ import castle.core.game.`object`.unit.GameObject
 import castle.core.game.`object`.unit.MovableUnit
 import castle.core.game.utils.json.PlayerJson
 import castle.core.physic.service.PhysicService
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 
 class Player(
@@ -19,6 +20,7 @@ class Player(
     private val unitType: String = playerJson.unitType
     private val spawnRate: Float = playerJson.spawnRate
     private var accumulate: Float = 0.0f
+    private val tempVector = Vector3()
 
     fun update(delta: Float) {
         accumulate += delta
@@ -39,10 +41,15 @@ class Player(
             Pair(constructor.node, constructor.getMatrix4())
         }
 
-        val movableUnit =
-            AttackUnit(paths, gameContext.resourceManager.constructorMap[unitType]!!, gameContext, gameMap, physicService)
-        movableUnit.startWalking()
-        baseUnits.add(movableUnit)
+        val constructor = gameContext.resourceManager.constructorMap[unitType]!!
+        val unit = AttackUnit(constructor, gameContext, gameMap, physicService)
+
+        if (paths.isNotEmpty()) {
+            unit.unitPosition = paths[0].second.getTranslation(tempVector)
+            unit.initWalking(paths)
+        }
+
+        baseUnits.add(unit)
     }
 
     override fun dispose() {

@@ -8,12 +8,11 @@ import castle.core.physic.service.PhysicService
 import com.badlogic.gdx.math.Matrix4
 
 class AttackUnit(
-    paths: List<Pair<String, Matrix4>>,
     constructor: Constructor,
     gameContext: GameContext,
     private val gameMap: GameMap,
     physicService: PhysicService
-) : MovableUnit(paths, constructor, gameContext, gameMap, physicService) {
+) : MovableUnit(constructor, gameContext, gameMap, physicService) {
     private val debugLine: DebugLine = DebugLine(gameContext)
 
     override fun update() {

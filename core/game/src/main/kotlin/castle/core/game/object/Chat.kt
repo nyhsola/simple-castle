@@ -53,8 +53,6 @@ class Chat(
         label.color.a = 0.7f
         textField.color.a = 0.7f
 
-        textArea.isDisabled = true
-
         table.add(textArea).fill().colspan(2).width(Gdx.graphics.width * 0.25f).height(Gdx.graphics.height * 0.25f)
         table.row()
         table.add(label).fill()
@@ -67,6 +65,9 @@ class Chat(
         engine.addEntity(entity.apply {
             add(stageComponent)
         })
+
+        textArea.isDisabled = false
+        textArea.style.font.data.markupEnabled = true
 
         textField.addListener(object : FocusListener() {
             override fun keyboardFocusChanged(event: FocusEvent, actor: Actor, focused: Boolean) {
@@ -103,10 +104,20 @@ class Chat(
 
     fun typeMessage(message: String) {
         val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
-        val messageEd = "$currentTime: $message"
-        chatHistory.add(messageEd)
-        chatPoll.add(messageEd)
-        textArea.text = chatHistory.takeLast(textArea.linesShowing).joinToString(separator = "\n") { it }
+        val color = (Math.random() * 0x1000000).toInt().toString(16)
+        val fullMessage = "$currentTime: $message"
+        fullMessage
+            .split("\n")
+            .flatMap { it.chunked(40) }
+            .forEach { internalTypeMessage("[#$color]$it") }
+    }
+
+    private fun internalTypeMessage(message: String) {
+        chatHistory.add(message)
+        chatPoll.add(message)
+        textArea.text = chatHistory
+            .takeLast(textArea.linesShowing)
+            .joinToString(separator = "\n") { it }
     }
 
     fun pollAllMessages(): Array<String> {
