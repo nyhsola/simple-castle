@@ -7,6 +7,8 @@ import castle.core.game.path.AreaGraph
 import castle.core.game.service.ScanService
 import castle.core.game.utils.ResourceManager
 import com.badlogic.ashley.core.Engine
+import com.badlogic.gdx.ai.pfa.DefaultGraphPath
+import com.badlogic.gdx.ai.pfa.GraphPath
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
@@ -38,7 +40,14 @@ class GameMap(
     private val miniMapBuffer: MutableList<MinimapPiece> = ArrayList()
     private val objMap: MutableMap<Area, GameObject> = HashMap()
 
-    fun getPath(from: Vector3, to: Vector3) = mapGraph.findPath(toArea(from), toArea(to))
+    fun getPath(list: List<Vector3>) : GraphPath<Area> {
+        val areas = list.map { toArea(it) }
+        val path = DefaultGraphPath<Area>()
+        for (i in 0 until areas.size - 2) {
+            mapGraph.findPath(areas[i], areas[i + 1]).forEach { path.add(it) }
+        }
+        return path
+    }
 
     fun isInRangeOfArea(position: Vector3, area: Area) = toArea(position).isInRange(area)
 
@@ -150,7 +159,8 @@ class GameMap(
         private val groundHeight: Int
     ) {
         private val entity = engine.createEntity().apply { engine.addEntity(this) }
-        private val rectComponent: RectComponent = engine.createComponent(RectComponent::class.java).apply { entity.add(this) }
+        private val rectComponent: RectComponent =
+            engine.createComponent(RectComponent::class.java).apply { entity.add(this) }
 
         init {
             rectComponent.height = height

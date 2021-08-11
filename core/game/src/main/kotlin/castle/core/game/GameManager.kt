@@ -18,6 +18,7 @@ import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.ai.GdxAI
 import com.badlogic.gdx.ai.msg.MessageManager
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 import ktx.app.KtxInputAdapter
 
@@ -40,7 +41,9 @@ class GameManager(
     private val signal = Signal<EventContext>().apply { this.add(eventQueue) }
 
     private val chat = Chat(engine, guiConfig, signal, resourceManager)
-    private val players: Players = Players(gameContext, gameMap, physicService)
+    private val players: Players = Players(gameContext, gameMap)
+
+    private val temp = Vector3()
 
     fun update(delta: Float) {
         proceedEvents()
@@ -53,7 +56,12 @@ class GameManager(
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         val collisionObject = rayCastService.rayCast(screenX.toFloat(), screenY.toFloat())
         if (collisionObject != null) {
-            chat.typeMessage(collisionObject.userData as String)
+            collisionObject.worldTransform.getTranslation(temp)
+
+            val nodeStr = collisionObject.userData as String
+            val position = "X: ${temp.x}\nY:${temp.y}\nZ: ${temp.z}"
+
+            chat.typeMessage("$nodeStr\n$position")
         }
         return super.touchDown(screenX, screenY, pointer, button)
     }

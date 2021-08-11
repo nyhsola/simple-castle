@@ -7,10 +7,9 @@ import com.badlogic.gdx.utils.Disposable
 
 class Players(
     gameContext: GameContext,
-    private val gameMap: GameMap,
-    private val physicService: PhysicService
+    private val gameMap: GameMap
 ) : Disposable {
-    private val players: List<Player> = gameContext.resourceManager.players.map { Player(it, gameContext, gameMap, physicService) }
+    private val players: List<Player> = gameContext.resourceManager.players.map { Player(it, gameContext, gameMap) }
 
     fun update(delta: Float) {
         players.forEach { it.update(delta) }

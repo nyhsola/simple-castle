@@ -2,7 +2,7 @@
   {
     "nodes": "ground",
     "instantiate": true,
-    "collisionFilterGroup": 8,
+    "collisionFilterGroup": 1,
     "collisionFilterMask": [
       -1
     ],
@@ -19,27 +19,27 @@
     "nodes": "castle(?:-\\d)",
     "shape": "ADJUSTED_BASE_BOX",
     "instantiate": true,
-    "collisionFilterGroup": 9,
+    "collisionFilterGroup": 1,
     "collisionFilterMask": [
-      8
+      1
     ]
   },
   {
     "nodes": "barrel(?:-\\d+)",
     "shape": "ADJUSTED_BASE_BOX",
     "instantiate": true,
-    "collisionFilterGroup": 9,
+    "collisionFilterGroup": 1,
     "collisionFilterMask": [
-      8
+      1
     ]
   },
   {
     "nodes": "castle(?:-\\d)(?:-\\w)",
     "shape": "ADJUSTED_BASE_BOX",
     "instantiate": true,
-    "collisionFilterGroup": 9,
+    "collisionFilterGroup": 1,
     "collisionFilterMask": [
-      8
+      1
     ]
   },
   {
@@ -48,19 +48,19 @@
     "animation": "unit-warrior|walk",
     "shape": "ADJUSTED_BASE_BOX",
     "mass": 1,
-    "collisionFilterGroup": 3,
+    "collisionFilterGroup": 2,
     "collisionFilterMask": [
-      8
+      1, 3
     ]
   },
   {
     "nodes": "area-(?:.+)",
     "shape": "ADJUSTED_BASE_BOX",
-    "hide": false,
+    "hide": true,
     "instantiate": true,
-    "collisionFilterGroup": 8,
+    "collisionFilterGroup": 3,
     "collisionFilterMask": [
-      3
+      2, 3
     ],
     "collisionFlag": [
       "CF_KINEMATIC_OBJECT", "CF_NO_CONTACT_RESPONSE"

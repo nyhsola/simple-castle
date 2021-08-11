@@ -1,9 +1,11 @@
 package castle.core.game.`object`.unit
 
+import castle.core.common.component.AnimationComponent
 import castle.core.common.component.PositionComponent
 import castle.core.common.component.RenderComponent
 import castle.core.game.GameContext
 import castle.core.game.utils.Constructor
+import castle.core.game.utils.math.MathHelper
 import castle.core.physic.component.PhysicComponent
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.Matrix4
@@ -11,6 +13,7 @@ import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 import java.util.*
+import kotlin.math.acos
 
 open class GameObject(
     constructor: Constructor,
@@ -25,14 +28,28 @@ open class GameObject(
         val zero: Vector3 = Vector3(0f, 0f, 0f)
     }
 
-    val entity: Entity = gameContext.engine.createEntity()
-    private val positionComponent: PositionComponent = gameContext.engine.createComponent(PositionComponent::class.java).apply { entity.add(this) }
-    private val renderComponent: RenderComponent = gameContext.engine.createComponent(RenderComponent::class.java).apply { entity.add(this) }
-    private val physicComponent: PhysicComponent = gameContext.engine.createComponent(PhysicComponent::class.java).apply { entity.add(this) }
-    private val tempVector: Vector3 = Vector3()
+    private val entity: Entity = gameContext.engine.createEntity()
+    private val positionComponent: PositionComponent =
+        gameContext.engine.createComponent(PositionComponent::class.java).apply { entity.add(this) }
+    private val renderComponent: RenderComponent =
+        gameContext.engine.createComponent(RenderComponent::class.java).apply { entity.add(this) }
+    private val physicComponent: PhysicComponent =
+        gameContext.engine.createComponent(PhysicComponent::class.java).apply { entity.add(this) }
+    private var animationComponent: AnimationComponent? = null
+    private val tempVector1: Vector3 = Vector3()
+    private val tempVector2: Vector3 = Vector3()
+    private val tempVector3: Vector3 = Vector3()
+    private val tempVector4: Vector3 = Vector3()
     private val tempQuaternion: Quaternion = Quaternion()
 
     init {
+        if (constructor.animation.isNotEmpty()) {
+            animationComponent = gameContext.engine.createComponent(AnimationComponent::class.java)
+                .apply {
+                    entity.add(this)
+                    this.animate = constructor.animation
+                }
+        }
         positionComponent.matrix4 = constructor.getMatrix4()
         renderComponent.modelInstance = constructor.getModelInstance()
         renderComponent.hide = constructor.hide
@@ -41,14 +58,20 @@ open class GameObject(
         gameContext.engine.addEntity(entity)
     }
 
-    val worldTransform: Matrix4
+    val uuid: String
+        get() = physicComponent.physicInstance.body.userData as String
+
+    private val worldTransform: Matrix4
         get() = positionComponent.matrix4
 
-    val orientation: Quaternion
+    var orientation: Quaternion
         get() = worldTransform.getRotation(tempQuaternion)
+        set(value) {
+            worldTransform.set(value)
+        }
 
     var unitPosition: Vector3
-        get() = worldTransform.getTranslation(tempVector)
+        get() = worldTransform.getTranslation(tempVector1)
         set(value) {
             worldTransform.setTranslation(value)
         }
@@ -65,10 +88,11 @@ open class GameObject(
             physicComponent.physicInstance.body.linearVelocity = value
         }
 
-    val uuid: String
-        get() = physicComponent.physicInstance.body.userData as String
-
-    open fun update() {
+    fun lookAt(target: Vector3) {
+        val direction = tempVector2.set(target).sub(unitPosition).nor()
+        val dotProduct = tempVector3.set(defaultFaceDirection).dot(direction)
+        val axis = tempVector4.set(defaultFaceDirection).crs(direction).nor()
+        worldTransform.rotateRad(axis, acos(dotProduct))
     }
 
     override fun dispose() {
