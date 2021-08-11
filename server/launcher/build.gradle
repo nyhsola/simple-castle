@@ -1,7 +1,7 @@
 apply plugin: "kotlin"
 
-targetCompatibility = JavaVersion.VERSION_11
-sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_14
+sourceCompatibility = JavaVersion.VERSION_14
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -18,7 +18,6 @@ dependencies {
 }
 
 task run(dependsOn: classes, type: JavaExec) {
-    jvmArgs("--illegal-access=deny")
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
@@ -27,7 +26,6 @@ task run(dependsOn: classes, type: JavaExec) {
 }
 
 task debug(dependsOn: classes, type: JavaExec) {
-    jvmArgs("--illegal-access=deny")
     main = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in

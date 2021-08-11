@@ -5,22 +5,19 @@ import castle.core.game.`object`.unit.AttackUnit
 import castle.core.game.`object`.unit.GameObject
 import castle.core.game.`object`.unit.MovableUnit
 import castle.core.game.utils.json.PlayerJson
-import castle.core.physic.service.PhysicService
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 
 class Player(
     playerJson: PlayerJson,
     private val gameContext: GameContext,
-    private val gameMap: GameMap,
-    private val physicService: PhysicService
+    private val gameMap: GameMap
 ) : Disposable {
     private val paths: List<List<String>> = playerJson.paths
     private val baseUnits: MutableList<MovableUnit> = ArrayList()
     private val unitType: String = playerJson.unitType
     private val spawnRate: Float = playerJson.spawnRate
     private var accumulate: Float = 0.0f
-    private val tempVector = Vector3()
 
     fun update(delta: Float) {
         accumulate += delta
@@ -38,15 +35,16 @@ class Player(
     private fun createUnit(path: List<String>) {
         val paths = path.map {
             val constructor = gameContext.resourceManager.constructorMap[it]!!
-            Pair(constructor.node, constructor.getMatrix4())
+            constructor.getMatrix4().getTranslation(Vector3())
         }
 
         val constructor = gameContext.resourceManager.constructorMap[unitType]!!
-        val unit = AttackUnit(constructor, gameContext, gameMap, physicService)
+        val unit = AttackUnit(constructor, gameContext, gameMap)
 
         if (paths.isNotEmpty()) {
-            unit.unitPosition = paths[0].second.getTranslation(tempVector)
-            unit.initWalking(paths)
+            unit.unitPosition = paths[0]
+            unit.startRoute(paths)
+            unit.lookAt(unit.nextPoint)
         }
 
         baseUnits.add(unit)

@@ -56,7 +56,7 @@
   {
     "nodes": "area-(?:.+)",
     "shape": "ADJUSTED_BASE_BOX",
-    "hide": false,
+    "hide": true,
     "instantiate": true,
     "collisionFilterGroup": 3,
     "collisionFilterMask": [

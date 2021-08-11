@@ -41,7 +41,7 @@ class GameManager(
     private val signal = Signal<EventContext>().apply { this.add(eventQueue) }
 
     private val chat = Chat(engine, guiConfig, signal, resourceManager)
-    private val players: Players = Players(gameContext, gameMap, physicService)
+    private val players: Players = Players(gameContext, gameMap)
 
     private val temp = Vector3()
 

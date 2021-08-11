@@ -1,5 +1,6 @@
 package castle.core.game.`object`.unit
 
+import castle.core.common.component.AnimationComponent
 import castle.core.common.component.PositionComponent
 import castle.core.common.component.RenderComponent
 import castle.core.game.GameContext
@@ -27,13 +28,14 @@ open class GameObject(
         val zero: Vector3 = Vector3(0f, 0f, 0f)
     }
 
-    val entity: Entity = gameContext.engine.createEntity()
+    private val entity: Entity = gameContext.engine.createEntity()
     private val positionComponent: PositionComponent =
         gameContext.engine.createComponent(PositionComponent::class.java).apply { entity.add(this) }
     private val renderComponent: RenderComponent =
         gameContext.engine.createComponent(RenderComponent::class.java).apply { entity.add(this) }
     private val physicComponent: PhysicComponent =
         gameContext.engine.createComponent(PhysicComponent::class.java).apply { entity.add(this) }
+    private var animationComponent: AnimationComponent? = null
     private val tempVector1: Vector3 = Vector3()
     private val tempVector2: Vector3 = Vector3()
     private val tempVector3: Vector3 = Vector3()
@@ -41,6 +43,13 @@ open class GameObject(
     private val tempQuaternion: Quaternion = Quaternion()
 
     init {
+        if (constructor.animation.isNotEmpty()) {
+            animationComponent = gameContext.engine.createComponent(AnimationComponent::class.java)
+                .apply {
+                    entity.add(this)
+                    this.animate = constructor.animation
+                }
+        }
         positionComponent.matrix4 = constructor.getMatrix4()
         renderComponent.modelInstance = constructor.getModelInstance()
         renderComponent.hide = constructor.hide

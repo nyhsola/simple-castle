@@ -23,62 +23,40 @@ import com.badlogic.gdx.physics.bullet.collision.btCollisionObject
 open class MovableUnit(
     constructor: Constructor,
     gameContext: GameContext,
-    private val gameMap: GameMap,
-    private val physicService: PhysicService
-) : GameObject(constructor, gameContext), PhysicListener {
+    private val gameMap: GameMap
+) : GameObject(constructor, gameContext) {
     companion object {
         const val BASE_SPEED: Float = 5f
     }
-
     private val stateMachine: StateMachine<MovableUnit, MovableUnitState> =
         DefaultStateMachine(this, MovableUnitState.STAND)
-    private val tempVector1: Vector3 = Vector3()
     private val tempVector2: Vector3 = Vector3()
     private val tempVector3: Vector3 = Vector3()
     private val tempVector4: Vector3 = Vector3()
     private val tempVector5: Vector3 = Vector3()
     private val tempVector6: Vector3 = Vector3()
     private val moveLine: DebugLine = DebugLine(gameContext)
-    private val animationComponent: AnimationComponent =
-        gameContext.engine.createComponent(AnimationComponent::class.java).apply { entity.add(this) }
     private var graphPath: GraphPath<Area> = DefaultGraphPath()
-    private var paths: List<Pair<String, Matrix4>> = emptyList()
     private var graphPosition: Int = 0
-    private var areaPosition: Int = 0
 
-    init {
-        animationComponent.animate = constructor.animation
-        physicService.addListener(this)
-    }
+    val nextPoint: Vector3
+        get() {
+            val graphPositionN = graphPosition + 1
+            if (graphPath.count <= 0 || graphPositionN >= graphPath.count) {
+                return Vector3.Zero
+            }
+            val position = graphPath.get(graphPositionN).position
+            return Vector3(position.x, unitPosition.y, position.y)
+        }
 
     open fun update() {
         stateMachine.update()
     }
 
-    fun initWalking(pathsParam: List<Pair<String, Matrix4>>) {
-        paths = pathsParam
-        stateMachine.changeState(MovableUnitState.INIT_WALK)
-    }
-
-    private fun initRotate() {
-        doOrIfNoPathStand(graphPosition) {
-            val targetFlat = it.position
-            val target = tempVector2.set(targetFlat.x, unitPosition.y, targetFlat.y)
-            lookAt(target)
-        }
-    }
-
-    private fun initPath() {
-        areaPosition++
-        doOrIfNoAreaStand(areaPosition) {
-            graphPath = gameMap.getPath(unitPosition, it.second.getTranslation(tempVector1))
-            stateMachine.changeState(MovableUnitState.WALK)
-        }
-    }
-
-    private fun resetWalking() {
+    fun startRoute(pathsParam: List<Vector3>) {
         graphPosition = 0
-        doOrIfNoPathStand(graphPosition) { goNextPoint(it) }
+        graphPath = gameMap.getPath(pathsParam)
+        stateMachine.changeState(MovableUnitState.WALK)
     }
 
     private fun goNextPoint(it: Area) {
@@ -87,20 +65,6 @@ open class MovableUnit(
             if (graphPosition >= graphPath.count) {
                 graphPosition = graphPath.count - 1
             }
-        }
-    }
-
-    private fun goNextArea(it: String) {
-        if (areaPosition in paths.indices && it.startsWith(paths[areaPosition].first)) {
-            initPath()
-        }
-    }
-
-    private fun doOrIfNoAreaStand(areaNum: Int, action: (Pair<String, Matrix4>) -> Unit) {
-        if (areaNum >= 0 && areaNum < paths.size) {
-            action.invoke(paths[areaNum])
-        } else {
-            stateMachine.changeState(MovableUnitState.STAND)
         }
     }
 
@@ -142,12 +106,11 @@ open class MovableUnit(
     }
 
     override fun dispose() {
-        physicService.removeListener(this)
         moveLine.dispose()
         super.dispose()
     }
 
-    enum class MovableUnitState : State<MovableUnit> {
+    private enum class MovableUnitState : State<MovableUnit> {
         STAND {
             override fun enter(entity: MovableUnit) {
                 entity.angularVelocity = zero
@@ -159,34 +122,14 @@ open class MovableUnit(
             override fun exit(entity: MovableUnit) = Unit
             override fun onMessage(entity: MovableUnit, telegram: Telegram) = false
         },
-        INIT_WALK {
-            override fun enter(entity: MovableUnit) {
-                entity.initPath()
-                entity.initRotate()
-                entity.stateMachine.changeState(WALK)
-            }
-            override fun update(entity: MovableUnit) = Unit
-            override fun exit(entity: MovableUnit) = Unit
-            override fun onMessage(entity: MovableUnit, telegram: Telegram) = false
-        },
         WALK {
             override fun enter(entity: MovableUnit) {
-                entity.resetWalking()
                 entity.moveLine.show = true
             }
 
             override fun update(entity: MovableUnit) = entity.updateMove()
             override fun exit(entity: MovableUnit) = Unit
             override fun onMessage(entity: MovableUnit, telegram: Telegram) = false
-        }
-    }
-
-    override fun onContactStarted(colObj0: btCollisionObject, colObj1: btCollisionObject) {
-        val userData1 = colObj0.userData as String
-        val userData2 = colObj1.userData as String
-
-        if (userData2 == uuid) {
-            goNextArea(userData1)
         }
     }
 }
