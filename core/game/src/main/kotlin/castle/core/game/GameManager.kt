@@ -83,11 +83,14 @@ class GameManager(
     private fun proceedMessages() {
         val messages = chat.pollAllMessages()
         for (message in messages) {
-            if (message == "debug-physic") {
+            if (message.contains("debug-physic")) {
                 physicService.debugEnabled = !physicService.debugEnabled
             }
-            if (message == "debug-ui") {
+            if (message.contains("debug-ui")) {
                 chat.debugEnabled = !chat.debugEnabled
+            }
+            if (message.contains("spawn")) {
+                players.spawn()
             }
         }
     }

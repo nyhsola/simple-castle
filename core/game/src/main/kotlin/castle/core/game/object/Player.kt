@@ -23,9 +23,13 @@ class Player(
         accumulate += delta
         while (accumulate >= spawnRate) {
             accumulate -= spawnRate
-            paths.forEach { createUnit(it) }
+            spawn()
         }
         baseUnits.forEach { it.update() }
+    }
+
+    fun spawn() {
+        paths.forEach { createUnit(it) }
     }
 
     fun getUnits(): List<GameObject> {
