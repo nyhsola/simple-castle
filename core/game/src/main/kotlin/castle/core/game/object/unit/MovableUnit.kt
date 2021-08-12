@@ -1,14 +1,10 @@
 package castle.core.game.`object`.unit
 
-import castle.core.common.component.AnimationComponent
 import castle.core.game.GameContext
 import castle.core.game.`object`.DebugLine
 import castle.core.game.`object`.GameMap
 import castle.core.game.path.Area
 import castle.core.game.utils.Constructor
-import castle.core.game.utils.math.MathHelper
-import castle.core.physic.service.PhysicListener
-import castle.core.physic.service.PhysicService
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine
 import com.badlogic.gdx.ai.fsm.State
 import com.badlogic.gdx.ai.fsm.StateMachine
@@ -17,8 +13,9 @@ import com.badlogic.gdx.ai.pfa.DefaultGraphPath
 import com.badlogic.gdx.ai.pfa.GraphPath
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Matrix4
+import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
-import com.badlogic.gdx.physics.bullet.collision.btCollisionObject
+import kotlin.math.acos
 
 open class MovableUnit(
     constructor: Constructor,
@@ -28,13 +25,13 @@ open class MovableUnit(
     companion object {
         const val BASE_SPEED: Float = 5f
     }
+
     private val stateMachine: StateMachine<MovableUnit, MovableUnitState> =
         DefaultStateMachine(this, MovableUnitState.STAND)
     private val tempVector2: Vector3 = Vector3()
     private val tempVector3: Vector3 = Vector3()
     private val tempVector4: Vector3 = Vector3()
-    private val tempVector5: Vector3 = Vector3()
-    private val tempVector6: Vector3 = Vector3()
+    private val tempQuaternion: Quaternion = Quaternion()
     private val moveLine: DebugLine = DebugLine(gameContext)
     private var graphPath: GraphPath<Area> = DefaultGraphPath()
     private var graphPosition: Int = 0
@@ -78,29 +75,22 @@ open class MovableUnit(
 
     private fun updateMove() {
         doOrIfNoPathStand(graphPosition) {
-            val currentUnitPosition = unitPosition
             val targetFlat = it.position
-            val target = tempVector2.set(targetFlat.x, currentUnitPosition.y, targetFlat.y)
-            val direction = tempVector3.set(target).sub(currentUnitPosition).nor().scl(BASE_SPEED)
+            val target = tempVector2.set(targetFlat.x, unitPosition.y, targetFlat.y)
+            val direction = tempVector3.set(target).sub(unitPosition).nor()
             val faceDirection = orientation.transform(tempVector4.set(defaultFaceDirection))
-
-            if (MathHelper.getAngle(direction, faceDirection) !in 0.0..15.0) {
-                val faceDirectionL = orientation.transform(tempVector5.set(defaultFaceDirectionL))
-                val faceDirectionR = orientation.transform(tempVector6.set(defaultFaceDirectionR))
-                val angleL = MathHelper.getAngle(direction, faceDirectionL)
-                val angleR = MathHelper.getAngle(direction, faceDirectionR)
-                angularVelocity = if (angleL < angleR) right else left
+            val angle = tempQuaternion.setFromCross(direction, faceDirection).angle
+            if (angle !in 0.0..10.0) {
+                angularVelocity = if (tempQuaternion.y < 0) right else left
                 linearVelocity = zero
             } else {
-                linearVelocity = direction
                 angularVelocity = zero
+                linearVelocity = direction.scl(BASE_SPEED)
             }
-
             moveLine.show = true
-            moveLine.from = currentUnitPosition
+            moveLine.from = unitPosition
             moveLine.to = target
             moveLine.color = Color.GREEN
-
             goNextPoint(it)
         }
     }

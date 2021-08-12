@@ -15,6 +15,10 @@ class Players(
         players.forEach { it.update(delta) }
     }
 
+    fun spawn() {
+        players.forEach { it.spawn() }
+    }
+
     fun getUnits(): List<GameObject> {
         return players.map { it.getUnits() }.flatten()
     }

@@ -9,9 +9,7 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.scenes.scene2d.Actor
-import com.badlogic.gdx.scenes.scene2d.InputEvent
-import com.badlogic.gdx.scenes.scene2d.InputListener
+import com.badlogic.gdx.scenes.scene2d.*
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea
@@ -62,12 +60,10 @@ class Chat(
 
         stage.addActor(table)
         stageComponent.stage = stage
-        engine.addEntity(entity.apply {
-            add(stageComponent)
-        })
 
-        textArea.isDisabled = false
+        textArea.isDisabled = true
         textArea.style.font.data.markupEnabled = true
+        textArea.touchable = Touchable.disabled
 
         textField.addListener(object : FocusListener() {
             override fun keyboardFocusChanged(event: FocusEvent, actor: Actor, focused: Boolean) {
@@ -77,29 +73,35 @@ class Chat(
             }
         })
 
-        textField.addListener(object : InputListener() {
+        stage.addListener(object : InputListener() {
             override fun keyDown(event: InputEvent, keycode: Int): Boolean {
-                if (keycode == Input.Keys.ENTER) {
-                    typeMessage(textField.text)
-                    textField.text = ""
-                    stage.unfocus(textField)
+                if (keycode == Input.Keys.ENTER || keycode == Input.Keys.NUMPAD_ENTER) {
+                    if (textField.text.isNotEmpty()) {
+                        typeMessage(textField.text)
+                        textField.text = ""
+                    }
                 }
-                if (keycode == Input.Keys.TAB) {
+                return super.keyDown(event, keycode)
+            }
+
+            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
+                if (event.target is Group) {
                     stage.unfocus(textField)
                     signal.dispatch(EventContext(EventType.CHAT_UNFOCUSED))
                 }
-                return super.keyDown(event, keycode)
+                return super.touchDown(event, x, y, pointer, button)
             }
         })
 
         stage.addListener(object : InputListener() {
-            override fun keyDown(event: InputEvent?, keycode: Int): Boolean {
-                if (keycode == Input.Keys.ENTER) {
+            override fun keyDown(event: InputEvent, keycode: Int): Boolean {
+                if (keycode == Input.Keys.ENTER || keycode == Input.Keys.NUMPAD_ENTER) {
                     stage.keyboardFocus = textField
                 }
                 return super.keyDown(event, keycode)
             }
         })
+        engine.addEntity(entity.apply { add(stageComponent) })
     }
 
     fun typeMessage(message: String) {
@@ -115,9 +117,10 @@ class Chat(
     private fun internalTypeMessage(message: String) {
         chatHistory.add(message)
         chatPoll.add(message)
-        textArea.text = chatHistory
+        val text = chatHistory
             .takeLast(textArea.linesShowing)
             .joinToString(separator = "\n") { it }
+        textArea.messageText = text
     }
 
     fun pollAllMessages(): Array<String> {

@@ -21,7 +21,7 @@ class StageRenderSystem : IteratingSystem(family.get()), EntityListener, KtxInpu
         super.addedToEngine(engine)
     }
 
-    override fun processEntity(entity: Entity?, deltaTime: Float) {
+    override fun processEntity(entity: Entity, deltaTime: Float) {
     }
 
     override fun entityAdded(entity: Entity) {
