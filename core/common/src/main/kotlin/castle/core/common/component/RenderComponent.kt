@@ -1,18 +1,20 @@
 package castle.core.common.component
 
+import castle.core.common.json.Constructor
 import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.ComponentMapper
 import com.badlogic.gdx.graphics.g3d.ModelInstance
+import java.util.*
 
-class RenderComponent : Component {
-    lateinit var modelInstance: ModelInstance
-    var hide: Boolean = false
+class RenderComponent(positionComponent: PositionComponent, constructor: Constructor) : Component {
+    val modelInstance: ModelInstance = constructor.getModelInstance()
+    var hide: Boolean = constructor.hide
+
+    init {
+        modelInstance.transform = positionComponent.matrix4
+    }
 
     companion object {
         val mapper: ComponentMapper<RenderComponent> = ComponentMapper.getFor(RenderComponent::class.java)
-
-        fun postConstruct(positionComponent: PositionComponent, renderComponent: RenderComponent) {
-            renderComponent.modelInstance.transform = positionComponent.matrix4
-        }
     }
 }

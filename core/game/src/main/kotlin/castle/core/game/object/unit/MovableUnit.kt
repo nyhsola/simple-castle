@@ -4,7 +4,7 @@ import castle.core.game.GameContext
 import castle.core.game.`object`.DebugLine
 import castle.core.game.`object`.GameMap
 import castle.core.game.path.Area
-import castle.core.game.utils.Constructor
+import castle.core.common.json.Constructor
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine
 import com.badlogic.gdx.ai.fsm.State
 import com.badlogic.gdx.ai.fsm.StateMachine
@@ -12,10 +12,8 @@ import com.badlogic.gdx.ai.msg.Telegram
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath
 import com.badlogic.gdx.ai.pfa.GraphPath
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
-import kotlin.math.acos
 
 open class MovableUnit(
     constructor: Constructor,
@@ -23,27 +21,32 @@ open class MovableUnit(
     private val gameMap: GameMap
 ) : GameObject(constructor, gameContext) {
     companion object {
-        const val BASE_SPEED: Float = 5f
-    }
+        private const val BASE_LINEAR_SPEED: Float = 5f
+        private const val BASE_ANGULAR_SPEED: Float = 3f
 
-    private val stateMachine: StateMachine<MovableUnit, MovableUnitState> =
-        DefaultStateMachine(this, MovableUnitState.STAND)
-    private val tempVector2: Vector3 = Vector3()
-    private val tempVector3: Vector3 = Vector3()
-    private val tempVector4: Vector3 = Vector3()
+        const val AT_POINT: Float = 0.1f
+        const val MELEE: Float = 1.1f
+    }
+    private val stateMachine: StateMachine<MovableUnit, MovableUnitState> = DefaultStateMachine(this, MovableUnitState.STAND)
+    private val tempTarget: Vector3 = Vector3()
+    private val tempDirection: Vector3 = Vector3()
     private val tempQuaternion: Quaternion = Quaternion()
     private val moveLine: DebugLine = DebugLine(gameContext)
-    private var graphPath: GraphPath<Area> = DefaultGraphPath()
-    private var graphPosition: Int = 0
+    private var graph: GraphPath<Area> = DefaultGraphPath()
+    private var position: Int = 0
+    private var trackObject: GameObject? = null
 
+    private val nextPointTemp = Vector3()
     val nextPoint: Vector3
         get() {
-            val graphPositionN = graphPosition + 1
-            if (graphPath.count <= 0 || graphPositionN >= graphPath.count) {
-                return Vector3.Zero
+            val nextPosition = position + 1
+            if (graph.count <= 0 || nextPosition >= graph.count) {
+                nextPointTemp.set(Vector3.Zero)
+            } else {
+                val position = graph.get(nextPosition).position
+                nextPointTemp.set(position.x, unitPosition.y, position.y)
             }
-            val position = graphPath.get(graphPositionN).position
-            return Vector3(position.x, unitPosition.y, position.y)
+            return nextPointTemp
         }
 
     open fun update() {
@@ -51,47 +54,77 @@ open class MovableUnit(
     }
 
     fun startRoute(pathsParam: List<Vector3>) {
-        graphPosition = 0
-        graphPath = gameMap.getPath(pathsParam)
-        stateMachine.changeState(MovableUnitState.WALK)
+        position = 0
+        graph = gameMap.getPath(pathsParam)
+        stateMachine.changeState(MovableUnitState.ROUTE)
     }
 
-    private fun goNextPoint(it: Area) {
-        if (gameMap.isInRangeOfArea(unitPosition, it)) {
-            graphPosition++
-            if (graphPosition >= graphPath.count) {
-                graphPosition = graphPath.count - 1
-            }
-        }
+    fun continueRoute() {
+        stateMachine.changeState(MovableUnitState.ROUTE)
     }
 
-    private fun doOrIfNoPathStand(pathNum: Int, action: (Area) -> Unit) {
-        if (pathNum >= 0 && pathNum < graphPath.count) {
-            action.invoke(graphPath[pathNum])
-        } else {
+    fun startTrack(trackObjectParam: GameObject) {
+        trackObject = trackObjectParam
+        stateMachine.changeState(MovableUnitState.TRACK)
+    }
+
+    fun stand() {
+        stateMachine.changeState(MovableUnitState.STAND)
+    }
+
+    fun isStand(): Boolean {
+        return stateMachine.isInState(MovableUnitState.STAND)
+    }
+
+    private fun updateRoute() {
+        if (position < 0 || position >= graph.count) {
             stateMachine.changeState(MovableUnitState.STAND)
+            return
+        }
+        val area = graph[position]
+        val targetFlat = area.position
+        val target = tempTarget.set(targetFlat.x, unitPosition.y, targetFlat.y)
+        updateMove(target, AT_POINT)
+        updatePosition(area)
+    }
+
+    private fun updateTrack() {
+        val target = tempTarget.set(trackObject!!.unitPosition)
+        updateMove(target, MELEE)
+    }
+
+    private fun updateMove(targetParam: Vector3, distance: Float) {
+        updateLine(targetParam)
+        val directionDst = tempDirection.set(targetParam).sub(unitPosition).nor().scl(distance)
+        val target = tempTarget.set(targetParam).sub(directionDst)
+        val direction = tempDirection.set(target).sub(unitPosition).nor()
+        val angle = tempQuaternion.setFromCross(direction, faceDirection).angle
+        val dst = unitPosition.dst2(target)
+        val needRotation = angle !in 0.0..10.0
+        if (needRotation) {
+            angularVelocity = (if (tempQuaternion.y < 0) right else left).cpy().scl(BASE_ANGULAR_SPEED)
+            linearVelocity = zero
+        } else if (dst > MELEE) {
+            linearVelocity = direction.scl(BASE_LINEAR_SPEED)
+            angularVelocity = zero
+        } else {
+            stand()
         }
     }
 
-    private fun updateMove() {
-        doOrIfNoPathStand(graphPosition) {
-            val targetFlat = it.position
-            val target = tempVector2.set(targetFlat.x, unitPosition.y, targetFlat.y)
-            val direction = tempVector3.set(target).sub(unitPosition).nor()
-            val faceDirection = orientation.transform(tempVector4.set(defaultFaceDirection))
-            val angle = tempQuaternion.setFromCross(direction, faceDirection).angle
-            if (angle !in 0.0..10.0) {
-                angularVelocity = if (tempQuaternion.y < 0) right else left
-                linearVelocity = zero
-            } else {
-                angularVelocity = zero
-                linearVelocity = direction.scl(BASE_SPEED)
-            }
-            moveLine.show = true
-            moveLine.from = unitPosition
-            moveLine.to = target
-            moveLine.color = Color.GREEN
-            goNextPoint(it)
+    private fun updatePosition(currentArea: Area) {
+        val nextPosition = position + 1
+        if (nextPosition < graph.count && gameMap.isInRangeOfArea(unitPosition, currentArea)) {
+            position++
+        }
+    }
+
+    private fun updateLine(target: Vector3) {
+        moveLine.apply {
+            show = true
+            from = unitPosition
+            to = target
+            color = Color.GREEN
         }
     }
 
@@ -103,6 +136,7 @@ open class MovableUnit(
     private enum class MovableUnitState : State<MovableUnit> {
         STAND {
             override fun enter(entity: MovableUnit) {
+                entity.playAnimation("stand", 1f)
                 entity.angularVelocity = zero
                 entity.linearVelocity = zero
                 entity.moveLine.show = false
@@ -112,12 +146,23 @@ open class MovableUnit(
             override fun exit(entity: MovableUnit) = Unit
             override fun onMessage(entity: MovableUnit, telegram: Telegram) = false
         },
-        WALK {
+        ROUTE {
             override fun enter(entity: MovableUnit) {
+                entity.playAnimation("walk", 1f)
                 entity.moveLine.show = true
             }
 
-            override fun update(entity: MovableUnit) = entity.updateMove()
+            override fun update(entity: MovableUnit) = entity.updateRoute()
+            override fun exit(entity: MovableUnit) = Unit
+            override fun onMessage(entity: MovableUnit, telegram: Telegram) = false
+        },
+        TRACK {
+            override fun enter(entity: MovableUnit) {
+                entity.playAnimation("walk", 1f)
+                entity.moveLine.show = true
+            }
+
+            override fun update(entity: MovableUnit) = entity.updateTrack()
             override fun exit(entity: MovableUnit) = Unit
             override fun onMessage(entity: MovableUnit, telegram: Telegram) = false
         }

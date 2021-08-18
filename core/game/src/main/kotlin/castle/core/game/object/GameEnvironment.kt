@@ -5,7 +5,7 @@ import castle.core.game.`object`.unit.GameObject
 import com.badlogic.gdx.utils.Disposable
 
 class GameEnvironment(gameContext: GameContext) : Disposable {
-    private val environment: List<GameObject> = gameContext.resourceManager.constructorMap
+    private val environment: List<GameObject> = gameContext.resourceService.constructorMap
         .filter { entry -> entry.value.instantiate }
         .map { entry -> GameObject(entry.value, gameContext) }
 

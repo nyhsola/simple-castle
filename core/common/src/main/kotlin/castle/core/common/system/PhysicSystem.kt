@@ -1,8 +1,8 @@
-package castle.core.physic.system
+package castle.core.common.system
 
+import castle.core.common.component.PhysicComponent
 import castle.core.common.component.PositionComponent
-import castle.core.physic.component.PhysicComponent
-import castle.core.physic.service.PhysicService
+import castle.core.common.service.PhysicService
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.EntityListener

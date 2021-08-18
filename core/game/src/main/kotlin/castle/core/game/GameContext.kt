@@ -1,9 +1,9 @@
 package castle.core.game
 
-import castle.core.game.utils.ResourceManager
+import castle.core.common.service.ResourceService
 import com.badlogic.ashley.core.Engine
 
 data class GameContext(
     val engine: Engine,
-    val resourceManager: ResourceManager
+    val resourceService: ResourceService
 )

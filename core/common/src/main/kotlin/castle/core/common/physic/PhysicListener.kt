@@ -1,4 +1,4 @@
-package castle.core.physic.service
+package castle.core.common.physic
 
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject
 

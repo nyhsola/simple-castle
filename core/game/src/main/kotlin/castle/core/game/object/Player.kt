@@ -4,7 +4,7 @@ import castle.core.game.GameContext
 import castle.core.game.`object`.unit.AttackUnit
 import castle.core.game.`object`.unit.GameObject
 import castle.core.game.`object`.unit.MovableUnit
-import castle.core.game.utils.json.PlayerJson
+import castle.core.common.json.PlayerJson
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 
@@ -38,11 +38,11 @@ class Player(
 
     private fun createUnit(path: List<String>) {
         val paths = path.map {
-            val constructor = gameContext.resourceManager.constructorMap[it]!!
+            val constructor = gameContext.resourceService.constructorMap[it]!!
             constructor.getMatrix4().getTranslation(Vector3())
         }
 
-        val constructor = gameContext.resourceManager.constructorMap[unitType]!!
+        val constructor = gameContext.resourceService.constructorMap[unitType]!!
         val unit = AttackUnit(constructor, gameContext, gameMap)
 
         if (paths.isNotEmpty()) {

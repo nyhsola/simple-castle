@@ -2,7 +2,7 @@ package castle.core.game.`object`.unit
 
 import castle.core.game.GameContext
 import castle.core.game.`object`.GameMap
-import castle.core.game.utils.Constructor
+import castle.core.common.json.Constructor
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine
 import com.badlogic.gdx.ai.fsm.State
 import com.badlogic.gdx.ai.fsm.StateMachine
@@ -13,8 +13,7 @@ class AttackUnit(
     gameContext: GameContext,
     private val gameMap: GameMap
 ) : MovableUnit(constructor, gameContext, gameMap) {
-    private val stateMachine: StateMachine<AttackUnit, AttackUnitState> =
-        DefaultStateMachine(this, AttackUnitState.PREPARE)
+    private val stateMachine: StateMachine<AttackUnit, AttackUnitState> = DefaultStateMachine(this, AttackUnitState.PREPARE)
     private var lastNearObjects: List<GameObject> = emptyList()
     private var enemy: GameObject? = null
 
@@ -24,10 +23,13 @@ class AttackUnit(
     }
 
     private fun enterAttack() {
+        startTrack(enemy!!)
     }
 
     private fun updateAttack() {
-
+        if (isStand()) {
+            playAnimation("attack", 5f)
+        }
     }
 
     private fun updatePeace() {
@@ -39,12 +41,6 @@ class AttackUnit(
     }
 
     enum class AttackUnitState : State<AttackUnit> {
-        PEACE {
-            override fun enter(entity: AttackUnit) = Unit
-            override fun update(entity: AttackUnit) = Unit
-            override fun exit(entity: AttackUnit) = Unit
-            override fun onMessage(entity: AttackUnit, telegram: Telegram) = false
-        },
         PREPARE {
             override fun enter(entity: AttackUnit) = Unit
             override fun update(entity: AttackUnit) = entity.updatePeace()

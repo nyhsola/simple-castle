@@ -5,7 +5,7 @@ import castle.core.game.`object`.unit.GameObject
 import castle.core.game.path.Area
 import castle.core.game.path.AreaGraph
 import castle.core.game.service.ScanService
-import castle.core.game.utils.ResourceManager
+import castle.core.common.service.ResourceService
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath
 import com.badlogic.gdx.ai.pfa.GraphPath
@@ -18,7 +18,7 @@ class GameMap(
     private val engine: Engine,
     screenWidth: Int, screenHeight: Int,
     scanService: ScanService,
-    resourceManager: ResourceManager
+    resourceService: ResourceService
 ) {
     companion object {
         private val SCAN_BOX = Vector3(1.7f, 1.7f, 1.7f)
@@ -30,7 +30,7 @@ class GameMap(
     private val startPositionY = 10f
     private val aabbMin = Vector3()
     private val aabbMax = Vector3()
-    private val map3D = resourceManager.constructorMap["ground"]!!.getPhysicInstance()
+    private val map3D = resourceService.constructorMap["ground"]!!.getPhysicInstance()
         .apply { body.getAabb(aabbMin, aabbMax) }
         .also { it.dispose() }
         .let { scanService.scanRegion(SCAN_BOX, aabbMin, aabbMax) }

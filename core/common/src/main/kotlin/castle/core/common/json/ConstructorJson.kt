@@ -1,8 +1,8 @@
-package castle.core.game.utils.json
+package castle.core.common.json
 
-import castle.core.physic.PhysicShape
+import castle.core.common.physic.PhysicShape
 
-data class SceneObjectJson(
+data class ConstructorJson(
     var nodes: String = "",
     var shape: PhysicShape = PhysicShape.STATIC,
     var mass: Float = 0.0f,
@@ -11,6 +11,5 @@ data class SceneObjectJson(
     var collisionFlag: List<String> = emptyList(),
     var instantiate: Boolean = false,
     var hide: Boolean = false,
-    var armature: String = "",
-    var animation: String = ""
+    var armature: String = ""
 )

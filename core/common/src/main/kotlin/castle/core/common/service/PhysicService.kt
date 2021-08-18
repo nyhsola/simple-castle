@@ -1,9 +1,9 @@
-package castle.core.physic.service
+package castle.core.common.service
 
-import castle.core.physic.component.PhysicComponent
+import castle.core.common.component.PhysicComponent
 import castle.core.common.component.PositionComponent
-import castle.core.common.service.CameraService
-import castle.core.physic.PhysicInstance
+import castle.core.common.physic.PhysicInstance
+import castle.core.common.physic.PhysicListener
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector3

@@ -11,8 +11,8 @@ import castle.core.game.event.EventQueue
 import castle.core.game.event.EventType
 import castle.core.game.service.RayCastService
 import castle.core.game.service.ScanService
-import castle.core.game.utils.ResourceManager
-import castle.core.physic.service.PhysicService
+import castle.core.common.service.ResourceService
+import castle.core.common.service.PhysicService
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Gdx
@@ -28,19 +28,19 @@ class GameManager(
     private val physicService: PhysicService,
     private val cameraService: CameraService
 ) : KtxInputAdapter, Disposable {
-    private val resourceManager: ResourceManager = ResourceManager()
+    private val resourceService: ResourceService = ResourceService()
     private val scanService = ScanService(physicService)
     private val rayCastService = RayCastService(physicService, cameraService)
-    private val gameContext: GameContext = GameContext(engine, resourceManager)
+    private val gameContext: GameContext = GameContext(engine, resourceService)
 
     private val gameEnvironment = GameEnvironment(gameContext)
     private val gameMap: GameMap =
-        GameMap(engine, Gdx.graphics.width, Gdx.graphics.height, scanService, resourceManager)
+        GameMap(engine, Gdx.graphics.width, Gdx.graphics.height, scanService, resourceService)
 
     private val eventQueue = EventQueue()
     private val signal = Signal<EventContext>().apply { this.add(eventQueue) }
 
-    private val chat = Chat(engine, guiConfig, signal, resourceManager)
+    private val chat = Chat(engine, guiConfig, signal, resourceService)
     private val players: Players = Players(gameContext, gameMap)
 
     private val temp = Vector3()
@@ -101,7 +101,7 @@ class GameManager(
     }
 
     override fun dispose() {
-        resourceManager.dispose()
+        resourceService.dispose()
         gameEnvironment.dispose()
         chat.dispose()
         players.dispose()

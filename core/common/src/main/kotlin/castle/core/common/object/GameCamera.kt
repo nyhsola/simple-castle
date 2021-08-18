@@ -67,7 +67,7 @@ class GameCamera {
         camera.update()
     }
 
-    fun scrolled(amountX: Float, amountY: Float): Boolean {
+    fun scrolled(amountY: Float): Boolean {
         camera.translate(tempVector.set(camera.direction).scl(amountY))
         camera.update()
         return false

@@ -3,7 +3,7 @@ package castle.core.game.system
 import castle.core.common.creator.GUIConfig
 import castle.core.common.service.CameraService
 import castle.core.game.GameManager
-import castle.core.physic.service.PhysicService
+import castle.core.common.service.PhysicService
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.systems.IntervalSystem
 import com.badlogic.gdx.Gdx

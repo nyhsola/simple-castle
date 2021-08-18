@@ -1,8 +1,8 @@
 package castle.core.game.service
 
 import castle.core.common.service.CameraService
-import castle.core.physic.PhysicInstance
-import castle.core.physic.service.PhysicService
+import castle.core.common.physic.PhysicInstance
+import castle.core.common.service.PhysicService
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.bullet.collision.ClosestRayResultCallback
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject
