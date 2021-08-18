@@ -1,6 +1,5 @@
 include 'blender'
 include 'android'
 include 'core:common'
-include 'core:physic'
 include 'core:game'
 include 'server:launcher'

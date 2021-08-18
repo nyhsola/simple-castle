@@ -1,14 +1,11 @@
-package castle.core.physic
+package castle.core.common.physic
 
-import com.badlogic.gdx.graphics.Mesh
 import com.badlogic.gdx.graphics.g3d.ModelInstance
-import com.badlogic.gdx.graphics.g3d.model.Node
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.math.collision.BoundingBox
 import com.badlogic.gdx.physics.bullet.Bullet
 import com.badlogic.gdx.physics.bullet.collision.btBoxShape
 import com.badlogic.gdx.physics.bullet.collision.btCollisionShape
-import com.badlogic.gdx.physics.bullet.collision.btConvexHullShape
 import java.util.function.Function
 import kotlin.math.max
 
@@ -28,25 +25,16 @@ enum class PhysicShape(private val function: Function<ModelInstance, btCollision
         }
 
         private fun calculateBaseBox(modelInstance: ModelInstance): btBoxShape {
-            val temp = BoundingBox()
-            val boundingBox = modelInstance.calculateBoundingBox(temp)
-            val dimensions = Vector3()
-            boundingBox.getDimensions(dimensions)
+            val dimensions = getDimension(modelInstance)
             val max = max(dimensions.x, dimensions.z)
             return btBoxShape(Vector3(max, dimensions.y, max).scl(SCALAR))
         }
 
         private fun calculateAdjustedBox(modelInstance: ModelInstance): btBoxShape {
-            val temp = BoundingBox()
-            val boundingBox = modelInstance.calculateBoundingBox(temp)
-            val dimensions = Vector3()
-            boundingBox.getDimensions(dimensions)
+            val dimensions = getDimension(modelInstance)
             return btBoxShape(dimensions.scl(SCALAR))
         }
 
-        private fun calculateDynamic(node: Node): btCollisionShape {
-            val mesh: Mesh = node.parts[0].meshPart.mesh
-            return btConvexHullShape(mesh.verticesBuffer, mesh.numVertices, mesh.vertexSize)
-        }
+        private fun getDimension(modelInstance: ModelInstance) = modelInstance.calculateBoundingBox(BoundingBox()).getDimensions(Vector3())
     }
 }

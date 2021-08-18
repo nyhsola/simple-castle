@@ -1,4 +1,4 @@
-package castle.core.game.utils.json
+package castle.core.common.json
 
 import com.badlogic.gdx.utils.Json
 import com.badlogic.gdx.utils.JsonValue

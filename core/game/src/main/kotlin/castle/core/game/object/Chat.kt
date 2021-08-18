@@ -4,7 +4,7 @@ import castle.core.common.component.StageComponent
 import castle.core.common.creator.GUIConfig
 import castle.core.game.event.EventContext
 import castle.core.game.event.EventType
-import castle.core.game.utils.ResourceManager
+import castle.core.common.service.ResourceService
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Gdx
@@ -25,7 +25,7 @@ class Chat(
     private val engine: Engine,
     guiConfig: GUIConfig,
     signal: Signal<EventContext>,
-    resourceManager: ResourceManager
+    resourceService: ResourceService
 ) : Disposable {
     private val entity = engine.createEntity()
 
@@ -33,9 +33,9 @@ class Chat(
 
     private val stage = guiConfig.stage()
     private val table = Table()
-    private val label = Label(": ", resourceManager.skin)
-    private val textArea = TextArea("", resourceManager.skin)
-    private val textField = TextField("", resourceManager.skin)
+    private val label = Label(": ", resourceService.skin)
+    private val textArea = TextArea("", resourceService.skin)
+    private val textField = TextField("", resourceService.skin)
 
     private val chatHistory: MutableList<String> = ArrayList()
     private val chatPoll: PriorityQueue<String> = PriorityQueue();

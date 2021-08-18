@@ -7,5 +7,4 @@ sourceCompatibility = JavaVersion.VERSION_14
 
 dependencies {
     implementation project(":core:common")
-    implementation project(":core:physic")
 }

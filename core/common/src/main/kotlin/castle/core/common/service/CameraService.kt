@@ -23,7 +23,7 @@ class CameraService : KtxInputAdapter {
     }
 
     override fun scrolled(amountX: Float, amountY: Float): Boolean {
-        return if (input) cameras[index].scrolled(amountX, amountY) else false
+        return if (input) cameras[index].scrolled(amountY) else false
     }
 
     override fun keyUp(keycode: Int): Boolean {

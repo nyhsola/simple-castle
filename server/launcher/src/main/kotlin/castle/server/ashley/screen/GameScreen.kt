@@ -4,8 +4,7 @@ import castle.core.common.builder.ScreenConfigurator
 import castle.core.common.config.CommonConfig
 import castle.core.common.creator.GUIConfig
 import castle.core.game.config.GameConfig
-import castle.core.physic.config.PhysicConfig
-import castle.core.game.system.GameCycleSystem
+import castle.core.common.config.PhysicConfig
 import com.badlogic.ashley.core.PooledEngine
 import com.badlogic.gdx.Gdx
 import ktx.app.KtxScreen
@@ -30,7 +29,7 @@ class GameScreen(guiConfig: GUIConfig) : KtxScreen {
         )
     )
 
-    private val engine: PooledEngine = screenConfigurator.engine
+    private val engine = screenConfigurator.engine
     private val inputMultiplexer = screenConfigurator.inputMultiplexer
     private val disposables = screenConfigurator.disposables
 

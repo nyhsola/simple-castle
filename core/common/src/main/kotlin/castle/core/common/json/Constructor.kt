@@ -1,26 +1,23 @@
-package castle.core.game.utils
+package castle.core.common.json
 
-import castle.core.game.utils.json.SceneObjectJson
-import castle.core.physic.PhysicInstance
-import castle.core.physic.PhysicShape
+import castle.core.common.physic.PhysicInstance
+import castle.core.common.physic.PhysicShape
 import com.badlogic.gdx.graphics.g3d.Model
 import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody
 import com.badlogic.gdx.utils.Array
 
-class Constructor(private val model: Model, sceneObjectJson: SceneObjectJson) {
-    private var collisionFlag: List<String> = sceneObjectJson.collisionFlag
-    private val physicShape: PhysicShape = sceneObjectJson.shape
-    private val armature: String = sceneObjectJson.armature
-    private var collisionFilterMask: List<Int> = sceneObjectJson.collisionFilterMask
-    private val mass: Float = sceneObjectJson.mass
-
-    val node: String = sceneObjectJson.nodes
-    var collisionFilterGroup: Int = sceneObjectJson.collisionFilterGroup
-    val instantiate: Boolean = sceneObjectJson.instantiate
-    var animation: String = sceneObjectJson.animation
-    var hide: Boolean = sceneObjectJson.hide
+class Constructor(private val model: Model, constructorJson: ConstructorJson) {
+    private var collisionFlag: List<String> = constructorJson.collisionFlag
+    private val physicShape: PhysicShape = constructorJson.shape
+    private var collisionFilterMask: List<Int> = constructorJson.collisionFilterMask
+    private val mass: Float = constructorJson.mass
+    val node: String = constructorJson.nodes
+    val armature: String = constructorJson.armature
+    var collisionFilterGroup: Int = constructorJson.collisionFilterGroup
+    val instantiate: Boolean = constructorJson.instantiate
+    var hide: Boolean = constructorJson.hide
 
     fun getPhysicInstance(): PhysicInstance {
         val shape = physicShape.build(getModel())

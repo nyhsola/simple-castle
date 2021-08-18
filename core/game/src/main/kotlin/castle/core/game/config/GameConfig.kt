@@ -3,7 +3,7 @@ package castle.core.game.config
 import castle.core.common.config.CommonConfig
 import castle.core.common.creator.GUIConfig
 import castle.core.game.system.GameCycleSystem
-import castle.core.physic.config.PhysicConfig
+import castle.core.common.config.PhysicConfig
 
 class GameConfig(
     guiConfig: GUIConfig,

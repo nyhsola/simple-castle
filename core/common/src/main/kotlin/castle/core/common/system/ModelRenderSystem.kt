@@ -4,9 +4,7 @@ import castle.core.common.creator.GUIConfig
 import castle.core.common.component.PositionComponent
 import castle.core.common.component.RenderComponent
 import castle.core.common.service.CameraService
-import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
-import com.badlogic.ashley.core.EntityListener
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Gdx
@@ -17,26 +15,10 @@ import com.badlogic.gdx.utils.Disposable
 class ModelRenderSystem(
     guiConfig: GUIConfig,
     private val cameraService: CameraService
-) : IteratingSystem(Family.all(PositionComponent::class.java, RenderComponent::class.java).get()),
-    EntityListener,
-    Disposable {
+) : IteratingSystem(Family.all(PositionComponent::class.java, RenderComponent::class.java).get()), Disposable {
     private val modelBatch: ModelBatch = guiConfig.modelBatch()
 
-    override fun addedToEngine(engine: Engine) {
-        engine.addEntityListener(family, this)
-        super.addedToEngine(engine)
-    }
-
     override fun processEntity(entity: Entity, deltaTime: Float) {
-    }
-
-    override fun entityRemoved(entity: Entity) {
-    }
-
-    override fun entityAdded(entity: Entity) {
-        val positionComponent = PositionComponent.mapper.get(entity)
-        val renderComponent = RenderComponent.mapper.get(entity)
-        RenderComponent.postConstruct(positionComponent, renderComponent)
     }
 
     override fun update(deltaTime: Float) {
