@@ -1,11 +1,12 @@
 package castle.core.game.`object`
 
-import castle.core.common.component.RectComponent
+import castle.core.common.component.Rect2DComponent
 import castle.core.game.`object`.unit.GameObject
 import castle.core.game.path.Area
 import castle.core.game.path.AreaGraph
 import castle.core.game.service.ScanService
 import castle.core.common.service.ResourceService
+import castle.core.game.GameContext
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath
 import com.badlogic.gdx.ai.pfa.GraphPath
@@ -15,10 +16,9 @@ import com.badlogic.gdx.math.Vector3
 import kotlin.math.abs
 
 class GameMap(
-    private val engine: Engine,
+    private val gameContext: GameContext,
     screenWidth: Int, screenHeight: Int,
-    scanService: ScanService,
-    resourceService: ResourceService
+    scanService: ScanService
 ) {
     companion object {
         private val SCAN_BOX = Vector3(1.7f, 1.7f, 1.7f)
@@ -30,7 +30,7 @@ class GameMap(
     private val startPositionY = 10f
     private val aabbMin = Vector3()
     private val aabbMax = Vector3()
-    private val map3D = resourceService.constructorMap["ground"]!!.getPhysicInstance()
+    private val map3D = gameContext.resourceService.constructorMap["ground"]!!.getPhysicInstance()
         .apply { body.getAabb(aabbMin, aabbMax) }
         .also { it.dispose() }
         .let { scanService.scanRegion(SCAN_BOX, aabbMin, aabbMax) }
@@ -126,7 +126,7 @@ class GameMap(
             for (j in miniMap[i].indices) {
                 pieces[i].add(
                     MinimapPiece(
-                        engine,
+                        gameContext.engine,
                         pointWidth, pointHeight,
                         Vector2(i.toFloat(), j.toFloat()),
                         Vector2(startPositionX, startPositionY), miniMap[i][j]
@@ -152,29 +152,28 @@ class GameMap(
         return map
     }
 
-    private class MinimapPiece(
-        engine: Engine,
+    private class MinimapPiece(engine: Engine,
         width: Float, height: Float,
         paramIndex: Vector2, offsetParam: Vector2,
         private val groundHeight: Int
     ) {
         private val entity = engine.createEntity().apply { engine.addEntity(this) }
-        private val rectComponent: RectComponent =
-            engine.createComponent(RectComponent::class.java).apply { entity.add(this) }
+        private val rect2DComponent: Rect2DComponent =
+            engine.createComponent(Rect2DComponent::class.java).apply { entity.add(this) }
 
         init {
-            rectComponent.height = height
-            rectComponent.width = width
-            rectComponent.position.set(
-                offsetParam.x + paramIndex.x * rectComponent.width,
-                offsetParam.y + paramIndex.y * rectComponent.height
+            rect2DComponent.height = height
+            rect2DComponent.width = width
+            rect2DComponent.position.set(
+                offsetParam.x + paramIndex.x * rect2DComponent.width,
+                offsetParam.y + paramIndex.y * rect2DComponent.height
             )
-            rectComponent.color = getGroundColor(groundHeight)
+            rect2DComponent.color = getGroundColor(groundHeight)
         }
 
-        fun setColor(color: Color) = color.also { rectComponent.color = it }
+        fun setColor(color: Color) = color.also { rect2DComponent.color = it }
 
-        fun reset() = getGroundColor(groundHeight).also { rectComponent.color = it }
+        fun reset() = getGroundColor(groundHeight).also { rect2DComponent.color = it }
 
         private fun getGroundColor(value: Int): Color {
             val baseHsv = FloatArray(3)

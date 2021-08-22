@@ -3,7 +3,6 @@ package castle.core.game.`object`
 import castle.core.game.GameContext
 import castle.core.game.`object`.unit.AttackUnit
 import castle.core.game.`object`.unit.GameObject
-import castle.core.game.`object`.unit.MovableUnit
 import castle.core.common.json.PlayerJson
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
@@ -14,7 +13,7 @@ class Player(
     private val gameMap: GameMap
 ) : Disposable {
     private val paths: List<List<String>> = playerJson.paths
-    private val baseUnits: MutableList<MovableUnit> = ArrayList()
+    private val baseUnits: MutableList<AttackUnit> = ArrayList()
     private val unitType: String = playerJson.unitType
     private val spawnRate: Float = playerJson.spawnRate
     private var accumulate: Float = 0.0f
@@ -25,7 +24,8 @@ class Player(
             accumulate -= spawnRate
             spawn()
         }
-        baseUnits.forEach { it.update() }
+        baseUnits.forEach { it.update(delta) }
+        baseUnits.filter { it.isDead }.onEach { it.dispose() }.forEach { baseUnits.remove(it) }
     }
 
     fun spawn() {

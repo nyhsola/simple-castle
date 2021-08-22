@@ -1,6 +1,6 @@
 package castle.core.game
 
-import castle.core.common.creator.GUIConfig
+import castle.core.common.config.GUIConfig
 import castle.core.common.service.CameraService
 import castle.core.game.`object`.Chat
 import castle.core.game.`object`.GameEnvironment
@@ -20,6 +20,7 @@ import com.badlogic.gdx.ai.GdxAI
 import com.badlogic.gdx.ai.msg.MessageManager
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
+import com.badlogic.gdx.utils.Timer
 import ktx.app.KtxInputAdapter
 
 class GameManager(
@@ -34,8 +35,7 @@ class GameManager(
     private val gameContext: GameContext = GameContext(engine, resourceService)
 
     private val gameEnvironment = GameEnvironment(gameContext)
-    private val gameMap: GameMap =
-        GameMap(engine, Gdx.graphics.width, Gdx.graphics.height, scanService, resourceService)
+    private val gameMap: GameMap = GameMap(gameContext, Gdx.graphics.width, Gdx.graphics.height, scanService)
 
     private val eventQueue = EventQueue()
     private val signal = Signal<EventContext>().apply { this.add(eventQueue) }

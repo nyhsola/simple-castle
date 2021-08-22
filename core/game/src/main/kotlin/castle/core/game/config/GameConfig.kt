@@ -1,7 +1,7 @@
 package castle.core.game.config
 
 import castle.core.common.config.CommonConfig
-import castle.core.common.creator.GUIConfig
+import castle.core.common.config.GUIConfig
 import castle.core.game.system.GameCycleSystem
 import castle.core.common.config.PhysicConfig
 

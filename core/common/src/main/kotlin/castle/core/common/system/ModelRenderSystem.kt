@@ -1,25 +1,22 @@
 package castle.core.common.system
 
-import castle.core.common.creator.GUIConfig
 import castle.core.common.component.PositionComponent
 import castle.core.common.component.RenderComponent
+import castle.core.common.config.GUIConfig
 import castle.core.common.service.CameraService
+import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g3d.ModelBatch
-import com.badlogic.gdx.utils.Disposable
 
 class ModelRenderSystem(
     guiConfig: GUIConfig,
     private val cameraService: CameraService
-) : IteratingSystem(Family.all(PositionComponent::class.java, RenderComponent::class.java).get()), Disposable {
-    private val modelBatch: ModelBatch = guiConfig.modelBatch()
-
-    override fun processEntity(entity: Entity, deltaTime: Float) {
-    }
+) : IteratingSystem(Family.all(PositionComponent::class.java, RenderComponent::class.java).get()) {
+    private val modelBatch: ModelBatch = guiConfig.modelBatch
 
     override fun update(deltaTime: Float) {
         Gdx.gl.apply {
@@ -29,16 +26,14 @@ class ModelRenderSystem(
             glEnable(GL20.GL_DEPTH_TEST)
         }
         modelBatch.begin(cameraService.currentCamera.camera)
-        for (i in 0 until entities.size()) {
-            val renderComponent = RenderComponent.mapper.get(entities[i])
-            if (!renderComponent.hide) {
-                modelBatch.render(renderComponent.modelInstance, cameraService.currentCamera.environment)
-            }
-        }
+        super.update(deltaTime)
         modelBatch.end()
     }
 
-    override fun dispose() {
-        modelBatch.dispose()
+    override fun processEntity(entity: Entity, deltaTime: Float) {
+        val renderComponent = RenderComponent.mapper.get(entity)
+        if (!renderComponent.hide) {
+            modelBatch.render(renderComponent.modelInstance, cameraService.currentCamera.environment)
+        }
     }
 }

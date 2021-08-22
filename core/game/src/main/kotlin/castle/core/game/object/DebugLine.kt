@@ -2,6 +2,7 @@ package castle.core.game.`object`
 
 import castle.core.game.GameContext
 import castle.core.common.component.Line3DComponent
+import castle.core.common.util.GlobalContext
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector3
@@ -40,7 +41,7 @@ class DebugLine(private val gameContext: GameContext) : Disposable {
             return line3DComponent.show
         }
         set(value) {
-            line3DComponent.show = value
+            line3DComponent.show = value && GlobalContext.isDebugEnabled
         }
 
     override fun dispose() {

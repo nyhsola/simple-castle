@@ -33,7 +33,7 @@ open class GameObject(
     }
 
     private val entity: Entity = gameContext.engine.createEntity()
-    private val positionComponent: PositionComponent = PositionComponent(constructor)
+    private val positionComponent: PositionComponent = PositionComponent(constructor.getMatrix4())
     private val renderComponent: RenderComponent = RenderComponent(positionComponent, constructor)
     private val physicComponent: PhysicComponent = PhysicComponent(constructor)
     private val animationComponent: AnimationComponent = AnimationComponent(renderComponent)
@@ -55,7 +55,7 @@ open class GameObject(
         gameContext.engine.addEntity(entity)
     }
 
-    private val worldTransform: Matrix4
+    val worldTransform: Matrix4
         get() = positionComponent.matrix4
 
     val uuid: String
@@ -79,12 +79,14 @@ open class GameObject(
     var angularVelocity: Vector3
         get() = physicComponent.physicInstance.body.angularVelocity
         set(value) {
+            physicComponent.physicInstance.body.activate()
             physicComponent.physicInstance.body.angularVelocity = value
         }
 
     var linearVelocity: Vector3
         get() = physicComponent.physicInstance.body.linearVelocity
         set(value) {
+            physicComponent.physicInstance.body.activate()
             physicComponent.physicInstance.body.linearVelocity = value
         }
 
@@ -107,6 +109,5 @@ open class GameObject(
 
     override fun dispose() {
         gameContext.engine.removeEntity(entity)
-        physicComponent.physicInstance.dispose()
     }
 }

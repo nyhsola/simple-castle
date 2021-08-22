@@ -1,6 +1,6 @@
 package castle.core.game.system
 
-import castle.core.common.creator.GUIConfig
+import castle.core.common.config.GUIConfig
 import castle.core.common.service.CameraService
 import castle.core.game.GameManager
 import castle.core.common.service.PhysicService
