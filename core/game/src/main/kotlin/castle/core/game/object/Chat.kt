@@ -1,7 +1,7 @@
 package castle.core.game.`object`
 
 import castle.core.common.component.StageComponent
-import castle.core.common.creator.GUIConfig
+import castle.core.common.config.GUIConfig
 import castle.core.game.event.EventContext
 import castle.core.game.event.EventType
 import castle.core.common.service.ResourceService
@@ -31,7 +31,7 @@ class Chat(
 
     private val stageComponent: StageComponent = engine.createComponent(StageComponent::class.java)
 
-    private val stage = guiConfig.stage()
+    private val stage = guiConfig.stage
     private val table = Table()
     private val label = Label(": ", resourceService.skin)
     private val textArea = TextArea("", resourceService.skin)

@@ -24,8 +24,8 @@ open class MovableUnit(
         private const val BASE_LINEAR_SPEED: Float = 5f
         private const val BASE_ANGULAR_SPEED: Float = 3f
 
-        const val AT_POINT: Float = 0.1f
-        const val MELEE: Float = 1.1f
+        const val AT_POINT: Float = 0.3f
+        const val MELEE: Float = 2f
     }
     private val stateMachine: StateMachine<MovableUnit, MovableUnitState> = DefaultStateMachine(this, MovableUnitState.STAND)
     private val tempTarget: Vector3 = Vector3()
@@ -95,20 +95,22 @@ open class MovableUnit(
 
     private fun updateMove(targetParam: Vector3, distance: Float) {
         updateLine(targetParam)
-        val directionDst = tempDirection.set(targetParam).sub(unitPosition).nor().scl(distance)
-        val target = tempTarget.set(targetParam).sub(directionDst)
-        val direction = tempDirection.set(target).sub(unitPosition).nor()
+        val direction = tempDirection.set(targetParam).sub(unitPosition).nor()
         val angle = tempQuaternion.setFromCross(direction, faceDirection).angle
-        val dst = unitPosition.dst2(target)
+        val actualDistance = unitPosition.dst2(targetParam)
         val needRotation = angle !in 0.0..10.0
-        if (needRotation) {
-            angularVelocity = (if (tempQuaternion.y < 0) right else left).cpy().scl(BASE_ANGULAR_SPEED)
-            linearVelocity = zero
-        } else if (dst > MELEE) {
-            linearVelocity = direction.scl(BASE_LINEAR_SPEED)
-            angularVelocity = zero
-        } else {
-            stand()
+        when {
+            needRotation -> {
+                angularVelocity = (if (tempQuaternion.y < 0) right else left).cpy().scl(BASE_ANGULAR_SPEED)
+                linearVelocity = zero
+            }
+            actualDistance > distance -> {
+                linearVelocity = direction.scl(BASE_LINEAR_SPEED)
+                angularVelocity = zero
+            }
+            else -> {
+                stand()
+            }
         }
     }
 

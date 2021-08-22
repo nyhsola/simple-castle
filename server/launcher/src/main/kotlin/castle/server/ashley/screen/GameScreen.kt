@@ -2,16 +2,18 @@ package castle.server.ashley.screen
 
 import castle.core.common.builder.ScreenConfigurator
 import castle.core.common.config.CommonConfig
-import castle.core.common.creator.GUIConfig
+import castle.core.common.config.GUIConfig
 import castle.core.game.config.GameConfig
 import castle.core.common.config.PhysicConfig
-import com.badlogic.ashley.core.PooledEngine
+import castle.core.common.config.RenderConfig
 import com.badlogic.gdx.Gdx
 import ktx.app.KtxScreen
 
-class GameScreen(guiConfig: GUIConfig) : KtxScreen {
-    private val commonConfig = CommonConfig(guiConfig)
+class GameScreen : KtxScreen {
+    private val commonConfig = CommonConfig()
+    private val guiConfig = GUIConfig()
     private val physicConfig = PhysicConfig(commonConfig)
+    private val renderConfig = RenderConfig(guiConfig, commonConfig)
     private val gameConfig = GameConfig(guiConfig, commonConfig, physicConfig)
 
     private val cameraService = commonConfig.cameraService
@@ -19,9 +21,10 @@ class GameScreen(guiConfig: GUIConfig) : KtxScreen {
     private val screenConfigurator = ScreenConfigurator(
         listOf(
             commonConfig.cameraControlSystem,
-            commonConfig.modelRenderSystem,
-            commonConfig.rectRenderSystem,
-            commonConfig.line3DRenderSystem,
+            renderConfig.modelRenderSystem,
+            renderConfig.rect3DRenderSystem,
+            renderConfig.rect2DRenderSystem,
+            renderConfig.line3DRenderSystem,
             commonConfig.stageRectRenderSystem,
             physicConfig.physicSystem,
             commonConfig.animationSystem,
@@ -50,6 +53,7 @@ class GameScreen(guiConfig: GUIConfig) : KtxScreen {
     }
 
     override fun dispose() {
+        guiConfig.dispose()
         engine.removeAllEntities()
         disposables.forEach { it.dispose() }
     }

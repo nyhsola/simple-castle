@@ -1,6 +1,5 @@
 package castle.server.ashley.app
 
-import castle.core.common.creator.GUIConfigImpl
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
@@ -15,7 +14,7 @@ object ServerLauncher {
             setWindowedMode(newWidth, newHeight)
         }
         Bullet.init(false, false)
-        Lwjgl3Application(ServerGame(GUIConfigImpl()), conf)
+        Lwjgl3Application(ServerGame(), conf)
         Runtime.getRuntime()
             .addShutdownHook(object : Thread() {
                 override fun run() {

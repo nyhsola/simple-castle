@@ -1,7 +1,7 @@
 package castle.core.common.system
 
-import castle.core.common.creator.GUIConfig
 import castle.core.common.component.Line3DComponent
+import castle.core.common.config.GUIConfig
 import castle.core.common.service.CameraService
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.Family
@@ -13,7 +13,7 @@ class Line3DRenderSystem(
     guiConfig: GUIConfig,
     private val cameraService: CameraService
 ) : IteratingSystem(Family.all(Line3DComponent::class.java).get()), Disposable {
-    private val shapeRenderer = guiConfig.shapeRenderer().apply { setAutoShapeType(true) }
+    private val shapeRenderer = guiConfig.createShapeRender()
 
     override fun update(deltaTime: Float) {
         shapeRenderer.projectionMatrix = cameraService.currentCamera.camera.combined
