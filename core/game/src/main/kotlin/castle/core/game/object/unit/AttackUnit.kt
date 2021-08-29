@@ -1,9 +1,9 @@
 package castle.core.game.`object`.unit
 
 import castle.core.game.GameContext
-import castle.core.game.`object`.GameMap
 import castle.core.common.json.Constructor
 import castle.core.game.`object`.HPBar
+import castle.core.game.service.MapService
 import castle.core.game.util.Task
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine
 import com.badlogic.gdx.ai.fsm.State
@@ -15,8 +15,8 @@ import java.lang.Float.min
 class AttackUnit(
     constructor: Constructor,
     gameContext: GameContext,
-    private val gameMap: GameMap
-) : MovableUnit(constructor, gameContext, gameMap), Disposable {
+    private val mapService: MapService
+) : MovableUnit(constructor, gameContext, mapService), Disposable {
     private val stateMachine: StateMachine<AttackUnit, AttackUnitState> = DefaultStateMachine(this, AttackUnitState.PEACE)
     private var lastNearObjects: List<GameObject> = emptyList()
     private var enemy: AttackUnit? = null
@@ -56,7 +56,7 @@ class AttackUnit(
     }
 
     private fun updatePeace() {
-        lastNearObjects = gameMap.getNearObjects(unitPosition)
+        lastNearObjects = mapService.getNearObjects(unitPosition)
         if (lastNearObjects.isNotEmpty()) {
             val nearEnemy = lastNearObjects[0]
             if (nearEnemy is AttackUnit) {

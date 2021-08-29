@@ -7,15 +7,18 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.utils.Disposable
 
 class Line3DRenderSystem(
     guiConfig: GUIConfig,
     private val cameraService: CameraService
-) : IteratingSystem(Family.all(Line3DComponent::class.java).get()), Disposable {
-    private val shapeRenderer = guiConfig.createShapeRender()
+) : IteratingSystem(Family.all(Line3DComponent::class.java).get()) {
+    private val shapeRenderer = guiConfig.shapeRender
+    private val transformMatrix4 = Matrix4()
 
     override fun update(deltaTime: Float) {
+        shapeRenderer.transformMatrix = transformMatrix4
         shapeRenderer.projectionMatrix = cameraService.currentCamera.camera.combined
         shapeRenderer.begin()
         super.update(deltaTime)
@@ -29,9 +32,5 @@ class Line3DRenderSystem(
             shapeRenderer.color = line3DComponent.color
             shapeRenderer.line(line3DComponent.from, line3DComponent.to)
         }
-    }
-
-    override fun dispose() {
-        shapeRenderer.dispose()
     }
 }

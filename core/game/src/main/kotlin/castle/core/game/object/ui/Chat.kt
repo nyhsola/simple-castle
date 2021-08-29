@@ -1,71 +1,47 @@
-package castle.core.game.`object`
+package castle.core.game.`object`.ui
 
-import castle.core.common.component.StageComponent
-import castle.core.common.config.GUIConfig
+import castle.core.common.service.ResourceService
 import castle.core.game.event.EventContext
 import castle.core.game.event.EventType
-import castle.core.common.service.ResourceService
-import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.signals.Signal
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.*
-import com.badlogic.gdx.scenes.scene2d.ui.Label
-import com.badlogic.gdx.scenes.scene2d.ui.Table
-import com.badlogic.gdx.scenes.scene2d.ui.TextArea
-import com.badlogic.gdx.scenes.scene2d.ui.TextField
+import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener
-import com.badlogic.gdx.utils.Align
-import com.badlogic.gdx.utils.Disposable
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class Chat(
-    private val engine: Engine,
-    guiConfig: GUIConfig,
     signal: Signal<EventContext>,
     resourceService: ResourceService
-) : Disposable {
-    private val entity = engine.createEntity()
+) : Table() {
 
-    private val stageComponent: StageComponent = engine.createComponent(StageComponent::class.java)
-
-    private val stage = guiConfig.stage
-    private val table = Table()
-    private val label = Label(": ", resourceService.skin)
     private val textArea = TextArea("", resourceService.skin)
-    private val textField = TextField("", resourceService.skin)
+    private val messageLine = Table()
+    private val label = Label(": ", resourceService.skin)
+    val textField = TextField("", resourceService.skin)
 
     private val chatHistory: MutableList<String> = ArrayList()
     private val chatPoll: PriorityQueue<String> = PriorityQueue();
 
-    var debugEnabled: Boolean = false
-        set(value) {
-            table.setDebug(value, value)
-            field = value
-        }
-
     init {
-        textArea.color.a = 0.7f
+        touchable = Touchable.enabled
+
+        textArea.color.a = 0.3f
         label.color.a = 0.7f
         textField.color.a = 0.7f
 
-        table.add(textArea).fill().colspan(2).width(Gdx.graphics.width * 0.25f).height(Gdx.graphics.height * 0.25f)
-        table.row()
-        table.add(label).fill()
-        table.add(textField).fill().expandX()
-
-        table.align(Align.bottomLeft)
-
-        stage.addActor(table)
-        stageComponent.stage = stage
+        add(textArea).grow()
+        row()
+        messageLine.add(label).fillY()
+        messageLine.add(textField).growX()
+        add(messageLine).growX()
 
         textArea.isDisabled = true
         textArea.style.font.data.markupEnabled = true
         textArea.touchable = Touchable.disabled
 
-        textField.addListener(object : FocusListener() {
+        addListener(object : FocusListener() {
             override fun keyboardFocusChanged(event: FocusEvent, actor: Actor, focused: Boolean) {
                 if (focused) {
                     signal.dispatch(EventContext(EventType.CHAT_FOCUSED))
@@ -73,7 +49,7 @@ class Chat(
             }
         })
 
-        stage.addListener(object : InputListener() {
+        addListener(object : InputListener() {
             override fun keyDown(event: InputEvent, keycode: Int): Boolean {
                 if (keycode == Input.Keys.ENTER || keycode == Input.Keys.NUMPAD_ENTER) {
                     if (textField.text.isNotEmpty()) {
@@ -83,25 +59,16 @@ class Chat(
                 }
                 return super.keyDown(event, keycode)
             }
-
-            override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
-                if (event.target is Group) {
-                    stage.unfocus(textField)
-                    signal.dispatch(EventContext(EventType.CHAT_UNFOCUSED))
-                }
-                return super.touchDown(event, x, y, pointer, button)
-            }
         })
 
-        stage.addListener(object : InputListener() {
+        addListener(object : InputListener() {
             override fun keyDown(event: InputEvent, keycode: Int): Boolean {
                 if (keycode == Input.Keys.ENTER || keycode == Input.Keys.NUMPAD_ENTER) {
-                    stage.keyboardFocus = textField
+                    this@Chat.stage.keyboardFocus = textField
                 }
                 return super.keyDown(event, keycode)
             }
         })
-        engine.addEntity(entity.apply { add(stageComponent) })
     }
 
     fun typeMessage(message: String) {
@@ -127,9 +94,5 @@ class Chat(
         val lastMessages = chatPoll.toTypedArray()
         chatPoll.clear()
         return lastMessages
-    }
-
-    override fun dispose() {
-        engine.removeEntity(entity)
     }
 }

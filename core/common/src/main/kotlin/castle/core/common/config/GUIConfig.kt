@@ -9,13 +9,11 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport
 class GUIConfig : Disposable {
     val modelBatch = ModelBatch()
     val stage = Stage(ScreenViewport())
-
-    fun createShapeRender() : ShapeRenderer {
-        return ShapeRenderer().apply { setAutoShapeType(true) }
-    }
+    val shapeRender = ShapeRenderer().apply { setAutoShapeType(true) }
 
     override fun dispose() {
         modelBatch.dispose()
+        shapeRender.dispose()
         stage.dispose()
     }
 }

@@ -2,9 +2,9 @@ package castle.core.game.`object`.unit
 
 import castle.core.game.GameContext
 import castle.core.game.`object`.DebugLine
-import castle.core.game.`object`.GameMap
 import castle.core.game.path.Area
 import castle.core.common.json.Constructor
+import castle.core.game.service.MapService
 import com.badlogic.gdx.ai.fsm.DefaultStateMachine
 import com.badlogic.gdx.ai.fsm.State
 import com.badlogic.gdx.ai.fsm.StateMachine
@@ -18,7 +18,7 @@ import com.badlogic.gdx.math.Vector3
 open class MovableUnit(
     constructor: Constructor,
     gameContext: GameContext,
-    private val gameMap: GameMap
+    private val mapService: MapService
 ) : GameObject(constructor, gameContext) {
     companion object {
         private const val BASE_LINEAR_SPEED: Float = 5f
@@ -55,7 +55,7 @@ open class MovableUnit(
 
     fun startRoute(pathsParam: List<Vector3>) {
         position = 0
-        graph = gameMap.getPath(pathsParam)
+        graph = mapService.getPath(pathsParam)
         stateMachine.changeState(MovableUnitState.ROUTE)
     }
 
@@ -116,7 +116,7 @@ open class MovableUnit(
 
     private fun updatePosition(currentArea: Area) {
         val nextPosition = position + 1
-        if (nextPosition < graph.count && gameMap.isInRangeOfArea(unitPosition, currentArea)) {
+        if (nextPosition < graph.count && mapService.withinArea(unitPosition, currentArea)) {
             position++
         }
     }
