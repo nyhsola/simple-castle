@@ -22,6 +22,16 @@ class StageRenderSystem : IteratingSystem(family.get()), EntityListener, KtxInpu
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
+        val stageComponent = StageComponent.mapper.get(entity)
+        stageComponent.stage.act(deltaTime)
+        stageComponent.stage.draw()
+    }
+
+    fun resize(width: Int, height: Int) {
+        for (i in 0 until entities.size()) {
+            val stageComponent = StageComponent.mapper.get(entities[i])
+            stageComponent.stage.viewport.update(width, height, true)
+        }
     }
 
     override fun entityAdded(entity: Entity) {
@@ -32,14 +42,6 @@ class StageRenderSystem : IteratingSystem(family.get()), EntityListener, KtxInpu
     override fun entityRemoved(entity: Entity) {
         val stageComponent = StageComponent.mapper.get(entity)
         inputMultiplexer.removeProcessor(stageComponent.stage)
-    }
-
-    override fun update(deltaTime: Float) {
-        for (i in 0 until entities.size()) {
-            val stageComponent = StageComponent.mapper.get(entities[i])
-            stageComponent.stage.act(deltaTime)
-            stageComponent.stage.draw()
-        }
     }
 
     override fun keyDown(keycode: Int): Boolean {

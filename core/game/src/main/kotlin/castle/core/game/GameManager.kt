@@ -2,25 +2,21 @@ package castle.core.game
 
 import castle.core.common.config.GUIConfig
 import castle.core.common.service.CameraService
-import castle.core.game.`object`.Chat
 import castle.core.game.`object`.GameEnvironment
-import castle.core.game.`object`.GameMap
 import castle.core.game.`object`.Players
-import castle.core.game.event.EventContext
 import castle.core.game.event.EventQueue
 import castle.core.game.event.EventType
 import castle.core.game.service.RayCastService
 import castle.core.game.service.ScanService
 import castle.core.common.service.ResourceService
 import castle.core.common.service.PhysicService
+import castle.core.game.`object`.ui.GameUI
+import castle.core.game.service.MapService
 import com.badlogic.ashley.core.Engine
-import com.badlogic.ashley.signals.Signal
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.ai.GdxAI
 import com.badlogic.gdx.ai.msg.MessageManager
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
-import com.badlogic.gdx.utils.Timer
 import ktx.app.KtxInputAdapter
 
 class GameManager(
@@ -30,24 +26,23 @@ class GameManager(
     private val cameraService: CameraService
 ) : KtxInputAdapter, Disposable {
     private val resourceService: ResourceService = ResourceService()
-    private val scanService = ScanService(physicService)
-    private val rayCastService = RayCastService(physicService, cameraService)
     private val gameContext: GameContext = GameContext(engine, resourceService)
-
     private val gameEnvironment = GameEnvironment(gameContext)
-    private val gameMap: GameMap = GameMap(gameContext, Gdx.graphics.width, Gdx.graphics.height, scanService)
-
     private val eventQueue = EventQueue()
-    private val signal = Signal<EventContext>().apply { this.add(eventQueue) }
 
-    private val chat = Chat(engine, guiConfig, signal, resourceService)
-    private val players: Players = Players(gameContext, gameMap)
+    private val rayCastService = RayCastService(physicService, cameraService)
+    private val scanService = ScanService(gameContext, physicService)
+    private val mapService = MapService(scanService)
+
+    private val gameUI = GameUI(gameContext, scanService, guiConfig, eventQueue)
+    private val players: Players = Players(gameContext, mapService)
 
     private val temp = Vector3()
 
     fun update(delta: Float) {
         proceedEvents()
-        gameMap.update(players.getUnits())
+        mapService.update(players)
+        gameUI.minimap.update(mapService.objectsOnMap)
         players.update(delta)
         proceedMessages()
         dispatchAiMessages(delta)
@@ -61,7 +56,7 @@ class GameManager(
             val nodeStr = collisionObject.userData as String
             val position = "X: ${temp.x}\nY:${temp.y}\nZ: ${temp.z}"
 
-            chat.typeMessage("$nodeStr\n$position")
+            gameUI.chat.typeMessage("$nodeStr\n$position")
         }
         return super.touchDown(screenX, screenY, pointer, button)
     }
@@ -81,13 +76,13 @@ class GameManager(
     }
 
     private fun proceedMessages() {
-        val messages = chat.pollAllMessages()
+        val messages = gameUI.chat.pollAllMessages()
         for (message in messages) {
             if (message.contains("debug-physic")) {
                 physicService.debugEnabled = !physicService.debugEnabled
             }
             if (message.contains("debug-ui")) {
-                chat.debugEnabled = !chat.debugEnabled
+                gameUI.debugEnabled = !gameUI.debugEnabled
             }
             if (message.contains("spawn")) {
                 players.spawn()
@@ -103,7 +98,7 @@ class GameManager(
     override fun dispose() {
         resourceService.dispose()
         gameEnvironment.dispose()
-        chat.dispose()
+        gameUI.dispose()
         players.dispose()
     }
 }

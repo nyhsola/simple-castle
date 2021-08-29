@@ -9,6 +9,10 @@ class CameraControlSystem(private val cameraService: CameraService) : EntitySyst
         cameraService.update(deltaTime)
     }
 
+    fun resize(width: Int, height: Int) {
+        cameraService.resize(width, height)
+    }
+
     override fun keyDown(keycode: Int): Boolean {
         return cameraService.keyDown(keycode)
     }

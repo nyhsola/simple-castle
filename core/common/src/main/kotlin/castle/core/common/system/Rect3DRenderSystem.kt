@@ -8,16 +8,18 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.EntityListener
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 
 class Rect3DRenderSystem(guiConfig: GUIConfig, private val cameraService: CameraService) :
-    IteratingSystem(Family.all(PositionComponent::class.java, Rect3DComponent::class.java).get()), EntityListener, Disposable {
-    private val shapeRenderer = guiConfig.createShapeRender()
+    IteratingSystem(Family.all(PositionComponent::class.java, Rect3DComponent::class.java).get()), EntityListener {
+    private val shapeRenderer = guiConfig.shapeRender
     private val textTransform = Matrix4().idt().rotate(0f, 1f, 0f, 90f)
     private val tempMatrix = Matrix4()
+    private val transformMatrix4 = Matrix4()
     private val tempVector = Vector3()
 
     override fun entityAdded(entity: Entity) {
@@ -43,13 +45,10 @@ class Rect3DRenderSystem(guiConfig: GUIConfig, private val cameraService: Camera
             .set(cameraService.currentCamera.camera.combined)
             .translate(tempVector.add(rect3DComponent.offset))
             .mul(textTransform)
+        shapeRenderer.transformMatrix = transformMatrix4
+        shapeRenderer.projectionMatrix = matrix4
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled)
         shapeRenderer.color = rect3DComponent.color
         shapeRenderer.rect(0f, 0f, rect3DComponent.width, rect3DComponent.height)
-        shapeRenderer.projectionMatrix = matrix4
-    }
-
-    override fun dispose() {
-        shapeRenderer.dispose()
     }
 }

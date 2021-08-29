@@ -4,13 +4,14 @@ import castle.core.game.GameContext
 import castle.core.game.`object`.unit.AttackUnit
 import castle.core.game.`object`.unit.GameObject
 import castle.core.common.json.PlayerJson
+import castle.core.game.service.MapService
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 
 class Player(
     playerJson: PlayerJson,
     private val gameContext: GameContext,
-    private val gameMap: GameMap
+    private val mapService: MapService
 ) : Disposable {
     private val paths: List<List<String>> = playerJson.paths
     private val baseUnits: MutableList<AttackUnit> = ArrayList()
@@ -43,7 +44,7 @@ class Player(
         }
 
         val constructor = gameContext.resourceService.constructorMap[unitType]!!
-        val unit = AttackUnit(constructor, gameContext, gameMap)
+        val unit = AttackUnit(constructor, gameContext, mapService)
 
         if (paths.isNotEmpty()) {
             unit.unitPosition = paths[0]
