@@ -1,0 +1,59 @@
+[
+  {
+    "templateName": "GROUND",
+    "renderSettings": {},
+    "physicSettings": {
+      "collisionFilterGroup": 1,
+      "collisionFilterMask": [
+        -1
+      ],
+      "collisionFlag": [
+        "CF_KINEMATIC_OBJECT"
+      ]
+    }
+  },
+  {
+    "templateName": "CASTLE",
+    "renderSettings": {},
+    "physicSettings": {
+      "shape": "ADJUSTED_BASE_BOX",
+      "collisionFilterGroup": 1,
+      "collisionFilterMask": [
+        1
+      ]
+    }
+  },
+  {
+    "templateName": "AREA",
+    "renderSettings": {
+      "hide": true
+    },
+    "physicSettings": {
+      "shape": "ADJUSTED_BASE_BOX",
+      "collisionFilterGroup": 3,
+      "collisionFilterMask": [
+        2,
+        3
+      ],
+      "collisionFlag": [
+        "CF_KINEMATIC_OBJECT", "CF_NO_CONTACT_RESPONSE"
+      ]
+    }
+  },
+  {
+    "templateName": "WARRIOR",
+    "nodeName": "unit-warrior-model",
+    "renderSettings": {
+      "armature": "unit-warrior"
+    },
+    "physicSettings": {
+      "shape": "ADJUSTED_BASE_BOX",
+      "mass": 1,
+      "collisionFilterGroup": 2,
+      "collisionFilterMask": [
+        1,
+        3
+      ]
+    }
+  }
+]

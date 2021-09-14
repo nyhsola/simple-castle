@@ -1,0 +1,31 @@
+[
+  {
+    "unitName": "castle",
+    "templateName": "CASTLE",
+    "hpSettings": {
+      "amount": 100,
+      "textureName": "hp"
+    }
+  },
+  {
+    "unitName": "warrior",
+    "templateName": "WARRIOR",
+    "behaviourSettings": {
+      "behaviour": "attack"
+    },
+    "attackSettings": {
+      "attackFrom": 20,
+      "attackTo": 50,
+      "attackSpeed": 1,
+      "range": 2.0
+    },
+    "moveSettings": {
+      "speedLinear": 7.0,
+      "speedAngular": 3.0
+    },
+    "hpSettings": {
+      "amount": 100,
+      "textureName": "hp"
+    }
+  }
+]

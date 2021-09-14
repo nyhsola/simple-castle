@@ -1,19 +1,12 @@
 package castle.core.common.component
 
-import castle.core.common.json.Constructor
 import castle.core.common.physic.PhysicInstance
 import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.ComponentMapper
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
-import java.util.*
 
-class PhysicComponent(val constructor: Constructor) : Component, Disposable {
-    val physicInstance: PhysicInstance = constructor.getPhysicInstance()
-
-    init {
-        physicInstance.body.userData = constructor.node + "-" + UUID.randomUUID().toString()
-    }
+class PhysicComponent(val physicInstance: PhysicInstance) : Component, Disposable {
 
     override fun dispose() {
         physicInstance.dispose()

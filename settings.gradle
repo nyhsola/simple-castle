@@ -1,5 +1,5 @@
-include 'blender'
 include 'android'
+include 'asset'
 include 'core:common'
 include 'core:game'
 include 'server:launcher'

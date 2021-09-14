@@ -2,6 +2,7 @@ package castle.core.game.service
 
 import castle.core.common.service.CameraService
 import castle.core.common.physic.PhysicInstance
+import castle.core.common.physic.PhysicTools
 import castle.core.common.service.PhysicService
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.bullet.collision.ClosestRayResultCallback
@@ -27,8 +28,8 @@ class RayCastService(
         rayTestCB.closestHitFraction = 1f
         rayTestCB.setRayFromWorld(rayFrom)
         rayTestCB.setRayToWorld(rayTo)
-        rayTestCB.collisionFilterGroup = PhysicInstance.getFilterGroup(3)
-        rayTestCB.collisionFilterMask = PhysicInstance.getFilterMask(listOf(2, 3))
+        rayTestCB.collisionFilterGroup = PhysicTools.getFilterGroup(3)
+        rayTestCB.collisionFilterMask = PhysicTools.getFilterMask(listOf(2, 3))
 
         physicService.dynamicsWorld.collisionWorld.rayTest(rayFrom, rayTo, rayTestCB)
 

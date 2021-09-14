@@ -1,14 +1,14 @@
 package castle.core.game.service
 
 import castle.core.common.service.PhysicService
-import castle.core.game.GameContext
+import castle.core.common.component.PhysicComponent
 import castle.core.game.path.Area
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.bullet.collision.btBoxShape
 import kotlin.math.abs
 
 class ScanService(
-    gameContext: GameContext,
+    gameResourceService: GameResourceService,
     private val physicService: PhysicService
 ) {
     companion object {
@@ -22,11 +22,8 @@ class ScanService(
     }
 
     private val tempVector: Vector3 = Vector3()
-    private val map3D = gameContext.resourceService.constructorMap["ground"]!!.getPhysicInstance()
-        .apply { body.getAabb(aabbMin, aabbMax) }
-        .also { it.dispose() }
-        .let { scanRegion(SCAN_BOX, aabbMin, aabbMax) }
-    val map = mirror(map3D.map { byX -> byX.map { byZ -> byZ.sum() } })
+    private val map3D by lazy { initMap3D(gameResourceService) }
+    val map by lazy { initMap2D() }
 
     fun toArea(position: Vector3): Area {
         val width = SCAN_BOX.x * 2
@@ -35,6 +32,15 @@ class ScanService(
         val y = (abs(aabbMin.z + position.z) / depth).toInt()
         return Area(x, y)
     }
+
+    private fun initMap3D(gameResourceService: GameResourceService): List<List<List<Int>>> {
+        return gameResourceService.templates.getValue("GROUND").buildUnit(gameResourceService.model, "ground")
+            .apply { getComponent(PhysicComponent::class.java).physicInstance.body.getAabb(aabbMin, aabbMax) }
+            .apply { dispose() }
+            .let { scanRegion(SCAN_BOX, aabbMin, aabbMax) }
+    }
+
+    private fun initMap2D() = mirror(map3D.map { byX -> byX.map { byZ -> byZ.sum() } })
 
     private fun scanRegion(boxScan: Vector3, aabbMin: Vector3, aabbMax: Vector3): List<List<List<Int>>> {
         val width = boxScan.x * 2

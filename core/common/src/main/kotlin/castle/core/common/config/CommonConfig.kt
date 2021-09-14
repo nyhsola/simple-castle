@@ -7,5 +7,6 @@ class CommonConfig {
     val cameraService = CameraService()
     val cameraControlSystem = CameraControlSystem(cameraService)
     val stageRectRenderSystem = StageRenderSystem()
-    val animationSystem = AnimationSystem()
+    private val animationSystem = AnimationSystem()
+    val systems = listOf(cameraControlSystem, stageRectRenderSystem, animationSystem)
 }

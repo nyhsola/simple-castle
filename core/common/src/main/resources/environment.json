@@ -1,0 +1,10 @@
+[
+  {
+    "templateName": "GROUND",
+    "nodesPattern": "ground"
+  },
+  {
+    "templateName": "AREA",
+    "nodesPattern": "area-(?:.+)"
+  }
+]
