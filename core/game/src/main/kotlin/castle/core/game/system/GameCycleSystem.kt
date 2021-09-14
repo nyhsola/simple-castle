@@ -1,9 +1,7 @@
 package castle.core.game.system
 
-import castle.core.common.config.GUIConfig
-import castle.core.common.service.CameraService
 import castle.core.game.GameManager
-import castle.core.common.service.PhysicService
+import castle.core.game.config.GameInternalConfig
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.systems.IntervalSystem
 import com.badlogic.gdx.Gdx
@@ -11,10 +9,8 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.utils.Disposable
 import ktx.app.KtxInputAdapter
 
-class GameCycleSystem(
-    private val guiConfig: GUIConfig,
-    private val physicService: PhysicService,
-    private val cameraService: CameraService
+internal class GameCycleSystem(
+    private val gameInternalConfig: GameInternalConfig
 ) : IntervalSystem(GAME_TICK), KtxInputAdapter, Disposable {
     private companion object {
         const val GAME_TICK: Float = 0.1f
@@ -23,7 +19,7 @@ class GameCycleSystem(
     private lateinit var gameManager: GameManager
 
     override fun addedToEngine(engine: Engine) {
-        gameManager = GameManager(engine, guiConfig, physicService, cameraService)
+        gameManager = GameManager(engine, gameInternalConfig)
     }
 
     override fun updateInterval() {

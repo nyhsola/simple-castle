@@ -5,5 +5,6 @@ import castle.core.common.system.PhysicSystem
 
 class PhysicConfig(commonConfig: CommonConfig) {
     val physicService = PhysicService(commonConfig.cameraService)
-    val physicSystem = PhysicSystem(physicService)
+    private val physicSystem = PhysicSystem(physicService)
+    val systems = listOf(physicSystem)
 }

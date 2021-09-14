@@ -11,22 +11,18 @@ import ktx.app.KtxScreen
 
 class GameScreen : KtxScreen {
     private val commonConfig = CommonConfig()
-    private val guiConfig = GUIConfig()
+    private val guiConfig = GUIConfig(commonConfig)
     private val physicConfig = PhysicConfig(commonConfig)
     private val renderConfig = RenderConfig(guiConfig, commonConfig)
     private val gameConfig = GameConfig(guiConfig, commonConfig, physicConfig)
 
     private val screenConfigurator = ScreenConfigurator(
         listOf(
-            commonConfig.cameraControlSystem,
-            renderConfig.modelRenderSystem,
-            renderConfig.rect3DRenderSystem,
-            renderConfig.line3DRenderSystem,
-            commonConfig.stageRectRenderSystem,
-            physicConfig.physicSystem,
-            commonConfig.animationSystem,
-            gameConfig.gameCycleSystem
-        )
+            renderConfig.systems,
+            physicConfig.systems,
+            commonConfig.systems,
+            gameConfig.systems
+        ).flatten()
     )
 
     private val engine = screenConfigurator.engine
@@ -51,8 +47,9 @@ class GameScreen : KtxScreen {
     }
 
     override fun dispose() {
-        guiConfig.dispose()
         engine.removeAllEntities()
         disposables.forEach { it.dispose() }
+        gameConfig.dispose()
+        guiConfig.dispose()
     }
 }

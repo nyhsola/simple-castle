@@ -4,6 +4,7 @@ import castle.core.common.component.PhysicComponent
 import castle.core.common.component.PositionComponent
 import castle.core.common.physic.PhysicInstance
 import castle.core.common.physic.PhysicListener
+import castle.core.common.physic.PhysicTools
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector3
@@ -100,7 +101,7 @@ class PhysicService(private val cameraService: CameraService) {
             }
 
         init {
-            collisionFilterGroup = PhysicInstance.getFilterGroup(8)
+            collisionFilterGroup = PhysicTools.getFilterGroup(8)
         }
 
         override fun addSingleResult(

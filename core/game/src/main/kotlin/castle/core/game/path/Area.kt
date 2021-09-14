@@ -1,6 +1,7 @@
 package castle.core.game.path
 
 import com.badlogic.gdx.math.Vector2
+import kotlin.math.pow
 
 class Area(
     val position: Vector2,
@@ -11,33 +12,22 @@ class Area(
 
     var index: Int = 0
 
-    fun isInRange(area: Area): Boolean {
-        val radius = 1
-        return (this.x == area.x && this.y == area.y)
-                || (x + radius == area.x && y == area.y)
-                || (x - radius == area.x && y == area.y)
-                || (x == area.x && y + radius == area.y)
-                || (x == area.x && y - radius == area.y)
-                || (x - radius == area.x && y - radius == area.y)
-                || (x == area.x - radius && y == area.y - radius)
-                || (x - radius == area.x && y == area.y - radius)
-                || (x == area.x - radius && y - radius == area.y)
-    }
-
-    fun getAreasInRange(): List<Area> {
-        val radius = 1
-        val list: MutableList<Area> = ArrayList()
-        list.add(Area(x + radius, y))
-        list.add(Area(x - radius, y))
-        list.add(Area(x, y + radius))
-        list.add(Area(x, y - radius))
-
-        list.add(Area(x - radius, y - radius))
-        list.add(Area(x + radius, y + radius))
-        list.add(Area(x - radius, y + radius))
-        list.add(Area(x + radius, y - radius))
-
-        return list
+    fun getAreasInRange(radius: Float, arr: ArrayList<Area>): List<Area> {
+        val radius2 = radius.pow(2)
+        val startX = (x - radius).toInt()
+        val endX = (x + radius).toInt()
+        val startY = (y - radius).toInt()
+        val endY = (y + radius).toInt()
+        for (xi in startX until endX) {
+            for (yi in startY until endY) {
+                val xi2 = (xi - x).toFloat().pow(2)
+                val yi2 = (yi - y).toFloat().pow(2)
+                if (xi2 + yi2 < radius2) {
+                    arr.add(Area(xi, yi))
+                }
+            }
+        }
+        return arr
     }
 
     override fun equals(other: Any?): Boolean {
