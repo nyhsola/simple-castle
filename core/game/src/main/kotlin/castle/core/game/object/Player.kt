@@ -8,9 +8,7 @@ class Player(
     private val playerJson: PlayerJson,
     private val gameContext: GameContext
 ) : Disposable {
-    private val startupUnits: List<CommonEntity> = playerJson.buildStartup(gameContext.getResourceService())
-        .onEach { it.add(gameContext.engine) }
-
+    private val startupUnits: List<CommonEntity> = playerJson.buildStartup(gameContext).onEach { it.add(gameContext.engine) }
     private val currUnits: MutableList<CommonEntity> = ArrayList()
 
     fun spawn() {

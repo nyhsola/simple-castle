@@ -1,5 +1,6 @@
 package castle.core.game.service
 
+import castle.core.common.component.PhysicComponent
 import castle.core.common.component.PositionComponent
 import castle.core.game.path.Area
 import castle.core.game.path.AreaGraph
@@ -15,6 +16,8 @@ class MapService(
     private val mapGraph by lazy { initializeGraph(scanService.map) }
     private val tempVector = Vector3()
     private val tempArr = ArrayList<Area>()
+    private val aabbMin = Vector3()
+    private val aabbMax = Vector3()
 
     val objectsOnMap: MutableMap<Area, MutableList<Entity>> = HashMap()
 
@@ -23,10 +26,18 @@ class MapService(
     }
 
     fun add(entity: Entity) {
-        PositionComponent.mapper.get(entity).matrix4.let {
-            val position = it.getTranslation(tempVector)
-            val area = scanService.toArea(position)
-            objectsOnMap.getOrPut(area) { mutableListOf() }.add(entity)
+        PositionComponent.mapper.get(entity).matrix4.getTranslation(tempVector)
+        PhysicComponent.mapper.get(entity).physicInstance.body.getAabb(aabbMin, aabbMax)
+        val min = scanService.toArea(aabbMin)
+        val max = scanService.toArea(aabbMax)
+        if (min.x - max.x <= 1) {
+            objectsOnMap.getOrPut(scanService.toArea(tempVector)) { mutableListOf() }.add(entity)
+        } else {
+            for (i in max.x until min.x) {
+                for (j in max.y until min.y) {
+                    objectsOnMap.getOrPut(Area(i, j)) { mutableListOf() }.add(entity)
+                }
+            }
         }
     }
 
