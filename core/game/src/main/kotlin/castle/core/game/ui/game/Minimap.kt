@@ -1,4 +1,4 @@
-package castle.core.game.ui
+package castle.core.game.ui.game
 
 import castle.core.common.config.GUIConfig
 import castle.core.game.path.Area
@@ -58,7 +58,6 @@ class Minimap(
         shapeRenderer.projectionMatrix = batch.projectionMatrix
         shapeRenderer.transformMatrix = batch.transformMatrix
         shapeRenderer.translate(x, y, 0f)
-
         shapeRenderer.begin()
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled)
         for (minimapPiece in minimap.flatten()) {

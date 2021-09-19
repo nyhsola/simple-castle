@@ -1,4 +1,4 @@
-package castle.core.game.ui
+package castle.core.game.ui.game
 
 import castle.core.common.service.ResourceService
 import castle.core.game.event.EventContext
@@ -15,7 +15,6 @@ class Chat(
     signal: Signal<EventContext>,
     resourceService: ResourceService
 ) : Table() {
-
     private val textArea = TextArea("", resourceService.skin)
     private val messageLine = Table()
     private val label = Label(": ", resourceService.skin)
@@ -27,9 +26,9 @@ class Chat(
     init {
         touchable = Touchable.enabled
 
-        textArea.color.a = 0.3f
-        label.color.a = 0.7f
-        textField.color.a = 0.7f
+        textArea.color.a = 0.25f
+        label.color.a = 0.65f
+        textField.color.a = 0.65f
 
         add(textArea).grow()
         row()

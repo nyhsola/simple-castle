@@ -1,6 +1,6 @@
 package castle.server.ashley.screen
 
-import castle.core.common.builder.ScreenConfigurator
+import castle.server.ashley.builder.ScreenConfigurator
 import castle.core.common.config.CommonConfig
 import castle.core.common.config.GUIConfig
 import castle.core.game.config.GameConfig

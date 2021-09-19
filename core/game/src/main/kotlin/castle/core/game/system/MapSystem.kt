@@ -3,7 +3,7 @@ package castle.core.game.system
 import castle.core.common.component.PositionComponent
 import castle.core.common.component.RenderComponent
 import castle.core.common.system.IteratingIntervalSystem
-import castle.core.game.ui.Minimap
+import castle.core.game.ui.game.Minimap
 import castle.core.game.service.MapService
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.Family

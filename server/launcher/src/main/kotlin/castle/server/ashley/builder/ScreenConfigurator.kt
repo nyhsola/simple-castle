@@ -1,4 +1,4 @@
-package castle.core.common.builder
+package castle.server.ashley.builder
 
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.ashley.core.PooledEngine
@@ -22,6 +22,7 @@ class ScreenConfigurator(entitySystems: List<EntitySystem>) {
         if (entitySystem is KtxInputAdapter) {
             inputMultiplexer.addProcessor(entitySystem)
         }
+        entitySystem.priority = Priority.order.indexOf(entitySystem.javaClass)
         engine.addSystem(entitySystem)
     }
 }

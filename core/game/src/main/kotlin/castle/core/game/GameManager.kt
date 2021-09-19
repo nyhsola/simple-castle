@@ -1,7 +1,5 @@
 package castle.core.game
 
-import castle.core.game.`object`.GameContext
-import castle.core.game.`object`.Players
 import castle.core.game.config.GameInternalConfig
 import castle.core.game.event.EventQueue
 import castle.core.game.event.EventType
@@ -9,24 +7,22 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.ai.GdxAI
 import com.badlogic.gdx.ai.msg.MessageManager
 import com.badlogic.gdx.math.Vector3
-import com.badlogic.gdx.utils.Disposable
 import ktx.app.KtxInputAdapter
 
 internal class GameManager(
     engine: Engine,
     private val gameInternalConfig: GameInternalConfig,
-) : KtxInputAdapter, Disposable {
-    private val gameContext: GameContext = GameContext(engine, gameInternalConfig.gameEnvironment, gameInternalConfig.gameResourceService)
+) : KtxInputAdapter {
     private val eventQueue = EventQueue()
-
     private val gameUI = gameInternalConfig.gameUI
-    private val players: Players = Players(gameContext)
-
+    private val debugUI = gameInternalConfig.debugUI
     private val temp = Vector3()
 
     init {
         gameUI.addListener(eventQueue)
         gameUI.add(engine)
+        debugUI.addListener(eventQueue)
+        debugUI.add(engine)
     }
 
     fun update(delta: Float) {
@@ -58,8 +54,11 @@ internal class GameManager(
                 EventType.CHAT_UNFOCUSED -> {
                     gameInternalConfig.commonConfig.cameraService.input = true
                 }
-                EventType.UI1_BUTTON_CLICK -> {
-                    players.spawn()
+                EventType.PHYSIC_ENABLE -> {
+                    gameInternalConfig.physicConfig.physicService.debugEnabled = !gameInternalConfig.physicConfig.physicService.debugEnabled
+                }
+                EventType.UI_ENABLE -> {
+                    gameUI.debugEnabled = !gameUI.debugEnabled
                 }
             }
         }
@@ -68,11 +67,8 @@ internal class GameManager(
     private fun proceedMessages() {
         val messages = gameUI.chat.pollAllMessages()
         for (message in messages) {
-            if (message.contains("debug-physic")) {
-                gameInternalConfig.physicConfig.physicService.debugEnabled = !gameInternalConfig.physicConfig.physicService.debugEnabled
-            }
-            if (message.contains("debug-ui")) {
-                gameUI.debugEnabled = !gameUI.debugEnabled
+            if (message.contains("debug")) {
+                debugUI.isVisible = !debugUI.isVisible
             }
         }
     }
@@ -80,10 +76,5 @@ internal class GameManager(
     private fun dispatchAiMessages(delta: Float) {
         GdxAI.getTimepiece().update(delta)
         MessageManager.getInstance().update()
-    }
-
-    override fun dispose() {
-        players.dispose()
-        gameContext.dispose()
     }
 }

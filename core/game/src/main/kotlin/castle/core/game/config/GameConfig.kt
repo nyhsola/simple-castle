@@ -16,13 +16,28 @@ class GameConfig(
 
     private val gameCycleSystem = GameCycleSystem(gameInternalConfig)
     private val hpSystem = HPSystem(guiConfig)
-    private val pathSystem = PathSystem(gameInternalConfig.mapService, gameInternalConfig.gameEnvironment)
+    private val pathSystem = PathSystem(gameInternalConfig.mapService)
     private val moveSystem = MoveSystem()
     private val mapSystem = MapSystem(gameInternalConfig.mapService, gameInternalConfig.gameUI.minimap)
     private val behaviourSystem = BehaviourSystem()
     private val attackSystem = AttackSystem(gameInternalConfig.mapService)
+    private val playerSystem = PlayerSystem(gameInternalConfig.gameResourceService)
+    private val textSystem = TextSystem(guiConfig, gameInternalConfig.gameResourceService, gameInternalConfig.commonConfig.cameraService)
+    private val startupSystem = StartupSystem(gameInternalConfig.gameResourceService)
 
-    val systems = listOf(gameCycleSystem, hpSystem, moveSystem, pathSystem, mapSystem, behaviourSystem, attackSystem)
+    val systems =
+        linkedSetOf(
+            gameCycleSystem,
+            hpSystem,
+            moveSystem,
+            pathSystem,
+            mapSystem,
+            behaviourSystem,
+            attackSystem,
+            playerSystem,
+            textSystem,
+            startupSystem
+        )
 
     override fun dispose() {
         gameInternalConfig.dispose()

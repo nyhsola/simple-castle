@@ -1,32 +1,30 @@
-package castle.core.game.ui
+package castle.core.game.ui.game
 
+import castle.core.common.`object`.CommonEntity
 import castle.core.common.component.StageComponent
 import castle.core.common.config.GUIConfig
-import castle.core.common.`object`.CommonEntity
 import castle.core.game.event.EventContext
 import castle.core.game.event.EventQueue
 import castle.core.game.event.EventType
 import castle.core.game.service.GameResourceService
 import castle.core.game.service.ScanService
 import com.badlogic.ashley.signals.Signal
-import com.badlogic.gdx.scenes.scene2d.Actor
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
 import com.badlogic.gdx.scenes.scene2d.ui.*
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
+import com.badlogic.gdx.utils.Align
 
 class GameUI(
     scanService: ScanService,
     private val resourceService: GameResourceService,
     guiConfig: GUIConfig
 ) : CommonEntity() {
-    private val stageComponent: StageComponent = StageComponent(guiConfig.stage).also { this.add(it) }
-
+    private val stageComponent: StageComponent = StageComponent(guiConfig.createStage()).also { this.add(it) }
     private val signal = Signal<EventContext>()
-
     private val rootContainer = Container<Table>()
-    private val rootGroup = Table()
+    private val rootTable = Table()
 
     val minimap: Minimap = Minimap(guiConfig, scanService)
     val chat = Chat(signal, resourceService)
@@ -38,15 +36,12 @@ class GameUI(
         }
 
     init {
-        rootGroup.bottom()
-        rootGroup.add(chatAndMapUI()).left()
-        rootGroup.add(abilityBarUI()).expandX()
-
+        rootTable.bottom()
+        rootTable.add(main()).grow()
         rootContainer.setFillParent(true)
         rootContainer.fill()
         rootContainer.pad(10f)
-        rootContainer.actor = rootGroup
-
+        rootContainer.actor = rootTable
         stageComponent.stage.addActor(rootContainer)
         stageComponent.stage.addListener(object : InputListener() {
             override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
@@ -64,48 +59,46 @@ class GameUI(
         signal.add(eventQueue)
     }
 
-    private fun chatAndMapUI(): Container<Table> {
-        val tableChatMap = Table()
-        val containerChatMap = Container<Table>()
-        val chatUI = Container<Group>()
-        val minimapUI = Container<Actor>()
-
-        chatUI
-            .height(Value.percentHeight(0.1f, rootGroup))
-            .fillX()
-        chatUI.actor = chat
-
-        minimapUI
-            .fill()
-        minimapUI.actor = minimap
-
-        tableChatMap
-            .add(chatUI)
-            .fillX()
-        tableChatMap.row()
-        tableChatMap
-            .add(minimapUI)
-            .grow()
-
-        containerChatMap
-            .left()
-            .bottom()
-            .width(Value.percentWidth(0.2f, rootContainer))
-            .height(Value.percentHeight(0.3f, rootContainer))
-        containerChatMap.actor = tableChatMap
-
-        return containerChatMap
+    private fun main(): Container<out Group> {
+        val table = Table().align(Align.bottom)
+        val container = Container<Table>().fill()
+        table.add(chat)
+            .height(Value.percentHeight(0.15f, container))
+            .width(Value.percentWidth(0.25f, container))
+            .align(Align.left)
+        table.row()
+        table.add(bottomBar()).growX()
+        container.actor = table
+        return container
     }
 
-    private fun abilityBarUI(): Container<Button> {
-        val containerAbility = Container<Button>()
-        val button = TextButton("Warrior", resourceService.skin)
-        button.addCaptureListener(object : ClickListener() {
-            override fun clicked(event: InputEvent, x: Float, y: Float) {
-                signal.dispatch(EventContext(EventType.UI1_BUTTON_CLICK))
+    private fun bottomBar(): Container<out Group> {
+        val table = Table()
+        val container = Container<Table>().fillX()
+        table.add(minimap)
+            .height(Value.percentHeight(1f, container))
+            .width(Value.percentHeight(1f, container))
+            .fill()
+            .align(Align.left)
+        table.add(rightTab()).expandX()
+        container.actor = table
+        return container
+    }
+
+    private fun rightTab(): Container<Table> {
+        val containerAbility = Container<Table>()
+        val table = Table()
+        for (i in 0 until 4) {
+            for (j in 0 until 5) {
+                val button = TextButton("U$i$j", resourceService.skin)
+                button.color = Color.DARK_GRAY
+                table.add(button)
+                    .width(50f)
+                    .height(50f)
             }
-        })
-        containerAbility.actor = button
+            table.row()
+        }
+        containerAbility.actor = table
         return containerAbility
     }
 }
