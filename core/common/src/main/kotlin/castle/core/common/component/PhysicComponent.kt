@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 
 class PhysicComponent(val physicInstance: PhysicInstance) : Component, Disposable {
-
     override fun dispose() {
         physicInstance.dispose()
     }

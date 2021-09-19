@@ -25,8 +25,7 @@ Mouse wheel - Move the camera away
 
 ### Chat commands:
 
-debug-physic - Enable/Disable physic shape borders  
-debug-ui - Enable/Disable ui borders  
+debug - Enable/Disable debug view in top right corner  
 
 ### Demo
 

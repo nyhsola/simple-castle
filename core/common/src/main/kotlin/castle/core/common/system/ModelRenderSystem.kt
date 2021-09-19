@@ -15,15 +15,18 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch
 class ModelRenderSystem(
     guiConfig: GUIConfig,
     private val cameraService: CameraService
-) : IteratingSystem(Family.all(PositionComponent::class.java, RenderComponent::class.java).get()) {
+) : IteratingSystem(family) {
     private val modelBatch: ModelBatch = guiConfig.modelBatch
+
+    private companion object {
+        private val family: Family = Family.all(PositionComponent::class.java, RenderComponent::class.java).get()
+    }
 
     override fun update(deltaTime: Float) {
         Gdx.gl.apply {
             glViewport(0, 0, Gdx.graphics.width, Gdx.graphics.height)
             glClearColor(0.3f, 0.3f, 0.3f, 1f)
             glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
-            glEnable(GL20.GL_DEPTH_TEST)
         }
         modelBatch.begin(cameraService.currentCamera.camera)
         super.update(deltaTime)

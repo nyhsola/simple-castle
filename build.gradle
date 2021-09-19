@@ -42,6 +42,9 @@ allprojects {
                 implementation "com.badlogicgames.ashley:ashley:$ashleyVersion"
                 implementation "com.badlogicgames.gdx:gdx-ai:$aiVersion"
 
+                implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+                implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+
                 api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
                 api "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
                 api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"

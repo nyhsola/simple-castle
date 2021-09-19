@@ -9,9 +9,9 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.utils.Disposable
 import ktx.app.KtxInputAdapter
 
-internal class GameCycleSystem(
+class GameCycleSystem(
     private val gameInternalConfig: GameInternalConfig
-) : IntervalSystem(GAME_TICK), KtxInputAdapter, Disposable {
+) : IntervalSystem(GAME_TICK), KtxInputAdapter {
     private companion object {
         const val GAME_TICK: Float = 0.1f
     }
@@ -38,9 +38,5 @@ internal class GameCycleSystem(
             }
             else -> super.keyDown(keycode)
         }
-    }
-
-    override fun dispose() {
-        gameManager.dispose()
     }
 }

@@ -124,12 +124,12 @@ enum class AttackBehaviour : State<Entity> {
     };
 
     fun getEnemies(me: Entity, others: List<Entity>): List<Entity> {
-        val playerComponent = PlayerComponent.mapper.get(me)
+        val sideComponent = SideComponent.mapper.get(me)
         return others
-            .filter { PlayerComponent.mapper.has(it) }
+            .filter { SideComponent.mapper.has(it) }
             .filter {
-                val component = PlayerComponent.mapper.get(it)
-                playerComponent.playerName != component.playerName
+                val component = SideComponent.mapper.get(it)
+                sideComponent.side != component.side
             }
     }
 }
