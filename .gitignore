@@ -3,10 +3,6 @@
 /.idea/codeStyles/codeStyleConfig.xml
 !/.idea/codeStyles/
 build/
-textures/
-*.fbx
-*.g3dj
-*.blend1
 
 *.iml
 

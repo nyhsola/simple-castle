@@ -1,5 +1,6 @@
 package castle.core.game.component
 
+import castle.core.game.util.Task
 import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.ComponentMapper
 import com.badlogic.gdx.graphics.Texture
@@ -11,6 +12,7 @@ import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
 import java.lang.Integer.max
+import java.lang.Integer.min
 
 class HPComponent(
     val amount: Int,

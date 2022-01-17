@@ -19,9 +19,9 @@ class AttackSystem(
         val attackComponent = AttackComponent.mapper.get(entity)
         val pathComponent = PathComponent.mapper.get(entity)
         val graph = pathComponent.graphPath
-        val nextPosition = pathComponent.nextPosition
-        val nextArea = graph[nextPosition]
-        attackComponent.nearObjects = mapService.getNearObjects(attackComponent.range, nextArea)
+        val currentPosition = pathComponent.currentPosition
+        val currentArea = graph[currentPosition]
+        attackComponent.nearObjects = mapService.getNearObjects(attackComponent.range, currentArea)
         if (attackComponent.enableAttacking) {
             attackComponent.attackTask.update(deltaTime)
         }

@@ -11,7 +11,6 @@ class Priority {
             Line3DRenderSystem::class.java,
             ModelRenderSystem::class.java,
             TextSystem::class.java,
-            TextCountSystem::class.java,
             PhysicSystem::class.java,
             HPSystem::class.java,
             StageRenderSystem::class.java,

@@ -2,9 +2,8 @@ package castle.core.game.service
 
 import castle.core.common.component.PhysicComponent
 import castle.core.common.component.PositionComponent
-import castle.core.common.path.Area
-import castle.core.common.path.AreaGraph
-import castle.core.common.service.ScanService
+import castle.core.game.path.Area
+import castle.core.game.path.AreaGraph
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath
 import com.badlogic.gdx.ai.pfa.GraphPath
@@ -32,14 +31,11 @@ class MapService(
         val min = scanService.toArea(aabbMin)
         val max = scanService.toArea(aabbMax)
         if (min.x - max.x <= 1) {
-            val area = scanService.toArea(tempVector)
-            val list = objectsOnMap.getOrPut(area) { mutableListOf() }
-            list.add(entity)
+            objectsOnMap.getOrPut(scanService.toArea(tempVector)) { mutableListOf() }.add(entity)
         } else {
             for (i in max.x until min.x) {
                 for (j in max.y until min.y) {
-                    val list = objectsOnMap.getOrPut(Area(i, j)) { mutableListOf() }
-                    list.add(entity)
+                    objectsOnMap.getOrPut(Area(i, j)) { mutableListOf() }.add(entity)
                 }
             }
         }
@@ -69,8 +65,8 @@ class MapService(
         val areaGraph = AreaGraph()
         for (i in map2D.indices) {
             for (j in map2D[i].indices) {
-                val x = scanService.aabbMax.x - i * scanService.scanBox.x * 2
-                val z = scanService.aabbMax.z - j * scanService.scanBox.z * 2
+                val x = ScanService.aabbMax.x - i * ScanService.SCAN_BOX.x * 2
+                val z = ScanService.aabbMax.z - j * ScanService.SCAN_BOX.z * 2
                 val position = Vector2(x, z)
                 areaGraph.addArea(Area(position, i, j))
             }

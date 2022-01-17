@@ -1,11 +1,11 @@
 package castle.server.ashley.screen
 
+import castle.server.ashley.builder.ScreenConfigurator
 import castle.core.common.config.CommonConfig
 import castle.core.common.config.GUIConfig
+import castle.core.game.config.GameConfig
 import castle.core.common.config.PhysicConfig
 import castle.core.common.config.RenderConfig
-import castle.core.game.config.GameConfig
-import castle.server.ashley.builder.ScreenConfigurator
 import com.badlogic.gdx.Gdx
 import ktx.app.KtxScreen
 
@@ -51,6 +51,5 @@ class GameScreen : KtxScreen {
         disposables.forEach { it.dispose() }
         gameConfig.dispose()
         guiConfig.dispose()
-        commonConfig.dispose()
     }
 }

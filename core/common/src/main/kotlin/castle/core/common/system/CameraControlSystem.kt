@@ -1,33 +1,11 @@
 package castle.core.common.system
 
-import castle.core.common.event.EventQueue
 import castle.core.common.service.CameraService
 import com.badlogic.ashley.core.EntitySystem
 import ktx.app.KtxInputAdapter
 
-class CameraControlSystem(
-    private val cameraService: CameraService,
-    private val eventQueue: EventQueue
-) : EntitySystem(), KtxInputAdapter {
-    companion object {
-        const val CHAT_FOCUSED = "CHAT_FOCUSED"
-        const val CHAT_UNFOCUSED = "CHAT_UNFOCUSED"
-    }
-
+class CameraControlSystem(private val cameraService: CameraService) : EntitySystem(), KtxInputAdapter {
     override fun update(deltaTime: Float) {
-        eventQueue.proceed {
-            when (it.eventType) {
-                CHAT_FOCUSED -> {
-                    cameraService.input = false
-                    true
-                }
-                CHAT_UNFOCUSED -> {
-                    cameraService.input = true
-                    true
-                }
-                else -> false
-            }
-        }
         cameraService.update(deltaTime)
     }
 
