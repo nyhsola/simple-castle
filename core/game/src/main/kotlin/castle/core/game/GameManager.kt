@@ -1,8 +1,7 @@
 package castle.core.game
 
+import castle.core.common.event.EventQueue
 import castle.core.game.config.GameInternalConfig
-import castle.core.game.event.EventQueue
-import castle.core.game.event.EventType
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.ai.GdxAI
 import com.badlogic.gdx.ai.msg.MessageManager
@@ -10,18 +9,20 @@ import com.badlogic.gdx.math.Vector3
 import ktx.app.KtxInputAdapter
 
 internal class GameManager(
+    private val eventQueue: EventQueue,
     engine: Engine,
     private val gameInternalConfig: GameInternalConfig,
 ) : KtxInputAdapter {
-    private val eventQueue = EventQueue()
+    companion object {
+        const val DEBUG_UI_ENABLE = "DEBUG_UI_ENABLE"
+    }
+
     private val gameUI = gameInternalConfig.gameUI
     private val debugUI = gameInternalConfig.debugUI
     private val temp = Vector3()
 
     init {
-        gameUI.addListener(eventQueue)
         gameUI.add(engine)
-        debugUI.addListener(eventQueue)
         debugUI.add(engine)
     }
 
@@ -45,21 +46,13 @@ internal class GameManager(
     }
 
     private fun proceedEvents() {
-        val gameEvents = eventQueue.pollAll()
-        for (gameEvent in gameEvents) {
-            when (gameEvent.eventType) {
-                EventType.CHAT_FOCUSED -> {
-                    gameInternalConfig.commonConfig.cameraService.input = false
-                }
-                EventType.CHAT_UNFOCUSED -> {
-                    gameInternalConfig.commonConfig.cameraService.input = true
-                }
-                EventType.PHYSIC_ENABLE -> {
-                    gameInternalConfig.physicConfig.physicService.debugEnabled = !gameInternalConfig.physicConfig.physicService.debugEnabled
-                }
-                EventType.UI_ENABLE -> {
+        eventQueue.proceed {
+            when (it.eventType) {
+                DEBUG_UI_ENABLE -> {
                     gameUI.debugEnabled = !gameUI.debugEnabled
+                    true
                 }
+                else -> false
             }
         }
     }

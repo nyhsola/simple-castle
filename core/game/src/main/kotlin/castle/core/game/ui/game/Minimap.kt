@@ -1,8 +1,8 @@
 package castle.core.game.ui.game
 
 import castle.core.common.config.GUIConfig
-import castle.core.game.path.Area
-import castle.core.game.service.ScanService
+import castle.core.common.path.Area
+import castle.core.common.service.ScanService
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
