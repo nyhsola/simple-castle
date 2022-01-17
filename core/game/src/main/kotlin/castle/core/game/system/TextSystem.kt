@@ -3,7 +3,7 @@ package castle.core.game.system
 import castle.core.common.config.GUIConfig
 import castle.core.common.service.CameraService
 import castle.core.game.component.TextComponent
-import castle.core.game.service.GameResourceService
+import castle.core.game.service.GameResources
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
@@ -13,12 +13,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.utils.Align
 
-class TextSystem(guiConfig: GUIConfig, gameResourceService: GameResourceService, private val cameraService: CameraService) :
+class TextSystem(guiConfig: GUIConfig, gameResources: GameResources, private val cameraService: CameraService) :
     IteratingSystem(family) {
     private val tempMat = Matrix4()
     private val textTransform = Matrix4().idt().rotate(0f, 1f, 0f, 90f)
     private val spriteBatch = guiConfig.spriteBatch
-    private val bitmapFont: BitmapFont = gameResourceService.bitmapFont
+    private val bitmapFont: BitmapFont = gameResources.bitmapFont
 
     private companion object {
         private val family: Family = Family.all(TextComponent::class.java).get()

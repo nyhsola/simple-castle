@@ -1,24 +1,30 @@
 package castle.core.game.ui.game
 
-import castle.core.common.service.ResourceService
-import castle.core.game.event.EventContext
-import castle.core.game.event.EventType
+import castle.core.common.event.EventContext
+import castle.core.common.service.CommonResources
+import castle.core.common.system.CameraControlSystem
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.scenes.scene2d.*
-import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.scenes.scene2d.Actor
+import com.badlogic.gdx.scenes.scene2d.InputEvent
+import com.badlogic.gdx.scenes.scene2d.InputListener
+import com.badlogic.gdx.scenes.scene2d.Touchable
+import com.badlogic.gdx.scenes.scene2d.ui.Label
+import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea
+import com.badlogic.gdx.scenes.scene2d.ui.TextField
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener
 import java.text.SimpleDateFormat
 import java.util.*
 
 class Chat(
     signal: Signal<EventContext>,
-    resourceService: ResourceService
+    commonResources: CommonResources
 ) : Table() {
-    private val textArea = TextArea("", resourceService.skin)
+    private val textArea = TextArea("", commonResources.skin)
     private val messageLine = Table()
-    private val label = Label(": ", resourceService.skin)
-    val textField = TextField("", resourceService.skin)
+    private val label = Label(": ", commonResources.skin)
+    val textField = TextField("", commonResources.skin)
 
     private val chatHistory: MutableList<String> = ArrayList()
     private val chatPoll: PriorityQueue<String> = PriorityQueue();
@@ -43,7 +49,7 @@ class Chat(
         addListener(object : FocusListener() {
             override fun keyboardFocusChanged(event: FocusEvent, actor: Actor, focused: Boolean) {
                 if (focused) {
-                    signal.dispatch(EventContext(EventType.CHAT_FOCUSED))
+                    signal.dispatch(EventContext(CameraControlSystem.CHAT_FOCUSED))
                 }
             }
         })
