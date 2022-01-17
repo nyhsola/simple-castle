@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.ComponentMapper
 import com.badlogic.gdx.math.Vector3
 
 class TextComponent(
-    val text: String,
+    var text: String,
     val offset: Vector3
 ) : Component {
     companion object {

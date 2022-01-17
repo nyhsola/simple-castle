@@ -15,7 +15,8 @@ enum class AttackBehaviour : State<Entity> {
         }
 
         override fun update(entity: Entity) {
-            BehaviourComponent.mapper.get(entity).state.changeState(MOVE_ROUTE)
+            val behaviourComponent = BehaviourComponent.mapper.get(entity)
+            behaviourComponent.state.changeState(MOVE_ROUTE)
         }
 
         override fun exit(entity: Entity) {
@@ -28,8 +29,8 @@ enum class AttackBehaviour : State<Entity> {
     MOVE_ROUTE {
         override fun enter(entity: Entity) {
             val animationComponent = AnimationComponent.mapper.get(entity)
-            animationComponent.setAnimation("walk", 1.5f)
             val moveComponent = MoveComponent.mapper.get(entity)
+            animationComponent.setAnimation("walk", 1.5f)
             moveComponent.enableMoving = true
             moveComponent.distance = MoveComponent.Companion.Distances.AT.distance
         }
@@ -38,14 +39,18 @@ enum class AttackBehaviour : State<Entity> {
             val pathComponent = PathComponent.mapper.get(entity)
             val moveComponent = MoveComponent.mapper.get(entity)
             val attackComponent = AttackComponent.mapper.get(entity)
-
-            if (attackComponent.nearObjects.isEmpty()) {
-                moveComponent.target.set(pathComponent.graphPath[pathComponent.currentPosition].position)
-            } else {
-                val enemies = getEnemies(entity, attackComponent.nearObjects)
-                if (enemies.isNotEmpty()) {
-                    BehaviourComponent.mapper.get(entity).state.changeState(ATTACK_ROUTE)
-                    AttackComponent.mapper.get(entity).target = enemies[0]
+            val behaviourComponent = BehaviourComponent.mapper.get(entity)
+            val nearObjects = attackComponent.nearObjects
+            val enemies = getEnemies(entity, nearObjects)
+            when {
+                enemies.isEmpty() -> {
+                    val nextPosition = pathComponent.nextPosition
+                    val nextArea = pathComponent.graphPath[nextPosition]
+                    moveComponent.target.set(nextArea.position)
+                }
+                enemies.isNotEmpty() -> {
+                    behaviourComponent.state.changeState(ATTACK_ROUTE)
+                    attackComponent.target = enemies[0]
                 }
             }
         }
@@ -62,18 +67,23 @@ enum class AttackBehaviour : State<Entity> {
 
         override fun enter(entity: Entity) {
             val animationComponent = AnimationComponent.mapper.get(entity)
-            animationComponent.setAnimation("walk", 1.5f)
             val moveComponent = MoveComponent.mapper.get(entity)
+            animationComponent.setAnimation("walk", 1.5f)
             moveComponent.distance = MoveComponent.Companion.Distances.MELEE.distance
         }
 
         override fun update(entity: Entity) {
             val moveComponent = MoveComponent.mapper.get(entity)
             val attackComponent = AttackComponent.mapper.get(entity)
-            val targetPosition = PositionComponent.mapper.get(attackComponent.target).matrix4.getTranslation(temp)
-            moveComponent.target.set(targetPosition.x, targetPosition.z)
-            if (!moveComponent.isMoving) {
-                BehaviourComponent.mapper.get(entity).state.changeState(ATTACK)
+            val behaviourComponent = BehaviourComponent.mapper.get(entity)
+
+            val moveComponentEnemy = MoveComponent.mapper.get(attackComponent.target)
+            val positionComponentEnemy = PositionComponent.mapper.get(attackComponent.target)
+            val targetPositionEnemy = positionComponentEnemy.matrix4.getTranslation(temp)
+
+            moveComponent.target.set(targetPositionEnemy.x, targetPositionEnemy.z)
+            if (!moveComponent.isMoving && !moveComponentEnemy.isMoving) {
+                behaviourComponent.state.changeState(ATTACK)
             }
         }
 
@@ -95,24 +105,25 @@ enum class AttackBehaviour : State<Entity> {
         override fun update(entity: Entity) {
             val moveComponent = MoveComponent.mapper.get(entity)
             val attackComponent = AttackComponent.mapper.get(entity)
+            val behaviourComponent = BehaviourComponent.mapper.get(entity)
             val enemy = attackComponent.target as CommonEntity
-
-            if (enemy.removed) {
-                attackComponent.enableAttacking = false
-                BehaviourComponent.mapper.get(entity).state.changeState(MOVE_ROUTE)
-                return
+            val positionComponentEnemy = PositionComponent.mapper.get(enemy)
+            val moveComponentEnemy = MoveComponent.mapper.get(attackComponent.target)
+            val targetPositionEnemy = positionComponentEnemy.matrix4.getTranslation(temp)
+            when {
+                enemy.removed -> {
+                    attackComponent.enableAttacking = false
+                    behaviourComponent.state.changeState(MOVE_ROUTE)
+                }
+                moveComponent.isMoving || moveComponentEnemy.isMoving -> {
+                    attackComponent.enableAttacking = false
+                    moveComponent.target.set(targetPositionEnemy.x, targetPositionEnemy.z)
+                    behaviourComponent.state.changeState(ATTACK_ROUTE)
+                }
+                else -> {
+                    attackComponent.enableAttacking = true
+                }
             }
-
-            val targetPosition = PositionComponent.mapper.get(attackComponent.target).matrix4.getTranslation(temp)
-            moveComponent.target.set(targetPosition.x, targetPosition.z)
-
-            if (moveComponent.isMoving) {
-                attackComponent.enableAttacking = false
-                BehaviourComponent.mapper.get(entity).state.changeState(ATTACK_ROUTE)
-                return
-            }
-
-            attackComponent.enableAttacking = true
         }
 
         override fun exit(entity: Entity) {

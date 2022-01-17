@@ -1,15 +1,16 @@
 package castle.core.game.system
 
+import castle.core.common.event.EventQueue
 import castle.core.game.GameManager
 import castle.core.game.config.GameInternalConfig
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.systems.IntervalSystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.utils.Disposable
 import ktx.app.KtxInputAdapter
 
 class GameCycleSystem(
+    private val eventQueue: EventQueue,
     private val gameInternalConfig: GameInternalConfig
 ) : IntervalSystem(GAME_TICK), KtxInputAdapter {
     private companion object {
@@ -19,7 +20,7 @@ class GameCycleSystem(
     private lateinit var gameManager: GameManager
 
     override fun addedToEngine(engine: Engine) {
-        gameManager = GameManager(engine, gameInternalConfig)
+        gameManager = GameManager(eventQueue, engine, gameInternalConfig)
     }
 
     override fun updateInterval() {
