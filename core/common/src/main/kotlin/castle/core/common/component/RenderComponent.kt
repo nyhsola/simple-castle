@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance
 class RenderComponent(
     val modelInstance: ModelInstance,
     var hide: Boolean,
+    var hideOnMap: Boolean,
     val nodeName: String,
     val armature: String
 ) : Component {

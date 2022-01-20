@@ -11,6 +11,7 @@ import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g3d.ModelBatch
+import com.badlogic.gdx.math.Vector3
 
 class ModelRenderSystem(
     guiConfig: GUIConfig,
@@ -34,7 +35,15 @@ class ModelRenderSystem(
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
+        val positionComponent = PositionComponent.mapper.get(entity)
         val renderComponent = RenderComponent.mapper.get(entity)
+        val matrix4Track = positionComponent.matrix4Track
+        val vector3Offset = positionComponent.vector3Offset
+
+        if (matrix4Track != null) {
+            positionComponent.matrix4.set(matrix4Track).translate(vector3Offset)
+        }
+
         if (!renderComponent.hide) {
             modelBatch.render(renderComponent.modelInstance, cameraService.currentCamera.environment)
         }

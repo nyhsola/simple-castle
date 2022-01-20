@@ -4,6 +4,8 @@ import castle.core.common.system.IteratingIntervalSystem
 import castle.core.game.component.BehaviourComponent
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.Family
+import com.badlogic.gdx.ai.GdxAI
+import com.badlogic.gdx.ai.msg.MessageManager
 
 class BehaviourSystem : IteratingIntervalSystem(BEHAVIOUR_TICK, family) {
     private companion object {
@@ -12,6 +14,8 @@ class BehaviourSystem : IteratingIntervalSystem(BEHAVIOUR_TICK, family) {
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
+        GdxAI.getTimepiece().update(deltaTime)
+        MessageManager.getInstance().update()
         BehaviourComponent.mapper.get(entity).state.update()
     }
 }

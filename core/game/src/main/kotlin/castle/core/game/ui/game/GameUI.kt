@@ -3,23 +3,27 @@ package castle.core.game.ui.game
 import castle.core.common.`object`.CommonEntity
 import castle.core.common.component.StageComponent
 import castle.core.common.config.GUIConfig
-import castle.core.game.event.EventContext
-import castle.core.game.event.EventQueue
-import castle.core.game.event.EventType
-import castle.core.game.service.GameResourceService
-import castle.core.game.service.ScanService
+import castle.core.common.event.EventContext
+import castle.core.common.event.EventQueue
+import castle.core.common.service.CommonResources
+import castle.core.common.service.ScanService
+import castle.core.common.system.CameraControlSystem
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
-import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.scenes.scene2d.ui.Container
+import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton
+import com.badlogic.gdx.scenes.scene2d.ui.Value
 import com.badlogic.gdx.utils.Align
 
 class GameUI(
     scanService: ScanService,
-    private val resourceService: GameResourceService,
-    guiConfig: GUIConfig
+    private val commonResources: CommonResources,
+    guiConfig: GUIConfig,
+    eventQueue: EventQueue
 ) : CommonEntity() {
     private val stageComponent: StageComponent = StageComponent(guiConfig.createStage()).also { this.add(it) }
     private val signal = Signal<EventContext>()
@@ -27,7 +31,7 @@ class GameUI(
     private val rootTable = Table()
 
     val minimap: Minimap = Minimap(guiConfig, scanService)
-    val chat = Chat(signal, resourceService)
+    val chat = Chat(signal, commonResources)
 
     var debugEnabled: Boolean = false
         set(value) {
@@ -36,6 +40,7 @@ class GameUI(
         }
 
     init {
+        signal.add(eventQueue)
         rootTable.bottom()
         rootTable.add(main()).grow()
         rootContainer.setFillParent(true)
@@ -46,17 +51,13 @@ class GameUI(
         stageComponent.stage.addListener(object : InputListener() {
             override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 if (event.target is Group) {
-                    signal.dispatch(EventContext(EventType.CHAT_UNFOCUSED))
+                    signal.dispatch(EventContext(CameraControlSystem.CHAT_UNFOCUSED))
                     stageComponent.stage.unfocusAll()
                     stageComponent.stage.keyboardFocus = chat
                 }
                 return super.touchDown(event, x, y, pointer, button)
             }
         })
-    }
-
-    fun addListener(eventQueue: EventQueue) {
-        signal.add(eventQueue)
     }
 
     private fun main(): Container<out Group> {
@@ -90,7 +91,7 @@ class GameUI(
         val table = Table()
         for (i in 0 until 4) {
             for (j in 0 until 5) {
-                val button = TextButton("U$i$j", resourceService.skin)
+                val button = TextButton("U$i$j", commonResources.skin)
                 button.color = Color.DARK_GRAY
                 table.add(button)
                     .width(50f)

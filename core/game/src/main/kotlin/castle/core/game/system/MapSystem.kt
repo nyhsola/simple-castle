@@ -25,7 +25,7 @@ class MapSystem(
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val renderComponent = RenderComponent.mapper.get(entity)
-        if (!renderComponent.hide && renderComponent.nodeName != "ground") {
+        if (!renderComponent.hideOnMap) {
             mapService.add(entity)
         }
     }
