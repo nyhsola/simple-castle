@@ -17,22 +17,6 @@
           "area-2-1-1",
           "area-3-3",
           "area-3"
-        ],
-        [
-          "area-1-2",
-          "area-0",
-          "area-3-2",
-          "area-3"
-        ],
-        [
-          "area-1-3",
-          "area-4-1-1",
-          "area-4-1",
-          "area-4",
-          "area-4-3",
-          "area-3-1-1",
-          "area-3-1",
-          "area-3"
         ]
       ]
     }
@@ -55,98 +39,6 @@
           "area-4-1-1",
           "area-4-1",
           "area-4"
-        ],
-        [
-          "area-2-2",
-          "area-0",
-          "area-4-2",
-          "area-4"
-        ],
-        [
-          "area-2-1",
-          "area-2-1-1",
-          "area-3-3",
-          "area-3",
-          "area-3-1",
-          "area-3-1-1",
-          "area-4-3",
-          "area-4"
-        ]
-      ]
-    }
-  },
-  {
-    "playerName": "Player 3",
-    "startupSettings": {
-      "units": {
-        "castle": "castle-3-n"
-      }
-    },
-    "pathSettings": {
-      "paths": [
-        [
-          "area-3-3",
-          "area-2-1-1",
-          "area-2-1",
-          "area-2",
-          "area-2-3",
-          "area-1-1-1",
-          "area-1-1",
-          "area-1"
-        ],
-        [
-          "area-3-2",
-          "area-0",
-          "area-1-2",
-          "area-1"
-        ],
-        [
-          "area-3-1",
-          "area-3-1-1",
-          "area-4-3",
-          "area-4",
-          "area-4-1",
-          "area-4-1-1",
-          "area-1-3",
-          "area-1"
-        ]
-      ]
-    }
-  },
-  {
-    "playerName": "Player 4",
-    "startupSettings": {
-      "units": {
-        "castle": "castle-4-n"
-      }
-    },
-    "pathSettings": {
-      "paths": [
-        [
-          "area-4-3",
-          "area-3-1-1",
-          "area-3-1",
-          "area-3",
-          "area-3-3",
-          "area-2-1-1",
-          "area-2-1",
-          "area-2"
-        ],
-        [
-          "area-4-2",
-          "area-0",
-          "area-2-1",
-          "area-2"
-        ],
-        [
-          "area-4-1",
-          "area-4-1-1",
-          "area-1-3",
-          "area-1",
-          "area-1-1",
-          "area-1-1-1",
-          "area-2-3",
-          "area-2"
         ]
       ]
     }

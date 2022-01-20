@@ -14,18 +14,22 @@
       "behaviour": "attack"
     },
     "attackSettings": {
-      "attackFrom": 20,
-      "attackTo": 50,
-      "attackSpeed": 1,
-      "range": 2.0
+      "attackFrom": 5,
+      "attackTo": 10,
+      "attackSpeed": 0.25,
+      "range": 3.0
     },
     "moveSettings": {
-      "speedLinear": 7.0,
+      "speedLinear": 3.0,
       "speedAngular": 3.0
     },
     "hpSettings": {
       "amount": 100,
       "textureName": "hp"
     }
+  },
+  {
+    "unitName": "pick",
+    "templateName": "PICK"
   }
 ]

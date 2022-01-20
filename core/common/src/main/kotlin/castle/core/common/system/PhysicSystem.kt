@@ -2,6 +2,7 @@ package castle.core.common.system
 
 import castle.core.common.component.PhysicComponent
 import castle.core.common.component.PositionComponent
+import castle.core.common.event.EventQueue
 import castle.core.common.service.PhysicService
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
@@ -11,9 +12,11 @@ import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.utils.Disposable
 
 class PhysicSystem(
-    private val physicService: PhysicService
+    private val physicService: PhysicService,
+    private val eventQueue: EventQueue
 ) : IteratingSystem(family), EntityListener, Disposable {
-    private companion object {
+    companion object {
+        const val PHYSIC_ENABLE = "PHYSIC_ENABLE"
         private val family: Family = Family.all(PositionComponent::class.java, PhysicComponent::class.java).get()
     }
 
@@ -31,6 +34,15 @@ class PhysicSystem(
     }
 
     override fun update(deltaTime: Float) {
+        eventQueue.proceed {
+            when (it.eventType) {
+                PHYSIC_ENABLE -> {
+                    physicService.debugEnabled = !physicService.debugEnabled
+                    true
+                }
+                else -> false
+            }
+        }
         physicService.renderDebug()
         physicService.update(deltaTime)
     }
