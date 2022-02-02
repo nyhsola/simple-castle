@@ -17,15 +17,16 @@ class GameInternalConfig(
 ) : Disposable {
     val gameResources = GameResources()
     val neutralInitService = NeutralInitService(commonConfig.environmentBuilder, commonConfig.commonResources)
-    val unitBuilder = UnitBuilder(commonConfig.commonResources, commonConfig.templateBuilder)
+    private val unitBuilder = UnitBuilder(commonConfig.commonResources, commonConfig.templateBuilder)
     val playerBuilder = PlayerBuilder(gameResources, neutralInitService, unitBuilder)
     val playerInitService = PlayerInitService(gameResources, playerBuilder)
     val rayCastService = RayCastService(physicConfig.physicService, commonConfig.cameraService)
     val mapService = MapService(physicConfig.scanService)
     val gameUI = GameUI(physicConfig.scanService, commonConfig.commonResources, guiConfig, commonConfig.eventQueue)
     private val debugUI = DebugUI(commonConfig.commonResources, guiConfig, commonConfig.eventQueue)
-    val chatService = ChatService(gameUI.chat)
-    val uiService = UIService(commonConfig.eventQueue, gameUI, debugUI, chatService)
+    private val chatService = ChatService(gameUI.chat)
+    val uiService = UIService(commonConfig.eventQueue, commonConfig.commonResources, gameUI, debugUI, chatService)
+    val selectionService = SelectionService(uiService)
 
     override fun dispose() {
         gameUI.dispose()

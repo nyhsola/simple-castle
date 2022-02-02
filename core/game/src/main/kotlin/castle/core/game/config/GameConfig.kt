@@ -14,7 +14,7 @@ class GameConfig(
     private val gameInternalConfig = GameInternalConfig(commonConfig, physicConfig, guiConfig)
     private val uiSystem = UISystem(gameInternalConfig.uiService)
     private val hpSystem = HPSystem(guiConfig)
-    private val clickSystem = ClickSystem(gameInternalConfig.rayCastService, gameInternalConfig.chatService, gameInternalConfig.unitBuilder, gameInternalConfig.gameResources)
+    private val selectionSystem = SelectionSystem(gameInternalConfig.rayCastService, gameInternalConfig.selectionService)
     private val pathSystem = PathSystem(gameInternalConfig.neutralInitService, gameInternalConfig.mapService)
     private val moveSystem = MoveSystem()
     private val mapSystem = MapSystem(gameInternalConfig.mapService, gameInternalConfig.gameUI.minimap)
@@ -27,7 +27,7 @@ class GameConfig(
 
     val systems =
         linkedSetOf(
-            clickSystem,
+            selectionSystem,
             uiSystem,
             hpSystem,
             moveSystem,

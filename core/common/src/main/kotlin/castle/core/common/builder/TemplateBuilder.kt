@@ -72,7 +72,8 @@ class TemplateBuilder(private val commonResources: CommonResources) {
     }
 
     private fun getMatrix4(node: String): Matrix4 {
-        return commonResources.model.getNode(node).globalTransform.cpy()
+        val model = commonResources.model.filter { it.value.getNode(node) != null }.map { it.value }.first()
+        return model.getNode(node).globalTransform.cpy()
     }
 
     private fun getModelInstance(node: String, armature: String): ModelInstance {
@@ -87,7 +88,8 @@ class TemplateBuilder(private val commonResources: CommonResources) {
     }
 
     private fun getModel(node: String, armature: String): ModelInstance {
+        val model = commonResources.model.filter { it.value.getNode(node) != null }.map { it.value }.first()
         val array = if (armature.isNotEmpty()) listOf(armature, node).toTypedArray() else listOf(node).toTypedArray()
-        return ModelInstance(commonResources.model, Array(array))
+        return ModelInstance(model, Array(array))
     }
 }
