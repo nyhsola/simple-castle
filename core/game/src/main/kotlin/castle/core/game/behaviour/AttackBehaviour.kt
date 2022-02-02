@@ -99,7 +99,7 @@ enum class AttackBehaviour : State<Entity> {
 
         override fun enter(entity: Entity) {
             val animationComponent = AnimationComponent.mapper.get(entity)
-            animationComponent.setAnimation("attack", 3f)
+            animationComponent.setAnimation("attack", 1.5f)
         }
 
         override fun update(entity: Entity) {

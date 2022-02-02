@@ -7,11 +7,12 @@ class Priority {
     companion object {
         val order = linkedSetOf(
             BaseCommandsSystem::class.java,
-            ClickSystem::class.java,
+            SelectionSystem::class.java,
             AnimationSystem::class.java,
             CameraControlSystem::class.java,
-            Line3DRenderSystem::class.java,
             ModelRenderSystem::class.java,
+            Circle3DRenderSystem::class.java,
+            Line3DRenderSystem::class.java,
             TextSystem::class.java,
             TextCountSystem::class.java,
             PhysicSystem::class.java,

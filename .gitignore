@@ -5,7 +5,6 @@
 build/
 textures/
 *.fbx
-*.g3dj
 *.blend1
 
 *.iml

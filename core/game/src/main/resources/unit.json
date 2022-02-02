@@ -20,7 +20,7 @@
       "range": 3.0
     },
     "moveSettings": {
-      "speedLinear": 3.0,
+      "speedLinear": 3.5,
       "speedAngular": 3.0
     },
     "hpSettings": {

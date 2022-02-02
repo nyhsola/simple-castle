@@ -14,7 +14,7 @@ class MoveComponent(
 ) : Component {
     companion object {
         enum class Distances(val distance: Float) {
-            AT(0.3f), MELEE(2f)
+            AT(0.3f), MELEE(4f)
         }
 
         val mapper: ComponentMapper<MoveComponent> = ComponentMapper.getFor(MoveComponent::class.java)

@@ -63,7 +63,7 @@ class UnitBuilder(
         val min = Vector3()
         val max = Vector3()
         physicComponent.physicInstance.body.getAabb(min, max)
-        val height = max.sub(min).y * 1.1f
+        val height = max.sub(min).y * 0.9f
         val width = max.sub(min).z * 1.1f
         return HPComponent(unitJson.hpSettings.amount, width, height, texture, positionComponent.matrix4)
     }

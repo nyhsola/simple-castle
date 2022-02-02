@@ -8,8 +8,9 @@ import com.badlogic.gdx.math.Vector3
 class PositionComponent(
     val matrix4: Matrix4
 ) : Component {
-    val vector3Offset: Vector3 = Vector3()
+    // TODO: 2/2/2022 OffsetComponent
     var matrix4Track: Matrix4? = null
+    val vector3Offset: Vector3 = Vector3()
     companion object {
         val mapper: ComponentMapper<PositionComponent> = ComponentMapper.getFor(PositionComponent::class.java)
     }

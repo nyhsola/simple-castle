@@ -10,13 +10,14 @@ import castle.core.common.service.ScanService
 import castle.core.common.system.CameraControlSystem
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.InputListener
-import com.badlogic.gdx.scenes.scene2d.ui.Container
-import com.badlogic.gdx.scenes.scene2d.ui.Table
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton
-import com.badlogic.gdx.scenes.scene2d.ui.Value
+import com.badlogic.gdx.scenes.scene2d.ui.*
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 import com.badlogic.gdx.utils.Align
 
 class GameUI(
@@ -32,6 +33,7 @@ class GameUI(
 
     val minimap: Minimap = Minimap(guiConfig, scanService)
     val chat = Chat(signal, commonResources)
+    val image = Image()
 
     var debugEnabled: Boolean = false
         set(value) {
@@ -79,14 +81,19 @@ class GameUI(
         table.add(minimap)
             .height(Value.percentHeight(1f, container))
             .width(Value.percentHeight(1f, container))
-            .fill()
+            .expandX()
             .align(Align.left)
-        table.add(rightTab()).expandX()
+        table.add(image)
+            .height(Value.percentHeight(1f, container))
+            .width(Value.percentHeight(1f, container))
+            .fill()
+            .align(Align.right)
+        table.add(buttonPanel())
         container.actor = table
         return container
     }
 
-    private fun rightTab(): Container<Table> {
+    private fun buttonPanel(): Container<Table> {
         val containerAbility = Container<Table>()
         val table = Table()
         for (i in 0 until 4) {

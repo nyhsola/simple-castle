@@ -15,7 +15,8 @@ class EnvironmentBuilder(
     }
 
     private fun getNodes(nodesPattern: String): Collection<String> {
-        return commonResources.model.nodes
+        return commonResources.model
+            .flatMap { it.value.nodes }
             .map { node -> node.id }
             .toSet()
             .filter { nodes -> nodes.matches(Regex(nodesPattern)) }

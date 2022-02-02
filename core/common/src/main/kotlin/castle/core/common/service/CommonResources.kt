@@ -14,14 +14,21 @@ import com.badlogic.gdx.utils.JsonReader
 
 class CommonResources : Disposable {
     private val loader = G3dModelLoader(JsonReader())
-    val model: Model = loadModel()
+    val model: Map<String, Model> = loadModel()
     val skin: Skin = loadSkin()
     val templates: Map<String, TemplateJson> = loadTemplates().associateBy { it.templateName }
     val textures: Map<String, Texture> = loadTextures()
     val environment: List<EnvironmentJson> = loadEnvironment()
 
-    private fun loadModel(): Model {
-        return loader.loadModel(Gdx.files.internal("assets3d/map.g3dj"))
+    private fun loadModel(): Map<String, Model> {
+        val map = HashMap<String, Model>()
+        val fileHandle = Gdx.files.getFileHandle("assets3d", Files.FileType.Internal)
+        for (entry in fileHandle.list()) {
+            if (entry.name().endsWith("g3dj")) {
+                map[entry.nameWithoutExtension()] = loader.loadModel(entry)
+            }
+        }
+        return map
     }
 
     private fun loadSkin(): Skin {
@@ -46,7 +53,7 @@ class CommonResources : Disposable {
     }
 
     override fun dispose() {
-        model.dispose()
+        model.forEach { it.value.dispose() }
         skin.dispose()
         textures.forEach { it.value.dispose() }
     }

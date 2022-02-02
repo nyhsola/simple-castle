@@ -42,9 +42,9 @@
   },
   {
     "templateName": "WARRIOR",
-    "nodeName": "unit-warrior-model",
+    "nodeName": "unit-warrior-n-model",
     "renderSettings": {
-      "armature": "unit-warrior",
+      "armature": "unit-warrior-n",
       "hideOnMap": false
     },
     "physicSettings": {
