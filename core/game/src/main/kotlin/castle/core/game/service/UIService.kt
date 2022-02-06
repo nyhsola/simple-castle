@@ -22,7 +22,7 @@ class UIService(
         const val DEBUG_UI_ENABLE = "DEBUG_UI_ENABLE"
     }
 
-    private val listDrawables: List<String> = listOf("unit-warrior-n")
+    private val listDrawables: List<String> = listOf("unit-warrior", "castle")
     private val drawables: Map<String, TextureRegionDrawable> = commonResources.textures
         .filter { listDrawables.contains(it.key) }
         .mapValues { TextureRegionDrawable(TextureRegion(it.value)) }

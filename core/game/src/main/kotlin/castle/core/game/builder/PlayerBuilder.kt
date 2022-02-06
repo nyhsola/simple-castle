@@ -21,18 +21,28 @@ class PlayerBuilder(
     }
 
     fun buildBuildings(playerJson: PlayerJson): List<CommonEntity> {
-        return playerJson.startupSettings.units.map { unitBuilder.build(gameResources.units.getValue(it.key), it.value) }
+        return playerJson.startupSettings.units
+            .map {
+                val unitJson = gameResources.units.getValue(it.key)
+                val unit = unitBuilder.build(unitJson, unitJson.node)
+                val spawnPoint = neutralInitService.neutralUnits.getValue(it.value)
+                initSpawnPoint(spawnPoint, unit)
+                unit.add(SideComponent(playerJson.playerName))
+                unit
+            }
     }
 
     fun buildUnits(playerJson: PlayerJson): List<CommonEntity> {
         val units: MutableList<CommonEntity> = ArrayList()
         if (playerJson.pathSettings.enabled) {
             for (path in playerJson.pathSettings.paths) {
-                val entity = unitBuilder.build(gameResources.units.getValue("warrior"))
-                initSpawnPoint(neutralInitService.neutralUnits.getValue(path[0]), entity)
-                entity.add(SideComponent(playerJson.playerName))
-                entity.add(PathComponent(path))
-                units.add(entity)
+                val unitJson = gameResources.units.getValue("warrior")
+                val unit = unitBuilder.build(unitJson, unitJson.node)
+                val spawnPoint = neutralInitService.neutralUnits.getValue(path[0])
+                initSpawnPoint(spawnPoint, unit)
+                unit.add(SideComponent(playerJson.playerName))
+                unit.add(PathComponent(path))
+                units.add(unit)
             }
         }
         return units

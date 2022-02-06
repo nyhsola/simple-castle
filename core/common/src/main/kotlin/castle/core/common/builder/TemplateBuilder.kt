@@ -14,11 +14,6 @@ import com.badlogic.gdx.utils.Array
 import java.util.*
 
 class TemplateBuilder(private val commonResources: CommonResources) {
-    fun build(templateJson: TemplateJson): CommonEntity {
-        val commonEntity = CommonEntity()
-        return buildUnitInternal(commonEntity, templateJson, templateJson.nodeName)
-    }
-
     fun build(templateJson: TemplateJson, nodeName: String): CommonEntity {
         val commonEntity = CommonEntity()
         return buildUnitInternal(commonEntity, templateJson, nodeName)
@@ -46,12 +41,11 @@ class TemplateBuilder(private val commonResources: CommonResources) {
     }
 
     private fun initRender(templateJson: TemplateJson, nodeName: String, positionComponent: PositionComponent): RenderComponent {
-        val armature = templateJson.renderSettings.armature
-        val modelInstance = getModelInstance(nodeName, armature)
+        val modelInstance = getModelInstance(nodeName)
         val hide = templateJson.renderSettings.hide
         val hideOnMap = templateJson.renderSettings.hideOnMap
         modelInstance.transform = positionComponent.matrix4
-        return RenderComponent(modelInstance, hide, hideOnMap, nodeName, armature)
+        return RenderComponent(modelInstance, hide, hideOnMap, nodeName)
     }
 
     private fun initPhysic(templateJson: TemplateJson, nodeName: String): PhysicComponent {
@@ -61,9 +55,8 @@ class TemplateBuilder(private val commonResources: CommonResources) {
     }
 
     private fun getPhysicInstance(templateJson: TemplateJson, nodeName: String): PhysicInstance {
-        val armature = templateJson.renderSettings.armature
         val physicShape = templateJson.physicSettings.shape
-        val shape = physicShape.build(getModel(nodeName, armature))
+        val shape = physicShape.build(getModel(nodeName))
         val info = btRigidBody.btRigidBodyConstructionInfo(templateJson.physicSettings.mass, null, shape)
         val collisionFlag = templateJson.physicSettings.collisionFlag
         val collisionFilterGroupParam = templateJson.physicSettings.collisionFilterGroup
@@ -72,12 +65,11 @@ class TemplateBuilder(private val commonResources: CommonResources) {
     }
 
     private fun getMatrix4(node: String): Matrix4 {
-        val model = commonResources.model.filter { it.value.getNode(node) != null }.map { it.value }.first()
-        return model.getNode(node).globalTransform.cpy()
+        return findNode(node)!!.getNode(node).globalTransform.cpy()
     }
 
-    private fun getModelInstance(node: String, armature: String): ModelInstance {
-        return getModel(node, armature).apply {
+    private fun getModelInstance(node: String): ModelInstance {
+        return getModel(node).apply {
             transform.mul(model.getNode(node).localTransform)
             nodes.forEach { node ->
                 node.translation.set(0f, 0f, 0f)
@@ -87,9 +79,19 @@ class TemplateBuilder(private val commonResources: CommonResources) {
         }
     }
 
-    private fun getModel(node: String, armature: String): ModelInstance {
-        val model = commonResources.model.filter { it.value.getNode(node) != null }.map { it.value }.first()
-        val array = if (armature.isNotEmpty()) listOf(armature, node).toTypedArray() else listOf(node).toTypedArray()
-        return ModelInstance(model, Array(array))
+    private fun getModel(nodeName: String): ModelInstance {
+        val nodeModelStr = "$nodeName-model"
+        val node = findNode(nodeName)
+        val nodeModel = findNode(nodeModelStr)
+
+        return if (nodeModel != null) {
+            val array = Array(listOf(nodeName, nodeModelStr).toTypedArray())
+            ModelInstance(nodeModel, array)
+        } else {
+            val array = Array(listOf(nodeName).toTypedArray())
+            ModelInstance(node, array)
+        }
     }
+
+    private fun findNode(node: String) = commonResources.model.filter { it.value.getNode(node) != null }.map { it.value }.firstOrNull()
 }

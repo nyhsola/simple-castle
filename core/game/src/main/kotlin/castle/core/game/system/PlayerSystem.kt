@@ -60,17 +60,6 @@ class PlayerSystem(
         playerBuilder.buildBuildings(playerComponent.playerJson)
             .onEach { it.add(SideComponent(playerName)) as CommonEntity }
             .onEach { it.add(engine) }
-//        val map = engine.entities
-//            .filter { RenderComponent.mapper.has(it) }
-//            .associateBy { RenderComponent.mapper.get(it).nodeName }
-//        for (list in playerComponent.playerJson.pathSettings.paths) {
-//            val startPoint = list[0]
-//            val positionComponent = PositionComponent.mapper.get(map[startPoint])
-//            val commonEntity = CommonEntity()
-//            commonEntity.add(TextComponent("", positionComponent.matrix4.getTranslation(Vector3()).scl(-1f, 1f, 1f)))
-//            commonEntity.add(TextCountComponent(999, playerName, SPAWN, signal))
-//            commonEntity.add(engine)
-//        }
     }
 
     override fun entityRemoved(entity: Entity) {

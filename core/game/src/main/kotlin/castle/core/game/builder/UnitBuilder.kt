@@ -27,13 +27,6 @@ class UnitBuilder(
         return init(unitJson, buildEntity)
     }
 
-    fun build(unitJson: UnitJson): CommonEntity {
-        val templates = commonResources.templates
-        val templateJson = templates.getValue(unitJson.templateName)
-        val buildEntity = templateBuilder.build(templateJson)
-        return init(unitJson, buildEntity)
-    }
-
     private fun init(unitJson: UnitJson, unit: CommonEntity): CommonEntity {
         if (unitJson.hpSettings.enabled) {
             unit.add(initHPBar(unitJson, unit))
@@ -45,7 +38,7 @@ class UnitBuilder(
             val attackComponent = AttackComponent(
                 unitJson.attackSettings.attackFrom..unitJson.attackSettings.attackTo,
                 unitJson.attackSettings.attackSpeed,
-                unitJson.attackSettings.range
+                unitJson.attackSettings.scanRange
             )
             unit.add(attackComponent)
         }

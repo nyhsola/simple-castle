@@ -17,9 +17,10 @@
     "renderSettings": {},
     "physicSettings": {
       "shape": "ADJUSTED_BASE_BOX",
-      "collisionFilterGroup": 1,
+      "collisionFilterGroup": 2,
       "collisionFilterMask": [
-        1
+        1,
+        3
       ]
     }
   },
@@ -42,9 +43,7 @@
   },
   {
     "templateName": "WARRIOR",
-    "nodeName": "unit-warrior-n-model",
     "renderSettings": {
-      "armature": "unit-warrior-n",
       "hideOnMap": false
     },
     "physicSettings": {
@@ -54,17 +53,6 @@
       "collisionFilterMask": [
         1,
         3
-      ]
-    }
-  },
-  {
-    "templateName": "PICK",
-    "nodeName": "pick",
-    "renderSettings": {},
-    "physicSettings": {
-      "shape": "ADJUSTED_BASE_BOX",
-      "collisionFlag": [
-        "CF_NO_CONTACT_RESPONSE"
       ]
     }
   }

@@ -8,7 +8,7 @@ import com.badlogic.ashley.core.Entity
 class AttackComponent(
     val attackAmount: IntRange,
     val attackSpeed: Float,
-    val range: Float,
+    val scanRange: Float,
     var target: Entity? = null,
     var enableAttacking: Boolean = false
 ) : Component {

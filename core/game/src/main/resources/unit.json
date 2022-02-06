@@ -1,6 +1,7 @@
 [
   {
     "unitName": "castle",
+    "node": "castle",
     "templateName": "CASTLE",
     "hpSettings": {
       "amount": 100,
@@ -9,6 +10,7 @@
   },
   {
     "unitName": "warrior",
+    "node": "unit-warrior",
     "templateName": "WARRIOR",
     "behaviourSettings": {
       "behaviour": "attack"
@@ -17,7 +19,7 @@
       "attackFrom": 5,
       "attackTo": 10,
       "attackSpeed": 0.25,
-      "range": 3.0
+      "scanRange": 3.0
     },
     "moveSettings": {
       "speedLinear": 3.5,
@@ -27,9 +29,5 @@
       "amount": 100,
       "textureName": "hp"
     }
-  },
-  {
-    "unitName": "pick",
-    "templateName": "PICK"
   }
 ]
