@@ -1,7 +1,7 @@
 package castle.core.game.system
 
 import castle.core.common.component.PhysicComponent
-import castle.core.game.component.MoveComponent
+import castle.core.game.component.SideComponent
 import castle.core.game.service.RayCastService
 import castle.core.game.service.SelectionService
 import com.badlogic.ashley.core.Engine
@@ -15,7 +15,7 @@ class SelectionSystem(
 ) : EntitySystem(), KtxInputAdapter {
 
     override fun addedToEngine(engine: Engine) {
-        engine.addEntity(selectionService.userPick)
+        engine.addEntity(selectionService.circle)
     }
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
@@ -34,7 +34,7 @@ class SelectionSystem(
         }
         var entityReturn: Entity? = null
         for (entity in engine.entities) {
-            if (PhysicComponent.mapper.has(entity) && MoveComponent.mapper.has(entity)) {
+            if (PhysicComponent.mapper.has(entity) && SideComponent.mapper.has(entity)) {
                 val physicComponent = PhysicComponent.mapper.get(entity)
                 val userData = physicComponent.physicInstance.body.userData as String
                 if (userData == node) {

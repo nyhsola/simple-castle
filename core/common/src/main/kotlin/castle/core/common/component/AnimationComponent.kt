@@ -9,7 +9,7 @@ class AnimationComponent(private val renderComponent: RenderComponent) : Compone
     val animationController: AnimationController = AnimationController(renderComponent.modelInstance)
 
     fun setAnimation(animation: String, speed: Float) {
-        val animationFull = renderComponent.armature + "|" + animation
+        val animationFull = "${renderComponent.nodeName}|$animation"
         animationController.paused = false
         animationController.setAnimation(animationFull, -1, speed, animationListener)
     }

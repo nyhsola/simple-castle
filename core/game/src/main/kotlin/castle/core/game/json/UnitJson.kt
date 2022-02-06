@@ -7,6 +7,7 @@ import castle.core.game.json.settings.MoveSettings
 
 data class UnitJson(
     val unitName: String = "",
+    val node: String = "",
     val templateName: String = "",
     val attackSettings: AttackSettings = AttackSettings(false),
     val moveSettings: MoveSettings = MoveSettings(false),

@@ -3,7 +3,7 @@
     "playerName": "Player 1",
     "startupSettings": {
       "units": {
-        "castle": "castle-1-n"
+        "castle": "area-1"
       }
     },
     "pathSettings": {
@@ -25,7 +25,7 @@
     "playerName": "Player 2",
     "startupSettings": {
       "units": {
-        "castle": "castle-2-n"
+        "castle": "area-2"
       }
     },
     "pathSettings": {

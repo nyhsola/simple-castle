@@ -8,8 +8,7 @@ class RenderComponent(
     val modelInstance: ModelInstance,
     var hide: Boolean,
     var hideOnMap: Boolean,
-    val nodeName: String,
-    val armature: String
+    val nodeName: String
 ) : Component {
     companion object {
         val mapper: ComponentMapper<RenderComponent> = ComponentMapper.getFor(RenderComponent::class.java)
