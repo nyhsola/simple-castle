@@ -8,18 +8,17 @@ import com.badlogic.gdx.physics.bullet.Bullet
 object ServerLauncher {
     @JvmStatic
     fun main(args: Array<String>) {
-        val newWidth = (Lwjgl3ApplicationConfiguration.getDisplayMode().width * 0.9).toInt()
-        val newHeight = (Lwjgl3ApplicationConfiguration.getDisplayMode().height * 0.9).toInt()
-        val conf = Lwjgl3ApplicationConfiguration().apply {
-            setWindowedMode(newWidth, newHeight)
-        }
         Bullet.init(false, false)
-        Lwjgl3Application(ServerGame(), conf)
-        Runtime.getRuntime()
-            .addShutdownHook(object : Thread() {
-                override fun run() {
-                    Gdx.app.postRunnable(Gdx.app::exit)
-                }
-            })
+        Lwjgl3Application(ServerGame(), Lwjgl3ApplicationConfiguration().apply {
+            setWindowedMode(
+                (Lwjgl3ApplicationConfiguration.getDisplayMode().width * 0.9).toInt(),
+                (Lwjgl3ApplicationConfiguration.getDisplayMode().height * 0.9).toInt()
+            )
+        })
+        Runtime.getRuntime().addShutdownHook(object : Thread() {
+            override fun run() {
+                Gdx.app.postRunnable(Gdx.app::exit)
+            }
+        })
     }
 }
