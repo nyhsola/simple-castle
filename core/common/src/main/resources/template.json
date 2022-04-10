@@ -13,18 +13,6 @@
     }
   },
   {
-    "templateName": "CASTLE",
-    "renderSettings": {},
-    "physicSettings": {
-      "shape": "ADJUSTED_BASE_BOX",
-      "collisionFilterGroup": 2,
-      "collisionFilterMask": [
-        1,
-        3
-      ]
-    }
-  },
-  {
     "templateName": "AREA",
     "renderSettings": {
       "hide": true
@@ -42,10 +30,20 @@
     }
   },
   {
-    "templateName": "WARRIOR",
-    "renderSettings": {
-      "hideOnMap": false
-    },
+    "templateName": "BUILDING",
+    "renderSettings": {},
+    "physicSettings": {
+      "shape": "ADJUSTED_BASE_BOX",
+      "collisionFilterGroup": 2,
+      "collisionFilterMask": [
+        1,
+        3
+      ]
+    }
+  },
+  {
+    "templateName": "UNIT",
+    "renderSettings": {},
     "physicSettings": {
       "shape": "ADJUSTED_BASE_BOX",
       "mass": 1,
