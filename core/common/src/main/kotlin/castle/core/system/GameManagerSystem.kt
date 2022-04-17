@@ -10,8 +10,6 @@ import castle.core.ui.service.UIService
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.ashley.systems.IntervalSystem
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
 
@@ -74,11 +72,6 @@ class GameManagerSystem(
     }
 
     override fun keyDown(keycode: Int): Boolean {
-        when (keycode) {
-            Input.Keys.ESCAPE -> {
-                Gdx.app.exit()
-            }
-        }
         return cameraService.keyDown(keycode)
     }
 

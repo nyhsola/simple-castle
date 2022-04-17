@@ -1,6 +1,7 @@
 package castle.core.screen
 
 import castle.core.config.GameConfig
+import castle.core.screen.add.ScreenConfigurator
 import com.badlogic.gdx.Gdx
 import ktx.app.KtxScreen
 

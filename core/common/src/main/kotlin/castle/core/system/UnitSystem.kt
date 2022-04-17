@@ -1,14 +1,15 @@
 package castle.core.system
 
-import castle.core.`object`.CommonEntity
 import castle.core.component.PhysicComponent
 import castle.core.component.PositionComponent
 import castle.core.component.SideComponent
 import castle.core.component.UnitComponent
 import castle.core.component.render.LineRenderComponent
 import castle.core.event.EventQueue
+import castle.core.`object`.CommonEntity
 import castle.core.service.EnvironmentInitService
 import castle.core.service.MapService
+import castle.core.system.abs.IteratingIntervalSystem
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.EntityListener
@@ -117,7 +118,7 @@ class UnitSystem(
     private fun checkDeath(entity: Entity) {
         val unitComponent = UnitComponent.mapper.get(entity)
         if (unitComponent.currentAmount <= 0) {
-            mapService.removeEntity(entity)
+            mapService.removeFromMap(entity)
             val commonEntity = entity as CommonEntity
             commonEntity.remove(engine)
         }

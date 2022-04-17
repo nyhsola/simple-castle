@@ -29,4 +29,4 @@ debug - Enable/Disable debug view in top right corner
 
 ### Demo
 
-![gif-example](/demo/gif-1.gif)
+![demo](/demo/demo.mp4)

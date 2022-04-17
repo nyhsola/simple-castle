@@ -34,8 +34,6 @@ allprojects {
     dependencies {
         plugins.withId("org.jetbrains.kotlin.jvm") {
             dependencies {
-                implementation 'org.mockito:mockito-all:1.10.19'
-
                 implementation "io.github.libktx:ktx-app:$ktxVersion"
                 implementation "io.github.libktx:ktx-math:$ktxVersion"
 

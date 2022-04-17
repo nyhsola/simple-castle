@@ -31,8 +31,8 @@ class ScanService(
         val depth = scanBox.z * 2
         val posX = abs(aabbMin.x + position.x)
         val poxZ = abs(aabbMin.z + position.z)
-        val x = (posX / width).toInt()
-        val y = (poxZ / depth).toInt()
+        val x = posX.div(width).toInt()
+        val y = poxZ.div(depth).toInt()
         return toArea(x, y)
     }
 

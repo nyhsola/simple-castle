@@ -13,7 +13,8 @@ class UIService(
         private val debugUI: DebugUI
 ) : KtxInputAdapter {
     companion object {
-        const val DEBUG_ENABLE = "DEBUG_UI_ENABLE"
+        const val DEBUG_UI_ENABLE_1 = "DEBUG_UI_ENABLE_1"
+        const val DEBUG_UI_ENABLE_2 = "DEBUG_UI_ENABLE_2"
     }
 
     fun init(engine: Engine) {
@@ -23,6 +24,7 @@ class UIService(
 
     fun update() {
         gameUI.update()
+        debugUI.update()
         proceedEvents()
         proceedMessages()
     }
@@ -40,8 +42,12 @@ class UIService(
     private fun proceedEvents() {
         eventQueue.proceed {
             when (it.eventType) {
-                DEBUG_ENABLE -> {
+                DEBUG_UI_ENABLE_1 -> {
                     gameUI.debugEnabled = !gameUI.debugEnabled
+                    true
+                }
+                DEBUG_UI_ENABLE_2 -> {
+                    debugUI.debugEnabled = !debugUI.debugEnabled
                     true
                 }
                 else -> false

@@ -2,7 +2,6 @@ package castle.core.ui.game
 
 import castle.core.event.EventContext
 import castle.core.service.CommonResources
-import castle.core.system.GameManagerSystem
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.Actor
@@ -71,17 +70,8 @@ class Chat(
         addListener(object : FocusListener() {
             override fun keyboardFocusChanged(event: FocusEvent, actor: Actor, focused: Boolean) {
                 if (focused) {
-                    signal.dispatch(EventContext(GameManagerSystem.CHAT_FOCUSED))
-                }
-            }
-        })
-
-        addListener(object : InputListener() {
-            override fun keyDown(event: InputEvent, keycode: Int): Boolean {
-                if (keycode == Input.Keys.ENTER || keycode == Input.Keys.NUMPAD_ENTER) {
                     this@Chat.stage.keyboardFocus = textField
                 }
-                return false
             }
         })
 

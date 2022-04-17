@@ -19,7 +19,6 @@ class PlayerService(
         players.map { playerBuilder.buildBuildings(it.value) }
                 .flatten()
                 .onEach { it.add(engine) }
-
     }
 
     fun update(engine: Engine, eventQueue: EventQueue) {
