@@ -1,10 +1,11 @@
 package castle.core.service
 
-import castle.core.`object`.CommonEntity
 import castle.core.component.PhysicComponent
 import castle.core.component.PositionComponent
+import castle.core.component.UnitComponent
 import castle.core.component.render.CircleRenderComponent
 import castle.core.event.EventQueue
+import castle.core.`object`.CommonEntity
 import castle.core.path.Area
 import castle.core.path.AreaGraph
 import castle.core.ui.game.Minimap
@@ -33,41 +34,61 @@ class MapService(
     private val aabbMin = Vector3()
     private val aabbMax = Vector3()
 
-    private val unitsPerArea: MutableMap<Area, MutableSet<Entity>> = HashMap()
+    private val unitsInArea: MutableMap<Area, MutableSet<Entity>> = HashMap()
+    private val areasInUnit: MutableMap<Entity, MutableSet<Area>> = HashMap()
 
     fun updateMap() {
-        minimap.update(unitsPerArea)
+        mapGraph.restoreConnections()
+        minimap.update(unitsInArea)
     }
 
     fun updateEntity(entity: Entity) {
-        removeEntity(entity)
-//        mapGraph.restoreConnections()
+        val unitComponent = UnitComponent.mapper.get(entity)
+        val oneTimeBuildingsUpdate = unitComponent.unitType == "building" && !areasInUnit.containsKey(entity)
+        if (unitComponent.unitType == "unit" || oneTimeBuildingsUpdate) {
+            removeFromMap(entity)
+            placeOnMap(entity, oneTimeBuildingsUpdate)
+        }
+    }
+
+    private fun placeOnMap(entity: Entity, isStatic: Boolean) {
         PhysicComponent.mapper.get(entity).body.getAabb(aabbMin, aabbMax)
         val min = scanService.toArea(aabbMin)
         val max = scanService.toArea(aabbMax)
         val isBiggerThanOneGrid = min.x - max.x <= 1
         if (isBiggerThanOneGrid) {
             val area = scanService.toArea(PositionComponent.mapper.get(entity).matrix4.getTranslation(tempVector))
-            unitsPerArea.getOrPut(area) { mutableSetOf() }.add(entity)
+            placeOnMapInternal(area, entity, isStatic)
         } else {
             for (i in max.x until min.x + 1) {
                 for (j in max.y until min.y + 1) {
                     val area = scanService.toArea(i, j)
-                    unitsPerArea.getOrPut(area) { mutableSetOf() }.add(entity)
-//                    mapGraph.disconnect(key)
+                    placeOnMapInternal(area, entity, isStatic)
                 }
             }
         }
     }
 
-    fun removeEntity(entity: Entity) {
-        unitsPerArea.forEach { it.value.remove(entity) }
+    private fun placeOnMapInternal(area: Area, entity: Entity, isStatic: Boolean) {
+        mapGraph.disconnect(area, isStatic)
+        unitsInArea.getOrPut(area) { mutableSetOf() }.add(entity)
+        areasInUnit.getOrPut(entity) { mutableSetOf() }.add(area)
+    }
+
+    fun removeFromMap(entity: Entity) {
+        val unitComponent = UnitComponent.mapper.get(entity)
+        val oneTimeBuildingsUpdate = unitComponent.unitType == "building"
+        if (oneTimeBuildingsUpdate) {
+            mapGraph.restoreStaticConnections(areasInUnit[entity]?.toList() ?: emptyList())
+        }
+        areasInUnit[entity]?.forEach { unitsInArea[it]?.remove(entity) }
+        areasInUnit.remove(entity)
     }
 
     fun getNearObjects(radius: Float, area: Area): List<Entity> {
         tempArr.clear()
         val areasInRange = area.getAreasInRange(radius, tempArr)
-        return areasInRange.mapNotNull { unitsPerArea[it] }.flatten()
+        return areasInRange.mapNotNull { unitsInArea[it] }.flatten()
     }
 
     fun getPath(list: List<Vector3>): GraphPath<Area> {
@@ -133,15 +154,18 @@ class MapService(
     }
 
     private fun createDebugCircles(circlesOut: MutableList<CommonEntity>) {
-        unitsPerArea.keys.forEach {
-            val commonEntity = CommonEntity()
-            val circleRenderComponent = CircleRenderComponent()
-            val position = it.position
-            circleRenderComponent.vector3Offset.set(position.x, 0f, position.y)
-            circleRenderComponent.radius = 1f
-            circleRenderComponent.shapeType = ShapeRenderer.ShapeType.Filled
-            commonEntity.add(circleRenderComponent)
-            circlesOut.add(commonEntity)
-        }
+        unitsInArea
+                .filter { it.value.isNotEmpty() }
+                .keys
+                .forEach {
+                    val commonEntity = CommonEntity()
+                    val circleRenderComponent = CircleRenderComponent()
+                    val position = it.position
+                    circleRenderComponent.vector3Offset.set(position.x, 0f, position.y)
+                    circleRenderComponent.radius = 1f
+                    circleRenderComponent.shapeType = ShapeRenderer.ShapeType.Filled
+                    commonEntity.add(circleRenderComponent)
+                    circlesOut.add(commonEntity)
+                }
     }
 }

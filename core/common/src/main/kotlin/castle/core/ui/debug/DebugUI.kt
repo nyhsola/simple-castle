@@ -1,9 +1,9 @@
 package castle.core.ui.debug
 
-import castle.core.`object`.CommonEntity
 import castle.core.component.render.StageRenderComponent
 import castle.core.event.EventContext
 import castle.core.event.EventQueue
+import castle.core.`object`.CommonEntity
 import castle.core.service.CommonResources
 import castle.core.service.MapService
 import castle.core.service.PlayerService
@@ -11,7 +11,9 @@ import castle.core.system.PhysicSystem
 import castle.core.system.UnitSystem
 import castle.core.ui.service.UIService
 import com.badlogic.ashley.signals.Signal
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.InputEvent
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Container
@@ -30,6 +32,14 @@ class DebugUI(
     private val rootContainer = Container<Table>()
     private val rootTable = Table()
 
+    private val fpsButton = createButton("FPS", listOf())
+
+    var debugEnabled: Boolean = false
+        set(value) {
+            stageRenderComponent.stage.isDebugAll = value
+            field = value
+        }
+
     var isVisible: Boolean = false
         set(value) {
             rootContainer.isVisible = value
@@ -39,7 +49,7 @@ class DebugUI(
     init {
         signal.add(eventQueue)
         rootContainer.isVisible = false
-        rootTable.add(tab()).grow()
+        rootTable.add(main()).grow()
         rootContainer.setFillParent(true)
         rootContainer.fill()
         rootContainer.pad(10f)
@@ -47,12 +57,37 @@ class DebugUI(
         stageRenderComponent.stage.addActor(rootContainer)
     }
 
-    private fun tab(): Container<Table> {
-        val containerAbility = Container<Table>().align(Align.topRight)
+    fun update() {
+        val framesPerSecond = Gdx.graphics.framesPerSecond.toString()
+        fpsButton.setText(framesPerSecond)
+    }
+
+    private fun main(): Container<out Group> {
+        val table = Table()
+        val container = Container<Table>().fill().align(Align.topRight)
+        table.add(tabTopLeft()).grow()
+        table.add(tabTopRight()).grow()
+        container.actor = table
+        return container
+    }
+
+
+    private fun tabTopLeft(): Container<Table> {
+        val containerAbility = Container<Table>().align(Align.topLeft)
+        val table = Table()
+        table.add(fpsButton).width(50f).height(50f)
+        containerAbility.actor = table
+        return containerAbility
+    }
+
+    private fun tabTopRight(): Container<Table> {
+        val container = Container<Table>().align(Align.topRight)
         val table = Table()
         table.add(createButton("Physic", listOf(EventContext(PhysicSystem.DEBUG_ENABLE)))).width(50f).height(50f)
         table.row()
-        table.add(createButton("UI", listOf(EventContext(UIService.DEBUG_ENABLE)))).width(50f).height(50f)
+        table.add(createButton("UI", listOf(EventContext(UIService.DEBUG_UI_ENABLE_1)))).width(50f).height(50f)
+        table.row()
+        table.add(createButton("DUI", listOf(EventContext(UIService.DEBUG_UI_ENABLE_2)))).width(50f).height(50f)
         table.row()
         table.add(createButton("Path", listOf(EventContext(UnitSystem.DEBUG_ENABLE)))).width(50f).height(50f)
         table.row()
@@ -63,8 +98,8 @@ class DebugUI(
                 EventContext(PlayerService.SPAWN, mapOf(Pair(PlayerService.PLAYER_NAME, "Player 2")))
         )
         table.add(createButton("Spawn", list)).width(50f).height(50f)
-        containerAbility.actor = table
-        return containerAbility
+        container.actor = table
+        return container
     }
 
     private fun createButton(text: String, events: List<EventContext>): TextButton {

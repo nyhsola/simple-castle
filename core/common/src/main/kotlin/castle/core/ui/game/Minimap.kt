@@ -18,6 +18,14 @@ class Minimap(
     private val minimap: MutableList<MutableList<MinimapPiece>> by lazy { initializeMinimap(scanService.map) }
     private val minimapBuffer: MutableList<MinimapPiece> = ArrayList()
 
+    init {
+//        addListener(object : DragListener() {
+//            override fun drag(event: InputEvent?, x: Float, y: Float, pointer: Int) {
+//                moveBy(x - width / 2, y - height / 2)
+//            }
+//        })
+    }
+
     override fun sizeChanged() {
         val pointWidth = width / minimap.size
         val pointHeight = height / minimap[0].size
@@ -43,7 +51,7 @@ class Minimap(
         minimapBuffer.forEach { it.reset() }
         minimapBuffer.clear()
         objectsOnMap
-                .filter { !it.value.isEmpty() }
+                .filter { it.value.isNotEmpty() }
                 .forEach {
                     val area = it.key
                     minimapBuffer.add(minimap[area.y][area.x])
@@ -57,14 +65,13 @@ class Minimap(
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA)
         shapeRenderer.projectionMatrix = batch.projectionMatrix
         shapeRenderer.transformMatrix = batch.transformMatrix
-        shapeRenderer.translate(x, y, 0f)
         shapeRenderer.begin()
         shapeRenderer.set(ShapeRenderer.ShapeType.Filled)
         for (minimapPiece in minimap.flatten()) {
             shapeRenderer.color = minimapPiece.color
             shapeRenderer.rect(
-                    minimapPiece.position.x,
-                    minimapPiece.position.y,
+                    minimapPiece.position.x + x,
+                    minimapPiece.position.y + y,
                     minimapPiece.width,
                     minimapPiece.height
             )
