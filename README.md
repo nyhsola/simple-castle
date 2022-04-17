@@ -29,4 +29,4 @@ debug - Enable/Disable debug view in top right corner
 
 ### Demo
 
-![demo](/demo/demo.mp4)
+https://user-images.githubusercontent.com/20153735/163736200-0d822612-a710-4bef-aaa7-f45bd3b45ad7.mp4
