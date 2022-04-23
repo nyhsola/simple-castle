@@ -1,6 +1,0 @@
-apply plugin: "kotlin"
-
-targetCompatibility = JavaVersion.VERSION_14
-sourceCompatibility = JavaVersion.VERSION_14
-
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'

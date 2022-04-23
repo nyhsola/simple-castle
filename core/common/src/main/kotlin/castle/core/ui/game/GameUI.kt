@@ -32,7 +32,7 @@ class GameUI(
     private val rootTable = Table()
 
     val minimap: Minimap = Minimap(shapeRenderer, scanService)
-    val chat = Chat(signal, commonResources)
+    val chat = Chat(commonResources)
     val portrait = Portrait(commonResources)
     val description = Description(commonResources, scanService)
     private val panelResources = PanelResources(commonResources)

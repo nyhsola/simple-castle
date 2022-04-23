@@ -51,6 +51,8 @@ class UnitComponent(
     var nearObjects: List<Entity> = ArrayList()
     var nearEnemies: List<Entity> = ArrayList()
 
+    var playerName: String = "neutral"
+
     val attackTask: Task = object : Task(attackSpeed) {
         override fun action() {
             val moveComponent = mapper.get(targetEnemy)

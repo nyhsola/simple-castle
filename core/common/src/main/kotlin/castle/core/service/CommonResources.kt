@@ -3,7 +3,6 @@ package castle.core.service
 import castle.core.json.EnvironmentJson
 import castle.core.json.TemplateJson
 import castle.core.util.LoadUtils
-import com.badlogic.gdx.Files
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g3d.Model
@@ -13,6 +12,9 @@ import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.JsonReader
 
 class CommonResources : Disposable {
+    private val assets3d = listOf("map.g3dj", "castle.g3dj", "unit-warrior.g3dj")
+    private val assets2d = listOf("castle.png", "hp.png", "unit-warrior.png")
+
     private val loader = G3dModelLoader(JsonReader())
     val model: Map<String, Model> = loadModel()
     val skin: Skin = loadSkin()
@@ -22,11 +24,8 @@ class CommonResources : Disposable {
 
     private fun loadModel(): Map<String, Model> {
         val map = HashMap<String, Model>()
-        val fileHandle = Gdx.files.getFileHandle("assets3d", Files.FileType.Internal)
-        for (entry in fileHandle.list()) {
-            if (entry.name().endsWith("g3dj")) {
-                map[entry.nameWithoutExtension()] = loader.loadModel(entry)
-            }
+        for (entry in assets3d) {
+            map[entry] = loader.loadModel(Gdx.files.internal("assets3d/$entry"))
         }
         return map
     }
@@ -45,9 +44,8 @@ class CommonResources : Disposable {
 
     private fun loadTextures(): Map<String, Texture> {
         val map = HashMap<String, Texture>()
-        val fileHandle = Gdx.files.getFileHandle("assets2d", Files.FileType.Internal)
-        for (entry in fileHandle.list()) {
-            map[entry.nameWithoutExtension()] = Texture(entry)
+        for (entry in assets2d) {
+            map[entry] = Texture(Gdx.files.internal("assets2d/$entry"))
         }
         return map
     }

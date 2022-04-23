@@ -1,25 +1,23 @@
 package castle.core.system
 
-import castle.core.event.EventContext
 import castle.core.event.EventQueue
 import castle.core.service.CameraService
 import castle.core.service.EnvironmentInitService
-import castle.core.service.PlayerService
+import castle.core.service.GameService
 import castle.core.service.SelectionService
 import castle.core.ui.service.UIService
 import com.badlogic.ashley.core.Engine
-import com.badlogic.ashley.signals.Signal
 import com.badlogic.ashley.systems.IntervalSystem
 import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
 
 class GameManagerSystem(
-        private val environmentInitService: EnvironmentInitService,
-        private val playerService: PlayerService,
-        private val uiService: UIService,
-        private val selectionService: SelectionService,
-        private val cameraService: CameraService,
-        private val eventQueue: EventQueue
+    private val environmentInitService: EnvironmentInitService,
+    private val gameService: GameService,
+    private val uiService: UIService,
+    private val selectionService: SelectionService,
+    private val cameraService: CameraService,
+    private val eventQueue: EventQueue
 ) : IntervalSystem(GAME_TICK), KtxInputAdapter, KtxScreen {
     companion object {
         private const val GAME_TICK: Float = 0.1f
@@ -27,17 +25,11 @@ class GameManagerSystem(
         const val CHAT_UNFOCUSED = "CHAT_UNFOCUSED"
     }
 
-    private val signal = Signal<EventContext>()
-
-    init {
-        signal.add(eventQueue)
-    }
-
     override fun addedToEngine(engine: Engine) {
         environmentInitService.init(engine)
         uiService.init(engine)
         selectionService.init(engine)
-        playerService.init(engine)
+        gameService.init(engine)
     }
 
     override fun update(deltaTime: Float) {
@@ -47,7 +39,7 @@ class GameManagerSystem(
 
     override fun updateInterval() {
         uiService.update()
-        playerService.update(engine, eventQueue)
+        gameService.update(engine, GAME_TICK, eventQueue)
         proceedEvents()
     }
 

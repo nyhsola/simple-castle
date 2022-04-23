@@ -1,14 +1,10 @@
 package castle.core.config
 
-import castle.core.builder.EnvironmentBuilder
-import castle.core.builder.PlayerBuilder
-import castle.core.builder.TemplateBuilder
-import castle.core.builder.UnitBuilder
+import castle.core.builder.*
 import castle.core.event.EventQueue
 import castle.core.service.*
 import castle.core.system.GameManagerSystem
 import castle.core.system.PhysicSystem
-import castle.core.system.TextCountSystem
 import castle.core.system.UnitSystem
 import castle.core.system.render.*
 import castle.core.ui.debug.DebugUI
@@ -56,15 +52,15 @@ class GameConfig : Disposable {
     private val unitBuilder = UnitBuilder(commonResources, templateBuilder)
     private val environmentInitService = EnvironmentInitService(environmentBuilder, commonResources)
     private val playerBuilder = PlayerBuilder(gameResources, environmentInitService, unitBuilder)
-    private val playerService = PlayerService(gameResources, playerBuilder)
+    private val effectBuilder = EffectBuilder(environmentInitService)
+    private val gameService = GameService(gameResources, playerBuilder, effectBuilder)
     private val rayCastService = RayCastService(physicService, cameraService)
     private val mapService = MapService(eventQueue, gameUI.minimap, scanService)
     private val selectionService = SelectionService(uiService, rayCastService)
 
     private val hpRenderSystem = HpRenderSystem(decalBatch)
     private val unitSystem = UnitSystem(eventQueue, environmentInitService, mapService)
-    private val textCountSystem = TextCountSystem()
-    private val gameManagerSystem = GameManagerSystem(environmentInitService, playerService, uiService, selectionService, cameraService, eventQueue)
+    private val gameManagerSystem = GameManagerSystem(environmentInitService, gameService, uiService, selectionService, cameraService, eventQueue)
 
     val systems =
             listOf(
@@ -77,7 +73,6 @@ class GameConfig : Disposable {
                     hpRenderSystem,
                     unitSystem,
                     textRenderSystem,
-                    textCountSystem,
                     gameManagerSystem
             )
 

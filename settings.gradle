@@ -1,4 +1,0 @@
-include 'android'
-include 'asset'
-include 'core:common'
-include 'server:launcher'

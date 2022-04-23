@@ -1,8 +1,6 @@
 package castle.core.ui.game
 
-import castle.core.event.EventContext
 import castle.core.service.CommonResources
-import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.InputEvent
@@ -16,10 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.FocusListener
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Chat(
-        signal: Signal<EventContext>,
-        commonResources: CommonResources
-) : Table() {
+class Chat(commonResources: CommonResources) : Table() {
     private val chatHistory: MutableList<String> = ArrayList()
     private val chatPoll: PriorityQueue<String> = PriorityQueue()
     private val textArea = TextArea("", commonResources.skin)
@@ -93,9 +88,9 @@ class Chat(
         val color = (Math.random() * 0x1000000).toInt().toString(16)
         val fullMessage = "$currentTime: $message"
         fullMessage
-                .split("\n")
-                .flatMap { it.chunked(40) }
-                .forEach { internalTypeMessage("[#$color]$it") }
+            .split("\n")
+            .flatMap { it.chunked(40) }
+            .forEach { internalTypeMessage("[#$color]$it") }
     }
 
     fun pollAllMessages(): Array<String> {
@@ -108,8 +103,8 @@ class Chat(
         chatHistory.add(message)
         chatPoll.add(message)
         val resultText = chatHistory
-                .takeLast(lines)
-                .joinToString(separator = "\n") { it }
+            .takeLast(lines)
+            .joinToString(separator = "\n") { it }
         text = resultText
     }
 }

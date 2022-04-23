@@ -2,6 +2,10 @@ How to run
 ======
 Use `gradlew :server:launcher:run` task to run application
 
+How to pack into jar
+=====
+Use `gradlew :server:launcher:jar` task to pack application into jar
+
 How to pack blender model into the game
 ======
 ### (No need to do this if you did not change model)
