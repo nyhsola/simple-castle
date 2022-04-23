@@ -2,7 +2,6 @@ package castle.core.screen.add
 
 import castle.core.system.GameManagerSystem
 import castle.core.system.PhysicSystem
-import castle.core.system.TextCountSystem
 import castle.core.system.UnitSystem
 import castle.core.system.render.*
 import com.badlogic.ashley.core.EntitySystem
@@ -24,8 +23,7 @@ class ScreenConfigurator(entitySystems: List<EntitySystem>) {
                 StageRenderSystem::class.java,
                 PhysicSystem::class.java,
                 UnitSystem::class.java,
-                GameManagerSystem::class.java,
-                TextCountSystem::class.java,
+                GameManagerSystem::class.java
         )
     }
 

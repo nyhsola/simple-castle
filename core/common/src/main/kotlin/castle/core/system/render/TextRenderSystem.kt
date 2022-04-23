@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Matrix4
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Align
 
 class TextRenderSystem(
@@ -19,7 +20,6 @@ class TextRenderSystem(
         private val cameraService: CameraService
 ) : IteratingSystem(Family.all(TextRenderComponent::class.java).get()) {
     private val tempMat = Matrix4()
-    private val textTransform = Matrix4().idt().rotate(0f, 1f, 0f, 90f)
     private val bitmapFont: BitmapFont = gameResources.bitmapFont
 
     override fun update(deltaTime: Float) {
@@ -30,7 +30,7 @@ class TextRenderSystem(
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val textRenderComponent = TextRenderComponent.mapper.get(entity)
         val camera = cameraService.currentCamera.camera
-        spriteBatch.projectionMatrix = tempMat.set(camera.combined).mul(textTransform).translate(textRenderComponent.offset)
+        spriteBatch.projectionMatrix = tempMat.set(camera.combined).translate(textRenderComponent.offset).rotate(Vector3.Y, 90f)
         spriteBatch.begin()
         bitmapFont.draw(spriteBatch, textRenderComponent.text, 0f, 0f, 0f, Align.center, false)
         spriteBatch.end()

@@ -5,8 +5,8 @@ import castle.core.event.EventContext
 import castle.core.event.EventQueue
 import castle.core.`object`.CommonEntity
 import castle.core.service.CommonResources
+import castle.core.service.GameService
 import castle.core.service.MapService
-import castle.core.service.PlayerService
 import castle.core.system.PhysicSystem
 import castle.core.system.UnitSystem
 import castle.core.ui.service.UIService
@@ -94,8 +94,8 @@ class DebugUI(
         table.add(createButton("Map", listOf(EventContext(MapService.DEBUG_ENABLE)))).width(50f).height(50f)
         table.row()
         val list = listOf(
-                EventContext(PlayerService.SPAWN, mapOf(Pair(PlayerService.PLAYER_NAME, "Player 1"))),
-                EventContext(PlayerService.SPAWN, mapOf(Pair(PlayerService.PLAYER_NAME, "Player 2")))
+                EventContext(GameService.SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 1"))),
+                EventContext(GameService.SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 3")))
         )
         table.add(createButton("Spawn", list)).width(50f).height(50f)
         container.actor = table

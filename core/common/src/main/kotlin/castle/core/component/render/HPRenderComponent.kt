@@ -26,7 +26,7 @@ class HPRenderComponent(
 
     private val height = max.sub(min).y * 0.9f
     private val width = max.sub(min).z * 1.1f
-    private val flatMap = TextureRegion.split(texture, texture.width / 4, texture.height)
+    private val flatMap = TextureRegion.split(texture, texture.width / 4, texture.height / 4)
             .flatMap { it.asIterable() }
             .reversed()
             .toTypedArray()
@@ -35,8 +35,8 @@ class HPRenderComponent(
 
     val translation: Vector3 = Vector3(0f, height, 0f)
     val matrix4: Matrix4 = position
-    val animation: Animation<TextureRegion> = Animation<TextureRegion>(10f, split)
-    val decal: Decal = Decal.newDecal(width, width / 3, TextureRegion(texture), true)
+    val animation: Animation<TextureRegion> = Animation<TextureRegion>(1000f, split)
+    val decal: Decal = Decal.newDecal(width, width / 4, TextureRegion(texture), true)
             .apply {
                 textureRegion = animation.getKeyFrame(0f)
                 rotation = quaternion

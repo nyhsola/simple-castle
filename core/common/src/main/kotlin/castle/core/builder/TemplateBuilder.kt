@@ -1,11 +1,14 @@
 package castle.core.builder
 
-import castle.core.`object`.CommonEntity
 import castle.core.component.PhysicComponent
 import castle.core.component.PositionComponent
 import castle.core.component.render.ModelRenderComponent
 import castle.core.json.TemplateJson
+import castle.core.`object`.CommonEntity
 import castle.core.service.CommonResources
+import com.badlogic.gdx.Application
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.g3d.Model
 import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody
@@ -78,5 +81,9 @@ class TemplateBuilder(private val commonResources: CommonResources) {
         return ModelInstance(nodeModel ?: findNode(nodeName), Array(list.toTypedArray()))
     }
 
-    private fun findNode(node: String) = commonResources.model.filter { it.value.getNode(node) != null }.map { it.value }.firstOrNull()
+    private fun findNode(node: String) : Model? {
+        Gdx.app.logLevel = Application.LOG_NONE;
+        Gdx.app.log("log", commonResources.model.map { it.key }.joinToString { it })
+        return commonResources.model.filter { it.value.getNode(node) != null }.map { it.value }.firstOrNull()
+    }
 }

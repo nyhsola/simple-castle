@@ -2,7 +2,6 @@ package castle.core.system
 
 import castle.core.component.PhysicComponent
 import castle.core.component.PositionComponent
-import castle.core.component.SideComponent
 import castle.core.component.UnitComponent
 import castle.core.component.render.LineRenderComponent
 import castle.core.event.EventQueue
@@ -134,13 +133,12 @@ class UnitSystem(
     }
 
     private fun findEnemies(entity: Entity): List<Entity> {
-        val sideComponent = SideComponent.mapper.get(entity)
         val unitComponent = UnitComponent.mapper.get(entity)
         return unitComponent.nearObjects
-                .filter { SideComponent.mapper.has(it) }
+                .filter { UnitComponent.mapper.has(it) }
                 .filter {
-                    val component = SideComponent.mapper.get(it)
-                    sideComponent.side != component.side
+                    val otherUnit = UnitComponent.mapper.get(it)
+                    otherUnit.playerName != unitComponent.playerName
                 }
     }
 

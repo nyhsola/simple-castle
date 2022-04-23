@@ -5,10 +5,10 @@
     "node": "castle",
     "unitSettings": {
       "unitType": "building",
-      "amount": 100
+      "amount": 10000
     },
     "hpSettings": {
-      "textureName": "hp"
+      "textureName": "hp.png"
     }
   },
   {
@@ -18,7 +18,7 @@
     "unitSettings": {
       "unitType": "unit",
       "behaviour": "attack",
-      "amount": 100,
+      "amount": 1000,
       "speedLinear": 8,
       "speedAngular": 3.0,
       "attackFrom": 5,
@@ -27,7 +27,7 @@
       "scanRange": 3.0
     },
     "hpSettings": {
-      "textureName": "hp"
+      "textureName": "hp.png"
     }
   }
 ]

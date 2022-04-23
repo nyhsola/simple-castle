@@ -1,11 +1,11 @@
 package castle.core.service
 
-import castle.core.`object`.CommonEntity
 import castle.core.component.PhysicComponent
 import castle.core.component.PositionComponent
-import castle.core.component.SideComponent
+import castle.core.component.UnitComponent
 import castle.core.component.render.CircleRenderComponent
 import castle.core.component.render.ModelRenderComponent
+import castle.core.`object`.CommonEntity
 import castle.core.ui.service.UIService
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
@@ -51,7 +51,7 @@ class SelectionService(
         }
         var entityReturn: Entity? = null
         for (entity in entities) {
-            if (PhysicComponent.mapper.has(entity) && SideComponent.mapper.has(entity)) {
+            if (PhysicComponent.mapper.has(entity) && UnitComponent.mapper.has(entity)) {
                 val physicComponent = PhysicComponent.mapper.get(entity)
                 val userData = physicComponent.body.userData as String
                 if (userData == node) {
