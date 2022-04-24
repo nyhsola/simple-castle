@@ -3,9 +3,11 @@ package castle.core.game
 import castle.core.event.EventQueue
 import castle.core.screen.GameScreen
 import castle.core.screen.StartScreen
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.physics.bullet.Bullet
 import ktx.app.KtxGame
+import kotlin.math.min
 
 class ServerGame : KtxGame<Screen>() {
     private val eventQueue = EventQueue()
@@ -22,7 +24,7 @@ class ServerGame : KtxGame<Screen>() {
 
     override fun render() {
         proceedEvent()
-        super.render()
+        currentScreen.render(min(1f / 30f, Gdx.graphics.deltaTime))
     }
 
     private fun proceedEvent() {

@@ -1,57 +1,44 @@
 [
   {
     "templateName": "GROUND",
-    "renderSettings": {},
-    "physicSettings": {
-      "collisionFilterGroup": 1,
-      "collisionFilterMask": [
-        -1
-      ],
-      "collisionFlag": [
-        "CF_KINEMATIC_OBJECT"
-      ]
-    }
+    "collisionFilterGroup": 1,
+    "collisionFilterMask": [
+      -1
+    ],
+    "collisionFlag": [
+      "CF_KINEMATIC_OBJECT"
+    ]
   },
   {
     "templateName": "AREA",
-    "renderSettings": {
-      "hide": true
-    },
-    "physicSettings": {
-      "shape": "ADJUSTED_BASE_BOX",
-      "collisionFilterGroup": 3,
-      "collisionFilterMask": [
-        2,
-        3
-      ],
-      "collisionFlag": [
-        "CF_KINEMATIC_OBJECT", "CF_NO_CONTACT_RESPONSE"
-      ]
-    }
+    "hide": true,
+    "shape": "ADJUSTED_BASE_BOX",
+    "collisionFilterGroup": 3,
+    "collisionFilterMask": [
+      2,
+      3
+    ],
+    "collisionFlag": [
+      "CF_KINEMATIC_OBJECT", "CF_NO_CONTACT_RESPONSE"
+    ]
   },
   {
     "templateName": "BUILDING",
-    "renderSettings": {},
-    "physicSettings": {
-      "shape": "ADJUSTED_BASE_BOX",
-      "collisionFilterGroup": 2,
-      "collisionFilterMask": [
-        1,
-        3
-      ]
-    }
+    "shape": "ADJUSTED_BASE_BOX",
+    "collisionFilterGroup": 2,
+    "collisionFilterMask": [
+      1,
+      3
+    ]
   },
   {
     "templateName": "UNIT",
-    "renderSettings": {},
-    "physicSettings": {
-      "shape": "ADJUSTED_BASE_BOX",
-      "mass": 1,
-      "collisionFilterGroup": 2,
-      "collisionFilterMask": [
-        1,
-        3
-      ]
-    }
+    "shape": "ADJUSTED_BASE_BOX",
+    "mass": 1,
+    "collisionFilterGroup": 2,
+    "collisionFilterMask": [
+      1,
+      3
+    ]
   }
 ]

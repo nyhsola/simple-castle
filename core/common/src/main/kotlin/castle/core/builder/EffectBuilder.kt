@@ -12,7 +12,7 @@ class EffectBuilder(
     private val environmentInitService: EnvironmentInitService
 ) {
     fun buildCountText(playerJson: PlayerJson, signal: Signal<EventContext>): List<CountText> {
-        return playerJson.pathSettings.paths
+        return playerJson.paths
             .mapIndexed { lineNumber, it ->
                 val pathEntity = environmentInitService.neutralUnits.getValue(it[0])
                 val positionComponent = PositionComponent.mapper.get(pathEntity)

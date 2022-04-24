@@ -1,5 +1,6 @@
 package castle.core.component
 
+import castle.core.behaviour.Behaviours
 import castle.core.path.Area
 import castle.core.util.Task
 import com.badlogic.ashley.core.Component
@@ -13,15 +14,15 @@ import com.badlogic.gdx.ai.pfa.GraphPath
 import com.badlogic.gdx.math.Vector2
 
 class UnitComponent(
-        val unitType: String,
-        val amount: Int,
-        val speedLinear: Float,
-        val speedAngular: Float,
-        val attackAmount: IntRange,
-        val attackSpeed: Float,
-        val scanRange: Float,
-        owner: Entity,
-        initialState: State<Entity>
+    owner: Entity,
+    behaviour: String,
+    val unitType: String,
+    val amount: Int,
+    val speedLinear: Float,
+    val speedAngular: Float,
+    val attackAmount: IntRange,
+    val attackSpeed: Float,
+    val scanRange: Float
 ) : Component {
     companion object {
         enum class Distances(val distance: Float) {
@@ -32,7 +33,7 @@ class UnitComponent(
     }
 
     var currentAmount = amount
-    val state: StateMachine<Entity, State<Entity>> = DefaultStateMachine(owner, initialState)
+    val state: StateMachine<Entity, State<Entity>> = DefaultStateMachine(owner, Behaviours.behaviors.getValue(behaviour))
 
     val target: Vector2 = Vector2()
     val path: MutableList<String> = ArrayList()

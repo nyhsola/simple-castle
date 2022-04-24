@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.ai.fsm.State
 import com.badlogic.gdx.ai.msg.Telegram
 
-enum class NoneBehavior : State<Entity> {
+enum class RangeAttackBehaviour : State<Entity> {
     INIT {
         override fun enter(entity: Entity) {}
 

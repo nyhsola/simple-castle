@@ -13,11 +13,11 @@ class PlayerBuilder(
     private val unitBuilder: UnitBuilder
 ) {
     fun buildBuildings(playerJson: PlayerJson): List<CommonEntity> {
-        return playerJson.startupSettings.units.map { buildInternal(playerJson.playerName, it.key, it.value) }
+        return playerJson.units.map { buildInternal(playerJson.playerName, it.key, it.value) }
     }
 
     fun buildUnit(playerJson: PlayerJson, lineNumber: Int): CommonEntity {
-        val line = playerJson.pathSettings.paths[lineNumber]
+        val line = playerJson.paths[lineNumber]
         val spawnPoint = line[0]
         return buildInternal(playerJson.playerName, "warrior", spawnPoint).also { initPath(it, line) }
     }

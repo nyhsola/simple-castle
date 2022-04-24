@@ -1,13 +1,13 @@
 package castle.core.behaviour
 
-import castle.core.`object`.CommonEntity
 import castle.core.component.UnitComponent
 import castle.core.component.render.AnimationRenderComponent
+import castle.core.`object`.CommonEntity
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.ai.fsm.State
 import com.badlogic.gdx.ai.msg.Telegram
 
-enum class AttackBehaviour : State<Entity> {
+enum class GroundAttackBehaviour : State<Entity> {
     INIT {
         override fun enter(entity: Entity) {
         }
