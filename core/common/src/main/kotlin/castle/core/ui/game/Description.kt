@@ -8,6 +8,7 @@ import castle.core.service.ScanService
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea
+import com.badlogic.gdx.utils.Align
 
 class Description(
         commonResources: CommonResources,
@@ -16,6 +17,10 @@ class Description(
     private var track: Entity? = null
     private val tempVector = Vector3()
 
+    init {
+        alignment = Align.center
+    }
+
     fun update() {
         if (track != null) {
             val modelRenderComponent = ModelRenderComponent.mapper.get(track)
@@ -23,9 +28,13 @@ class Description(
             val unitComponent = UnitComponent.mapper.get(track)
             val area = scanService.toArea(positionComponent.matrix4.getTranslation(tempVector))
             messageText = """
-                Unit: ${modelRenderComponent.nodeName}
+                ${modelRenderComponent.nodeName} (${unitComponent.state.currentState})
+                - - - - -
+                HP: ${unitComponent.currentAmount}/${unitComponent.amount}
+                Attack: ${unitComponent.attackAmount}
+                Attack Speed: ${unitComponent.attackSpeed}
+                
                 Position: ${area.x} ${area.y} 
-                Status: ${unitComponent.state.currentState}
             """.trimIndent()
         }
     }

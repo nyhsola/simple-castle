@@ -24,14 +24,8 @@ class TemplateBuilder(private val commonResources: CommonResources) {
     private fun buildUnitInternal(commonEntity: CommonEntity, templateJson: TemplateJson, nodeName: String): CommonEntity {
         val positionComponent = initPosition(nodeName)
         commonEntity.add(positionComponent)
-        if (templateJson.renderSettings.enabled) {
-            val renderComponent = initRender(templateJson, nodeName, positionComponent)
-            commonEntity.add(renderComponent)
-        }
-        if (templateJson.physicSettings.enabled) {
-            val physicComponent = initPhysic(templateJson, nodeName)
-            commonEntity.add(physicComponent)
-        }
+        commonEntity.add(initRender(templateJson, nodeName, positionComponent))
+        commonEntity.add(initPhysic(templateJson, nodeName))
         return commonEntity
     }
 
@@ -41,18 +35,18 @@ class TemplateBuilder(private val commonResources: CommonResources) {
 
     private fun initRender(templateJson: TemplateJson, nodeName: String, positionComponent: PositionComponent): ModelRenderComponent {
         val modelInstance = getModelInstance(nodeName)
-        val hide = templateJson.renderSettings.hide
+        val hide = templateJson.hide
         modelInstance.transform = positionComponent.matrix4
         return ModelRenderComponent(modelInstance, hide, nodeName)
     }
 
     private fun initPhysic(templateJson: TemplateJson, nodeName: String): PhysicComponent {
-        val physicShape = templateJson.physicSettings.shape
+        val physicShape = templateJson.shape
         val shape = physicShape.build(getModel(nodeName))
-        val info = btRigidBody.btRigidBodyConstructionInfo(templateJson.physicSettings.mass, null, shape)
-        val collisionFlag = templateJson.physicSettings.collisionFlag
-        val collisionFilterGroupParam = templateJson.physicSettings.collisionFilterGroup
-        val collisionFilterMaskList = templateJson.physicSettings.collisionFilterMask
+        val info = btRigidBody.btRigidBodyConstructionInfo(templateJson.mass, null, shape)
+        val collisionFlag = templateJson.collisionFlag
+        val collisionFilterGroupParam = templateJson.collisionFilterGroup
+        val collisionFilterMaskList = templateJson.collisionFilterMask
         val physicComponent = PhysicComponent(info, collisionFlag, collisionFilterGroupParam, collisionFilterMaskList)
         physicComponent.body.userData = nodeName + "-" + UUID.randomUUID().toString()
         return physicComponent

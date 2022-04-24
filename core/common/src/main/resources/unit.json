@@ -3,31 +3,22 @@
     "unitName": "castle",
     "templateName": "BUILDING",
     "node": "castle",
-    "unitSettings": {
-      "unitType": "building",
-      "amount": 10000
-    },
-    "hpSettings": {
-      "textureName": "hp.png"
-    }
+    "unitType": "building",
+    "amount": 10000,
+    "behaviour": "range-attack"
   },
   {
     "unitName": "warrior",
     "templateName": "UNIT",
     "node": "unit-warrior",
-    "unitSettings": {
-      "unitType": "unit",
-      "behaviour": "attack",
-      "amount": 1000,
-      "speedLinear": 8,
-      "speedAngular": 3.0,
-      "attackFrom": 5,
-      "attackTo": 100,
-      "attackSpeed": 0.25,
-      "scanRange": 3.0
-    },
-    "hpSettings": {
-      "textureName": "hp.png"
-    }
+    "unitType": "unit",
+    "amount": 1000,
+    "behaviour": "ground-attack",
+    "speedLinear": 8,
+    "speedAngular": 3.0,
+    "attackFrom": 5,
+    "attackTo": 100,
+    "attackSpeed": 0.25,
+    "scanRange": 3.0
   }
 ]

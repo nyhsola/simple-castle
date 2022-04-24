@@ -38,7 +38,7 @@ class Player(
     }
 
     fun spawnUnits(engine: Engine) {
-        List(playerJson.pathSettings.paths.size) { index -> playerBuilder.buildUnit(playerJson, index)}.onEach { it.add(engine) }
+        List(playerJson.paths.size) { index -> playerBuilder.buildUnit(playerJson, index)}.onEach { it.add(engine) }
     }
 
     private fun internalEvents(engine: Engine) {

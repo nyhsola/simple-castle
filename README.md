@@ -9,14 +9,12 @@ Use `gradlew :server:launcher:jar` task to pack application into jar
 How to pack blender model into the game
 ======
 ### (No need to do this if you did not change model)
-Use task `gradlew :asset:buildModel` to update model. It packs **map.blend** model into the game.
+Use task `gradlew :asset:buildModel` to update model. It packs **.blend** files from step4 folder into the assets
 
 ### Notes:
 
-* Task works only on Windows
-* Before usage update `asset/paths.properties` according your Blender app location
+* Before usage update `asset/paths.properties` according your Blender app location and fbx-conv.exe
 * When saving project file in Blender, mark option File > External Data > Automatically Pack Into .blend.
-* To make this work you'll need to install VC 2015 Redistributable Package (See https://github.com/libgdx/fbx-conv)
 
 Other:
 ======

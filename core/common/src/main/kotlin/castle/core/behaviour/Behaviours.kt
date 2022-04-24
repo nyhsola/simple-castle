@@ -6,8 +6,9 @@ import com.badlogic.gdx.ai.fsm.State
 class Behaviours {
     companion object {
         val behaviors: Map<String, State<Entity>> = mapOf(
-                "none" to NoneBehavior.NONE,
-                "attack" to AttackBehaviour.INIT,
+                "none" to NoneBehavior.INIT,
+                "ground-attack" to GroundAttackBehaviour.INIT,
+                "range-attack" to RangeAttackBehaviour.INIT,
         )
     }
 }

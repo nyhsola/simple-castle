@@ -13,7 +13,6 @@ import com.badlogic.gdx.physics.bullet.dynamics.btConstraintSolver
 import com.badlogic.gdx.physics.bullet.dynamics.btDiscreteDynamicsWorld
 import com.badlogic.gdx.physics.bullet.dynamics.btSequentialImpulseConstraintSolver
 import com.badlogic.gdx.physics.bullet.linearmath.btIDebugDraw
-import kotlin.math.min
 
 class PhysicService(private val cameraService: CameraService) {
     private val contactListener: CustomContactListener = CustomContactListener()
@@ -45,7 +44,7 @@ class PhysicService(private val cameraService: CameraService) {
     }
 
     fun update(deltaTime: Float) {
-        dynamicsWorld.stepSimulation(min(1f / 30f, deltaTime), 5, 1f / 60f)
+        dynamicsWorld.stepSimulation(deltaTime, 5, 1f / 60f)
     }
 
     fun removeEntity(entity: Entity) {
