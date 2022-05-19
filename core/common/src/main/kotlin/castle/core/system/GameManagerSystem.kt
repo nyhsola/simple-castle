@@ -1,22 +1,22 @@
 package castle.core.system
 
 import castle.core.event.EventQueue
-import castle.core.service.CameraService
-import castle.core.service.EnvironmentInitService
-import castle.core.service.GameService
-import castle.core.service.SelectionService
+import castle.core.service.*
 import castle.core.ui.service.UIService
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.systems.IntervalSystem
+import com.badlogic.gdx.ai.GdxAI
+import com.badlogic.gdx.ai.msg.MessageManager
 import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
 
 class GameManagerSystem(
-    private val environmentInitService: EnvironmentInitService,
+    private val environmentService: EnvironmentService,
     private val gameService: GameService,
     private val uiService: UIService,
     private val selectionService: SelectionService,
     private val cameraService: CameraService,
+    private val mapService: MapService,
     private val eventQueue: EventQueue
 ) : IntervalSystem(GAME_TICK), KtxInputAdapter, KtxScreen {
     companion object {
@@ -26,20 +26,24 @@ class GameManagerSystem(
     }
 
     override fun addedToEngine(engine: Engine) {
-        environmentInitService.init(engine)
+        environmentService.init(engine)
         uiService.init(engine)
         selectionService.init(engine)
         gameService.init(engine)
     }
 
     override fun update(deltaTime: Float) {
+        GdxAI.getTimepiece().update(deltaTime)
+        MessageManager.getInstance().update()
         cameraService.update(deltaTime)
         super.update(deltaTime)
     }
 
     override fun updateInterval() {
+        mapService.updateMap()
         uiService.update()
         gameService.update(engine, GAME_TICK, eventQueue)
+        mapService.proceedEvents(engine)
         proceedEvents()
     }
 
@@ -85,7 +89,7 @@ class GameManagerSystem(
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         cameraService.touchDown(screenX, screenY, pointer, button)
-        selectionService.select(screenX, screenY, engine.entities)
+        selectionService.select(screenX, screenY)
         return uiService.touchDown(screenX, screenY, pointer, button)
     }
 

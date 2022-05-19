@@ -18,8 +18,8 @@ class UIService(
     }
 
     fun init(engine: Engine) {
-        gameUI.add(engine)
-        debugUI.add(engine)
+        engine.addEntity(gameUI)
+        engine.addEntity(debugUI)
     }
 
     fun update() {

@@ -19,6 +19,6 @@
     "attackFrom": 5,
     "attackTo": 100,
     "attackSpeed": 0.25,
-    "scanRange": 3.0
+    "visibilityRange": 3.0
   }
 ]

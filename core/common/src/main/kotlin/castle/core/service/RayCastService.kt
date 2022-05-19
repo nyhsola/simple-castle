@@ -23,8 +23,8 @@ class RayCastService(
         rayTestCB.closestHitFraction = 1f
         rayTestCB.setRayFromWorld(rayFrom)
         rayTestCB.setRayToWorld(rayTo)
-        rayTestCB.collisionFilterGroup = PhysicTools.getFilterGroup(3)
-        rayTestCB.collisionFilterMask = PhysicTools.getFilterMask(listOf(2))
+        rayTestCB.collisionFilterGroup = PhysicTools.getFilterGroup(1)
+        rayTestCB.collisionFilterMask = PhysicTools.getFilterMask(listOf(3, 4))
         physicService.dynamicsWorld.collisionWorld.rayTest(rayFrom, rayTo, rayTestCB)
         return if (rayTestCB.hasHit()) rayTestCB.collisionObject else null
     }

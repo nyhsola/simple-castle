@@ -1,5 +1,6 @@
 package castle.core.builder
 
+import castle.core.behaviour.Behaviours
 import castle.core.component.PhysicComponent
 import castle.core.component.PositionComponent
 import castle.core.component.UnitComponent
@@ -7,36 +8,37 @@ import castle.core.component.render.AnimationRenderComponent
 import castle.core.component.render.HPRenderComponent
 import castle.core.component.render.ModelRenderComponent
 import castle.core.json.UnitJson
-import castle.core.`object`.CommonEntity
 import castle.core.service.CommonResources
+import com.badlogic.ashley.core.Entity
 
 class UnitBuilder(
     private val commonResources: CommonResources,
-    private val templateBuilder: TemplateBuilder
+    private val templateBuilder: TemplateBuilder,
+    private val behaviours: Behaviours
 ) {
     private companion object {
         private const val defaultHpTexture = "hp.png"
     }
 
-    fun build(unitJson: UnitJson): CommonEntity {
+    fun build(unitJson: UnitJson): Entity {
         val templates = commonResources.templates
         val templateJson = templates.getValue(unitJson.templateName)
         val buildEntity = templateBuilder.build(templateJson, unitJson.node)
         return init(unitJson, buildEntity)
     }
 
-    private fun init(unitJson: UnitJson, unit: CommonEntity): CommonEntity {
+    private fun init(unitJson: UnitJson, unit: Entity): Entity {
         unit.add(
             UnitComponent(
+                behaviours.behaviors.getValue(unitJson.behaviour),
                 unit,
-                unitJson.behaviour,
                 unitJson.unitType,
                 unitJson.amount,
-                unitJson.speedLinear,
-                unitJson.speedAngular,
                 unitJson.attackFrom..unitJson.attackTo,
                 unitJson.attackSpeed,
-                unitJson.scanRange
+                unitJson.visibilityRange,
+                unitJson.speedLinear,
+                unitJson.speedAngular
             )
         )
         unit.add(

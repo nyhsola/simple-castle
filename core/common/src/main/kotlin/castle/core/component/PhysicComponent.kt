@@ -1,32 +1,29 @@
 package castle.core.component
 
+import castle.core.json.TemplateJson
 import castle.core.physic.MotionState
 import castle.core.physic.PhysicTools
 import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.ComponentMapper
+import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.bullet.collision.CollisionConstants
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody
 import com.badlogic.gdx.utils.Disposable
 
 class PhysicComponent(
-        val constructionInfo: btRigidBody.btRigidBodyConstructionInfo,
-        collisionFlag: List<String>,
-        collisionFilterGroupParam: Int,
-        collisionFilterMaskList: List<Int>
+    modelInstance: ModelInstance,
+    templateJson: TemplateJson
 ) : Component, Disposable {
-    val body: btRigidBody
     private val motionState = MotionState()
-    val collisionFilterMask: Int
-    val collisionFilterGroup: Int
+    private val constructionInfo = btRigidBody.btRigidBodyConstructionInfo(templateJson.mass, motionState, templateJson.shape.build(modelInstance))
+    val body: btRigidBody = btRigidBody(constructionInfo)
+    val collisionFilterMask: Int = PhysicTools.getFilterMask(templateJson.collisionFilterMask)
+    val collisionFilterGroup: Int = PhysicTools.getFilterGroup(templateJson.collisionFilterGroup)
 
     init {
-        constructionInfo.motionState = motionState
-        body = btRigidBody(constructionInfo)
         body.activationState = CollisionConstants.DISABLE_DEACTIVATION
-        body.collisionFlags = body.collisionFlags or PhysicTools.getCollisionFlag(collisionFlag)
-        collisionFilterMask = PhysicTools.getFilterMask(collisionFilterMaskList)
-        collisionFilterGroup = PhysicTools.getFilterGroup(collisionFilterGroupParam)
+        body.collisionFlags = body.collisionFlags or PhysicTools.getCollisionFlag(templateJson.collisionFlag)
     }
 
     override fun dispose() {

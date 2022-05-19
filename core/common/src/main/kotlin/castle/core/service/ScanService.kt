@@ -9,9 +9,9 @@ import com.badlogic.gdx.physics.bullet.collision.btBoxShape
 import kotlin.math.abs
 
 class ScanService(
-        commonResources: CommonResources,
-        private val templateBuilder: TemplateBuilder,
-        private val physicService: PhysicService
+    commonResources: CommonResources,
+    private val templateBuilder: TemplateBuilder,
+    private val physicService: PhysicService
 ) {
     companion object {
         private const val occupied = 1
@@ -45,9 +45,9 @@ class ScanService(
 
     private fun initMap3D(commonResources: CommonResources): List<List<List<Int>>> {
         return templateBuilder.build(commonResources.templates.getValue("GROUND"), "ground")
-                .apply { PhysicComponent.mapper.get(this).body.getAabb(aabbMin, aabbMax) }
-                .apply { dispose() }
-                .let { scanRegion(scanBox, aabbMin, aabbMax) }
+            .apply { PhysicComponent.mapper.get(this).body.getAabb(aabbMin, aabbMax) }
+            .apply { PhysicComponent.mapper.get(this).dispose() }
+            .let { scanRegion(scanBox, aabbMin, aabbMax) }
     }
 
     private fun initMap2D() = mirror(map3D.map { byX -> byX.map { byZ -> byZ.sum() } })

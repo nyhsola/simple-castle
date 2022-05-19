@@ -28,7 +28,7 @@ class Description(
             val unitComponent = UnitComponent.mapper.get(track)
             val area = scanService.toArea(positionComponent.matrix4.getTranslation(tempVector))
             messageText = """
-                ${modelRenderComponent.nodeName} (${unitComponent.state.currentState})
+                ${modelRenderComponent.nodeName} (${unitComponent.state.currentState.javaClass.simpleName})
                 - - - - -
                 HP: ${unitComponent.currentAmount}/${unitComponent.amount}
                 Attack: ${unitComponent.attackAmount}

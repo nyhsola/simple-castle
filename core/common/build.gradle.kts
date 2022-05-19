@@ -6,4 +6,6 @@ dependencies {
     implementation(libs.gai)
     implementation(libs.gfreetype)
     implementation(libs.gbullet)
+
+    testImplementation(kotlin("test"))
 }

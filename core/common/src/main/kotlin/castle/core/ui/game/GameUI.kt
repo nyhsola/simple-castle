@@ -3,10 +3,10 @@ package castle.core.ui.game
 import castle.core.component.render.StageRenderComponent
 import castle.core.event.EventContext
 import castle.core.event.EventQueue
-import castle.core.`object`.CommonEntity
 import castle.core.service.CommonResources
 import castle.core.service.ScanService
 import castle.core.system.GameManagerSystem
+import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.Value
 import com.badlogic.gdx.utils.Align
+import com.badlogic.gdx.utils.Disposable
 
 private const val PAD_MAIN = 0.02f
 
@@ -25,7 +26,7 @@ class GameUI(
         stage: Stage,
         shapeRenderer: ShapeRenderer,
         eventQueue: EventQueue
-) : CommonEntity() {
+) : Entity(), Disposable {
     private val stageRenderComponent: StageRenderComponent = StageRenderComponent(stage).also { this.add(it) }
     private val signal = Signal<EventContext>()
     private val rootContainer = Container<Table>()
@@ -164,5 +165,9 @@ class GameUI(
                 .align(Align.topRight)
                 .expand()
         return container
+    }
+
+    override fun dispose() {
+        stageRenderComponent.dispose()
     }
 }
