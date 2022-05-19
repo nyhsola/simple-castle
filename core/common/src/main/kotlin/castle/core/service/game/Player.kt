@@ -5,8 +5,8 @@ import castle.core.builder.PlayerBuilder
 import castle.core.event.EventContext
 import castle.core.event.EventQueue
 import castle.core.json.PlayerJson
-import castle.core.`object`.CommonEntity
 import com.badlogic.ashley.core.Engine
+import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.signals.Signal
 
 class Player(
@@ -14,7 +14,7 @@ class Player(
     private val playerBuilder: PlayerBuilder,
     private val effectBuilder: EffectBuilder
 ) {
-    private val buildings: MutableList<CommonEntity> = ArrayList()
+    private val buildings: MutableList<Entity> = ArrayList()
     private val effects: MutableList<CountText> = ArrayList()
 
     private val internalPlayerEvents: EventQueue = EventQueue()
@@ -38,7 +38,7 @@ class Player(
     }
 
     fun spawnUnits(engine: Engine) {
-        List(playerJson.paths.size) { index -> playerBuilder.buildUnit(playerJson, index)}.onEach { it.add(engine) }
+        List(playerJson.paths.size) { index -> playerBuilder.buildUnit(playerJson, index)}.onEach { engine.addEntity(it) }
     }
 
     private fun internalEvents(engine: Engine) {
@@ -46,7 +46,7 @@ class Player(
             when (eventContext.eventType) {
                 CountText.ON_COUNT -> {
                     val lineNumber = eventContext.params.getValue(CountText.PARAM_LINE) as Int
-                    playerBuilder.buildUnit(playerJson, lineNumber).add(engine)
+                    engine.addEntity(playerBuilder.buildUnit(playerJson, lineNumber))
                     true
                 }
                 else -> false

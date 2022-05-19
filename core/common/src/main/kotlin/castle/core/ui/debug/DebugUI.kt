@@ -3,13 +3,13 @@ package castle.core.ui.debug
 import castle.core.component.render.StageRenderComponent
 import castle.core.event.EventContext
 import castle.core.event.EventQueue
-import castle.core.`object`.CommonEntity
 import castle.core.service.CommonResources
 import castle.core.service.GameService
 import castle.core.service.MapService
 import castle.core.system.PhysicSystem
 import castle.core.system.UnitSystem
 import castle.core.ui.service.UIService
+import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
@@ -21,12 +21,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Align
+import com.badlogic.gdx.utils.Disposable
 
 class DebugUI(
         private val commonResources: CommonResources,
         stage: Stage,
         eventQueue: EventQueue
-) : CommonEntity() {
+) : Entity(), Disposable{
     private val stageRenderComponent: StageRenderComponent = StageRenderComponent(stage).also { this.add(it) }
     private val signal = Signal<EventContext>()
     private val rootContainer = Container<Table>()
@@ -112,5 +113,9 @@ class DebugUI(
             }
         })
         return button
+    }
+
+    override fun dispose() {
+        stageRenderComponent.dispose()
     }
 }

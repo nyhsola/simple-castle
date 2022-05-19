@@ -117,7 +117,17 @@ class PhysicService(private val cameraService: CameraService) {
 
     private inner class CustomContactListener : ContactListener() {
         override fun onContactStarted(colObj0: btCollisionObject, colObj1: btCollisionObject) {
-            physicListeners.forEach { it.onContactStarted(colObj0, colObj1) }
+            if (colObj0.userData !is Entity || colObj1.userData !is Entity) return
+            val entity1 = colObj0.userData as Entity
+            val entity2 = colObj1.userData as Entity
+            physicListeners.forEach { it.onContactStarted(entity1, entity2) }
+        }
+
+        override fun onContactEnded(colObj0: btCollisionObject, colObj1: btCollisionObject) {
+            if (colObj0.userData !is Entity || colObj1.userData !is Entity) return
+            val entity1 = colObj0.userData as Entity
+            val entity2 = colObj1.userData as Entity
+            physicListeners.forEach { it.onContactEnded(entity1, entity2) }
         }
     }
 }

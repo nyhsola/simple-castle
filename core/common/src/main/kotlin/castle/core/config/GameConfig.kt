@@ -1,5 +1,8 @@
 package castle.core.config
 
+import castle.core.behaviour.Behaviours
+import castle.core.behaviour.GroundMeleeAttackBehaviour
+import castle.core.behaviour.GroundRangeAttackBehaviour
 import castle.core.builder.*
 import castle.core.event.EventQueue
 import castle.core.service.*
@@ -49,18 +52,24 @@ class GameConfig : Disposable {
     private val debugUI = DebugUI(commonResources, createStage(), eventQueue)
     private val uiService = UIService(eventQueue, gameUI, debugUI)
 
-    private val unitBuilder = UnitBuilder(commonResources, templateBuilder)
-    private val environmentInitService = EnvironmentInitService(environmentBuilder, commonResources)
-    private val playerBuilder = PlayerBuilder(gameResources, environmentInitService, unitBuilder)
-    private val effectBuilder = EffectBuilder(environmentInitService)
+    private val mapService = MapService(eventQueue, gameUI.minimap, scanService)
+    private val environmentService = EnvironmentService(environmentBuilder, commonResources)
+    private val unitService = UnitService(physicService, mapService, environmentService)
+
+    private val groundMeleeAttackBehaviour = GroundMeleeAttackBehaviour(unitService)
+    private val groundRangeAttackBehaviour = GroundRangeAttackBehaviour(unitService)
+    private val behaviours = Behaviours(groundMeleeAttackBehaviour, groundRangeAttackBehaviour)
+
+    private val unitBuilder = UnitBuilder(commonResources, templateBuilder, behaviours)
+    private val playerBuilder = PlayerBuilder(gameResources, environmentService, unitBuilder)
+    private val effectBuilder = EffectBuilder(environmentService)
     private val gameService = GameService(gameResources, playerBuilder, effectBuilder)
     private val rayCastService = RayCastService(physicService, cameraService)
-    private val mapService = MapService(eventQueue, gameUI.minimap, scanService)
     private val selectionService = SelectionService(uiService, rayCastService)
 
     private val hpRenderSystem = HpRenderSystem(decalBatch)
-    private val unitSystem = UnitSystem(eventQueue, environmentInitService, mapService)
-    private val gameManagerSystem = GameManagerSystem(environmentInitService, gameService, uiService, selectionService, cameraService, eventQueue)
+    private val unitSystem = UnitSystem(eventQueue)
+    private val gameManagerSystem = GameManagerSystem(environmentService, gameService, uiService, selectionService, cameraService, mapService, eventQueue)
 
     val systems =
             listOf(

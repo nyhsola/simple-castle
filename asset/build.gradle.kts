@@ -14,25 +14,29 @@ val fbxPath = "\"${properties.getProperty("fbx-path")}\""
 val assets3d = rootProject.file("/android/assets/assets3d")
 
 task("buildModel") {
-    val models = modelFolder.listFiles().filter { it.isFile && it.extension == "blend" }
-    for (model in models) {
-        val blendFile = "\"${model.path}\""
-        val targetFileFbx = "\"${rootProject.file("/asset/blender-project/step4/${model.nameWithoutExtension}.fbx")}\""
-        exec {
-            commandLine(blenderPath, blendFile, "--background", "--python", pythonScriptFile, "--", "filename=$targetFileFbx")
-        }
-        exec {
-            commandLine(fbxPath, "-f", "-o", "G3DJ", targetFileFbx)
+    doLast {
+        val models = modelFolder.listFiles().filter { it.isFile && it.extension == "blend" }
+        for (model in models) {
+            val blendFile = "\"${model.path}\""
+            val targetFileFbx = "\"${rootProject.file("/asset/blender-project/step4/${model.nameWithoutExtension}.fbx")}\""
+            exec {
+                commandLine(blenderPath, blendFile, "--background", "--python", pythonScriptFile, "--", "filename=$targetFileFbx")
+            }
+            exec {
+                commandLine(fbxPath, "-f", "-o", "G3DJ", targetFileFbx)
+            }
         }
     }
 }
 
 task("copyModel") {
-    val models = modelFolder.listFiles().filter { it.isFile && it.extension == "g3dj" }
-    for (model in models) {
-        copy {
-            from(model, texturesFolder)
-            into(asset3dFolder)
+    doLast {
+        val models = modelFolder.listFiles().filter { it.isFile && it.extension == "g3dj" }
+        for (model in models) {
+            copy {
+                from(model, texturesFolder)
+                into(asset3dFolder)
+            }
         }
     }
 }

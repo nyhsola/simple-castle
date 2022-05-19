@@ -4,29 +4,26 @@ import castle.core.component.PhysicComponent
 import castle.core.component.PositionComponent
 import castle.core.component.render.ModelRenderComponent
 import castle.core.json.TemplateJson
-import castle.core.`object`.CommonEntity
 import castle.core.service.CommonResources
+import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.Application
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g3d.Model
 import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.math.Matrix4
-import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody
 import com.badlogic.gdx.utils.Array
-import java.util.*
 
 class TemplateBuilder(private val commonResources: CommonResources) {
-    fun build(templateJson: TemplateJson, nodeName: String): CommonEntity {
-        val commonEntity = CommonEntity()
-        return buildUnitInternal(commonEntity, templateJson, nodeName)
+    fun build(templateJson: TemplateJson, nodeName: String): Entity {
+        return buildUnitInternal(Entity(), templateJson, nodeName)
     }
 
-    private fun buildUnitInternal(commonEntity: CommonEntity, templateJson: TemplateJson, nodeName: String): CommonEntity {
+    private fun buildUnitInternal(entity: Entity, templateJson: TemplateJson, nodeName: String): Entity {
         val positionComponent = initPosition(nodeName)
-        commonEntity.add(positionComponent)
-        commonEntity.add(initRender(templateJson, nodeName, positionComponent))
-        commonEntity.add(initPhysic(templateJson, nodeName))
-        return commonEntity
+        entity.add(positionComponent)
+        entity.add(initRender(templateJson, nodeName, positionComponent))
+        entity.add(initPhysic(entity, templateJson, nodeName))
+        return entity
     }
 
     private fun initPosition(node: String): PositionComponent {
@@ -40,15 +37,9 @@ class TemplateBuilder(private val commonResources: CommonResources) {
         return ModelRenderComponent(modelInstance, hide, nodeName)
     }
 
-    private fun initPhysic(templateJson: TemplateJson, nodeName: String): PhysicComponent {
-        val physicShape = templateJson.shape
-        val shape = physicShape.build(getModel(nodeName))
-        val info = btRigidBody.btRigidBodyConstructionInfo(templateJson.mass, null, shape)
-        val collisionFlag = templateJson.collisionFlag
-        val collisionFilterGroupParam = templateJson.collisionFilterGroup
-        val collisionFilterMaskList = templateJson.collisionFilterMask
-        val physicComponent = PhysicComponent(info, collisionFlag, collisionFilterGroupParam, collisionFilterMaskList)
-        physicComponent.body.userData = nodeName + "-" + UUID.randomUUID().toString()
+    private fun initPhysic(entity: Entity, templateJson: TemplateJson, nodeName: String): PhysicComponent {
+        val physicComponent = PhysicComponent(getModel(nodeName), templateJson)
+        physicComponent.body.userData = entity
         return physicComponent
     }
 
@@ -75,7 +66,7 @@ class TemplateBuilder(private val commonResources: CommonResources) {
         return ModelInstance(nodeModel ?: findNode(nodeName), Array(list.toTypedArray()))
     }
 
-    private fun findNode(node: String) : Model? {
+    private fun findNode(node: String): Model? {
         Gdx.app.logLevel = Application.LOG_NONE;
         Gdx.app.log("log", commonResources.model.map { it.key }.joinToString { it })
         return commonResources.model.filter { it.value.getNode(node) != null }.map { it.value }.firstOrNull()

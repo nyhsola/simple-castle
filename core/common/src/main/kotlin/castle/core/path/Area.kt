@@ -4,15 +4,21 @@ import com.badlogic.gdx.math.Vector2
 import kotlin.math.pow
 
 class Area(
-        val position: Vector2,
-        val x: Int,
-        val y: Int
+    val position: Vector2,
+    val x: Int,
+    val y: Int
 ) {
     constructor(x: Int, y: Int) : this(Vector2(), x, y)
 
     var index: Int = 0
 
-    fun getAreasInRange(radius: Float, arr: ArrayList<Area>): List<Area> {
+    fun inRadius(radius: Float, area: Area): Boolean {
+        var isInArea = false
+        forEachInRadius(radius) { x, y -> isInArea = (x == area.x && y == area.y) || isInArea }
+        return isInArea
+    }
+
+    fun forEachInRadius(radius: Float, action: (Int, Int) -> Unit) {
         val radius2 = radius.pow(2)
         val startX = (x - radius).toInt()
         val endX = (x + radius).toInt()
@@ -23,11 +29,10 @@ class Area(
                 val xi2 = (xi - x).toFloat().pow(2)
                 val yi2 = (yi - y).toFloat().pow(2)
                 if (xi2 + yi2 < radius2) {
-                    arr.add(Area(xi, yi))
+                    action.invoke(xi, yi)
                 }
             }
         }
-        return arr
     }
 
     override fun equals(other: Any?): Boolean {
