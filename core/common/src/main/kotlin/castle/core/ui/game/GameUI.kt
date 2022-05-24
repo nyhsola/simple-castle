@@ -21,11 +21,11 @@ import com.badlogic.gdx.utils.Disposable
 private const val PAD_MAIN = 0.02f
 
 class GameUI(
-        scanService: ScanService,
-        commonResources: CommonResources,
-        stage: Stage,
-        shapeRenderer: ShapeRenderer,
-        eventQueue: EventQueue
+    scanService: ScanService,
+    commonResources: CommonResources,
+    stage: Stage,
+    shapeRenderer: ShapeRenderer,
+    eventQueue: EventQueue
 ) : Entity(), Disposable {
     private val stageRenderComponent: StageRenderComponent = StageRenderComponent(stage).also { this.add(it) }
     private val signal = Signal<EventContext>()

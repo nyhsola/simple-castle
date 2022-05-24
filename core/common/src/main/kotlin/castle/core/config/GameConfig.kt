@@ -1,6 +1,7 @@
 package castle.core.config
 
 import castle.core.behaviour.Behaviours
+import castle.core.behaviour.DecorationBehaviour
 import castle.core.behaviour.GroundMeleeAttackBehaviour
 import castle.core.behaviour.GroundRangeAttackBehaviour
 import castle.core.builder.*
@@ -8,6 +9,7 @@ import castle.core.event.EventQueue
 import castle.core.service.*
 import castle.core.system.GameManagerSystem
 import castle.core.system.PhysicSystem
+import castle.core.system.StateSystem
 import castle.core.system.UnitSystem
 import castle.core.system.render.*
 import castle.core.ui.debug.DebugUI
@@ -28,18 +30,21 @@ class GameConfig : Disposable {
     private val commonResources = CommonResources()
     private val gameResources = GameResources()
 
-    private val templateBuilder = TemplateBuilder(commonResources)
-    private val environmentBuilder = EnvironmentBuilder(commonResources, templateBuilder)
-
-    private val physicService = PhysicService(cameraService)
-    private val scanService = ScanService(commonResources, templateBuilder, physicService)
-    private val physicSystem = PhysicSystem(physicService, eventQueue)
-
     private val modelBatch = ModelBatch()
     private val decalBatch = DecalBatch(CameraGroupStrategy(cameraService.currentCamera.camera))
     private val spriteBatch = SpriteBatch()
     private val shapeRender = ShapeRenderer().apply { setAutoShapeType(true) }
     private fun createStage() = Stage(ScreenViewport())
+
+    private val templateBuilder = TemplateBuilder(commonResources)
+    private val environmentBuilder = EnvironmentBuilder(commonResources, templateBuilder)
+
+    private val physicService = PhysicService(cameraService)
+    private val scanService = ScanService(commonResources, templateBuilder, physicService)
+
+    private val gameUI = GameUI(scanService, commonResources, createStage(), shapeRender, eventQueue)
+    private val debugUI = DebugUI(commonResources, createStage(), eventQueue)
+    private val uiService = UIService(eventQueue, gameUI, debugUI)
 
     private val stageRectRenderSystem = StageRenderSystem()
     private val animationRenderSystem = AnimationRenderSystem()
@@ -48,42 +53,45 @@ class GameConfig : Disposable {
     private val circleRenderSystem = CircleRenderSystem(shapeRender, cameraService)
     private val textRenderSystem = TextRenderSystem(spriteBatch, gameResources, cameraService)
 
-    private val gameUI = GameUI(scanService, commonResources, createStage(), shapeRender, eventQueue)
-    private val debugUI = DebugUI(commonResources, createStage(), eventQueue)
-    private val uiService = UIService(eventQueue, gameUI, debugUI)
-
+    private val environmentService = EnvironmentService(environmentBuilder)
     private val mapService = MapService(eventQueue, gameUI.minimap, scanService)
-    private val environmentService = EnvironmentService(environmentBuilder, commonResources)
     private val unitService = UnitService(physicService, mapService, environmentService)
 
     private val groundMeleeAttackBehaviour = GroundMeleeAttackBehaviour(unitService)
     private val groundRangeAttackBehaviour = GroundRangeAttackBehaviour(unitService)
-    private val behaviours = Behaviours(groundMeleeAttackBehaviour, groundRangeAttackBehaviour)
+    private val decorationBehaviour = DecorationBehaviour(mapService)
 
+    private val behaviours = Behaviours(groundMeleeAttackBehaviour, groundRangeAttackBehaviour, decorationBehaviour)
+
+    private val decorationBuilder: DecorationBuilder = DecorationBuilder(commonResources, templateBuilder, behaviours)
     private val unitBuilder = UnitBuilder(commonResources, templateBuilder, behaviours)
     private val playerBuilder = PlayerBuilder(gameResources, environmentService, unitBuilder)
     private val effectBuilder = EffectBuilder(environmentService)
-    private val gameService = GameService(gameResources, playerBuilder, effectBuilder)
+
+    private val gameService = GameService(gameResources, playerBuilder, effectBuilder, decorationBuilder)
     private val rayCastService = RayCastService(physicService, cameraService)
     private val selectionService = SelectionService(uiService, rayCastService)
 
     private val hpRenderSystem = HpRenderSystem(decalBatch)
+    private val stateSystem = StateSystem()
+    private val physicSystem = PhysicSystem(physicService, eventQueue)
     private val unitSystem = UnitSystem(eventQueue)
     private val gameManagerSystem = GameManagerSystem(environmentService, gameService, uiService, selectionService, cameraService, mapService, eventQueue)
 
     val systems =
-            listOf(
-                    physicSystem,
-                    stageRectRenderSystem,
-                    animationRenderSystem,
-                    modelRenderSystem,
-                    lineRenderSystem,
-                    circleRenderSystem,
-                    hpRenderSystem,
-                    unitSystem,
-                    textRenderSystem,
-                    gameManagerSystem
-            )
+        listOf(
+            physicSystem,
+            stageRectRenderSystem,
+            animationRenderSystem,
+            modelRenderSystem,
+            lineRenderSystem,
+            circleRenderSystem,
+            hpRenderSystem,
+            stateSystem,
+            unitSystem,
+            textRenderSystem,
+            gameManagerSystem
+        )
 
     override fun dispose() {
         commonResources.dispose()

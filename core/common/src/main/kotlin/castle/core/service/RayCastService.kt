@@ -7,8 +7,8 @@ import com.badlogic.gdx.physics.bullet.collision.btCollisionObject
 import com.badlogic.gdx.utils.Disposable
 
 class RayCastService(
-        private val physicService: PhysicService,
-        private val cameraService: CameraService
+    private val physicService: PhysicService,
+    private val cameraService: CameraService
 ) : Disposable {
     private val meters = 50f
     private val rayFrom = Vector3()
@@ -24,7 +24,7 @@ class RayCastService(
         rayTestCB.setRayFromWorld(rayFrom)
         rayTestCB.setRayToWorld(rayTo)
         rayTestCB.collisionFilterGroup = PhysicTools.getFilterGroup(1)
-        rayTestCB.collisionFilterMask = PhysicTools.getFilterMask(listOf(3, 4))
+        rayTestCB.collisionFilterMask = PhysicTools.getFilterMask(listOf(4))
         physicService.dynamicsWorld.collisionWorld.rayTest(rayFrom, rayTo, rayTestCB)
         return if (rayTestCB.hasHit()) rayTestCB.collisionObject else null
     }

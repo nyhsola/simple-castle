@@ -1,15 +1,17 @@
 package castle.core.service
 
+import castle.core.builder.DecorationBuilder
 import castle.core.builder.EffectBuilder
 import castle.core.builder.PlayerBuilder
 import castle.core.event.EventQueue
-import castle.core.service.game.Player
+import castle.core.`object`.Player
 import com.badlogic.ashley.core.Engine
 
 class GameService(
     gameResources: GameResources,
-    private val playerBuilder: PlayerBuilder,
-    private val effectBuilder: EffectBuilder
+    playerBuilder: PlayerBuilder,
+    effectBuilder: EffectBuilder,
+    decorationBuilder: DecorationBuilder
 ) {
     companion object {
         const val SPAWN: String = "SPAWN"
@@ -17,9 +19,11 @@ class GameService(
     }
 
     private val players = gameResources.players.mapValues { Player(it.value, playerBuilder, effectBuilder) }
+    private val decorations = decorationBuilder.buildDecorations()
 
     fun init(engine: Engine) {
         players.onEach { it.value.init(engine) }
+        decorations.onEach { engine.addEntity(it) }
     }
 
     fun update(engine: Engine, deltaTime: Float, eventQueue: EventQueue) {

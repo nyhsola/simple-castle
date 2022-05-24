@@ -1,5 +1,6 @@
 package castle.core.behaviour
 
+import castle.core.component.StateComponent
 import castle.core.component.UnitComponent
 import castle.core.component.render.AnimationRenderComponent
 import castle.core.service.UnitService
@@ -17,8 +18,9 @@ class GroundMeleeAttackBehaviour(private val unitService: UnitService) {
     private inner class Init : StateDelta<Entity> {
         override fun update(entity: Entity, delta: Float) {
             val unitComponent = UnitComponent.mapper.get(entity)
+            val stateComponent = StateComponent.mapper.get(entity)
             unitService.initPath(unitComponent)
-            unitComponent.state.changeState(moveRoute)
+            stateComponent.state.changeState(moveRoute)
         }
     }
 
@@ -31,17 +33,18 @@ class GroundMeleeAttackBehaviour(private val unitService: UnitService) {
 
         override fun update(entity: Entity, delta: Float) {
             val unitComponent = UnitComponent.mapper.get(entity)
+            val stateComponent = StateComponent.mapper.get(entity)
             unitService.updateMap(unitComponent)
             unitService.updateEnemies(unitComponent)
-            unitService.updateMove(unitComponent)
+            unitService.updateMovePath(unitComponent)
             when {
                 unitComponent.isEnemiesAround -> {
-                    unitComponent.targetEnemy = unitComponent.nearEnemies.first()
-                    unitComponent.state.changeState(attackRoute)
+                    unitComponent.targetEnemy = unitComponent.inRadiusEnemies.first()
+                    stateComponent.state.changeState(attackRoute)
                 }
                 unitComponent.isEnemiesInTouch -> {
                     unitComponent.targetEnemy = unitComponent.inTouchEnemies.first()
-                    unitComponent.state.changeState(attack)
+                    stateComponent.state.changeState(attack)
                 }
             }
         }
@@ -54,15 +57,19 @@ class GroundMeleeAttackBehaviour(private val unitService: UnitService) {
 
         override fun update(entity: Entity, delta: Float) {
             val unitComponent = UnitComponent.mapper.get(entity)
+            val stateComponent = StateComponent.mapper.get(entity)
             val unitComponentEnemy = unitComponent.targetEnemy!!
             unitService.updateMap(unitComponent)
             unitService.updateMoveTarget(unitComponent)
             when {
                 unitComponent.inTouchEnemies.contains(unitComponentEnemy) -> {
-                    unitComponent.state.changeState(attack)
+                    stateComponent.state.changeState(attack)
+                }
+                !unitComponent.inTouchEnemies.contains(unitComponentEnemy) && unitComponent.inTouchObjects.isNotEmpty() -> {
+                    // re-init path to obj
                 }
                 unitComponentEnemy.isDead -> {
-                    unitComponent.state.changeState(moveRoute)
+                    stateComponent.state.changeState(moveRoute)
                 }
             }
         }
@@ -75,14 +82,15 @@ class GroundMeleeAttackBehaviour(private val unitService: UnitService) {
 
         override fun update(entity: Entity, delta: Float) {
             val unitComponent = UnitComponent.mapper.get(entity)
+            val stateComponent = StateComponent.mapper.get(entity)
             val unitComponentEnemy = unitComponent.targetEnemy!!
             unitService.updateMap(unitComponent)
             when {
                 unitComponentEnemy.isDead -> {
-                    unitComponent.state.changeState(moveRoute)
+                    stateComponent.state.changeState(moveRoute)
                 }
                 !unitComponent.inTouchEnemies.contains(unitComponent.targetEnemy) -> {
-                    unitComponent.state.changeState(moveRoute)
+                    stateComponent.state.changeState(moveRoute)
                 }
                 else -> unitService.updateAttack(unitComponent, delta)
             }

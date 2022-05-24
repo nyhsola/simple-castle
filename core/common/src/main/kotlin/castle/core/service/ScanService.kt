@@ -22,7 +22,7 @@ class ScanService(
     private val map3D by lazy { initMap3D(commonResources) }
     val map by lazy { initMap2D() }
 
-    private val scanBox = Vector3(1f, 1f, 1f)
+    private val scanBox = Vector3(1.1f, 1.1f, 1.1f)
     private val aabbMin = Vector3()
     private val aabbMax = Vector3()
 

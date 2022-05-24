@@ -5,8 +5,6 @@ import castle.core.service.*
 import castle.core.ui.service.UIService
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.systems.IntervalSystem
-import com.badlogic.gdx.ai.GdxAI
-import com.badlogic.gdx.ai.msg.MessageManager
 import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
 
@@ -33,8 +31,6 @@ class GameManagerSystem(
     }
 
     override fun update(deltaTime: Float) {
-        GdxAI.getTimepiece().update(deltaTime)
-        MessageManager.getInstance().update()
         cameraService.update(deltaTime)
         super.update(deltaTime)
     }

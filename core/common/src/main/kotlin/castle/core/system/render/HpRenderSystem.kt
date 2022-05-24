@@ -20,7 +20,7 @@ class HpRenderSystem(private val decalBatch: DecalBatch) : IteratingSystem(Famil
         val unitComponent = UnitComponent.mapper.get(entity)
         val hpRenderComponent = HPRenderComponent.mapper.get(entity)
         val position = hpRenderComponent.matrix4.getTranslation(temp).add(hpRenderComponent.translation)
-        val percent = unitComponent.currentAmount.toFloat() / unitComponent.amount.toFloat()
+        val percent = unitComponent.currentHealth.toFloat() / unitComponent.totalHealth.toFloat()
         val textureRegion = hpRenderComponent.animation.getKeyFrame(hpRenderComponent.animation.animationDuration * percent)
         hpRenderComponent.decal.textureRegion = textureRegion
         hpRenderComponent.decal.position = position

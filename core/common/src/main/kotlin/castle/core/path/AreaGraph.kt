@@ -13,8 +13,7 @@ class AreaGraph : IndexedGraph<Area> {
     private val areas: Array<Area> = Array<Area>()
     private val areaConnections: Array<AreaConnection> = Array<AreaConnection>()
     private val map: ObjectMap<Area, Array<Connection<Area>>> = ObjectMap<Area, Array<Connection<Area>>>()
-    private val dynamicUpdate: MutableList<Area> = ArrayList()
-    private val staticUpdate: MutableList<Area> = ArrayList()
+    private val disconnectedArea: MutableList<Area> = ArrayList()
     private var lastNodeIndex = 0
 
     fun addArea(area: Area) {
@@ -33,20 +32,12 @@ class AreaGraph : IndexedGraph<Area> {
         areaConnections.add(areaConnection)
     }
 
-    fun restoreStaticConnections(list: List<Area>) {
-        staticUpdate.removeAll(list)
+    fun restore(from: Area) {
+        disconnectedArea.remove(from)
     }
 
-    fun restoreConnections() {
-        dynamicUpdate.clear()
-    }
-
-    fun disconnect(from: Area, isStatic: Boolean) {
-        if (isStatic) {
-            staticUpdate.add(from)
-        } else {
-            dynamicUpdate.add(from)
-        }
+    fun disconnect(from: Area) {
+        disconnectedArea.add(from)
     }
 
     fun findPath(from: Area, to: Area): GraphPath<Area> {
@@ -62,7 +53,7 @@ class AreaGraph : IndexedGraph<Area> {
     }
 
     override fun getConnections(fromNode: Area): Array<Connection<Area>> {
-        if (!(staticUpdate.contains(fromNode) || dynamicUpdate.contains(fromNode)) && map.containsKey(fromNode)) {
+        if (!disconnectedArea.contains(fromNode) && map.containsKey(fromNode)) {
             return map.get(fromNode)
         }
         return Array()

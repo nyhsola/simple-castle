@@ -3,7 +3,6 @@
     "unitName": "castle",
     "templateName": "BUILDING",
     "node": "castle",
-    "unitType": "building",
     "amount": 10000,
     "behaviour": "range-attack"
   },
@@ -11,12 +10,11 @@
     "unitName": "warrior",
     "templateName": "UNIT",
     "node": "unit-warrior",
-    "unitType": "unit",
     "amount": 1000,
     "behaviour": "ground-attack",
     "speedLinear": 8,
     "speedAngular": 3.0,
-    "attackFrom": 5,
+    "attackFrom": 10,
     "attackTo": 100,
     "attackSpeed": 0.25,
     "visibilityRange": 3.0

@@ -12,12 +12,6 @@ class Area(
 
     var index: Int = 0
 
-    fun inRadius(radius: Float, area: Area): Boolean {
-        var isInArea = false
-        forEachInRadius(radius) { x, y -> isInArea = (x == area.x && y == area.y) || isInArea }
-        return isInArea
-    }
-
     fun forEachInRadius(radius: Float, action: (Int, Int) -> Unit) {
         val radius2 = radius.pow(2)
         val startX = (x - radius).toInt()

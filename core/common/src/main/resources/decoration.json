@@ -1,0 +1,6 @@
+[
+  {
+    "templateName": "ENV",
+    "nodesPattern": "barrel-(?:.+)"
+  }
+]

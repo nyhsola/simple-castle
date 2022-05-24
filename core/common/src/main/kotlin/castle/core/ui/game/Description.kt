@@ -1,6 +1,7 @@
 package castle.core.ui.game
 
 import castle.core.component.PositionComponent
+import castle.core.component.StateComponent
 import castle.core.component.UnitComponent
 import castle.core.component.render.ModelRenderComponent
 import castle.core.service.CommonResources
@@ -11,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextArea
 import com.badlogic.gdx.utils.Align
 
 class Description(
-        commonResources: CommonResources,
-        private val scanService: ScanService
+    commonResources: CommonResources,
+    private val scanService: ScanService
 ) : TextArea("", commonResources.skin) {
     private var track: Entity? = null
     private val tempVector = Vector3()
@@ -26,11 +27,12 @@ class Description(
             val modelRenderComponent = ModelRenderComponent.mapper.get(track)
             val positionComponent = PositionComponent.mapper.get(track)
             val unitComponent = UnitComponent.mapper.get(track)
+            val stateComponent = StateComponent.mapper.get(track)
             val area = scanService.toArea(positionComponent.matrix4.getTranslation(tempVector))
             messageText = """
-                ${modelRenderComponent.nodeName} (${unitComponent.state.currentState.javaClass.simpleName})
+                ${modelRenderComponent.nodeName} (${stateComponent.state.currentState.javaClass.simpleName})
                 - - - - -
-                HP: ${unitComponent.currentAmount}/${unitComponent.amount}
+                HP: ${unitComponent.currentHealth}/${unitComponent.totalHealth}
                 Attack: ${unitComponent.attackAmount}
                 Attack Speed: ${unitComponent.attackSpeed}
                 

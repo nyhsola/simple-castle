@@ -2,7 +2,6 @@ package castle.core.service
 
 import castle.core.component.PhysicComponent
 import castle.core.component.PositionComponent
-import castle.core.component.UnitComponent
 import castle.core.component.render.CircleRenderComponent
 import castle.core.event.EventQueue
 import castle.core.path.Area
@@ -14,6 +13,7 @@ import com.badlogic.gdx.ai.pfa.DefaultGraphPath
 import com.badlogic.gdx.ai.pfa.GraphPath
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector3
+import kotlin.math.abs
 
 class MapService(
     private val eventQueue: EventQueue,
@@ -37,25 +37,16 @@ class MapService(
     private val areasInUnit: MutableMap<Entity, MutableSet<Area>> = HashMap()
 
     fun updateMap() {
-        mapGraph.restoreConnections()
         minimap.update(unitsInArea)
     }
 
     fun updateEntity(entity: Entity) {
-        val unitComponent = UnitComponent.mapper.get(entity)
-        val oneTimeBuildingsUpdate = unitComponent.unitType == "building" && !areasInUnit.containsKey(entity)
-        if (unitComponent.unitType == "unit" || oneTimeBuildingsUpdate) {
-            removeEntity(entity)
-            placeOnMap(entity, oneTimeBuildingsUpdate)
-        }
+        removeEntity(entity)
+        placeOnMap(entity)
     }
 
     fun removeEntity(entity: Entity) {
-        val unitComponent = UnitComponent.mapper.get(entity)
-        val oneTimeBuildingsUpdate = unitComponent.unitType == "building"
-        if (oneTimeBuildingsUpdate) {
-            mapGraph.restoreStaticConnections(areasInUnit[entity]?.toList() ?: emptyList())
-        }
+        areasInUnit[entity]?.forEach { mapGraph.restore(it) }
         areasInUnit[entity]?.forEach { unitsInArea[it]?.remove(entity) }
         areasInUnit.remove(entity)
     }
@@ -76,7 +67,7 @@ class MapService(
     }
 
     fun inRadius(position: Vector3, area: Area): Boolean {
-        return scanService.toArea(position).inRadius(2f, area)
+        return scanService.toArea(position) == area
     }
 
     fun proceedEvents(engine: Engine) {
@@ -98,26 +89,26 @@ class MapService(
         }
     }
 
-    private fun placeOnMap(entity: Entity, isStatic: Boolean) {
+    private fun placeOnMap(entity: Entity) {
         PhysicComponent.mapper.get(entity).body.getAabb(aabbMin, aabbMax)
         val min = scanService.toArea(aabbMin)
         val max = scanService.toArea(aabbMax)
-        val isBiggerThanOneGrid = min.x - max.x <= 1
-        if (isBiggerThanOneGrid) {
+        val isBiggerThanOneGrid = abs(min.x - max.x) > 1
+        if (!isBiggerThanOneGrid) {
             val area = scanService.toArea(PositionComponent.mapper.get(entity).matrix4.getTranslation(tempVector))
-            placeOnMapInternal(area, entity, isStatic)
+            placeOnMapInternal(area, entity)
         } else {
             for (i in max.x until min.x + 1) {
                 for (j in max.y until min.y + 1) {
                     val area = scanService.toArea(i, j)
-                    placeOnMapInternal(area, entity, isStatic)
+                    placeOnMapInternal(area, entity)
                 }
             }
         }
     }
 
-    private fun placeOnMapInternal(area: Area, entity: Entity, isStatic: Boolean) {
-        mapGraph.disconnect(area, isStatic)
+    private fun placeOnMapInternal(area: Area, entity: Entity) {
+        mapGraph.disconnect(area)
         unitsInArea.getOrPut(area) { mutableSetOf() }.add(entity)
         areasInUnit.getOrPut(entity) { mutableSetOf() }.add(area)
     }
