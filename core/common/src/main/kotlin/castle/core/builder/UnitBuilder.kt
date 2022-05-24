@@ -3,6 +3,7 @@ package castle.core.builder
 import castle.core.behaviour.Behaviours
 import castle.core.component.PhysicComponent
 import castle.core.component.PositionComponent
+import castle.core.component.StateComponent
 import castle.core.component.UnitComponent
 import castle.core.component.render.AnimationRenderComponent
 import castle.core.component.render.HPRenderComponent
@@ -21,18 +22,15 @@ class UnitBuilder(
     }
 
     fun build(unitJson: UnitJson): Entity {
-        val templates = commonResources.templates
-        val templateJson = templates.getValue(unitJson.templateName)
+        val templateJson = commonResources.templates.getValue(unitJson.templateName)
         val buildEntity = templateBuilder.build(templateJson, unitJson.node)
-        return init(unitJson, buildEntity)
+        return buildInternal(unitJson, buildEntity)
     }
 
-    private fun init(unitJson: UnitJson, unit: Entity): Entity {
+    private fun buildInternal(unitJson: UnitJson, unit: Entity): Entity {
         unit.add(
             UnitComponent(
-                behaviours.behaviors.getValue(unitJson.behaviour),
                 unit,
-                unitJson.unitType,
                 unitJson.amount,
                 unitJson.attackFrom..unitJson.attackTo,
                 unitJson.attackSpeed,
@@ -48,9 +46,13 @@ class UnitBuilder(
                 PhysicComponent.mapper.get(unit).body
             )
         )
-        if (unitJson.behaviour != "none") {
-            unit.add(AnimationRenderComponent(ModelRenderComponent.mapper.get(unit)))
-        }
+        unit.add(
+            StateComponent(
+                behaviours.behaviors.getValue(unitJson.behaviour),
+                unit
+            )
+        )
+        unit.add(AnimationRenderComponent(ModelRenderComponent.mapper.get(unit)))
         return unit
     }
 }

@@ -6,16 +6,13 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 
 class EnvironmentService(
-        private val environmentBuilder: EnvironmentBuilder,
-        private val commonResources: CommonResources
+    private val environmentBuilder: EnvironmentBuilder
 ) {
-    val neutralUnits: MutableMap<String, Entity> = HashMap()
+    val environmentObjects: MutableMap<String, Entity> = HashMap()
 
     fun init(engine: Engine) {
-        commonResources.environment
-                .map { environmentBuilder.build(it) }
-                .flatten()
-                .onEach { engine.addEntity(it) }
-                .onEach { neutralUnits[ModelRenderComponent.mapper.get(it).nodeName] = it }
+        environmentBuilder.buildEnvironment()
+            .onEach { engine.addEntity(it) }
+            .onEach { environmentObjects[ModelRenderComponent.mapper.get(it).nodeName] = it }
     }
 }

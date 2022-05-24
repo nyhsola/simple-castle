@@ -3,8 +3,6 @@ package castle.core.component
 import castle.core.path.Area
 import castle.core.physic.PhysicListener
 import castle.core.service.UnitService
-import castle.core.state.StateDelta
-import castle.core.state.StateMachineDelta
 import castle.core.util.Task
 import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.ComponentMapper
@@ -12,13 +10,10 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath
 import com.badlogic.gdx.ai.pfa.GraphPath
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.math.Vector3
 
 class UnitComponent(
-    behaviour: StateDelta<Entity>,
     val owner: Entity,
-    val unitType: String,
-    val amount: Int,
+    val totalHealth: Int,
     val attackAmount: IntRange,
     val attackSpeed: Float,
     val visibilityRange: Float,
@@ -29,60 +24,54 @@ class UnitComponent(
         val mapper: ComponentMapper<UnitComponent> = ComponentMapper.getFor(UnitComponent::class.java)
     }
 
-    private val temp: Vector3 = Vector3()
-    val target: Vector2 = Vector2()
+    var playerName: String = "neutral"
     var needRotation: Boolean = false
     var needMove: Boolean = false
+    var currentHealth = totalHealth
     var distance: Float = UnitService.Companion.Distances.AT.distance
-    var toPosition: Int = 0
 
-    val toArea: Area
-        get() = graphPath[toPosition]
-    val position: Vector3
-        get() = PositionComponent.mapper.get(owner).matrix4.getTranslation(temp)
-    val isEnemiesAround: Boolean
-        get() = nearEnemies.isNotEmpty()
-    val isEnemiesInTouch: Boolean
-        get() = inTouchEnemies.isNotEmpty()
-    val isDead: Boolean
-        get() = currentAmount <= 0
-
-    val state: StateMachineDelta<Entity, StateDelta<Entity>> = StateMachineDelta(owner, behaviour)
     val path: MutableList<String> = ArrayList()
+    var mainPath: GraphPath<Area> = DefaultGraphPath()
+    var nextPath: Int = 0
 
-    val inTouchEnemies: MutableSet<UnitComponent> = HashSet()
-    var nearUnits: List<UnitComponent> = ArrayList()
-    var nearEnemies: List<UnitComponent> = ArrayList()
-    var currentAmount = amount
-    var isGoingMove: Boolean = false
-    var graphPath: GraphPath<Area> = DefaultGraphPath()
+    var addPath: GraphPath<Area> = DefaultGraphPath()
+    var nextAddPath: Int = 0
+
+    val targetMove: Vector2 = Vector2()
     var targetEnemy: UnitComponent? = null
 
-    var playerName: String = "neutral"
+    val nextArea: Area
+        get() = if (mainPath.count <= 0) Area(0,0) else mainPath[nextPath]
+    val isDead: Boolean
+        get() = currentHealth <= 0
+    val isEnemiesAround: Boolean
+        get() = inRadiusEnemies.isNotEmpty()
+    val isEnemiesInTouch: Boolean
+        get() = inTouchEnemies.isNotEmpty()
+    val inTouchEnemies: List<UnitComponent>
+        get() = findEnemies(extractUnit(inTouchObjects))
+    val inRadiusEnemies: List<UnitComponent>
+        get() = findEnemies(inRadiusUnits)
+
+    val inTouchObjects: MutableSet<Entity> = HashSet()
+    val inRadiusUnits: MutableList<UnitComponent> = ArrayList()
 
     val physicListener = object : PhysicListener {
         override fun onContactStarted(entity1: Entity, entity2: Entity) {
-            if (!mapper.has(entity1) || !mapper.has(entity2)) return
-            val unitComponent1 = mapper.get(entity1)
-            val unitComponent2 = mapper.get(entity2)
-            if (unitComponent2.playerName == unitComponent1.playerName) return
             if (owner == entity1) {
-                inTouchEnemies.add(unitComponent2)
+                inTouchObjects.add(entity2)
             }
             if (owner == entity2) {
-                inTouchEnemies.add(unitComponent1)
+                inTouchObjects.add(entity1)
             }
         }
 
         override fun onContactEnded(entity1: Entity, entity2: Entity) {
-            if (!mapper.has(entity1) || !mapper.has(entity2)) return
-            val unitComponent1 = mapper.get(entity1)
-            val unitComponent2 = mapper.get(entity2)
             if (owner == entity1) {
-                inTouchEnemies.remove(unitComponent2)
+                inTouchObjects.remove(entity2)
             }
             if (owner == entity2) {
-                inTouchEnemies.remove(unitComponent1)
+                inTouchObjects.remove(entity1)
             }
         }
     }
@@ -93,11 +82,15 @@ class UnitComponent(
         }
     }
 
-    fun update(deltaTime: Float) {
-        state.update(deltaTime)
+    private fun takeDamage(amountParam: Int) {
+        currentHealth = Integer.max(currentHealth - amountParam, 0)
     }
 
-    private fun takeDamage(amountParam: Int) {
-        currentAmount = Integer.max(currentAmount - amountParam, 0)
+    private fun findEnemies(units: Collection<UnitComponent>): List<UnitComponent> {
+        return units.filter { playerName != it.playerName }
+    }
+
+    private fun extractUnit(obj: Collection<Entity>): List<UnitComponent> {
+        return obj.filter { mapper.has(it) }.map { mapper.get(it) }
     }
 }

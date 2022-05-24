@@ -1,5 +1,6 @@
 package castle.core.behaviour
 
+import castle.core.component.StateComponent
 import castle.core.component.UnitComponent
 import castle.core.service.UnitService
 import castle.core.state.StateDelta
@@ -14,8 +15,9 @@ class GroundRangeAttackBehaviour(private val unitService: UnitService) {
     private inner class Init : StateDelta<Entity> {
         override fun update(entity: Entity, delta: Float) {
             val unitComponent = UnitComponent.mapper.get(entity)
+            val stateComponent = StateComponent.mapper.get(entity)
             unitService.updateMap(unitComponent)
-            unitComponent.state.changeState(main)
+            stateComponent.state.changeState(main)
         }
     }
 

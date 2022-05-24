@@ -29,9 +29,7 @@ class UnitSystem(
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        val unitComponent = UnitComponent.mapper.get(entity)
-        unitComponent.update(deltaTime)
-        if (unitComponent.isDead) {
+        if (UnitComponent.mapper.get(entity).isDead) {
             engine.removeEntity(entity)
         }
     }
@@ -50,6 +48,7 @@ class UnitSystem(
                     }
                     true
                 }
+
                 else -> false
             }
         }
@@ -58,9 +57,9 @@ class UnitSystem(
     private fun createDebugLines(entity: Entity, linesOut: MutableList<Entity>) {
         val unitComponent = UnitComponent.mapper.get(entity)
         val positionComponent = PositionComponent.mapper.get(entity)
-        for (j in 0 until unitComponent.graphPath.count - 2) {
-            val area1 = unitComponent.graphPath.get(j).position
-            val area2 = unitComponent.graphPath.get(j + 1).position
+        for (j in 0 until unitComponent.mainPath.count - 2) {
+            val area1 = unitComponent.mainPath.get(j).position
+            val area2 = unitComponent.mainPath.get(j + 1).position
             val unitPosition = positionComponent.matrix4.getTranslation(tempPosition)
             val lineRenderComponent = LineRenderComponent(
                 Vector3(area1.x, unitPosition.y, area1.y), Vector3(area2.x, unitPosition.y, area2.y), Color.GREEN, true

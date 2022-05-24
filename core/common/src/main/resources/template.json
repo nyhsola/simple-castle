@@ -23,9 +23,17 @@
     ]
   },
   {
-    "templateName": "BUILDING",
+    "templateName": "ENV",
     "shape": "ADJUSTED_BASE_BOX",
     "collisionFilterGroup": 3,
+    "collisionFilterMask": [
+      4
+    ]
+  },
+  {
+    "templateName": "BUILDING",
+    "shape": "ADJUSTED_BASE_BOX",
+    "collisionFilterGroup": 4,
     "collisionFilterMask": [
       1,
       4

@@ -34,10 +34,10 @@ class UnitService(
     private val direction: Vector3 = Vector3()
 
     fun initPath(unitComponent: UnitComponent) {
-        val pathObjects = unitComponent.path.map { environmentService.neutralUnits[it] }
+        val pathObjects = unitComponent.path.map { environmentService.environmentObjects[it] }
         val pathPositions = pathObjects.map { PositionComponent.mapper.get(it).matrix4.getTranslation(temp).cpy() }
         val graphPath = mapService.getPath(pathPositions)
-        unitComponent.graphPath = graphPath
+        unitComponent.mainPath = graphPath
     }
 
     fun initMelee(unitComponent: UnitComponent) {
@@ -54,15 +54,15 @@ class UnitService(
     }
 
     fun updateEnemies(unitComponent: UnitComponent) {
-        val entities = mapService.getNear(unitComponent.toArea, unitComponent.visibilityRange)
-        unitComponent.nearUnits = extractUnitComponent(entities)
-        unitComponent.nearEnemies = findEnemies(unitComponent)
+        unitComponent.inRadiusUnits.clear()
+        unitComponent.inRadiusUnits.addAll(extractUnitComponent(mapService.getNear(unitComponent.nextArea, unitComponent.visibilityRange)))
     }
 
-    fun updateMove(unitComponent: UnitComponent) {
-        unitComponent.target.set(unitComponent.graphPath[unitComponent.toPosition].position)
-        if (mapService.inRadius(unitComponent.position, unitComponent.toArea)) {
-            unitComponent.toPosition = Integer.min(unitComponent.toPosition + 1, unitComponent.graphPath.count - 1)
+    fun updateMovePath(unitComponent: UnitComponent) {
+        unitComponent.targetMove.set(unitComponent.nextArea.position)
+        val unitPosition =  PositionComponent.mapper.get(unitComponent.owner).matrix4.getTranslation(temp)
+        if (mapService.inRadius(unitPosition, unitComponent.nextArea)) {
+            unitComponent.nextPath = Integer.min(unitComponent.nextPath + 1, unitComponent.mainPath.count - 1)
         }
         updateMoveParams(unitComponent)
         updateMoveInternal(unitComponent)
@@ -70,16 +70,15 @@ class UnitService(
 
     fun updateMoveTarget(unitComponent: UnitComponent) {
         val targetEntity = unitComponent.targetEnemy!!.owner
-        val unitComponentEnemy = UnitComponent.mapper.get(targetEntity)
-        val movingTarget = PositionComponent.mapper.get(unitComponentEnemy?.owner).matrix4.getTranslation(temp)
-        unitComponent.target.set(movingTarget.x, movingTarget.z)
+        val movingTarget = PositionComponent.mapper.get(targetEntity).matrix4.getTranslation(temp)
+        unitComponent.targetMove.set(movingTarget.x, movingTarget.z)
         updateMoveParams(unitComponent)
         updateMoveInternal(unitComponent)
     }
 
     fun updateAttack(unitComponent: UnitComponent, deltaTime: Float) {
         val enemyTarget = PositionComponent.mapper.get(unitComponent.targetEnemy!!.owner).matrix4.getTranslation(temp)
-        unitComponent.target.set(enemyTarget.x, enemyTarget.z)
+        unitComponent.targetMove.set(enemyTarget.x, enemyTarget.z)
         unitComponent.attackTask.update(deltaTime)
         updateMoveParams(unitComponent)
     }
@@ -88,7 +87,7 @@ class UnitService(
         val matrix4 = PositionComponent.mapper.get(unitComponent.owner).matrix4
         val unitPosition = matrix4.getTranslation(tempPosition)
         val orientation = matrix4.getRotation(tempOrientation)
-        val targetLevel = tempTarget.set(unitComponent.target.x, unitPosition.y, unitComponent.target.y)
+        val targetLevel = tempTarget.set(unitComponent.targetMove.x, unitPosition.y, unitComponent.targetMove.y)
         val faceDirection = orientation.transform(tempDefaultFace.set(defaultFaceDirection))
         val directionNew = tempDirection.set(targetLevel).sub(unitPosition).nor()
         val angle = tempAngle.setFromCross(directionNew, faceDirection).angle
@@ -96,7 +95,6 @@ class UnitService(
         direction.set(directionNew)
         unitComponent.needRotation = angle !in 0.0..10.0
         unitComponent.needMove = actualDistance > unitComponent.distance
-        unitComponent.isGoingMove = unitComponent.needRotation || unitComponent.needMove
     }
 
     private fun updateMoveInternal(unitComponent: UnitComponent) {
@@ -119,14 +117,6 @@ class UnitService(
     }
 
     private fun extractUnitComponent(entities: Collection<Entity>): List<UnitComponent> {
-        return entities.map { UnitComponent.mapper.get(it) }
-    }
-
-    private fun findEnemies(unitComponent: UnitComponent): List<UnitComponent> {
-        return unitComponent.nearUnits.filter { isEnemy(unitComponent, it) }
-    }
-
-    private fun isEnemy(unitComponent: UnitComponent, otherUnitComponent: UnitComponent): Boolean {
-        return unitComponent.playerName != otherUnitComponent.playerName
+        return entities.filter { UnitComponent.mapper.has(it) }.map { UnitComponent.mapper.get(it) }
     }
 }

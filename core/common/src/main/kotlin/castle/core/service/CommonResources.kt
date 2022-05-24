@@ -1,5 +1,6 @@
 package castle.core.service
 
+import castle.core.json.DecorationJson
 import castle.core.json.EnvironmentJson
 import castle.core.json.TemplateJson
 import castle.core.util.LoadUtils
@@ -21,6 +22,7 @@ class CommonResources : Disposable {
     val templates: Map<String, TemplateJson> = loadTemplates().associateBy { it.templateName }
     val textures: Map<String, Texture> = loadTextures()
     val environment: List<EnvironmentJson> = loadEnvironment()
+    val decoration: List<DecorationJson> = loadDecoration()
 
     private fun loadModel(): Map<String, Model> {
         val map = HashMap<String, Model>()
@@ -40,6 +42,10 @@ class CommonResources : Disposable {
 
     private fun loadEnvironment(): List<EnvironmentJson> {
         return LoadUtils.loadList("/environment.json", EnvironmentJson::class.java)
+    }
+
+    private fun loadDecoration(): List<DecorationJson> {
+        return LoadUtils.loadList("/decoration.json", DecorationJson::class.java)
     }
 
     private fun loadTextures(): Map<String, Texture> {

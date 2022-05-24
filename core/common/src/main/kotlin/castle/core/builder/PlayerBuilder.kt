@@ -25,7 +25,7 @@ class PlayerBuilder(
     private fun buildInternal(playerName: String, unitStr: String, spawnStr: String): Entity {
         val unitJson = gameResources.units.getValue(unitStr)
         val unit = unitBuilder.build(unitJson)
-        val spawnPoint = environmentService.neutralUnits.getValue(spawnStr)
+        val spawnPoint = environmentService.environmentObjects.getValue(spawnStr)
         UnitComponent.mapper.get(unit).playerName = playerName
         initSpawnPoint(unit, spawnPoint)
         return unit

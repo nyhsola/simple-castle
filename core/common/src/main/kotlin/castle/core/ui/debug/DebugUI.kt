@@ -24,9 +24,9 @@ import com.badlogic.gdx.utils.Align
 import com.badlogic.gdx.utils.Disposable
 
 class DebugUI(
-        private val commonResources: CommonResources,
-        stage: Stage,
-        eventQueue: EventQueue
+    private val commonResources: CommonResources,
+    stage: Stage,
+    eventQueue: EventQueue
 ) : Entity(), Disposable{
     private val stageRenderComponent: StageRenderComponent = StageRenderComponent(stage).also { this.add(it) }
     private val signal = Signal<EventContext>()
@@ -95,8 +95,7 @@ class DebugUI(
         table.add(createButton("Map", listOf(EventContext(MapService.DEBUG_ENABLE)))).width(50f).height(50f)
         table.row()
         val list = listOf(
-                EventContext(GameService.SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 1"))),
-                EventContext(GameService.SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 3")))
+                EventContext(GameService.SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 1")))
         )
         table.add(createButton("Spawn", list)).width(50f).height(50f)
         container.actor = table
