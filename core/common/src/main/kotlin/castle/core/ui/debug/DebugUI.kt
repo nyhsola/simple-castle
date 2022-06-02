@@ -21,13 +21,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Align
-import com.badlogic.gdx.utils.Disposable
 
 class DebugUI(
-    private val commonResources: CommonResources,
     stage: Stage,
+    private val commonResources: CommonResources,
     eventQueue: EventQueue
-) : Entity(), Disposable{
+) : Entity() {
     private val stageRenderComponent: StageRenderComponent = StageRenderComponent(stage).also { this.add(it) }
     private val signal = Signal<EventContext>()
     private val rootContainer = Container<Table>()
@@ -113,9 +112,5 @@ class DebugUI(
             }
         })
         return button
-    }
-
-    override fun dispose() {
-        stageRenderComponent.dispose()
     }
 }

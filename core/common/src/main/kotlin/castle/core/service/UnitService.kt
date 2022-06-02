@@ -48,6 +48,7 @@ class UnitService(
     fun updateMap(unitComponent: UnitComponent) {
         mapService.updateEntity(unitComponent.owner)
         if (unitComponent.isDead) {
+            unitComponent.deleteMe = true
             physicService.removeListener(unitComponent.physicListener)
             mapService.removeEntity(unitComponent.owner)
         }

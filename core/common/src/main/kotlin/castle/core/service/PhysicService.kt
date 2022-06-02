@@ -50,6 +50,7 @@ class PhysicService(private val cameraService: CameraService) {
     fun removeEntity(entity: Entity) {
         val physicComponent = PhysicComponent.mapper.get(entity)
         dynamicsWorld.removeRigidBody(physicComponent.body)
+        physicComponent.dispose()
     }
 
     fun addEntity(entity: Entity) {

@@ -39,6 +39,7 @@ class StageRenderSystem : IteratingSystem(Family.all(StageRenderComponent::class
     override fun entityRemoved(entity: Entity) {
         val stageRenderComponent = StageRenderComponent.mapper.get(entity)
         inputMultiplexer.removeProcessor(stageRenderComponent.stage)
+        stageRenderComponent.dispose()
     }
 
     override fun keyDown(keycode: Int): Boolean {
