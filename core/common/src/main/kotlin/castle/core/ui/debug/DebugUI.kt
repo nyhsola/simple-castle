@@ -95,7 +95,8 @@ class DebugUI(
         table.add(createButton("Map", listOf(EventContext(MapService.DEBUG_ENABLE)))).width(50f).height(50f)
         table.row()
         val list = listOf(
-                EventContext(GameService.SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 1")))
+                EventContext(GameService.SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 1"))),
+                EventContext(GameService.SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 3")))
         )
         table.add(createButton("Spawn", list)).width(50f).height(50f)
         container.actor = table

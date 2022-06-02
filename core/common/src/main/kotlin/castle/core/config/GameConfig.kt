@@ -15,7 +15,6 @@ import castle.core.system.render.*
 import castle.core.ui.debug.DebugUI
 import castle.core.ui.game.GameUI
 import castle.core.ui.service.UIService
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.g3d.ModelBatch
 import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch
@@ -24,15 +23,15 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 
-class GameConfig : Disposable {
+class GameConfig(commonConfig: CommonConfig) : Disposable {
     private val eventQueue = EventQueue()
     private val cameraService = CameraService()
-    private val commonResources = CommonResources()
+    private val commonResources = commonConfig.commonResources
     private val gameResources = GameResources()
 
     private val modelBatch = ModelBatch()
     private val decalBatch = DecalBatch(CameraGroupStrategy(cameraService.currentCamera.camera))
-    private val spriteBatch = SpriteBatch()
+    private val spriteBatch = commonConfig.spriteBatch
     private val shapeRender = ShapeRenderer().apply { setAutoShapeType(true) }
     private fun createStage() = Stage(ScreenViewport())
 

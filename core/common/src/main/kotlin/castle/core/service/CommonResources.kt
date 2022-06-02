@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.JsonReader
 
 class CommonResources : Disposable {
     private val assets3d = listOf("map.g3dj", "castle.g3dj", "unit-warrior.g3dj")
-    private val assets2d = listOf("castle.png", "hp.png", "unit-warrior.png")
+    private val assets2d = listOf("castle.png", "hp.png", "unit-warrior.png", "start.png")
 
     private val loader = G3dModelLoader(JsonReader())
     val model: Map<String, Model> = loadModel()
