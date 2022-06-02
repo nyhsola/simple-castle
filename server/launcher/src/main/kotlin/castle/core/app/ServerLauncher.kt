@@ -10,9 +10,10 @@ object ServerLauncher {
     fun main(args: Array<String>) {
         Lwjgl3Application(ServerGame(), Lwjgl3ApplicationConfiguration().apply {
             setResizable(true)
+//            setDecorated(false)
             setWindowedMode(
-                    (Lwjgl3ApplicationConfiguration.getDisplayMode().width * 0.99).toInt(),
-                    (Lwjgl3ApplicationConfiguration.getDisplayMode().height * 0.9).toInt()
+                    (Lwjgl3ApplicationConfiguration.getDisplayMode().width * 0.999f).toInt(),
+                    (Lwjgl3ApplicationConfiguration.getDisplayMode().height * 0.9f).toInt()
             )
         })
         Runtime.getRuntime().addShutdownHook(object : Thread() {

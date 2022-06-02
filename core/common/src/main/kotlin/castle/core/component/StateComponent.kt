@@ -15,5 +15,4 @@ class StateComponent(
     }
 
     val state: StateMachineDelta<Entity, StateDelta<Entity>> = StateMachineDelta(owner, behaviour)
-
 }

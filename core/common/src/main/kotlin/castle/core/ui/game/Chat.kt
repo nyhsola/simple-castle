@@ -49,8 +49,8 @@ class Chat(commonResources: CommonResources) : Table() {
         touchable = Touchable.enabled
 
         textArea.color.a = 0.25f
-        label.color.a = 0.65f
-        textField.color.a = 0.65f
+        label.color.a = 0.75f
+        textField.color.a = 0.75f
 
         add(textArea).grow()
         row()

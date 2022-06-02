@@ -5,6 +5,7 @@ import castle.core.service.*
 import castle.core.ui.service.UIService
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.systems.IntervalSystem
+import com.badlogic.gdx.Gdx
 import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
 
@@ -21,6 +22,7 @@ class GameManagerSystem(
         private const val GAME_TICK: Float = 0.1f
         const val CHAT_FOCUSED = "CHAT_FOCUSED"
         const val CHAT_UNFOCUSED = "CHAT_UNFOCUSED"
+        const val EXIT_GAME = "EXIT_GAME"
     }
 
     override fun addedToEngine(engine: Engine) {
@@ -54,6 +56,10 @@ class GameManagerSystem(
                     cameraService.input = true
                     true
                 }
+                EXIT_GAME -> {
+                    Gdx.app.exit()
+                    true
+                }
                 else -> false
             }
         }
@@ -64,6 +70,7 @@ class GameManagerSystem(
     }
 
     override fun keyDown(keycode: Int): Boolean {
+        uiService.keyDown(keycode)
         return cameraService.keyDown(keycode)
     }
 
@@ -86,7 +93,7 @@ class GameManagerSystem(
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         cameraService.touchDown(screenX, screenY, pointer, button)
         selectionService.select(screenX, screenY)
-        return uiService.touchDown(screenX, screenY, pointer, button)
+        return false
     }
 
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {

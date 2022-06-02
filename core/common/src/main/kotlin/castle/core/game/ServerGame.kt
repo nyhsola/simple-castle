@@ -2,7 +2,6 @@ package castle.core.game
 
 import castle.core.config.CommonConfig
 import castle.core.config.GameConfig
-import castle.core.event.EventQueue
 import castle.core.screen.GameScreen
 import castle.core.screen.StartScreen
 import com.badlogic.gdx.Gdx
@@ -15,14 +14,12 @@ class ServerGame : KtxGame<Screen>() {
     private val commonConfig by lazy { CommonConfig() }
     private val gameConfig by lazy { GameConfig(commonConfig) }
 
-    private val eventQueue = EventQueue()
-
     init {
         Bullet.init(false, false)
     }
 
     override fun create() {
-        addScreen(StartScreen(commonConfig, eventQueue))
+        addScreen(StartScreen(commonConfig))
         addScreen(GameScreen(gameConfig))
         setScreen<StartScreen>()
     }
@@ -39,7 +36,7 @@ class ServerGame : KtxGame<Screen>() {
     }
 
     private fun proceedEvent() {
-        eventQueue.proceed {
+        commonConfig.eventQueue.proceed {
             when (it.eventType) {
                 StartScreen.GAME_EVENT -> {
                     setScreen<GameScreen>()

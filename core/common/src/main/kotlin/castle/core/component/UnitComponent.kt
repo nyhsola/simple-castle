@@ -29,6 +29,7 @@ class UnitComponent(
     var needMove: Boolean = false
     var currentHealth = totalHealth
     var distance: Float = UnitService.Companion.Distances.AT.distance
+    var deleteMe = false
 
     val path: MutableList<String> = ArrayList()
     var mainPath: GraphPath<Area> = DefaultGraphPath()
