@@ -5,8 +5,7 @@ import castle.core.screen.add.ScreenConfigurator
 import com.badlogic.gdx.Gdx
 import ktx.app.KtxScreen
 
-class GameScreen : KtxScreen {
-    private val gameConfig = GameConfig()
+class GameScreen(gameConfig: GameConfig) : KtxScreen {
     private val screenConfigurator = ScreenConfigurator(gameConfig.systems)
     private val engine = screenConfigurator.engine
     private val inputMultiplexer = screenConfigurator.inputMultiplexer
@@ -32,6 +31,5 @@ class GameScreen : KtxScreen {
     override fun dispose() {
         engine.removeAllEntities()
         disposables.forEach { it.dispose() }
-        gameConfig.dispose()
     }
 }

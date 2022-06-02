@@ -2749,7 +2749,7 @@
 		}, 
 		{
 			"id": "barrel-1", 
-			"translation": [ 39.161797,  1.013091,  0.799625], 
+			"translation": [ 41.572906,  1.013091,  8.656363], 
 			"parts": [
 				{
 					"meshpartid": "Cube_part1", 
@@ -2760,7 +2760,7 @@
 		}, 
 		{
 			"id": "barrel-2", 
-			"translation": [ 39.161797,  1.013091, -1.205862], 
+			"translation": [ 40.258942,  1.013091,  6.587305], 
 			"parts": [
 				{
 					"meshpartid": "Cube_part1", 
@@ -2771,7 +2771,7 @@
 		}, 
 		{
 			"id": "barrel-3", 
-			"translation": [ 39.161797,  1.013091,  2.739640], 
+			"translation": [ 39.161797,  1.013091,  8.786964], 
 			"parts": [
 				{
 					"meshpartid": "Cube_part1", 

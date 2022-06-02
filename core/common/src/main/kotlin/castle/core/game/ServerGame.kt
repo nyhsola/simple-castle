@@ -1,5 +1,7 @@
 package castle.core.game
 
+import castle.core.config.CommonConfig
+import castle.core.config.GameConfig
 import castle.core.event.EventQueue
 import castle.core.screen.GameScreen
 import castle.core.screen.StartScreen
@@ -10,6 +12,9 @@ import ktx.app.KtxGame
 import kotlin.math.min
 
 class ServerGame : KtxGame<Screen>() {
+    private val commonConfig by lazy { CommonConfig() }
+    private val gameConfig by lazy { GameConfig(commonConfig) }
+
     private val eventQueue = EventQueue()
 
     init {
@@ -17,14 +22,20 @@ class ServerGame : KtxGame<Screen>() {
     }
 
     override fun create() {
-        addScreen(StartScreen(eventQueue))
-        addScreen(GameScreen())
+        addScreen(StartScreen(commonConfig, eventQueue))
+        addScreen(GameScreen(gameConfig))
         setScreen<StartScreen>()
     }
 
     override fun render() {
         proceedEvent()
         currentScreen.render(min(1f / 30f, Gdx.graphics.deltaTime))
+    }
+
+    override fun dispose() {
+        commonConfig.dispose()
+        gameConfig.dispose()
+        super.dispose()
     }
 
     private fun proceedEvent() {

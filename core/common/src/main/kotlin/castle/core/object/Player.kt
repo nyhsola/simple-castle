@@ -28,8 +28,8 @@ class Player(
         val buildingsCreated = playerBuilder.buildBuildings(playerJson).onEach { engine.addEntity(it) }
         buildings.addAll(buildingsCreated)
 
-//        val effectsCreated = effectBuilder.buildCountText(playerJson, signal).onEach { engine.addEntity(it) }
-//        effects.addAll(effectsCreated)
+        val effectsCreated = effectBuilder.buildCountText(playerJson, signal).onEach { engine.addEntity(it) }
+        effects.addAll(effectsCreated)
     }
 
     fun update(engine: Engine, deltaTime: Float) {
