@@ -29,7 +29,7 @@ class UnitSystem(
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        if (UnitComponent.mapper.get(entity).isDead) {
+        if (UnitComponent.mapper.get(entity).deleteMe) {
             engine.removeEntity(entity)
         }
     }

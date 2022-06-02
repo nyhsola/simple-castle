@@ -2,7 +2,6 @@ package castle.core.screen
 
 import castle.core.config.CommonConfig
 import castle.core.event.EventContext
-import castle.core.event.EventQueue
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
@@ -10,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
 
-class StartScreen(commonConfig: CommonConfig, eventQueue: EventQueue) : KtxScreen, KtxInputAdapter {
+class StartScreen(commonConfig: CommonConfig) : KtxScreen, KtxInputAdapter {
     companion object {
         const val GAME_EVENT = "GAME_EVENT"
     }
@@ -23,7 +22,7 @@ class StartScreen(commonConfig: CommonConfig, eventQueue: EventQueue) : KtxScree
     private var accumulated = 0f
 
     init {
-        signal.add(eventQueue)
+        signal.add(commonConfig.eventQueue)
         setAlpha(spriteBatch, 0f)
     }
 

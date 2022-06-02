@@ -9,7 +9,7 @@ Simple castle
 :joystick: Game
 ======
 ### :keyboard: Controls
-ESC - Exit game  
+ESC - Toggle show menu  
 Arrow keys/WASD - Move your camera  
 Mouse wheel - Move the camera away
 

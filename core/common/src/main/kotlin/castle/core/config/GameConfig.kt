@@ -5,7 +5,6 @@ import castle.core.behaviour.DecorationBehaviour
 import castle.core.behaviour.GroundMeleeAttackBehaviour
 import castle.core.behaviour.GroundRangeAttackBehaviour
 import castle.core.builder.*
-import castle.core.event.EventQueue
 import castle.core.service.*
 import castle.core.system.GameManagerSystem
 import castle.core.system.PhysicSystem
@@ -14,17 +13,23 @@ import castle.core.system.UnitSystem
 import castle.core.system.render.*
 import castle.core.ui.debug.DebugUI
 import castle.core.ui.game.GameUI
+import castle.core.ui.menu.MenuUI
 import castle.core.ui.service.UIService
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g3d.ModelBatch
 import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Disposable
-import com.badlogic.gdx.utils.viewport.ScreenViewport
+import com.badlogic.gdx.utils.Scaling
+import com.badlogic.gdx.utils.viewport.ScalingViewport
 
 class GameConfig(commonConfig: CommonConfig) : Disposable {
-    private val eventQueue = EventQueue()
+    private val scalingViewport = ScalingViewport(Scaling.stretch, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat(), OrthographicCamera())
+
+    private val eventQueue = commonConfig.eventQueue
     private val cameraService = CameraService()
     private val commonResources = commonConfig.commonResources
     private val gameResources = GameResources()
@@ -33,7 +38,7 @@ class GameConfig(commonConfig: CommonConfig) : Disposable {
     private val decalBatch = DecalBatch(CameraGroupStrategy(cameraService.currentCamera.camera))
     private val spriteBatch = commonConfig.spriteBatch
     private val shapeRender = ShapeRenderer().apply { setAutoShapeType(true) }
-    private fun createStage() = Stage(ScreenViewport())
+    private fun createStage() = Stage(scalingViewport, spriteBatch)
 
     private val templateBuilder = TemplateBuilder(commonResources)
     private val environmentBuilder = EnvironmentBuilder(commonResources, templateBuilder)
@@ -41,9 +46,10 @@ class GameConfig(commonConfig: CommonConfig) : Disposable {
     private val physicService = PhysicService(cameraService)
     private val scanService = ScanService(commonResources, templateBuilder, physicService)
 
-    private val gameUI = GameUI(scanService, commonResources, createStage(), shapeRender, eventQueue)
-    private val debugUI = DebugUI(commonResources, createStage(), eventQueue)
-    private val uiService = UIService(eventQueue, gameUI, debugUI)
+    private val gameUI = GameUI(createStage(), scanService, commonResources, shapeRender, eventQueue)
+    private val debugUI = DebugUI(createStage(), commonResources, eventQueue)
+    private val menuUI = MenuUI(createStage(), commonResources, eventQueue)
+    private val uiService = UIService(eventQueue, gameUI, menuUI, debugUI)
 
     private val stageRectRenderSystem = StageRenderSystem()
     private val animationRenderSystem = AnimationRenderSystem()
@@ -93,14 +99,8 @@ class GameConfig(commonConfig: CommonConfig) : Disposable {
         )
 
     override fun dispose() {
-        commonResources.dispose()
-
         modelBatch.dispose()
         decalBatch.dispose()
-        spriteBatch.dispose()
         shapeRender.dispose()
-
-        gameUI.dispose()
-        debugUI.dispose()
     }
 }
