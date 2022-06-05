@@ -8,16 +8,18 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.math.collision.BoundingBox
+import com.badlogic.gdx.utils.Disposable
 
 class SelectionService(
+    private val engine: Engine,
     private val uiService: UIService,
     private val rayCastService: RayCastService
-) {
+) : Disposable {
     private val circle: Entity = Entity().add(CircleRenderComponent())
     private val boundingBox = BoundingBox()
     private val tempVector3 = Vector3()
 
-    fun init(engine: Engine) {
+    fun init() {
         engine.addEntity(circle)
     }
 
@@ -44,5 +46,9 @@ class SelectionService(
     private fun unSelect() {
         CircleRenderComponent.mapper.get(circle).radius = 0.0f
         uiService.deactivateSelection()
+    }
+
+    override fun dispose() {
+        engine.removeEntity(circle)
     }
 }

@@ -1,4 +1,4 @@
-package castle.core.screen
+package castle.core.game
 
 import castle.core.config.CommonConfig
 import castle.core.event.EventContext
@@ -39,8 +39,11 @@ class StartScreen(commonConfig: CommonConfig) : KtxScreen, KtxInputAdapter {
             setAlpha(spriteBatch, alpha)
         }
 
+        val widthScale: Float = Gdx.graphics.width / 1920f
+        val heightScale: Float = Gdx.graphics.height / 1080f
+
         spriteBatch.begin()
-        spriteBatch.draw(texture, 0f, 0f)
+        spriteBatch.draw(texture, 0f, 0f, texture.width * widthScale, texture.height * heightScale);
         spriteBatch.end()
     }
 

@@ -1,14 +1,14 @@
-package castle.core.service
+package castle.core.behaviour.controller
 
 import castle.core.component.PhysicComponent
 import castle.core.component.PositionComponent
 import castle.core.component.UnitComponent
-import com.badlogic.ashley.core.Entity
+import castle.core.service.EnvironmentService
+import castle.core.service.MapService
 import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
 
-class UnitService(
-    private val physicService: PhysicService,
+class GroundUnitController(
     private val mapService: MapService,
     private val environmentService: EnvironmentService
 ) {
@@ -41,22 +41,7 @@ class UnitService(
     }
 
     fun initMelee(unitComponent: UnitComponent) {
-        physicService.addListener(unitComponent.physicListener)
         unitComponent.distance = Distances.AT.distance
-    }
-
-    fun updateMap(unitComponent: UnitComponent) {
-        mapService.updateEntity(unitComponent.owner)
-        if (unitComponent.isDead) {
-            unitComponent.deleteMe = true
-            physicService.removeListener(unitComponent.physicListener)
-            mapService.removeEntity(unitComponent.owner)
-        }
-    }
-
-    fun updateEnemies(unitComponent: UnitComponent) {
-        unitComponent.inRadiusUnits.clear()
-        unitComponent.inRadiusUnits.addAll(extractUnitComponent(mapService.getNear(unitComponent.nextArea, unitComponent.visibilityRange)))
     }
 
     fun updateMovePath(unitComponent: UnitComponent) {
@@ -117,7 +102,4 @@ class UnitService(
         }
     }
 
-    private fun extractUnitComponent(entities: Collection<Entity>): List<UnitComponent> {
-        return entities.filter { UnitComponent.mapper.has(it) }.map { UnitComponent.mapper.get(it) }
-    }
 }

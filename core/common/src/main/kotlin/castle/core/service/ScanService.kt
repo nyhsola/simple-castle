@@ -1,6 +1,5 @@
 package castle.core.service
 
-import castle.core.builder.TemplateBuilder
 import castle.core.component.PhysicComponent
 import castle.core.path.Area
 import com.badlogic.gdx.math.Vector2
@@ -9,8 +8,7 @@ import com.badlogic.gdx.physics.bullet.collision.btBoxShape
 import kotlin.math.abs
 
 class ScanService(
-    commonResources: CommonResources,
-    private val templateBuilder: TemplateBuilder,
+    private val environmentService: EnvironmentService,
     private val physicService: PhysicService
 ) {
     companion object {
@@ -19,8 +17,8 @@ class ScanService(
     }
 
     private val tempVector: Vector3 = Vector3()
-    private val map3D by lazy { initMap3D(commonResources) }
-    val map by lazy { initMap2D() }
+    private val map3D by lazy { initMap3D() }
+    val map2D by lazy { mirror(map3D.map { byX -> byX.map { byZ -> byZ.sum() } }) }
 
     private val scanBox = Vector3(1.1f, 1.1f, 1.1f)
     private val aabbMin = Vector3()
@@ -43,14 +41,11 @@ class ScanService(
         return Area(position, i, j)
     }
 
-    private fun initMap3D(commonResources: CommonResources): List<List<List<Int>>> {
-        return templateBuilder.build(commonResources.templates.getValue("GROUND"), "ground")
+    private fun initMap3D(): List<List<List<Int>>> {
+        return environmentService.environmentObjects.getValue("ground")
             .apply { PhysicComponent.mapper.get(this).body.getAabb(aabbMin, aabbMax) }
-            .apply { PhysicComponent.mapper.get(this).dispose() }
             .let { scanRegion(scanBox, aabbMin, aabbMax) }
     }
-
-    private fun initMap2D() = mirror(map3D.map { byX -> byX.map { byZ -> byZ.sum() } })
 
     private fun scanRegion(boxScan: Vector3, aabbMin: Vector3, aabbMax: Vector3): List<List<List<Int>>> {
         val width = boxScan.x * 2

@@ -6,7 +6,7 @@ import castle.core.component.render.CircleRenderComponent
 import castle.core.event.EventQueue
 import castle.core.path.Area
 import castle.core.path.AreaGraph
-import castle.core.ui.game.Minimap
+import castle.core.ui.service.UIService
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath
@@ -17,7 +17,7 @@ import kotlin.math.abs
 
 class MapService(
     private val eventQueue: EventQueue,
-    private val minimap: Minimap,
+    private val uiService: UIService,
     private val scanService: ScanService
 ) {
     companion object {
@@ -27,7 +27,7 @@ class MapService(
     private var debugEnabled: Boolean = false
     private val circles: MutableList<Entity> = ArrayList()
 
-    private val mapGraph by lazy { initializeGraph(scanService.map) }
+    private val mapGraph by lazy { initializeGraph(scanService.map2D) }
     private val tempVector = Vector3()
     private val tempArr = HashSet<Entity>()
     private val aabbMin = Vector3()
@@ -37,15 +37,15 @@ class MapService(
     private val areasInUnit: MutableMap<Entity, MutableSet<Area>> = HashMap()
 
     fun updateMap() {
-        minimap.update(unitsInArea)
+        uiService.updateMap(unitsInArea)
     }
 
     fun updateEntity(entity: Entity) {
-        removeEntity(entity)
+        removeFromMap(entity)
         placeOnMap(entity)
     }
 
-    fun removeEntity(entity: Entity) {
+    fun removeFromMap(entity: Entity) {
         areasInUnit[entity]?.forEach { mapGraph.restore(it) }
         areasInUnit[entity]?.forEach { unitsInArea[it]?.remove(entity) }
         areasInUnit.remove(entity)

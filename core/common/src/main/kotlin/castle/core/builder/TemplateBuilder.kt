@@ -6,28 +6,22 @@ import castle.core.component.render.ModelRenderComponent
 import castle.core.json.TemplateJson
 import castle.core.service.CommonResources
 import com.badlogic.ashley.core.Entity
-import com.badlogic.gdx.Application
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g3d.Model
 import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.utils.Array
 
 class TemplateBuilder(private val commonResources: CommonResources) {
-    fun build(templateJson: TemplateJson, nodeName: String): Entity {
-        return buildUnitInternal(Entity(), templateJson, nodeName)
+    fun build(templateName: String, nodeName: String): Entity {
+        return buildInternal(Entity(), commonResources.templates.getValue(templateName), nodeName)
     }
 
-    private fun buildUnitInternal(entity: Entity, templateJson: TemplateJson, nodeName: String): Entity {
-        val positionComponent = initPosition(nodeName)
+    private fun buildInternal(entity: Entity, templateJson: TemplateJson, nodeName: String): Entity {
+        val positionComponent = PositionComponent(nodeName, getMatrix4(nodeName))
         entity.add(positionComponent)
         entity.add(initRender(templateJson, nodeName, positionComponent))
         entity.add(initPhysic(entity, templateJson, nodeName))
         return entity
-    }
-
-    private fun initPosition(node: String): PositionComponent {
-        return PositionComponent(getMatrix4(node))
     }
 
     private fun initRender(templateJson: TemplateJson, nodeName: String, positionComponent: PositionComponent): ModelRenderComponent {
@@ -67,8 +61,6 @@ class TemplateBuilder(private val commonResources: CommonResources) {
     }
 
     private fun findNode(node: String): Model? {
-        Gdx.app.logLevel = Application.LOG_NONE;
-        Gdx.app.log("log", commonResources.model.map { it.key }.joinToString { it })
         return commonResources.model.filter { it.value.getNode(node) != null }.map { it.value }.firstOrNull()
     }
 }

@@ -15,7 +15,7 @@ class Minimap(
         private val shapeRenderer: ShapeRenderer,
         scanService: ScanService
 ) : Widget() {
-    private val minimap: MutableList<MutableList<MinimapPiece>> by lazy { initializeMinimap(scanService.map) }
+    private val minimap: MutableList<MutableList<MinimapPiece>> by lazy { initializeMinimap(scanService.map2D) }
     private val minimapBuffer: MutableList<MinimapPiece> = ArrayList()
 
     init {

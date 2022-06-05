@@ -26,10 +26,10 @@ class GameManagerSystem(
     }
 
     override fun addedToEngine(engine: Engine) {
-        environmentService.init(engine)
-        uiService.init(engine)
-        selectionService.init(engine)
-        gameService.init(engine)
+        environmentService.init()
+        uiService.init()
+        selectionService.init()
+        gameService.init()
     }
 
     override fun update(deltaTime: Float) {
@@ -40,7 +40,7 @@ class GameManagerSystem(
     override fun updateInterval() {
         mapService.updateMap()
         uiService.update()
-        gameService.update(engine, GAME_TICK, eventQueue)
+        gameService.update(GAME_TICK)
         mapService.proceedEvents(engine)
         proceedEvents()
     }
@@ -57,7 +57,7 @@ class GameManagerSystem(
                     true
                 }
                 EXIT_GAME -> {
-                    Gdx.app.exit()
+                    Gdx.app.postRunnable(Gdx.app::exit)
                     true
                 }
                 else -> false
@@ -102,5 +102,11 @@ class GameManagerSystem(
 
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
         return cameraService.touchUp(screenX, screenY, pointer, button)
+    }
+
+    override fun dispose() {
+        environmentService.dispose()
+        gameService.dispose()
+        uiService.dispose()
     }
 }

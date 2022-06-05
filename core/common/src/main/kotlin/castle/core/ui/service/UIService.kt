@@ -2,6 +2,9 @@ package castle.core.ui.service
 
 import castle.core.event.EventContext
 import castle.core.event.EventQueue
+import castle.core.path.Area
+import castle.core.service.CommonResources
+import castle.core.service.ScanService
 import castle.core.ui.debug.DebugUI
 import castle.core.ui.game.GameUI
 import castle.core.ui.menu.MenuUI
@@ -9,23 +12,36 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.utils.Disposable
+import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.app.KtxInputAdapter
 
 class UIService(
     private val eventQueue: EventQueue,
-    private val gameUI: GameUI,
-    private val menuUI: MenuUI,
-    private val debugUI: DebugUI
-) : KtxInputAdapter {
+    private val engine: Engine,
+    scanService: ScanService,
+    commonResources: CommonResources,
+    shapeRenderer: ShapeRenderer,
+    private val spriteBatch: SpriteBatch,
+    private val viewport: Viewport
+) : KtxInputAdapter, Disposable {
     companion object {
         const val DEBUG_UI_ENABLE_1 = "DEBUG_UI_ENABLE_1"
         const val DEBUG_UI_ENABLE_2 = "DEBUG_UI_ENABLE_2"
         const val MENU_ENABLE = "MENU_ENABLE"
     }
 
+    private val gameUI = GameUI(createStage(), scanService, commonResources, shapeRenderer, eventQueue)
+    private val debugUI = DebugUI(createStage(), commonResources, eventQueue)
+    private val menuUI = MenuUI(createStage(), commonResources, eventQueue)
     private val signal = Signal<EventContext>()
 
-    fun init(engine: Engine) {
+    private fun createStage() = Stage(viewport, spriteBatch)
+
+    fun init() {
         signal.add(eventQueue)
         engine.addEntity(gameUI)
         engine.addEntity(menuUI)
@@ -37,6 +53,10 @@ class UIService(
         debugUI.update()
         proceedEvents()
         proceedMessages()
+    }
+
+    fun updateMap(objectsOnMap: Map<Area, Collection<Entity>>) {
+        gameUI.minimap.update(objectsOnMap)
     }
 
     fun activateSelection(entity: Entity) {
@@ -83,5 +103,11 @@ class UIService(
                 debugUI.isVisible = !debugUI.isVisible
             }
         }
+    }
+
+    override fun dispose() {
+        engine.removeEntity(gameUI)
+        engine.removeEntity(menuUI)
+        engine.removeEntity(debugUI)
     }
 }
