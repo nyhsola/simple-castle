@@ -6,19 +6,20 @@ import castle.core.component.render.CircleRenderComponent
 import castle.core.event.EventQueue
 import castle.core.path.Area
 import castle.core.path.AreaGraph
-import castle.core.ui.game.Minimap
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath
 import com.badlogic.gdx.ai.pfa.GraphPath
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import kotlin.math.abs
 
 class MapService(
+    private val engine: Engine,
     private val eventQueue: EventQueue,
-    private val minimap: Minimap,
-    private val scanService: ScanService
+    private val mapScanService: MapScanService,
+    private val environmentService: EnvironmentService
 ) {
     companion object {
         const val DEBUG_ENABLE = "DEBUG_MAP_ENABLE"
@@ -27,25 +28,29 @@ class MapService(
     private var debugEnabled: Boolean = false
     private val circles: MutableList<Entity> = ArrayList()
 
-    private val mapGraph by lazy { initializeGraph(scanService.map) }
+    private val mapGraph = AreaGraph()
     private val tempVector = Vector3()
     private val tempArr = HashSet<Entity>()
     private val aabbMin = Vector3()
     private val aabbMax = Vector3()
 
-    private val unitsInArea: MutableMap<Area, MutableSet<Entity>> = HashMap()
+    val unitsInArea: MutableMap<Area, MutableSet<Entity>> = HashMap()
     private val areasInUnit: MutableMap<Entity, MutableSet<Area>> = HashMap()
 
-    fun updateMap() {
-        minimap.update(unitsInArea)
+    fun init() {
+        initializeGraph(mapScanService.map)
+    }
+
+    fun update() {
+        proceedEvents(engine)
     }
 
     fun updateEntity(entity: Entity) {
-        removeEntity(entity)
+        removeFromMap(entity)
         placeOnMap(entity)
     }
 
-    fun removeEntity(entity: Entity) {
+    fun removeFromMap(entity: Entity) {
         areasInUnit[entity]?.forEach { mapGraph.restore(it) }
         areasInUnit[entity]?.forEach { unitsInArea[it]?.remove(entity) }
         areasInUnit.remove(entity)
@@ -58,7 +63,7 @@ class MapService(
     }
 
     fun getPath(list: List<Vector3>): GraphPath<Area> {
-        val areas = list.map { scanService.toArea(it) }
+        val areas = list.map { toArea(it) }
         val path = DefaultGraphPath<Area>()
         for (i in 0 until areas.size - 2) {
             mapGraph.findPath(areas[i], areas[i + 1]).forEach { path.add(it) }
@@ -66,11 +71,29 @@ class MapService(
         return path
     }
 
-    fun inRadius(position: Vector3, area: Area): Boolean {
-        return scanService.toArea(position) == area
+    fun inRadius(currentArea: Area, nextArea: Area): Boolean {
+        var inRadius = false
+        currentArea.forEachInRadius(3f) { x, y -> inRadius = inRadius || (nextArea.x == x && nextArea.y == y) }
+        return inRadius
     }
 
-    fun proceedEvents(engine: Engine) {
+    fun toArea(position: Vector3): Area {
+        val width = MapScanService.scanBox.x * 2
+        val depth = MapScanService.scanBox.z * 2
+        val posX = abs(environmentService.aabbMin.x + position.x)
+        val poxZ = abs(environmentService.aabbMin.z + position.z)
+        val x = posX.div(width).toInt()
+        val y = poxZ.div(depth).toInt()
+        return toArea(x, y)
+    }
+
+    private fun toArea(i: Int, j: Int): Area {
+        val x = environmentService.aabbMax.x - i * MapScanService.scanBox.x * 2 - MapScanService.scanBox.x
+        val z = environmentService.aabbMax.z - j * MapScanService.scanBox.z * 2 - MapScanService.scanBox.z
+        return Area(Vector2(x, z), i, j)
+    }
+
+    private fun proceedEvents(engine: Engine) {
         eventQueue.proceed { eventContext ->
             when (eventContext.eventType) {
                 DEBUG_ENABLE -> {
@@ -91,16 +114,16 @@ class MapService(
 
     private fun placeOnMap(entity: Entity) {
         PhysicComponent.mapper.get(entity).body.getAabb(aabbMin, aabbMax)
-        val min = scanService.toArea(aabbMin)
-        val max = scanService.toArea(aabbMax)
+        val min = toArea(aabbMin)
+        val max = toArea(aabbMax)
         val isBiggerThanOneGrid = abs(min.x - max.x) > 1
         if (!isBiggerThanOneGrid) {
-            val area = scanService.toArea(PositionComponent.mapper.get(entity).matrix4.getTranslation(tempVector))
+            val area = toArea(PositionComponent.mapper.get(entity).matrix4.getTranslation(tempVector))
             placeOnMapInternal(area, entity)
         } else {
             for (i in max.x until min.x + 1) {
                 for (j in max.y until min.y + 1) {
-                    val area = scanService.toArea(i, j)
+                    val area = toArea(i, j)
                     placeOnMapInternal(area, entity)
                 }
             }
@@ -113,11 +136,10 @@ class MapService(
         areasInUnit.getOrPut(entity) { mutableSetOf() }.add(area)
     }
 
-    private fun initializeGraph(map2D: List<List<Int>>): AreaGraph {
-        val areaGraph = AreaGraph()
+    private fun initializeGraph(map2D: List<List<Int>>) {
         for (i in map2D.indices) {
             for (j in map2D[i].indices) {
-                areaGraph.addArea(scanService.toArea(i, j))
+                mapGraph.addArea(toArea(i, j))
             }
         }
         map2D.forEachIndexed { i, it1 ->
@@ -125,21 +147,20 @@ class MapService(
                 if (it2 == 0) {
                     val area = Area(i, j)
                     if (i - 1 >= 0 && map2D[i - 1][j] == 0) {
-                        areaGraph.connect(area, Area(i - 1, j))
+                        mapGraph.connect(area, Area(i - 1, j))
                     }
                     if (i + 1 < map2D.size && map2D[i + 1][j] == 0) {
-                        areaGraph.connect(area, Area(i + 1, j))
+                        mapGraph.connect(area, Area(i + 1, j))
                     }
                     if (j - 1 >= 0 && map2D[i][j - 1] == 0) {
-                        areaGraph.connect(area, Area(i, j - 1))
+                        mapGraph.connect(area, Area(i, j - 1))
                     }
                     if (j + 1 < map2D[i].size && map2D[i][j + 1] == 0) {
-                        areaGraph.connect(area, Area(i, j + 1))
+                        mapGraph.connect(area, Area(i, j + 1))
                     }
                 }
             }
         }
-        return areaGraph
     }
 
     private fun createDebugCircles(circlesOut: MutableList<Entity>) {
@@ -150,7 +171,7 @@ class MapService(
                 val commonEntity = Entity()
                 val circleRenderComponent = CircleRenderComponent()
                 val position = it.position
-                circleRenderComponent.vector3Offset.set(position.x, 0f, position.y)
+                circleRenderComponent.vector3Offset.set(position.x, 0.3f, position.y)
                 circleRenderComponent.radius = 1f
                 circleRenderComponent.shapeType = ShapeRenderer.ShapeType.Filled
                 commonEntity.add(circleRenderComponent)

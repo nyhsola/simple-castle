@@ -3,8 +3,9 @@ package castle.core.ui.game
 import castle.core.component.render.StageRenderComponent
 import castle.core.event.EventContext
 import castle.core.event.EventQueue
+import castle.core.path.Area
 import castle.core.service.CommonResources
-import castle.core.service.ScanService
+import castle.core.service.MapScanService
 import castle.core.system.GameManagerSystem
 import castle.core.ui.service.UIService.Companion.MENU_ENABLE
 import com.badlogic.ashley.core.Entity
@@ -20,7 +21,7 @@ private const val PAD_MAIN = 0.02f
 
 class GameUI(
     stage: Stage,
-    scanService: ScanService,
+    mapScanService: MapScanService,
     private val commonResources: CommonResources,
     shapeRenderer: ShapeRenderer,
     eventQueue: EventQueue
@@ -30,10 +31,10 @@ class GameUI(
     private val rootContainer = Container<Table>()
     private val rootTable = Table()
 
-    val minimap: Minimap = Minimap(shapeRenderer, scanService)
+    private val minimap: Minimap = Minimap(shapeRenderer, mapScanService)
     val chat = Chat(commonResources)
     val portrait = Portrait(commonResources)
-    val description = Description(commonResources, scanService)
+    val description = Description(commonResources)
     private val panelResources = PanelResources(commonResources)
     private val panelSkills = PanelSkills(commonResources)
 
@@ -82,7 +83,12 @@ class GameUI(
         })
     }
 
-    fun update() {
+    fun init() {
+        minimap.init()
+    }
+
+    fun update(objectsOnMap: Map<Area, Collection<Entity>>) {
+        minimap.update(objectsOnMap)
         description.update()
     }
 

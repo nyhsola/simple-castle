@@ -1,56 +1,72 @@
 package castle.core.`object`
 
-import castle.core.builder.EffectBuilder
-import castle.core.builder.PlayerBuilder
-import castle.core.event.EventContext
+import castle.core.builder.TextBuilder
+import castle.core.builder.UnitBuilder
+import castle.core.component.UnitComponent
 import castle.core.event.EventQueue
 import castle.core.json.PlayerJson
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
-import com.badlogic.ashley.signals.Signal
+import com.badlogic.gdx.utils.Disposable
 
 class Player(
+    private val eventQueue: EventQueue,
+    private val engine: Engine,
     private val playerJson: PlayerJson,
-    private val playerBuilder: PlayerBuilder,
-    private val effectBuilder: EffectBuilder
-) {
-    private val buildings: MutableList<Entity> = ArrayList()
-    private val effects: MutableList<CountText> = ArrayList()
+    private val unitBuilder: UnitBuilder,
+    textBuilder: TextBuilder
+) : Disposable {
+    private val buildings: List<Entity> = playerJson.units.map { spawnBuilding(playerJson.playerName, it.key, it.value) }
+    private val effects: List<CountText> = textBuilder.build(playerJson, eventQueue)
+    private val units: MutableList<Entity> = ArrayList()
 
-    private val internalPlayerEvents: EventQueue = EventQueue()
-    private val signal: Signal<EventContext> = Signal()
-
-    init {
-        signal.add(internalPlayerEvents)
+    fun init() {
+        buildings.onEach { engine.addEntity(it) }
+        effects.onEach { engine.addEntity(it) }
     }
 
-    fun init(engine: Engine) {
-        val buildingsCreated = playerBuilder.buildBuildings(playerJson).onEach { engine.addEntity(it) }
-        buildings.addAll(buildingsCreated)
-
-        val effectsCreated = effectBuilder.buildCountText(playerJson, signal).onEach { engine.addEntity(it) }
-        effects.addAll(effectsCreated)
-    }
-
-    fun update(engine: Engine, deltaTime: Float) {
+    fun update(deltaTime: Float) {
         effects.onEach { it.update(deltaTime) }
-        internalEvents(engine)
+        proceedEvents()
     }
 
-    fun spawnUnits(engine: Engine) {
-        List(playerJson.paths.size) { index -> playerBuilder.buildUnit(playerJson, index)}.onEach { engine.addEntity(it) }
+    fun spawnUnits() {
+        List(playerJson.paths.size) { index -> spawnUnit(index) }
     }
 
-    private fun internalEvents(engine: Engine) {
-        internalPlayerEvents.proceed { eventContext ->
+    private fun proceedEvents() {
+        eventQueue.proceed { eventContext ->
             when (eventContext.eventType) {
                 CountText.ON_COUNT -> {
-                    val lineNumber = eventContext.params.getValue(CountText.PARAM_LINE) as Int
-                    engine.addEntity(playerBuilder.buildUnit(playerJson, lineNumber))
+                    spawnUnit(eventContext.params.getValue(CountText.PARAM_LINE) as Int)
                     true
                 }
                 else -> false
             }
         }
+    }
+
+    private fun spawnBuilding(playerName: String, unitStr: String, spawnStr: String): Entity {
+        val unit = unitBuilder.build(unitStr, spawnStr)
+        UnitComponent.mapper.get(unit).playerName = playerName
+        return unit
+    }
+
+    private fun spawnUnit(lineNumber: Int): Entity {
+        val path = playerJson.paths[lineNumber]
+        val spawn = path[0]
+        val entity = unitBuilder.build("warrior", spawn)
+        val unitComponent = UnitComponent.mapper.get(entity)
+        unitComponent.path.addAll(path)
+        unitComponent.playerName = playerJson.playerName
+        engine.addEntity(entity)
+        units.add(entity)
+        return entity
+    }
+
+    override fun dispose() {
+        buildings.onEach { engine.removeEntity(it) }
+        units.onEach { engine.removeEntity(it) }
+        effects.onEach { engine.removeEntity(it) }
     }
 }

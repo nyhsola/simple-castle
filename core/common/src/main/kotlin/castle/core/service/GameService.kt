@@ -1,46 +1,55 @@
 package castle.core.service
 
 import castle.core.builder.DecorationBuilder
-import castle.core.builder.EffectBuilder
 import castle.core.builder.PlayerBuilder
 import castle.core.event.EventQueue
 import castle.core.`object`.Player
 import com.badlogic.ashley.core.Engine
+import com.badlogic.ashley.core.Entity
+import com.badlogic.gdx.utils.Disposable
 
 class GameService(
-    gameResources: GameResources,
-    playerBuilder: PlayerBuilder,
-    effectBuilder: EffectBuilder,
-    decorationBuilder: DecorationBuilder
-) {
+    private val engine: Engine,
+    private val eventQueue: EventQueue,
+    private val playerBuilder: PlayerBuilder,
+    private val decorationBuilder: DecorationBuilder
+) : Disposable {
     companion object {
-        const val SPAWN: String = "SPAWN"
+        const val DEBUG_SPAWN: String = "DEBUG_SPAWN"
         const val PLAYER_NAME: String = "PLAYER_NAME"
     }
 
-    private val players = gameResources.players.mapValues { Player(it.value, playerBuilder, effectBuilder) }
-    private val decorations = decorationBuilder.buildDecorations()
+    private val players: MutableMap<String, Player> = HashMap()
+    private val decorations: MutableList<Entity> = ArrayList()
 
-    fun init(engine: Engine) {
-        players.onEach { it.value.init(engine) }
+    fun init() {
+        players.putAll(playerBuilder.build())
+        decorations.addAll(decorationBuilder.build())
+
+        players.onEach { it.value.init() }
         decorations.onEach { engine.addEntity(it) }
     }
 
-    fun update(engine: Engine, deltaTime: Float, eventQueue: EventQueue) {
-        players.onEach { it.value.update(engine, deltaTime) }
-        proceedEvents(eventQueue, engine)
+    fun update(deltaTime: Float) {
+        players.onEach { it.value.update(deltaTime) }
+        proceedEvents()
     }
 
-    private fun proceedEvents(eventQueue: EventQueue, engine: Engine) {
+    private fun proceedEvents() {
         eventQueue.proceed { eventContext ->
             when (eventContext.eventType) {
-                SPAWN -> {
+                DEBUG_SPAWN -> {
                     val playerName = eventContext.params[PLAYER_NAME] as String
-                    players.getValue(playerName).spawnUnits(engine)
+                    players.getValue(playerName).spawnUnits()
                     true
                 }
                 else -> false
             }
         }
+    }
+
+    override fun dispose() {
+        players.forEach { it.value.dispose() }
+        decorations.forEach { engine.removeEntity(it) }
     }
 }

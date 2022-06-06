@@ -2,8 +2,6 @@ package castle.core.game
 
 import castle.core.config.CommonConfig
 import castle.core.config.GameConfig
-import castle.core.screen.GameScreen
-import castle.core.screen.StartScreen
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import com.badlogic.gdx.physics.bullet.Bullet
