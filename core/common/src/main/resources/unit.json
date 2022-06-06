@@ -4,7 +4,8 @@
     "templateName": "BUILDING",
     "node": "castle",
     "amount": 10000,
-    "behaviour": "range-attack"
+    "behaviour": "range-attack",
+    "visibilityRange": 15.0
   },
   {
     "unitName": "warrior",
@@ -17,6 +18,6 @@
     "attackFrom": 10,
     "attackTo": 100,
     "attackSpeed": 0.25,
-    "visibilityRange": 3.0
+    "visibilityRange": 10.0
   }
 ]

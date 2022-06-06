@@ -9,15 +9,14 @@ class EnvironmentBuilder(
     private val commonResources: CommonResources,
     private val templateBuilder: TemplateBuilder
 ) {
-    fun buildEnvironment(): List<Entity> {
+    fun build(): List<Entity> {
         return commonResources.environment
             .map { buildInternal(it) }
             .flatten()
     }
 
     private fun buildInternal(environmentJson: EnvironmentJson): List<Entity> {
-        val templateJson = commonResources.templates.getValue(environmentJson.templateName)
-        return ModelUtils.searchNodes(commonResources.model, environmentJson.nodesPattern)
-            .map { templateBuilder.build(templateJson, it) }
+        val nodes = ModelUtils.searchNodes(commonResources.model, environmentJson.nodesPattern)
+        return nodes.map { templateBuilder.build(environmentJson.templateName, it) }
     }
 }

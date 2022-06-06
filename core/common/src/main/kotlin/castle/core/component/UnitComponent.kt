@@ -1,9 +1,9 @@
 package castle.core.component
 
+import castle.core.behaviour.controller.GroundUnitController
 import castle.core.path.Area
-import castle.core.physic.PhysicListener
-import castle.core.service.UnitService
 import castle.core.util.Task
+import castle.core.util.UnitUtils
 import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.ComponentMapper
 import com.badlogic.ashley.core.Entity
@@ -28,10 +28,12 @@ class UnitComponent(
     var needRotation: Boolean = false
     var needMove: Boolean = false
     var currentHealth = totalHealth
-    var distance: Float = UnitService.Companion.Distances.AT.distance
+    var distance: Float = GroundUnitController.Companion.Distances.AT.distance
     var deleteMe = false
 
     val path: MutableList<String> = ArrayList()
+    var currentArea: Area = Area(0, 0)
+
     var mainPath: GraphPath<Area> = DefaultGraphPath()
     var nextPath: Int = 0
 
@@ -41,41 +43,16 @@ class UnitComponent(
     val targetMove: Vector2 = Vector2()
     var targetEnemy: UnitComponent? = null
 
+    val inTouchObjects: MutableSet<Entity> = HashSet()
+
     val nextArea: Area
-        get() = if (mainPath.count <= 0) Area(0,0) else mainPath[nextPath]
+        get() = if (mainPath.count <= 0 || nextPath > mainPath.count - 1) Area(0,0) else mainPath[nextPath]
     val isDead: Boolean
         get() = currentHealth <= 0
-    val isEnemiesAround: Boolean
-        get() = inRadiusEnemies.isNotEmpty()
     val isEnemiesInTouch: Boolean
         get() = inTouchEnemies.isNotEmpty()
     val inTouchEnemies: List<UnitComponent>
-        get() = findEnemies(extractUnit(inTouchObjects))
-    val inRadiusEnemies: List<UnitComponent>
-        get() = findEnemies(inRadiusUnits)
-
-    val inTouchObjects: MutableSet<Entity> = HashSet()
-    val inRadiusUnits: MutableList<UnitComponent> = ArrayList()
-
-    val physicListener = object : PhysicListener {
-        override fun onContactStarted(entity1: Entity, entity2: Entity) {
-            if (owner == entity1) {
-                inTouchObjects.add(entity2)
-            }
-            if (owner == entity2) {
-                inTouchObjects.add(entity1)
-            }
-        }
-
-        override fun onContactEnded(entity1: Entity, entity2: Entity) {
-            if (owner == entity1) {
-                inTouchObjects.remove(entity2)
-            }
-            if (owner == entity2) {
-                inTouchObjects.remove(entity1)
-            }
-        }
-    }
+        get() = UnitUtils.findEnemies(this, UnitUtils.extractUnit(inTouchObjects))
 
     val attackTask: Task = object : Task(attackSpeed) {
         override fun action() {
@@ -85,13 +62,5 @@ class UnitComponent(
 
     private fun takeDamage(amountParam: Int) {
         currentHealth = Integer.max(currentHealth - amountParam, 0)
-    }
-
-    private fun findEnemies(units: Collection<UnitComponent>): List<UnitComponent> {
-        return units.filter { playerName != it.playerName }
-    }
-
-    private fun extractUnit(obj: Collection<Entity>): List<UnitComponent> {
-        return obj.filter { mapper.has(it) }.map { mapper.get(it) }
     }
 }

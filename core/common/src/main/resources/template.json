@@ -23,6 +23,14 @@
     ]
   },
   {
+    "templateName": "PROJECTILE",
+    "shape": "ADJUSTED_BASE_BOX",
+    "collisionFilterGroup": 2,
+    "collisionFilterMask": [
+      1
+    ]
+  },
+  {
     "templateName": "ENV",
     "shape": "ADJUSTED_BASE_BOX",
     "collisionFilterGroup": 3,

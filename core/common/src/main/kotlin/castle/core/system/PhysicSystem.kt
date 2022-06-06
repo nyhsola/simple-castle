@@ -12,8 +12,8 @@ import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.utils.Disposable
 
 class PhysicSystem(
-    private val physicService: PhysicService,
-    private val eventQueue: EventQueue
+    private val eventQueue: EventQueue,
+    private val physicService: PhysicService
 ) : IteratingSystem(family), EntityListener, Disposable {
     companion object {
         const val DEBUG_ENABLE = "PHYSIC_ENABLE"
