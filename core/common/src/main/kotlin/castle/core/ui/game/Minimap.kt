@@ -1,7 +1,7 @@
 package castle.core.ui.game
 
 import castle.core.path.Area
-import castle.core.service.ScanService
+import castle.core.service.MapScanService
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
@@ -12,10 +12,9 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Widget
 
 class Minimap(
-        private val shapeRenderer: ShapeRenderer,
-        scanService: ScanService
+    private val shapeRenderer: ShapeRenderer, private val mapScanService: MapScanService
 ) : Widget() {
-    private val minimap: MutableList<MutableList<MinimapPiece>> by lazy { initializeMinimap(scanService.map) }
+    private val minimap: MutableList<MutableList<MinimapPiece>> = ArrayList()
     private val minimapBuffer: MutableList<MinimapPiece> = ArrayList()
 
     init {
@@ -24,6 +23,10 @@ class Minimap(
 //                moveBy(x - width / 2, y - height / 2)
 //            }
 //        })
+    }
+
+    fun init() {
+        initializeMinimap(mapScanService.map)
     }
 
     override fun sizeChanged() {
@@ -50,13 +53,11 @@ class Minimap(
     fun update(objectsOnMap: Map<Area, Collection<Entity>>) {
         minimapBuffer.forEach { it.reset() }
         minimapBuffer.clear()
-        objectsOnMap
-                .filter { it.value.isNotEmpty() }
-                .forEach {
-                    val area = it.key
-                    minimapBuffer.add(minimap[area.y][area.x])
-                    minimap[area.y][area.x].color = Color.RED
-                }
+        objectsOnMap.filter { it.value.isNotEmpty() }.forEach {
+            val area = it.key
+            minimapBuffer.add(minimap[area.y][area.x])
+            minimap[area.y][area.x].color = Color.RED
+        }
     }
 
     override fun draw(batch: Batch, parentAlpha: Float) {
@@ -70,10 +71,7 @@ class Minimap(
         for (minimapPiece in minimap.flatten()) {
             shapeRenderer.color = minimapPiece.color
             shapeRenderer.rect(
-                    minimapPiece.position.x + x,
-                    minimapPiece.position.y + y,
-                    minimapPiece.width,
-                    minimapPiece.height
+                minimapPiece.position.x + x, minimapPiece.position.y + y, minimapPiece.width, minimapPiece.height
             )
         }
         shapeRenderer.end()
@@ -81,20 +79,17 @@ class Minimap(
         batch.begin()
     }
 
-    private fun initializeMinimap(minimapParam: List<List<Int>>): MutableList<MutableList<MinimapPiece>> {
-        val pieces: MutableList<MutableList<MinimapPiece>> = ArrayList()
+    private fun initializeMinimap(minimapParam: List<List<Int>>) {
         for (i in minimapParam.indices) {
-            pieces.add(ArrayList())
+            minimap.add(ArrayList())
             for (j in minimapParam[i].indices) {
-                pieces[i].add(MinimapPiece(Vector2(i.toFloat(), j.toFloat()), minimapParam[i][j]))
+                minimap[i].add(MinimapPiece(Vector2(i.toFloat(), j.toFloat()), minimapParam[i][j]))
             }
         }
-        return pieces
     }
 
     private class MinimapPiece(
-            private val index: Vector2,
-            private val groundHeight: Int
+        private val index: Vector2, private val groundHeight: Int
     ) {
         var width: Float = 0f
         var height: Float = 0f
@@ -120,8 +115,7 @@ class Minimap(
 
         private fun updatePosition() {
             position.set(
-                    offset.x + index.x * width,
-                    offset.y + index.y * height
+                offset.x + index.x * width, offset.y + index.y * height
             )
         }
 

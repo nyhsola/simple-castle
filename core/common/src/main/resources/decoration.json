@@ -2,5 +2,9 @@
   {
     "templateName": "ENV",
     "nodesPattern": "barrel-(?:.+)"
+  },
+  {
+    "templateName": "ENV",
+    "nodesPattern": "barrel-n-(?:.+)"
   }
 ]

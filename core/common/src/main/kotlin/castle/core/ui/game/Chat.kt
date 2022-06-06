@@ -35,7 +35,6 @@ class Chat(commonResources: CommonResources) : Table() {
             textField.text = value
         }
 
-
     var text: String
         get() {
             return textArea.messageText
@@ -43,7 +42,6 @@ class Chat(commonResources: CommonResources) : Table() {
         set(value) {
             textArea.messageText = value
         }
-
 
     init {
         touchable = Touchable.enabled

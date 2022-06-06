@@ -23,16 +23,16 @@ class TextRenderSystem(
     private val bitmapFont: BitmapFont = gameResources.bitmapFont
 
     override fun update(deltaTime: Float) {
-        Gdx.gl.apply { glEnable(GL20.GL_DEPTH_TEST) }
+        spriteBatch.begin()
+        Gdx.gl.glEnable(GL20.GL_DEPTH_TEST)
         super.update(deltaTime)
+        spriteBatch.end()
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val textRenderComponent = TextRenderComponent.mapper.get(entity)
         val camera = cameraService.currentCamera.camera
         spriteBatch.projectionMatrix = tempMat.set(camera.combined).translate(textRenderComponent.offset).rotate(Vector3.Y, 90f)
-        spriteBatch.begin()
         bitmapFont.draw(spriteBatch, textRenderComponent.text, 0f, 0f, 0f, Align.center, false)
-        spriteBatch.end()
     }
 }
