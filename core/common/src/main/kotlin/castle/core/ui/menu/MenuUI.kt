@@ -5,23 +5,28 @@ import castle.core.event.EventContext
 import castle.core.event.EventQueue
 import castle.core.service.CommonResources
 import castle.core.system.GameManagerSystem
+import castle.core.util.UIUtils
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.signals.Signal
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.InputEvent
-import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Container
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
+import com.badlogic.gdx.utils.viewport.Viewport
+import org.koin.core.annotation.Single
 
+@Single
 class MenuUI(
-    stage: Stage,
+    spriteBatch: SpriteBatch,
+    viewport: Viewport,
     private val commonResources: CommonResources,
     eventQueue: EventQueue
 ) : Entity() {
-    private val stageRenderComponent: StageRenderComponent = StageRenderComponent(stage).also { this.add(it) }
+    private val stageRenderComponent: StageRenderComponent = StageRenderComponent(UIUtils.createStage(viewport, spriteBatch)).also { this.add(it) }
     private val rootContainer = Container<Table>()
     private val rootTable = Table()
     private val signal = Signal<EventContext>()
@@ -53,13 +58,13 @@ class MenuUI(
         return container
     }
 
-    private fun label() : Label {
+    private fun label(): Label {
         val button = Label("Game not paused!", commonResources.skin)
         button.color.a = 0.75f
         return button
     }
 
-    private fun exitButton() : TextButton {
+    private fun exitButton(): TextButton {
         val button = TextButton("Exit", commonResources.skin)
         button.color.a = 0.75f
         button.addCaptureListener(object : ClickListener() {

@@ -7,7 +7,9 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
+import org.koin.core.annotation.Single
 
+@Single
 class GameResources {
     val players: Map<String, PlayerJson> = loadPlayers().associateBy { it.playerName }
     val units: Map<String, UnitJson> = loadUnits().associateBy { it.unitName }

@@ -6,7 +6,9 @@ import castle.core.component.StateComponent
 import castle.core.component.UnitComponent
 import castle.core.state.StateDelta
 import com.badlogic.ashley.core.Entity
+import org.koin.core.annotation.Single
 
+@Single
 class GroundRangeAttackBehaviour(private val controller: GroundRangeUnitController) {
     private val init = Init()
     private val main = Main()

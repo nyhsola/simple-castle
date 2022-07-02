@@ -7,7 +7,9 @@ import castle.core.service.EnvironmentService
 import castle.core.service.MapService
 import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
+import org.koin.core.annotation.Single
 
+@Single
 class GroundUnitController(
     private val mapService: MapService,
     private val environmentService: EnvironmentService

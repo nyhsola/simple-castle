@@ -4,6 +4,7 @@ import castle.core.component.PhysicComponent
 import castle.core.component.PositionComponent
 import castle.core.component.UnitComponent
 import castle.core.component.render.LineRenderComponent
+import castle.core.event.EventContext
 import castle.core.event.EventQueue
 import castle.core.physic.PhysicListener
 import castle.core.service.MapService
@@ -14,7 +15,9 @@ import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector3
+import org.koin.core.annotation.Single
 
+@Single
 class UnitSystem(
     private val eventQueue: EventQueue,
     private val mapService: MapService,
@@ -29,13 +32,26 @@ class UnitSystem(
     private val temp: Vector3 = Vector3()
     private val lines: MutableList<Entity> = ArrayList()
 
+    private val operations: Map<String, (EventContext) -> Unit> = mapOf(
+        Pair(DEBUG_ENABLE) {
+            debugEnabled = !debugEnabled
+            if (debugEnabled) {
+                engine.getEntitiesFor(family).onEach { createDebugLines(it, lines) }
+                lines.onEach { engine.addEntity(it) }
+            } else {
+                lines.onEach { engine.removeEntity(it) }
+                lines.clear()
+            }
+        }
+    )
+
     override fun addedToEngine(engine: Engine) {
         physicService.addListener(this)
         super.addedToEngine(engine)
     }
 
     override fun update(deltaTime: Float) {
-        proceedEvents()
+        eventQueue.proceed(operations)
         super.update(deltaTime)
     }
 
@@ -48,26 +64,6 @@ class UnitSystem(
         }
         if (unitComponent.isDead) {
             unitComponent.deleteMe = true
-        }
-    }
-
-    private fun proceedEvents() {
-        eventQueue.proceed { eventContext ->
-            when (eventContext.eventType) {
-                DEBUG_ENABLE -> {
-                    debugEnabled = !debugEnabled
-                    if (debugEnabled) {
-                        engine.getEntitiesFor(family).onEach { createDebugLines(it, lines) }
-                        lines.onEach { engine.addEntity(it) }
-                    } else {
-                        lines.onEach { engine.removeEntity(it) }
-                        lines.clear()
-                    }
-                    true
-                }
-
-                else -> false
-            }
         }
     }
 

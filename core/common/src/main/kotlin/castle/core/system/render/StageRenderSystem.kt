@@ -9,7 +9,9 @@ import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.InputMultiplexer
 import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
+import org.koin.core.annotation.Single
 
+@Single
 class StageRenderSystem : IteratingSystem(Family.all(StageRenderComponent::class.java).get()), EntityListener, KtxInputAdapter, KtxScreen {
     private val inputMultiplexer = InputMultiplexer()
 

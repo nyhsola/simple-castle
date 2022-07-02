@@ -10,7 +10,9 @@ import castle.core.service.CommonResources
 import castle.core.service.EnvironmentService
 import castle.core.service.GameResources
 import com.badlogic.ashley.core.Entity
+import org.koin.core.annotation.Single
 
+@Single
 class UnitBuilder(
     private val commonResources: CommonResources,
     private val gameResources: GameResources,

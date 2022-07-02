@@ -5,7 +5,9 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.bullet.collision.ClosestRayResultCallback
 import com.badlogic.gdx.physics.bullet.collision.btCollisionObject
 import com.badlogic.gdx.utils.Disposable
+import org.koin.core.annotation.Single
 
+@Single
 class RayCastService(
     private val physicService: PhysicService,
     private val cameraService: CameraService

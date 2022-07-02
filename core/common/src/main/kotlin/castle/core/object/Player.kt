@@ -3,6 +3,7 @@ package castle.core.`object`
 import castle.core.builder.TextBuilder
 import castle.core.builder.UnitBuilder
 import castle.core.component.UnitComponent
+import castle.core.event.EventContext
 import castle.core.event.EventQueue
 import castle.core.json.PlayerJson
 import com.badlogic.ashley.core.Engine
@@ -20,6 +21,12 @@ class Player(
     private val effects: List<CountText> = textBuilder.build(playerJson, eventQueue)
     private val units: MutableList<Entity> = ArrayList()
 
+    private val operations: Map<String, (EventContext) -> Unit> = mapOf(
+        Pair(CountText.ON_COUNT) {
+            spawnUnit(it.params.getValue(CountText.PARAM_LINE) as Int)
+        }
+    )
+
     fun init() {
         buildings.onEach { engine.addEntity(it) }
         effects.onEach { engine.addEntity(it) }
@@ -27,23 +34,11 @@ class Player(
 
     fun update(deltaTime: Float) {
         effects.onEach { it.update(deltaTime) }
-        proceedEvents()
+        eventQueue.proceed(operations)
     }
 
     fun spawnUnits() {
         List(playerJson.paths.size) { index -> spawnUnit(index) }
-    }
-
-    private fun proceedEvents() {
-        eventQueue.proceed { eventContext ->
-            when (eventContext.eventType) {
-                CountText.ON_COUNT -> {
-                    spawnUnit(eventContext.params.getValue(CountText.PARAM_LINE) as Int)
-                    true
-                }
-                else -> false
-            }
-        }
     }
 
     private fun spawnBuilding(playerName: String, unitStr: String, spawnStr: String): Entity {

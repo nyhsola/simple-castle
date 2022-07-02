@@ -7,10 +7,12 @@ import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Matrix4
+import org.koin.core.annotation.Single
 
+@Single
 class LineRenderSystem(
-        private val shapeRenderer: ShapeRenderer,
-        private val cameraService: CameraService
+    private val shapeRenderer: ShapeRenderer,
+    private val cameraService: CameraService
 ) : IteratingSystem(Family.all(LineRenderComponent::class.java).get()) {
     private val transformMatrix4 = Matrix4()
 

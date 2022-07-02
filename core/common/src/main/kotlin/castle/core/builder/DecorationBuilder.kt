@@ -5,7 +5,9 @@ import castle.core.json.DecorationJson
 import castle.core.service.CommonResources
 import castle.core.util.ModelUtils
 import com.badlogic.ashley.core.Entity
+import org.koin.core.annotation.Single
 
+@Single
 class DecorationBuilder(
     private val commonResources: CommonResources,
     private val templateBuilder: TemplateBuilder

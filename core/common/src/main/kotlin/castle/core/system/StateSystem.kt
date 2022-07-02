@@ -6,7 +6,9 @@ import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.ai.GdxAI
 import com.badlogic.gdx.ai.msg.MessageManager
+import org.koin.core.annotation.Single
 
+@Single
 class StateSystem : IteratingSystem(family) {
     companion object {
         private val family: Family = Family.all(StateComponent::class.java).get()

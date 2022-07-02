@@ -7,7 +7,9 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
+import org.koin.core.annotation.Single
 
+@Single
 class EnvironmentService(
     private val engine: Engine,
     private val environmentBuilder: EnvironmentBuilder

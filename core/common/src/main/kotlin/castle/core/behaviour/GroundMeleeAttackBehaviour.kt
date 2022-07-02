@@ -8,7 +8,9 @@ import castle.core.component.render.AnimationRenderComponent
 import castle.core.state.StateDelta
 import castle.core.util.UnitUtils
 import com.badlogic.ashley.core.Entity
+import org.koin.core.annotation.Single
 
+@Single
 class GroundMeleeAttackBehaviour(
     private val controller: GroundUnitController
 ) {

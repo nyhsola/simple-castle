@@ -3,6 +3,7 @@ package castle.core.service
 import castle.core.component.PhysicComponent
 import castle.core.component.PositionComponent
 import castle.core.component.render.CircleRenderComponent
+import castle.core.event.EventContext
 import castle.core.event.EventQueue
 import castle.core.path.Area
 import castle.core.path.AreaGraph
@@ -13,8 +14,10 @@ import com.badlogic.gdx.ai.pfa.GraphPath
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
+import org.koin.core.annotation.Single
 import kotlin.math.abs
 
+@Single
 class MapService(
     private val engine: Engine,
     private val eventQueue: EventQueue,
@@ -37,12 +40,25 @@ class MapService(
     val unitsInArea: MutableMap<Area, MutableSet<Entity>> = HashMap()
     private val areasInUnit: MutableMap<Entity, MutableSet<Area>> = HashMap()
 
+    private val operations: Map<String, (EventContext) -> Unit> = mapOf(
+        Pair(DEBUG_ENABLE) {
+            debugEnabled = !debugEnabled
+            if (debugEnabled) {
+                createDebugCircles(circles)
+                circles.forEach { engine.addEntity(it) }
+            } else {
+                circles.forEach { engine.removeEntity(it) }
+                circles.clear()
+            }
+        }
+    )
+
     fun init() {
         initializeGraph(mapScanService.map)
     }
 
     fun update() {
-        proceedEvents(engine)
+        eventQueue.proceed(operations)
     }
 
     fun updateEntity(entity: Entity) {
@@ -91,25 +107,6 @@ class MapService(
         val x = environmentService.aabbMax.x - i * MapScanService.scanBox.x * 2 - MapScanService.scanBox.x
         val z = environmentService.aabbMax.z - j * MapScanService.scanBox.z * 2 - MapScanService.scanBox.z
         return Area(Vector2(x, z), i, j)
-    }
-
-    private fun proceedEvents(engine: Engine) {
-        eventQueue.proceed { eventContext ->
-            when (eventContext.eventType) {
-                DEBUG_ENABLE -> {
-                    debugEnabled = !debugEnabled
-                    if (debugEnabled) {
-                        createDebugCircles(circles)
-                        circles.forEach { engine.addEntity(it) }
-                    } else {
-                        circles.forEach { engine.removeEntity(it) }
-                        circles.clear()
-                    }
-                    true
-                }
-                else -> false
-            }
-        }
     }
 
     private fun placeOnMap(entity: Entity) {

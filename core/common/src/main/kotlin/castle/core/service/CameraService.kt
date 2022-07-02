@@ -2,7 +2,9 @@ package castle.core.service
 
 import castle.core.`object`.GameCamera
 import ktx.app.KtxInputAdapter
+import org.koin.core.annotation.Single
 
+@Single
 class CameraService : KtxInputAdapter {
     private val index: Int = 0
     private val cameras: List<GameCamera> = listOf(GameCamera())

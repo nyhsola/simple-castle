@@ -6,7 +6,9 @@ import castle.core.service.MapService
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
+import org.koin.core.annotation.Single
 
+@Single
 class MapSystem(
     private val mapService: MapService
 ) : IteratingSystem(family) {
