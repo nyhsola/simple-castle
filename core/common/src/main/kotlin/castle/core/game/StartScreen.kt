@@ -1,28 +1,34 @@
 package castle.core.game
 
-import castle.core.config.CommonConfig
 import castle.core.event.EventContext
+import castle.core.event.EventQueue
+import castle.core.service.CommonResources
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
+import org.koin.core.annotation.Single
 
-class StartScreen(commonConfig: CommonConfig) : KtxScreen, KtxInputAdapter {
+@Single
+class StartScreen(
+    private val spriteBatch: SpriteBatch,
+    commonResources: CommonResources,
+    eventQueue: EventQueue
+) : KtxScreen, KtxInputAdapter {
     companion object {
         const val GAME_EVENT = "GAME_EVENT"
     }
 
     private val signal = Signal<EventContext>()
-    private val spriteBatch = commonConfig.spriteBatch
-    private val texture = commonConfig.commonResources.textures.getValue("start.png")
+    private val texture = commonResources.textures.getValue("start.png")
 
     private val totalDuration = 2f
     private var accumulated = 0f
 
     init {
-        signal.add(commonConfig.eventQueue)
+        signal.add(eventQueue)
         setAlpha(spriteBatch, 0f)
     }
 

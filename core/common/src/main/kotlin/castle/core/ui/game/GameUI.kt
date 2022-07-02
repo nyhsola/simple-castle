@@ -6,27 +6,36 @@ import castle.core.event.EventQueue
 import castle.core.path.Area
 import castle.core.service.CommonResources
 import castle.core.service.MapScanService
+import castle.core.service.UIService.Companion.MENU_ENABLE
 import castle.core.system.GameManagerSystem
-import castle.core.ui.service.UIService.Companion.MENU_ENABLE
+import castle.core.util.UIUtils
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.badlogic.gdx.scenes.scene2d.*
+import com.badlogic.gdx.scenes.scene2d.Group
+import com.badlogic.gdx.scenes.scene2d.InputEvent
+import com.badlogic.gdx.scenes.scene2d.InputListener
+import com.badlogic.gdx.scenes.scene2d.Touchable
 import com.badlogic.gdx.scenes.scene2d.ui.*
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Align
+import com.badlogic.gdx.utils.viewport.Viewport
+import org.koin.core.annotation.Single
 
 private const val PAD_MAIN = 0.02f
 
+@Single
 class GameUI(
-    stage: Stage,
+    spriteBatch: SpriteBatch,
+    viewport: Viewport,
     mapScanService: MapScanService,
     private val commonResources: CommonResources,
     shapeRenderer: ShapeRenderer,
     eventQueue: EventQueue
 ) : Entity() {
-    private val stageRenderComponent: StageRenderComponent = StageRenderComponent(stage).also { this.add(it) }
+    private val stageRenderComponent: StageRenderComponent = StageRenderComponent(UIUtils.createStage(viewport, spriteBatch)).also { this.add(it) }
     private val signal = Signal<EventContext>()
     private val rootContainer = Container<Table>()
     private val rootTable = Table()

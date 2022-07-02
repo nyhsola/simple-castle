@@ -9,10 +9,12 @@ import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g3d.ModelBatch
+import org.koin.core.annotation.Single
 
+@Single
 class ModelRenderSystem(
-        private val modelBatch: ModelBatch,
-        private val cameraService: CameraService
+    private val modelBatch: ModelBatch,
+    private val cameraService: CameraService
 ) : IteratingSystem(Family.all(PositionComponent::class.java, ModelRenderComponent::class.java).get()) {
     override fun update(deltaTime: Float) {
         Gdx.gl.apply {

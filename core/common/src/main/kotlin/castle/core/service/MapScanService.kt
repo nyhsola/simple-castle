@@ -2,8 +2,10 @@ package castle.core.service
 
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.bullet.collision.btBoxShape
+import org.koin.core.annotation.Single
 import kotlin.math.abs
 
+@Single
 class MapScanService(
     private val environmentService: EnvironmentService,
     private val physicService: PhysicService
@@ -25,7 +27,6 @@ class MapScanService(
         map3D.addAll(scanRegion(scanBox, environmentService.aabbMin, environmentService.aabbMax))
         map2D.addAll(mirror(map3D.map { byX -> byX.map { byZ -> byZ.sum() } }))
     }
-
 
 
     private fun scanRegion(boxScan: Vector3, aabbMin: Vector3, aabbMax: Vector3): MutableList<MutableList<MutableList<Int>>> {

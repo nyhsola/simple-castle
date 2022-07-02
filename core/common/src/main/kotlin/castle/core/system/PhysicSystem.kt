@@ -2,6 +2,7 @@ package castle.core.system
 
 import castle.core.component.PhysicComponent
 import castle.core.component.PositionComponent
+import castle.core.event.EventContext
 import castle.core.event.EventQueue
 import castle.core.service.PhysicService
 import com.badlogic.ashley.core.Engine
@@ -10,7 +11,9 @@ import com.badlogic.ashley.core.EntityListener
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.utils.Disposable
+import org.koin.core.annotation.Single
 
+@Single
 class PhysicSystem(
     private val eventQueue: EventQueue,
     private val physicService: PhysicService
@@ -19,6 +22,10 @@ class PhysicSystem(
         const val DEBUG_ENABLE = "PHYSIC_ENABLE"
         private val family: Family = Family.all(PositionComponent::class.java, PhysicComponent::class.java).get()
     }
+
+    private val operations: Map<String, (EventContext) -> Unit> = mapOf(
+        Pair(DEBUG_ENABLE) { physicService.debugEnabled = !physicService.debugEnabled }
+    )
 
     override fun addedToEngine(engine: Engine) {
         engine.addEntityListener(family, this)
@@ -34,15 +41,7 @@ class PhysicSystem(
     }
 
     override fun update(deltaTime: Float) {
-        eventQueue.proceed {
-            when (it.eventType) {
-                DEBUG_ENABLE -> {
-                    physicService.debugEnabled = !physicService.debugEnabled
-                    true
-                }
-                else -> false
-            }
-        }
+        eventQueue.proceed(operations)
         physicService.renderDebug()
         physicService.update(deltaTime)
     }

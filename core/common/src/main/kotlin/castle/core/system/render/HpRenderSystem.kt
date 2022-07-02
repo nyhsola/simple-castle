@@ -7,7 +7,9 @@ import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch
 import com.badlogic.gdx.math.Vector3
+import org.koin.core.annotation.Single
 
+@Single
 class HpRenderSystem(private val decalBatch: DecalBatch) : IteratingSystem(Family.all(UnitComponent::class.java, HPRenderComponent::class.java).get()) {
     private val temp: Vector3 = Vector3()
 

@@ -10,7 +10,9 @@ import com.badlogic.gdx.graphics.g3d.Model
 import com.badlogic.gdx.graphics.g3d.ModelInstance
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.utils.Array
+import org.koin.core.annotation.Single
 
+@Single
 class TemplateBuilder(private val commonResources: CommonResources) {
     fun build(templateName: String, nodeName: String): Entity {
         return buildInternal(Entity(), commonResources.templates.getValue(templateName), nodeName)

@@ -4,7 +4,9 @@ import castle.core.builder.ProjectileBuilder
 import castle.core.component.PositionComponent
 import castle.core.component.UnitComponent
 import castle.core.service.MapService
+import org.koin.core.annotation.Single
 
+@Single
 class GroundRangeUnitController(
     private val mapService: MapService,
     private val projectileBuilder: ProjectileBuilder

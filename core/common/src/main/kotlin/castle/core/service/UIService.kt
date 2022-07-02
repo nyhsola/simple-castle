@@ -1,10 +1,8 @@
-package castle.core.ui.service
+package castle.core.service
 
 import castle.core.event.EventContext
 import castle.core.event.EventQueue
 import castle.core.path.Area
-import castle.core.service.CommonResources
-import castle.core.service.MapScanService
 import castle.core.ui.debug.DebugUI
 import castle.core.ui.game.GameUI
 import castle.core.ui.menu.MenuUI
@@ -12,21 +10,17 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.Disposable
-import com.badlogic.gdx.utils.viewport.Viewport
 import ktx.app.KtxInputAdapter
+import org.koin.core.annotation.Single
 
+@Single
 class UIService(
     private val engine: Engine,
     private val eventQueue: EventQueue,
-    mapScanService: MapScanService,
-    commonResources: CommonResources,
-    shapeRenderer: ShapeRenderer,
-    private val spriteBatch: SpriteBatch,
-    private val viewport: Viewport
+    private val gameUI: GameUI,
+    private val debugUI: DebugUI,
+    private val menuUI: MenuUI
 ) : KtxInputAdapter, Disposable {
     companion object {
         const val DEBUG_UI_ENABLE_1 = "DEBUG_UI_ENABLE_1"
@@ -34,12 +28,13 @@ class UIService(
         const val MENU_ENABLE = "MENU_ENABLE"
     }
 
-    private val gameUI = GameUI(createStage(), mapScanService, commonResources, shapeRenderer, eventQueue)
-    private val debugUI = DebugUI(createStage(), commonResources, eventQueue)
-    private val menuUI = MenuUI(createStage(), commonResources, eventQueue)
     private val signal = Signal<EventContext>()
 
-    private fun createStage() = Stage(viewport, spriteBatch)
+    private val operations: Map<String, (EventContext) -> Unit> = mapOf(
+        Pair(DEBUG_UI_ENABLE_1) { gameUI.debugEnabled = !gameUI.debugEnabled },
+        Pair(DEBUG_UI_ENABLE_2) { debugUI.debugEnabled = !debugUI.debugEnabled },
+        Pair(MENU_ENABLE) { menuUI.isVisible = !menuUI.isVisible }
+    )
 
     fun init() {
         signal.add(eventQueue)
@@ -53,7 +48,7 @@ class UIService(
     fun update(objectsOnMap: Map<Area, Collection<Entity>>) {
         gameUI.update(objectsOnMap)
         debugUI.update()
-        proceedEvents()
+        eventQueue.proceed(operations)
         proceedMessages()
     }
 
@@ -72,26 +67,6 @@ class UIService(
             signal.dispatch(EventContext(MENU_ENABLE))
         }
         return super.keyDown(keycode)
-    }
-
-    private fun proceedEvents() {
-        eventQueue.proceed {
-            when (it.eventType) {
-                DEBUG_UI_ENABLE_1 -> {
-                    gameUI.debugEnabled = !gameUI.debugEnabled
-                    true
-                }
-                DEBUG_UI_ENABLE_2 -> {
-                    debugUI.debugEnabled = !debugUI.debugEnabled
-                    true
-                }
-                MENU_ENABLE -> {
-                    menuUI.isVisible = !menuUI.isVisible
-                    true
-                }
-                else -> false
-            }
-        }
     }
 
     private fun proceedMessages() {

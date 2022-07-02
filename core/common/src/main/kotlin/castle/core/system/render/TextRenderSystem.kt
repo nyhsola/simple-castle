@@ -13,7 +13,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Align
+import org.koin.core.annotation.Single
 
+@Single
 class TextRenderSystem(
     private val spriteBatch: SpriteBatch,
     gameResources: GameResources,

@@ -5,13 +5,22 @@ include(
     "server:launcher"
 )
 
+pluginManagement {
+    val kspDevtoolsVersion = "1.7.0-1.0.6"
+    plugins {
+        id("com.google.devtools.ksp") version kspDevtoolsVersion
+    }
+}
+
 dependencyResolutionManagement {
     val kotlinVersion = "1.6.20"
     val ktxVersion = "1.10.0-b1"
-    val gdxVersion = "1.10.0"
+    val gdxVersion = "1.11.0"
     val ashleyVersion = "1.7.4"
     val aiVersion = "1.8.2"
     val gradleTool = "7.0.4"
+    val koinVersion = "3.2.0"
+    val koinAnnotationVersion = "1.0.1"
 
     versionCatalogs {
         create("libs") {
@@ -21,6 +30,10 @@ dependencyResolutionManagement {
 
             library("kapp", "io.github.libktx:ktx-app:$ktxVersion")
             library("kmath", "io.github.libktx:ktx-math:$ktxVersion")
+
+            library("koin", "io.insert-koin:koin-core:$koinVersion")
+            library("koina", "io.insert-koin:koin-annotations:$koinAnnotationVersion")
+            library("koinc", "io.insert-koin:koin-ksp-compiler:$koinAnnotationVersion")
 
             library("gashley", "com.badlogicgames.ashley:ashley:$ashleyVersion")
             library("gai", "com.badlogicgames.gdx:gdx-ai:$aiVersion")

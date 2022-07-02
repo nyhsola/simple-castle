@@ -2,7 +2,7 @@ package castle.core.util
 
 import com.badlogic.gdx.graphics.g3d.Model
 
-class ModelUtils {
+abstract class ModelUtils {
     companion object {
         fun searchNodes(models: Map<String, Model>, nodesPattern: String): Collection<String> {
             return models

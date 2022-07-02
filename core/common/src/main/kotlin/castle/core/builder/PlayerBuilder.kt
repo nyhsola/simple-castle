@@ -4,7 +4,9 @@ import castle.core.event.EventQueue
 import castle.core.`object`.Player
 import castle.core.service.GameResources
 import com.badlogic.ashley.core.Engine
+import org.koin.core.annotation.Single
 
+@Single
 class PlayerBuilder(
     private val gameResources: GameResources,
     private val unitBuilder: UnitBuilder,

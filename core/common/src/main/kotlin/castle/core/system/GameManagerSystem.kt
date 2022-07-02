@@ -1,14 +1,16 @@
 package castle.core.system
 
+import castle.core.event.EventContext
 import castle.core.event.EventQueue
 import castle.core.service.*
-import castle.core.ui.service.UIService
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.systems.IntervalSystem
 import com.badlogic.gdx.Gdx
 import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
+import org.koin.core.annotation.Single
 
+@Single
 class GameManagerSystem(
     private val environmentService: EnvironmentService,
     private val gameService: GameService,
@@ -25,6 +27,12 @@ class GameManagerSystem(
         const val CHAT_UNFOCUSED = "CHAT_UNFOCUSED"
         const val EXIT_GAME = "EXIT_GAME"
     }
+
+    private val operations: Map<String, (EventContext) -> Unit> = mapOf(
+        Pair(CHAT_FOCUSED) { cameraService.input = false },
+        Pair(CHAT_UNFOCUSED) { cameraService.input = true },
+        Pair(EXIT_GAME) { Gdx.app.postRunnable(Gdx.app::exit) }
+    )
 
     override fun addedToEngine(engine: Engine) {
         environmentService.init()
@@ -44,27 +52,7 @@ class GameManagerSystem(
         uiService.update(mapService.unitsInArea)
         gameService.update(GAME_TICK)
         mapService.update()
-        proceedEvents()
-    }
-
-    private fun proceedEvents() {
-        eventQueue.proceed {
-            when (it.eventType) {
-                CHAT_FOCUSED -> {
-                    cameraService.input = false
-                    true
-                }
-                CHAT_UNFOCUSED -> {
-                    cameraService.input = true
-                    true
-                }
-                EXIT_GAME -> {
-                    Gdx.app.postRunnable(Gdx.app::exit)
-                    true
-                }
-                else -> false
-            }
-        }
+        eventQueue.proceed(operations)
     }
 
     override fun resize(width: Int, height: Int) {

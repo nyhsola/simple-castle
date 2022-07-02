@@ -4,7 +4,6 @@ import castle.core.component.PositionComponent
 import castle.core.component.UnitComponent
 import castle.core.component.render.CircleRenderComponent
 import castle.core.component.render.ModelRenderComponent
-import castle.core.ui.service.UIService
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.graphics.Color
@@ -12,7 +11,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.math.collision.BoundingBox
 import com.badlogic.gdx.utils.Disposable
+import org.koin.core.annotation.Single
 
+@Single
 class SelectionService(
     private val engine: Engine,
     private val uiService: UIService,

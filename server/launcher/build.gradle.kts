@@ -43,6 +43,7 @@ dependencies {
     implementation(libs.kapp)
     implementation(libs.gbackend)
     implementation(libs.glwjgl3)
+    implementation(libs.koin)
 
     implementation(variantOf(libs.gplatformdesktop) { classifier("natives-desktop") })
     implementation(variantOf(libs.gplatformbullet) { classifier("natives-desktop") })

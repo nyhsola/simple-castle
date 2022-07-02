@@ -3,7 +3,7 @@ package castle.core.util
 import castle.core.component.UnitComponent
 import com.badlogic.ashley.core.Entity
 
-class UnitUtils {
+abstract class UnitUtils {
     companion object {
         fun findEnemies(me: UnitComponent, units: Collection<UnitComponent>): List<UnitComponent> {
             return units.filter { me.playerName != it.playerName }

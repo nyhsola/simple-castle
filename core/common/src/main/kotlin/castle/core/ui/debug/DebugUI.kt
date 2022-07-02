@@ -6,28 +6,33 @@ import castle.core.event.EventQueue
 import castle.core.service.CommonResources
 import castle.core.service.GameService
 import castle.core.service.MapService
+import castle.core.service.UIService
 import castle.core.system.PhysicSystem
 import castle.core.system.UnitSystem
-import castle.core.ui.service.UIService
+import castle.core.util.UIUtils
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.scenes.scene2d.Group
 import com.badlogic.gdx.scenes.scene2d.InputEvent
-import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Container
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener
 import com.badlogic.gdx.utils.Align
+import com.badlogic.gdx.utils.viewport.Viewport
+import org.koin.core.annotation.Single
 
+@Single
 class DebugUI(
-    stage: Stage,
+    spriteBatch: SpriteBatch,
+    viewport: Viewport,
     private val commonResources: CommonResources,
     eventQueue: EventQueue
 ) : Entity() {
-    private val stageRenderComponent: StageRenderComponent = StageRenderComponent(stage).also { this.add(it) }
+    private val stageRenderComponent: StageRenderComponent = StageRenderComponent(UIUtils.createStage(viewport, spriteBatch)).also { this.add(it) }
     private val signal = Signal<EventContext>()
     private val rootContainer = Container<Table>()
     private val rootTable = Table()
@@ -94,8 +99,8 @@ class DebugUI(
         table.add(createButton("Map", listOf(EventContext(MapService.DEBUG_ENABLE)))).width(50f).height(50f)
         table.row()
         val list = listOf(
-                EventContext(GameService.DEBUG_SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 1"))),
-                EventContext(GameService.DEBUG_SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 3")))
+            EventContext(GameService.DEBUG_SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 1"))),
+            EventContext(GameService.DEBUG_SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 3")))
         )
         table.add(createButton("Spawn", list)).width(50f).height(50f)
         container.actor = table
