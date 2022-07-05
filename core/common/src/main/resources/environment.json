@@ -6,5 +6,9 @@
   {
     "templateName": "AREA",
     "nodesPattern": "area-(?:.+)"
+  },
+  {
+    "templateName": "AREA",
+    "nodesPattern": "add-(?:.+)"
   }
 ]

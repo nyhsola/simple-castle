@@ -25,6 +25,7 @@
   {
     "templateName": "PROJECTILE",
     "shape": "ADJUSTED_BASE_BOX",
+    "mass": 0.1,
     "collisionFilterGroup": 2,
     "collisionFilterMask": [
       1

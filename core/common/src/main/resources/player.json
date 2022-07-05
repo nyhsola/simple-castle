@@ -2,46 +2,26 @@
   {
     "playerName": "Player 1",
     "units": {
-      "castle": "area-1"
-    },
-    "paths": [
-      [
-        "area-1-1",
-        "area-1-1-1",
-        "area-2-1-1",
-        "area-3-1-1",
-        "area-4-1-1"
+      "castle": [
+        "area-1"
       ],
-      [
-        "area-1-2",
-        "area-0",
-        "area-3-2",
-        "area-3-3",
-        "area-2-1-1",
-        "area-1-1-1"
-      ],
-      [
-        "area-1-3",
-        "area-4-1-1",
-        "area-3-1-1",
-        "area-2-1-1",
-        "area-1-1-1"
+      "tower": [
+        "add-1",
+        "add-2",
+        "add-3",
+        "add-4"
       ]
-    ]
+    },
+    "paths": []
   },
   {
     "playerName": "Player 3",
     "units": {
-      "castle": "area-3"
+      "castle": [
+        "area-3"
+      ]
     },
     "paths": [
-      [
-        "area-3-3",
-        "area-2-1-1",
-        "area-1-1-1",
-        "area-4-1-1",
-        "area-3-1-1"
-      ],
       [
         "area-3-2",
         "area-0",
@@ -49,13 +29,6 @@
         "area-1-3",
         "area-4-1-1",
         "area-3-1-1"
-      ],
-      [
-        "area-3-1",
-        "area-3-1-1",
-        "area-4-1-1",
-        "area-1-1-1",
-        "area-2-1-1"
       ]
     ]
   }

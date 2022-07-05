@@ -30,22 +30,19 @@ class PhysicService(private val cameraService: CameraService) {
     private val anyHitCallback = AnyHitCallback()
     private val physicListeners: MutableList<PhysicListener> = ArrayList()
 
+    var debugEnabled: Boolean = false
     val dynamicsWorld: btDiscreteDynamicsWorld =
         btDiscreteDynamicsWorld(dispatcher, broadPhase, constraintSolver, collisionConfig).apply {
             gravity = Vector3(0.0f, -10f, 0f)
             debugDrawer = customDebugDrawer
         }
-    var debugEnabled: Boolean = false
 
-    fun renderDebug() {
+    fun update(deltaTime: Float) {
         if (debugEnabled) {
             customDebugDrawer.begin(cameraService.currentCamera.camera)
             dynamicsWorld.debugDrawWorld()
             customDebugDrawer.end()
         }
-    }
-
-    fun update(deltaTime: Float) {
         dynamicsWorld.stepSimulation(deltaTime, 5, 1f / 60f)
     }
 

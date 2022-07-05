@@ -42,7 +42,6 @@ class PhysicSystem(
 
     override fun update(deltaTime: Float) {
         eventQueue.proceed(operations)
-        physicService.renderDebug()
         physicService.update(deltaTime)
     }
 

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.math.collision.BoundingBox
 import com.badlogic.gdx.utils.Disposable
+import ktx.app.KtxInputAdapter
 import org.koin.core.annotation.Single
 
 @Single
@@ -18,7 +19,7 @@ class SelectionService(
     private val engine: Engine,
     private val uiService: UIService,
     private val rayCastService: RayCastService
-) : Disposable {
+) : KtxInputAdapter, Disposable {
     private val selectionCircle: Entity = Entity().add(CircleRenderComponent())
     private val radiusCircle: Entity = Entity().add(CircleRenderComponent())
     private val boundingBox = BoundingBox()
@@ -30,9 +31,10 @@ class SelectionService(
         engine.addEntity(radiusCircle)
     }
 
-    fun select(x: Int, y: Int) {
-        val userPick = rayCastService.rayCast(x.toFloat(), y.toFloat())?.userData
+    override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+        val userPick = rayCastService.rayCast(screenX.toFloat(), screenY.toFloat())?.userData
         if (userPick == null) unSelect() else select(userPick as Entity)
+        return false
     }
 
     private fun select(selectedUnit: Entity) {

@@ -1,16 +1,18 @@
 package castle.core.game
 
-import castle.core.config.ScreenConfig
 import castle.core.system.*
 import castle.core.system.render.*
 import com.badlogic.ashley.core.PooledEngine
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
+import com.badlogic.gdx.utils.Disposable
+import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
 import org.koin.core.annotation.Single
 
 @Single
 class GameScreen(
-    engine: PooledEngine,
+    private val engine: PooledEngine,
     stageRenderSystem: StageRenderSystem,
     animationRenderSystem: AnimationRenderSystem,
     modelRenderSystem: ModelRenderSystem,
@@ -22,30 +24,39 @@ class GameScreen(
     physicSystem: PhysicSystem,
     unitSystem: UnitSystem,
     mapSystem: MapSystem,
+    removeSystem: RemoveSystem,
     gameManagerSystem: GameManagerSystem
 ) : KtxScreen {
-    private val screenConfig = ScreenConfig(
-        engine,
-        linkedSetOf(
-            animationRenderSystem,
-            modelRenderSystem,
-            circleRenderSystem,
-            lineRenderSystem,
-            textRenderSystem,
-            hpRenderSystem,
-            stageRenderSystem,
-            physicSystem,
-            stateSystem,
-            unitSystem,
-            mapSystem,
-            gameManagerSystem
-        )
+    private val entitySystems = linkedSetOf(
+        animationRenderSystem,
+        modelRenderSystem,
+        circleRenderSystem,
+        lineRenderSystem,
+        textRenderSystem,
+        hpRenderSystem,
+        stageRenderSystem,
+        physicSystem,
+        stateSystem,
+        unitSystem,
+        mapSystem,
+        removeSystem,
+        gameManagerSystem
     )
 
-    private val engine = screenConfig.engine
-    private val inputMultiplexer = screenConfig.inputMultiplexer
-    private val screens = screenConfig.screens
-    private val disposables = screenConfig.disposables
+    private val inputMultiplexer = InputMultiplexer()
+    private val screens = ArrayList<KtxScreen>(entitySystems.filter { it is KtxScreen }.map { it as KtxScreen })
+    private val disposables = ArrayList(entitySystems.filter { it is Disposable }.map { it as Disposable }.reversed())
+
+    init {
+        entitySystems
+            .filter { it is KtxInputAdapter }
+            .forEach { inputMultiplexer.addProcessor(it as KtxInputAdapter) }
+
+        entitySystems.forEachIndexed { index, entitySystem ->
+            entitySystem.priority = index
+            engine.addSystem(entitySystem)
+        }
+    }
 
     override fun resize(width: Int, height: Int) {
         screens.forEach { it.resize(width, height) }

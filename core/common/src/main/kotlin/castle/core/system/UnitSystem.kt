@@ -1,13 +1,14 @@
 package castle.core.system
 
+import castle.core.behaviour.component.GroundMeleeComponent
 import castle.core.component.PhysicComponent
 import castle.core.component.PositionComponent
+import castle.core.component.RemoveComponent
 import castle.core.component.UnitComponent
 import castle.core.component.render.LineRenderComponent
 import castle.core.event.EventContext
 import castle.core.event.EventQueue
 import castle.core.physic.PhysicListener
-import castle.core.service.MapService
 import castle.core.service.PhysicService
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
@@ -20,7 +21,6 @@ import org.koin.core.annotation.Single
 @Single
 class UnitSystem(
     private val eventQueue: EventQueue,
-    private val mapService: MapService,
     private val physicService: PhysicService
 ) : IteratingSystem(family), PhysicListener {
     companion object {
@@ -50,36 +50,37 @@ class UnitSystem(
         super.addedToEngine(engine)
     }
 
+    override fun removedFromEngine(engine: Engine) {
+        physicService.removeListener(this)
+        super.removedFromEngine(engine)
+    }
+
     override fun update(deltaTime: Float) {
         eventQueue.proceed(operations)
         super.update(deltaTime)
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        val unitComponent = UnitComponent.mapper.get(entity)
-        val positionComponent = PositionComponent.mapper.get(entity)
-        unitComponent.currentArea = mapService.toArea(positionComponent.matrix4.getTranslation(temp))
-        if (unitComponent.deleteMe) {
-            engine.removeEntity(entity)
-        }
-        if (unitComponent.isDead) {
-            unitComponent.deleteMe = true
+        if (UnitComponent.mapper.get(entity).isDead && !RemoveComponent.mapper.has(entity)) {
+            entity.add(RemoveComponent(0.1f))
         }
     }
 
     private fun createDebugLines(entity: Entity, linesOut: MutableList<Entity>) {
-        val unitComponent = UnitComponent.mapper.get(entity)
         val positionComponent = PositionComponent.mapper.get(entity)
-        for (j in 0 until unitComponent.mainPath.count - 2) {
-            val area1 = unitComponent.mainPath.get(j).position
-            val area2 = unitComponent.mainPath.get(j + 1).position
-            val unitPosition = positionComponent.matrix4.getTranslation(temp)
-            val lineRenderComponent = LineRenderComponent(
-                Vector3(area1.x, unitPosition.y, area1.y), Vector3(area2.x, unitPosition.y, area2.y), Color.GREEN, true
-            )
-            val lineEntity = Entity()
-            lineEntity.add(lineRenderComponent)
-            linesOut.add(lineEntity)
+        if (GroundMeleeComponent.mapper.has(entity)) {
+            val meleeComponent = GroundMeleeComponent.mapper.get(entity)
+            for (j in 0 until meleeComponent.mainPath.count - 2) {
+                val area1 = meleeComponent.mainPath.get(j).position
+                val area2 = meleeComponent.mainPath.get(j + 1).position
+                val unitPosition = positionComponent.matrix4.getTranslation(temp)
+                val lineRenderComponent = LineRenderComponent(
+                    Vector3(area1.x, unitPosition.y, area1.y), Vector3(area2.x, unitPosition.y, area2.y), Color.GREEN, true
+                )
+                val lineEntity = Entity()
+                lineEntity.add(lineRenderComponent)
+                linesOut.add(lineEntity)
+            }
         }
     }
 

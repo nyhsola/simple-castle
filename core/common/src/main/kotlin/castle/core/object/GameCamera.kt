@@ -20,13 +20,13 @@ class GameCamera {
         fieldOfView = 67f
         viewportWidth = Gdx.graphics.width.toFloat()
         viewportHeight = Gdx.graphics.height.toFloat()
-        position.set(Vector3(50f, 50f, 0f))
+        position.set(Vector3(25f, 25f, 0f))
         lookAt(Vector3.Zero)
         update()
     }
 
     val environment: Environment = Environment().apply {
-        set(ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f))
+        set(ColorAttribute(ColorAttribute.AmbientLight, 0.3f, 0.3f, 0.3f, 1f))
         add(DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f))
     }
 

@@ -66,7 +66,7 @@ class UIService(
         if (keycode == Input.Keys.ESCAPE) {
             signal.dispatch(EventContext(MENU_ENABLE))
         }
-        return super.keyDown(keycode)
+        return false
     }
 
     private fun proceedMessages() {

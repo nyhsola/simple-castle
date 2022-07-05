@@ -1,5 +1,6 @@
 package castle.core.ui.game
 
+import castle.core.component.MapComponent
 import castle.core.component.StateComponent
 import castle.core.component.UnitComponent
 import castle.core.component.render.ModelRenderComponent
@@ -21,17 +22,14 @@ class Description(
         if (track != null) {
             val modelRenderComponent = ModelRenderComponent.mapper.get(track)
             val unitComponent = UnitComponent.mapper.get(track)
+            val mapComponent = MapComponent.mapper.get(track)
             val stateComponent = StateComponent.mapper.get(track)
-            val currentArea = unitComponent.currentArea
-            val nextArea = unitComponent.nextArea
+            val currentArea = mapComponent.currentArea
             messageText = """
                 ${modelRenderComponent.nodeName} (${stateComponent.state.currentState.javaClass.simpleName})
                 - - - - -
                 HP: ${unitComponent.currentHealth}/${unitComponent.totalHealth}
-                Attack: ${unitComponent.attackAmount}
-                Attack Speed: ${unitComponent.attackSpeed}
                 Position: ${currentArea.x} ${currentArea.y}
-                Next: ${nextArea.x} ${nextArea.y}
             """.trimIndent()
         }
     }

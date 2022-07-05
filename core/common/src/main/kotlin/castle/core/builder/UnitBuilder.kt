@@ -24,7 +24,7 @@ class UnitBuilder(
         private const val defaultHpTexture = "hp.png"
     }
 
-    fun build(unitStr: String, spawn: String) : Entity {
+    fun build(unitStr: String, spawn: String): Entity {
         val unit = build(unitStr)
         val spawnUnit = environmentService.environmentObjects.getValue(spawn)
         PositionComponent.mapper.get(unit).setMatrix(PositionComponent.mapper.get(spawnUnit))
@@ -38,17 +38,7 @@ class UnitBuilder(
     }
 
     private fun buildInternal(unitJson: UnitJson, unit: Entity): Entity {
-        unit.add(
-            UnitComponent(
-                unit,
-                unitJson.amount,
-                unitJson.attackFrom..unitJson.attackTo,
-                unitJson.attackSpeed,
-                unitJson.visibilityRange,
-                unitJson.speedLinear,
-                unitJson.speedAngular
-            )
-        )
+        unit.add(UnitComponent(unit, unitJson))
         unit.add(
             HPRenderComponent(
                 commonResources.textures.getValue(defaultHpTexture),
@@ -56,13 +46,8 @@ class UnitBuilder(
                 PhysicComponent.mapper.get(unit).body
             )
         )
-        unit.add(
-            StateComponent(
-                behaviours.behaviors.getValue(unitJson.behaviour),
-                unit
-            )
-        )
-        unit.add(MapComponent(unitJson.speedAngular == 0f))
+        unit.add(StateComponent(behaviours.behaviors.getValue(unitJson.behaviour), unit))
+        unit.add(MapComponent(unitJson.speedAngular != 0f))
         unit.add(AnimationRenderComponent(ModelRenderComponent.mapper.get(unit)))
         return unit
     }

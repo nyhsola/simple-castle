@@ -2,7 +2,7 @@ package castle.core.util
 
 import com.badlogic.gdx.utils.Json
 
-abstract class LoadUtils {
+interface LoadUtils {
     companion object {
         private val json = Json()
 
