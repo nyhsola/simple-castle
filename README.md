@@ -12,6 +12,7 @@ Simple castle
 ESC - Toggle show menu  
 Arrow keys/WASD - Move your camera  
 Mouse wheel - Move the camera away
+Double space tap - Move camera to castle
 
 ### :keyboard: Chat commands
 debug - Enable/Disable debug view in top right corner  

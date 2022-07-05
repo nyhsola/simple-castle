@@ -1,21 +1,19 @@
 package castle.core.component
 
+import castle.core.path.Area
 import castle.core.util.UnitUtils
 import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.ComponentMapper
 import com.badlogic.ashley.core.Entity
 
-class MapComponent(
-    val isStatic: Boolean
-) : Component {
+class MapComponent(val isMovable: Boolean) : Component {
     companion object {
         val mapper: ComponentMapper<MapComponent> = ComponentMapper.getFor(MapComponent::class.java)
     }
 
-    var once = false
     var shouldSearchEntities = false
-
     val inRadiusEntities: MutableList<Entity> = ArrayList()
+    var currentArea: Area = Area(0, 0)
 
     val isUnitsAround: Boolean
         get() = inRadiusUnits.isNotEmpty()

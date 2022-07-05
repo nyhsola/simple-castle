@@ -25,7 +25,7 @@ class DecorationBuilder(
 
     private fun buildInternal(templateName: String, node: String): Entity {
         val entity = templateBuilder.build(templateName, node)
-        entity.add(MapComponent(true))
+        entity.add(MapComponent(false))
         return entity
     }
 }

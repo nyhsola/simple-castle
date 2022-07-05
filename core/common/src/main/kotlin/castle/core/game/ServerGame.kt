@@ -1,6 +1,5 @@
 package castle.core.game
 
-import castle.core.config.GameModule
 import castle.core.event.EventContext
 import castle.core.event.EventQueue
 import com.badlogic.gdx.Gdx

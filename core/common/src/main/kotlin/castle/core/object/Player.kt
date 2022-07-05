@@ -1,7 +1,9 @@
 package castle.core.`object`
 
+import castle.core.behaviour.controller.GroundMeleeUnitController
 import castle.core.builder.TextBuilder
 import castle.core.builder.UnitBuilder
+import castle.core.component.PositionComponent
 import castle.core.component.UnitComponent
 import castle.core.event.EventContext
 import castle.core.event.EventQueue
@@ -17,9 +19,12 @@ class Player(
     private val unitBuilder: UnitBuilder,
     textBuilder: TextBuilder
 ) : Disposable {
-    private val buildings: List<Entity> = playerJson.units.map { spawnBuilding(playerJson.playerName, it.key, it.value) }
+    private val buildings: List<Entity> = playerJson.units.map { spawnBuilding(playerJson.playerName, it.key, it.value) }.flatten()
     private val effects: List<CountText> = textBuilder.build(playerJson, eventQueue)
     private val units: MutableList<Entity> = ArrayList()
+
+    val castle: Entity
+        get() = buildings.first { PositionComponent.mapper.get(it).nodeName == "castle" }
 
     private val operations: Map<String, (EventContext) -> Unit> = mapOf(
         Pair(CountText.ON_COUNT) {
@@ -41,10 +46,12 @@ class Player(
         List(playerJson.paths.size) { index -> spawnUnit(index) }
     }
 
-    private fun spawnBuilding(playerName: String, unitStr: String, spawnStr: String): Entity {
-        val unit = unitBuilder.build(unitStr, spawnStr)
-        UnitComponent.mapper.get(unit).playerName = playerName
-        return unit
+    private fun spawnBuilding(playerName: String, unitStr: String, spawnStr: List<String>): List<Entity> {
+        return spawnStr.map {
+            val unit = unitBuilder.build(unitStr, it)
+            UnitComponent.mapper.get(unit).playerName = playerName
+            unit
+        }
     }
 
     private fun spawnUnit(lineNumber: Int): Entity {
@@ -52,8 +59,8 @@ class Player(
         val spawn = path[0]
         val entity = unitBuilder.build("warrior", spawn)
         val unitComponent = UnitComponent.mapper.get(entity)
-        unitComponent.path.addAll(path)
         unitComponent.playerName = playerJson.playerName
+        unitComponent.params.putAll(mapOf(GroundMeleeUnitController.PATH_PARAM to path))
         engine.addEntity(entity)
         units.add(entity)
         return entity

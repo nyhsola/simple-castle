@@ -6,6 +6,7 @@ import castle.core.service.*
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.systems.IntervalSystem
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
 import ktx.app.KtxInputAdapter
 import ktx.app.KtxScreen
 import org.koin.core.annotation.Single
@@ -34,6 +35,8 @@ class GameManagerSystem(
         Pair(EXIT_GAME) { Gdx.app.postRunnable(Gdx.app::exit) }
     )
 
+    private val inputMultiplexer = InputMultiplexer()
+
     override fun addedToEngine(engine: Engine) {
         environmentService.init()
         mapScanService.init()
@@ -41,6 +44,10 @@ class GameManagerSystem(
         uiService.init()
         selectionService.init()
         gameService.init()
+        inputMultiplexer.addProcessor(cameraService)
+        inputMultiplexer.addProcessor(uiService)
+        inputMultiplexer.addProcessor(gameService)
+        inputMultiplexer.addProcessor(selectionService)
     }
 
     override fun update(deltaTime: Float) {
@@ -60,38 +67,43 @@ class GameManagerSystem(
     }
 
     override fun keyDown(keycode: Int): Boolean {
-        uiService.keyDown(keycode)
-        return cameraService.keyDown(keycode)
+        inputMultiplexer.keyDown(keycode)
+        return false
     }
 
     override fun keyTyped(character: Char): Boolean {
-        return cameraService.keyTyped(character)
+        inputMultiplexer.keyTyped(character)
+        return false
     }
 
     override fun keyUp(keycode: Int): Boolean {
-        return cameraService.keyUp(keycode)
+        inputMultiplexer.keyUp(keycode)
+        return false
     }
 
     override fun mouseMoved(screenX: Int, screenY: Int): Boolean {
-        return cameraService.mouseMoved(screenX, screenY)
+        inputMultiplexer.mouseMoved(screenX, screenY)
+        return false
     }
 
     override fun scrolled(amountX: Float, amountY: Float): Boolean {
-        return cameraService.scrolled(amountX, amountY)
+        inputMultiplexer.scrolled(amountX, amountY)
+        return false
     }
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        cameraService.touchDown(screenX, screenY, pointer, button)
-        selectionService.select(screenX, screenY)
+        inputMultiplexer.touchDown(screenX, screenY, pointer, button)
         return false
     }
 
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
-        return cameraService.touchDragged(screenX, screenY, pointer)
+        inputMultiplexer.touchDragged(screenX, screenY, pointer)
+        return false
     }
 
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        return cameraService.touchUp(screenX, screenY, pointer, button)
+        inputMultiplexer.touchUp(screenX, screenY, pointer, button)
+        return false
     }
 
     override fun dispose() {

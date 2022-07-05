@@ -1,41 +1,53 @@
 package castle.core.system
 
 import castle.core.component.MapComponent
+import castle.core.component.PositionComponent
 import castle.core.component.UnitComponent
 import castle.core.service.MapService
+import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
+import com.badlogic.ashley.core.EntityListener
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
+import com.badlogic.gdx.math.Vector3
 import org.koin.core.annotation.Single
 
 @Single
 class MapSystem(
     private val mapService: MapService
-) : IteratingSystem(family) {
+) : IteratingSystem(family), EntityListener {
     companion object {
         private val family: Family = Family.all(MapComponent::class.java).get()
     }
 
+    private val temp: Vector3 = Vector3()
+
+    override fun addedToEngine(engine: Engine) {
+        engine.addEntityListener(family, this)
+        super.addedToEngine(engine)
+    }
+
+    override fun entityAdded(entity: Entity) {
+        val mapComponent = MapComponent.mapper.get(entity)
+        mapService.updateEntity(entity)
+        mapComponent.currentArea = mapService.toArea(PositionComponent.mapper.get(entity).matrix4.getTranslation(temp))
+    }
+
+    override fun entityRemoved(entity: Entity) {
+        mapService.removeFromMap(entity)
+    }
+
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val mapComponent = MapComponent.mapper.get(entity)
-
-        if (mapComponent.isStatic && !mapComponent.once) {
+        if (mapComponent.isMovable) {
             mapService.updateEntity(entity)
-            mapComponent.once = true
+            mapComponent.currentArea = mapService.toArea(PositionComponent.mapper.get(entity).matrix4.getTranslation(temp))
         }
-
-        if (!mapComponent.isStatic) {
-            mapService.updateEntity(entity)
-        }
-
         if (UnitComponent.mapper.has(entity)) {
             val unitComponent = UnitComponent.mapper.get(entity)
             mapComponent.inRadiusEntities.clear()
             if (mapComponent.shouldSearchEntities) {
-                mapComponent.inRadiusEntities.addAll(mapService.getNear(unitComponent.currentArea, unitComponent.visibilityRange))
-            }
-            if (unitComponent.isDead) {
-                mapService.removeFromMap(entity)
+                mapComponent.inRadiusEntities.addAll(mapService.getNear(mapComponent.currentArea, unitComponent.visibilityRange))
             }
         }
     }
