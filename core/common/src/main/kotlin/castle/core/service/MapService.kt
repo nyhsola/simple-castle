@@ -103,12 +103,6 @@ class MapService(
         return toArea(x, y)
     }
 
-    private fun toArea(i: Int, j: Int): Area {
-        val x = environmentService.aabbMax.x - i * MapScanService.scanBox.x * 2 - MapScanService.scanBox.x
-        val z = environmentService.aabbMax.z - j * MapScanService.scanBox.z * 2 - MapScanService.scanBox.z
-        return Area(Vector2(x, z), i, j)
-    }
-
     private fun placeOnMap(entity: Entity) {
         PhysicComponent.mapper.get(entity).body.getAabb(aabbMin, aabbMax)
         val min = toArea(aabbMin)
@@ -158,6 +152,12 @@ class MapService(
                 }
             }
         }
+    }
+
+    private fun toArea(i: Int, j: Int): Area {
+        val x = environmentService.aabbMax.x - i * MapScanService.scanBox.x * 2 - MapScanService.scanBox.x
+        val z = environmentService.aabbMax.z - j * MapScanService.scanBox.z * 2 - MapScanService.scanBox.z
+        return Area(Vector2(x, z), i, j)
     }
 
     private fun createDebugCircles(circlesOut: MutableList<Entity>) {

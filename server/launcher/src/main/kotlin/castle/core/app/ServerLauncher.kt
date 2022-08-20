@@ -11,7 +11,6 @@ object ServerLauncher {
         val width = (Lwjgl3ApplicationConfiguration.getDisplayMode().width * 0.999f).toInt()
         val height = (Lwjgl3ApplicationConfiguration.getDisplayMode().height * 0.9f).toInt()
         Lwjgl3Application(ServerGame(), Lwjgl3ApplicationConfiguration().apply {
-            setDecorated(false)
             setWindowedMode(width, height)
         })
         Runtime.getRuntime().addShutdownHook(object : Thread() {
