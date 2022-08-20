@@ -18,7 +18,7 @@ Double space tap - Move camera to castle
 debug - Enable/Disable debug view in top right corner  
 
 ### :desktop_computer: Demo
-https://user-images.githubusercontent.com/20153735/163736200-0d822612-a710-4bef-aaa7-f45bd3b45ad7.mp4
+https://user-images.githubusercontent.com/20153735/185769167-4c127bd9-2916-4611-b6c1-95d6be4d49b5.mp4
 
 :zap: FAQ
 =====
