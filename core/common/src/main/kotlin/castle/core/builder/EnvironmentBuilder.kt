@@ -8,13 +8,13 @@ import org.koin.core.annotation.Single
 
 @Single
 class EnvironmentBuilder(
-    private val commonResources: CommonResources,
-    private val templateBuilder: TemplateBuilder
+        private val commonResources: CommonResources,
+        private val templateBuilder: TemplateBuilder
 ) {
     fun build(): List<Entity> {
         return commonResources.environment
-            .map { buildInternal(it) }
-            .flatten()
+                .map { buildInternal(it) }
+                .flatten()
     }
 
     private fun buildInternal(environmentJson: EnvironmentJson): List<Entity> {

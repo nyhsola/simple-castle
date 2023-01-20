@@ -12,8 +12,8 @@ import org.koin.core.annotation.Single
 
 @Single
 class GroundRangeUnitController(
-    private val engine: Engine,
-    private val projectileBuilder: ProjectileBuilder
+        private val engine: Engine,
+        private val projectileBuilder: ProjectileBuilder
 ) {
     private val force = 200f
     private val tempVectorFrom = Vector3()
@@ -23,8 +23,8 @@ class GroundRangeUnitController(
         val unitComponent = UnitComponent.mapper.get(entity)
         val unitJson = unitComponent.unitJson
         val meleeComponent = GroundRangeComponent(
-            unitJson.attackFrom..unitJson.attackTo,
-            unitJson.attackSpeed
+                unitJson.attackFrom..unitJson.attackTo,
+                unitJson.attackSpeed
         )
         entity.add(meleeComponent)
     }

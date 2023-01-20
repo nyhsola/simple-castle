@@ -19,10 +19,10 @@ import kotlin.math.abs
 
 @Single
 class MapService(
-    private val engine: Engine,
-    private val eventQueue: EventQueue,
-    private val mapScanService: MapScanService,
-    private val environmentService: EnvironmentService
+        private val engine: Engine,
+        private val eventQueue: EventQueue,
+        private val mapScanService: MapScanService,
+        private val environmentService: EnvironmentService
 ) {
     companion object {
         const val DEBUG_ENABLE = "DEBUG_MAP_ENABLE"
@@ -41,16 +41,16 @@ class MapService(
     private val areasInUnit: MutableMap<Entity, MutableSet<Area>> = HashMap()
 
     private val operations: Map<String, (EventContext) -> Unit> = mapOf(
-        Pair(DEBUG_ENABLE) {
-            debugEnabled = !debugEnabled
-            if (debugEnabled) {
-                createDebugCircles(circles)
-                circles.forEach { engine.addEntity(it) }
-            } else {
-                circles.forEach { engine.removeEntity(it) }
-                circles.clear()
+            Pair(DEBUG_ENABLE) {
+                debugEnabled = !debugEnabled
+                if (debugEnabled) {
+                    createDebugCircles(circles)
+                    circles.forEach { engine.addEntity(it) }
+                } else {
+                    circles.forEach { engine.removeEntity(it) }
+                    circles.clear()
+                }
             }
-        }
     )
 
     fun init() {
@@ -162,17 +162,17 @@ class MapService(
 
     private fun createDebugCircles(circlesOut: MutableList<Entity>) {
         unitsInArea
-            .filter { it.value.isNotEmpty() }
-            .keys
-            .forEach {
-                val commonEntity = Entity()
-                val circleRenderComponent = CircleRenderComponent()
-                val position = it.position
-                circleRenderComponent.vector3Offset.set(position.x, 0.3f, position.y)
-                circleRenderComponent.radius = 1f
-                circleRenderComponent.shapeType = ShapeRenderer.ShapeType.Filled
-                commonEntity.add(circleRenderComponent)
-                circlesOut.add(commonEntity)
-            }
+                .filter { it.value.isNotEmpty() }
+                .keys
+                .forEach {
+                    val commonEntity = Entity()
+                    val circleRenderComponent = CircleRenderComponent()
+                    val position = it.position
+                    circleRenderComponent.vector3Offset.set(position.x, 0.3f, position.y)
+                    circleRenderComponent.radius = 1f
+                    circleRenderComponent.shapeType = ShapeRenderer.ShapeType.Filled
+                    commonEntity.add(circleRenderComponent)
+                    circlesOut.add(commonEntity)
+                }
     }
 }

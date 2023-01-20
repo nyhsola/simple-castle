@@ -63,6 +63,7 @@ class GroundRangeAttackBehaviour(private val controller: GroundRangeUnitControll
                     rangeComponent.attackTask.reset()
                     stateComponent.state.changeState(main)
                 }
+
                 targetEnemy.isDead -> {
                     stateComponent.state.changeState(main)
                 }

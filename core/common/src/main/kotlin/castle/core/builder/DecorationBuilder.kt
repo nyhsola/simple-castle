@@ -9,13 +9,13 @@ import org.koin.core.annotation.Single
 
 @Single
 class DecorationBuilder(
-    private val commonResources: CommonResources,
-    private val templateBuilder: TemplateBuilder
+        private val commonResources: CommonResources,
+        private val templateBuilder: TemplateBuilder
 ) {
     fun build(): List<Entity> {
         return commonResources.decoration
-            .map { buildInternal(it) }
-            .flatten()
+                .map { buildInternal(it) }
+                .flatten()
     }
 
     private fun buildInternal(decorationJson: DecorationJson): List<Entity> {

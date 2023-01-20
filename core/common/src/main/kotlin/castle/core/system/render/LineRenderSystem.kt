@@ -11,8 +11,8 @@ import org.koin.core.annotation.Single
 
 @Single
 class LineRenderSystem(
-    private val shapeRenderer: ShapeRenderer,
-    private val cameraService: CameraService
+        private val shapeRenderer: ShapeRenderer,
+        private val cameraService: CameraService
 ) : IteratingSystem(Family.all(LineRenderComponent::class.java).get()) {
     private val transformMatrix4 = Matrix4()
 

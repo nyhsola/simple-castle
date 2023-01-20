@@ -8,11 +8,11 @@ import org.koin.core.annotation.Single
 
 @Single
 class PlayerBuilder(
-    private val gameResources: GameResources,
-    private val unitBuilder: UnitBuilder,
-    private val textBuilder: TextBuilder,
-    private val eventQueue: EventQueue,
-    private val engine: Engine
+        private val gameResources: GameResources,
+        private val unitBuilder: UnitBuilder,
+        private val textBuilder: TextBuilder,
+        private val eventQueue: EventQueue,
+        private val engine: Engine
 ) {
     fun build(): Map<String, Player> {
         return gameResources.players.mapValues { Player(eventQueue, engine, it.value, unitBuilder, textBuilder) }

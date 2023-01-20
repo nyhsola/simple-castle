@@ -16,11 +16,11 @@ import org.koin.core.annotation.Single
 
 @Single
 class UIService(
-    private val engine: Engine,
-    private val eventQueue: EventQueue,
-    private val gameUI: GameUI,
-    private val debugUI: DebugUI,
-    private val menuUI: MenuUI
+        private val engine: Engine,
+        private val eventQueue: EventQueue,
+        private val gameUI: GameUI,
+        private val debugUI: DebugUI,
+        private val menuUI: MenuUI
 ) : KtxInputAdapter, Disposable {
     companion object {
         const val DEBUG_UI_ENABLE_1 = "DEBUG_UI_ENABLE_1"
@@ -31,9 +31,9 @@ class UIService(
     private val signal = Signal<EventContext>()
 
     private val operations: Map<String, (EventContext) -> Unit> = mapOf(
-        Pair(DEBUG_UI_ENABLE_1) { gameUI.debugEnabled = !gameUI.debugEnabled },
-        Pair(DEBUG_UI_ENABLE_2) { debugUI.debugEnabled = !debugUI.debugEnabled },
-        Pair(MENU_ENABLE) { menuUI.isVisible = !menuUI.isVisible }
+            Pair(DEBUG_UI_ENABLE_1) { gameUI.debugEnabled = !gameUI.debugEnabled },
+            Pair(DEBUG_UI_ENABLE_2) { debugUI.debugEnabled = !debugUI.debugEnabled },
+            Pair(MENU_ENABLE) { menuUI.isVisible = !menuUI.isVisible }
     )
 
     fun init() {

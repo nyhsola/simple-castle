@@ -19,7 +19,7 @@ plugins {
 }
 
 allprojects {
-    apply() {
+    apply {
         plugin("idea")
     }
 }

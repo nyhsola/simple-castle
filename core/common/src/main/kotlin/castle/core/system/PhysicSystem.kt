@@ -15,8 +15,8 @@ import org.koin.core.annotation.Single
 
 @Single
 class PhysicSystem(
-    private val eventQueue: EventQueue,
-    private val physicService: PhysicService
+        private val eventQueue: EventQueue,
+        private val physicService: PhysicService
 ) : IteratingSystem(family), EntityListener, Disposable {
     companion object {
         const val DEBUG_ENABLE = "PHYSIC_ENABLE"
@@ -24,7 +24,7 @@ class PhysicSystem(
     }
 
     private val operations: Map<String, (EventContext) -> Unit> = mapOf(
-        Pair(DEBUG_ENABLE) { physicService.debugEnabled = !physicService.debugEnabled }
+            Pair(DEBUG_ENABLE) { physicService.debugEnabled = !physicService.debugEnabled }
     )
 
     override fun addedToEngine(engine: Engine) {

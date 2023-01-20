@@ -13,9 +13,9 @@ import org.koin.core.annotation.Single
 
 @Single
 class StartScreen(
-    private val spriteBatch: SpriteBatch,
-    commonResources: CommonResources,
-    eventQueue: EventQueue
+        private val spriteBatch: SpriteBatch,
+        commonResources: CommonResources,
+        eventQueue: EventQueue
 ) : KtxScreen, KtxInputAdapter {
     companion object {
         const val GAME_EVENT = "GAME_EVENT"
@@ -49,7 +49,7 @@ class StartScreen(
         val heightScale: Float = Gdx.graphics.height / 1080f
 
         spriteBatch.begin()
-        spriteBatch.draw(texture, 0f, 0f, texture.width * widthScale, texture.height * heightScale);
+        spriteBatch.draw(texture, 0f, 0f, texture.width * widthScale, texture.height * heightScale)
         spriteBatch.end()
     }
 

@@ -14,8 +14,8 @@ import org.koin.core.annotation.Single
 
 @Single
 class GroundMeleeUnitController(
-    private val mapService: MapService,
-    private val environmentService: EnvironmentService
+        private val mapService: MapService,
+        private val environmentService: EnvironmentService
 ) {
     companion object {
         const val PATH_PARAM = "PATH"
@@ -43,10 +43,10 @@ class GroundMeleeUnitController(
         val unitComponent = UnitComponent.mapper.get(entity)
         val unitJson = unitComponent.unitJson
         val meleeComponent = GroundMeleeComponent(
-            unitJson.attackFrom..unitJson.attackTo,
-            unitJson.attackSpeed,
-            unitJson.speedLinear,
-            unitJson.speedAngular
+                unitJson.attackFrom..unitJson.attackTo,
+                unitJson.attackSpeed,
+                unitJson.speedLinear,
+                unitJson.speedAngular
         )
         val path = unitComponent.params[PATH_PARAM] as List<*>
         val pathObjects = path.map { environmentService.environmentObjects[it as String] }
@@ -107,10 +107,12 @@ class GroundMeleeUnitController(
                 physicComponent.body.angularVelocity = tempSpeed
                 physicComponent.body.linearVelocity = zero
             }
+
             meleeComponent.needMove -> {
                 physicComponent.body.linearVelocity = direction.scl(meleeComponent.speedLinear)
                 physicComponent.body.angularVelocity = zero
             }
+
             else -> {
                 physicComponent.body.linearVelocity = zero
                 physicComponent.body.angularVelocity = zero

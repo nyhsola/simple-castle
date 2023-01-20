@@ -21,10 +21,10 @@ import org.koin.core.annotation.Single
 
 @Single
 class MenuUI(
-    spriteBatch: SpriteBatch,
-    viewport: Viewport,
-    private val commonResources: CommonResources,
-    eventQueue: EventQueue
+        spriteBatch: SpriteBatch,
+        viewport: Viewport,
+        private val commonResources: CommonResources,
+        eventQueue: EventQueue
 ) : Entity() {
     private val stageRenderComponent: StageRenderComponent = StageRenderComponent(UIUtils.createStage(viewport, spriteBatch)).also { this.add(it) }
     private val rootContainer = Container<Table>()

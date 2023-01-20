@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextArea
 import com.badlogic.gdx.utils.Align
 
 class Description(
-    commonResources: CommonResources
+        commonResources: CommonResources
 ) : TextArea("", commonResources.skin) {
     private var track: Entity? = null
 

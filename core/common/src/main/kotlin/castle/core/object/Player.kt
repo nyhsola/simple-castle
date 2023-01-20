@@ -13,11 +13,11 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.utils.Disposable
 
 class Player(
-    private val eventQueue: EventQueue,
-    private val engine: Engine,
-    private val playerJson: PlayerJson,
-    private val unitBuilder: UnitBuilder,
-    textBuilder: TextBuilder
+        private val eventQueue: EventQueue,
+        private val engine: Engine,
+        private val playerJson: PlayerJson,
+        private val unitBuilder: UnitBuilder,
+        textBuilder: TextBuilder
 ) : Disposable {
     private val buildings: List<Entity> = playerJson.units.map { spawnBuilding(playerJson.playerName, it.key, it.value) }.flatten()
     private val effects: List<CountText> = textBuilder.build(playerJson, eventQueue)
@@ -27,9 +27,9 @@ class Player(
         get() = buildings.first { PositionComponent.mapper.get(it).nodeName == "castle" }
 
     private val operations: Map<String, (EventContext) -> Unit> = mapOf(
-        Pair(CountText.ON_COUNT) {
-            spawnUnit(it.params.getValue(CountText.PARAM_LINE) as Int)
-        }
+            Pair(CountText.ON_COUNT) {
+                spawnUnit(it.params.getValue(CountText.PARAM_LINE) as Int)
+            }
     )
 
     fun init() {

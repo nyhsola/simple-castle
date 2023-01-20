@@ -9,8 +9,8 @@ import org.koin.core.annotation.Single
 
 @Single
 class RayCastService(
-    private val physicService: PhysicService,
-    private val cameraService: CameraService
+        private val physicService: PhysicService,
+        private val cameraService: CameraService
 ) : Disposable {
     private val meters = 50f
     private val rayFrom = Vector3()

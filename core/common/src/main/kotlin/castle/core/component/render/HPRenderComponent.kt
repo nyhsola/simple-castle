@@ -28,9 +28,9 @@ class HPRenderComponent(
     private val width = max.sub(min).z * 1.1f
     private val hpBarWidth = (width / 4) * 0.7f
     private val flatMap = TextureRegion.split(texture, texture.width / 4, texture.height / 4)
-        .flatMap { it.asIterable() }
-        .reversed()
-        .toTypedArray()
+            .flatMap { it.asIterable() }
+            .reversed()
+            .toTypedArray()
     private val split = Array<TextureRegion>().apply { addAll(*flatMap) }
     private val quaternion: Quaternion = Quaternion(Vector3.Y, 90f)
 
@@ -38,10 +38,10 @@ class HPRenderComponent(
     val matrix4: Matrix4 = position
     val animation: Animation<TextureRegion> = Animation<TextureRegion>(1000f, split)
     val decal: Decal = Decal.newDecal(width, hpBarWidth, TextureRegion(texture), true)
-        .apply {
-            textureRegion = animation.getKeyFrame(0f)
-            rotation = quaternion
-        }
+            .apply {
+                textureRegion = animation.getKeyFrame(0f)
+                rotation = quaternion
+            }
 
     companion object {
         val mapper: ComponentMapper<HPRenderComponent> = ComponentMapper.getFor(HPRenderComponent::class.java)

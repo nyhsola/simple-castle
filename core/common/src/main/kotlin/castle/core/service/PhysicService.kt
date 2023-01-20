@@ -32,10 +32,10 @@ class PhysicService(private val cameraService: CameraService) {
 
     var debugEnabled: Boolean = false
     val dynamicsWorld: btDiscreteDynamicsWorld =
-        btDiscreteDynamicsWorld(dispatcher, broadPhase, constraintSolver, collisionConfig).apply {
-            gravity = Vector3(0.0f, -10f, 0f)
-            debugDrawer = customDebugDrawer
-        }
+            btDiscreteDynamicsWorld(dispatcher, broadPhase, constraintSolver, collisionConfig).apply {
+                gravity = Vector3(0.0f, -10f, 0f)
+                debugDrawer = customDebugDrawer
+            }
 
     fun update(deltaTime: Float) {
         if (debugEnabled) {
@@ -57,9 +57,9 @@ class PhysicService(private val cameraService: CameraService) {
         val physicComponent = PhysicComponent.mapper.get(entity)
         PhysicComponent.postConstruct(positionComponent, physicComponent)
         dynamicsWorld.addRigidBody(
-            physicComponent.body,
-            physicComponent.collisionFilterGroup,
-            physicComponent.collisionFilterMask
+                physicComponent.body,
+                physicComponent.collisionFilterGroup,
+                physicComponent.collisionFilterMask
         )
     }
 
@@ -102,13 +102,13 @@ class PhysicService(private val cameraService: CameraService) {
         }
 
         override fun addSingleResult(
-            cp: btManifoldPoint?,
-            colObj0Wrap: btCollisionObjectWrapper?,
-            partId0: Int,
-            index0: Int,
-            colObj1Wrap: btCollisionObjectWrapper?,
-            partId1: Int,
-            index1: Int
+                cp: btManifoldPoint?,
+                colObj0Wrap: btCollisionObjectWrapper?,
+                partId0: Int,
+                index0: Int,
+                colObj1Wrap: btCollisionObjectWrapper?,
+                partId1: Int,
+                index1: Int
         ): Float {
             isAnyHit = true
             return 0.0f

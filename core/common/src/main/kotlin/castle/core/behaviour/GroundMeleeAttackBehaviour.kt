@@ -13,7 +13,7 @@ import org.koin.core.annotation.Single
 
 @Single
 class GroundMeleeAttackBehaviour(
-    private val controller: GroundMeleeUnitController
+        private val controller: GroundMeleeUnitController
 ) {
     private val init = Init()
     private val moveRoute = MoveRoute()
@@ -49,6 +49,7 @@ class GroundMeleeAttackBehaviour(
                         stateComponent.state.changeState(attackRoute)
                     }
                 }
+
                 unitComponent.isEnemiesInTouch -> {
                     meleeComponent.targetEnemy = unitComponent.inTouchEnemies.first()
                     stateComponent.state.changeState(attack)
@@ -76,9 +77,11 @@ class GroundMeleeAttackBehaviour(
                 unitComponent.inTouchEnemies.contains(unitComponentEnemy) -> {
                     stateComponent.state.changeState(attack)
                 }
+
                 !unitComponent.inTouchEnemies.contains(unitComponentEnemy) && unitComponent.inTouchObjects.isNotEmpty() -> {
                     // re-init path to obj
                 }
+
                 unitComponentEnemy.isDead -> {
                     stateComponent.state.changeState(moveRoute)
                 }
@@ -99,9 +102,11 @@ class GroundMeleeAttackBehaviour(
                 meleeComponent.targetEnemy!!.isDead -> {
                     stateComponent.state.changeState(moveRoute)
                 }
+
                 !unitComponent.inTouchEnemies.contains(meleeComponent.targetEnemy) -> {
                     stateComponent.state.changeState(moveRoute)
                 }
+
                 else -> controller.updateAttack(entity, delta)
             }
         }

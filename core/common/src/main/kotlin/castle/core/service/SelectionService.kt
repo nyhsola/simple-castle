@@ -16,9 +16,9 @@ import org.koin.core.annotation.Single
 
 @Single
 class SelectionService(
-    private val engine: Engine,
-    private val uiService: UIService,
-    private val rayCastService: RayCastService
+        private val engine: Engine,
+        private val uiService: UIService,
+        private val rayCastService: RayCastService
 ) : KtxInputAdapter, Disposable {
     private val selectionCircle: Entity = Entity().add(CircleRenderComponent())
     private val radiusCircle: Entity = Entity().add(CircleRenderComponent())

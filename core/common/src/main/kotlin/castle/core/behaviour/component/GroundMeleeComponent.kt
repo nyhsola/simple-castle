@@ -11,10 +11,10 @@ import com.badlogic.gdx.ai.pfa.GraphPath
 import com.badlogic.gdx.math.Vector2
 
 class GroundMeleeComponent(
-    val attackAmount: IntRange,
-    val attackSpeed: Float,
-    val speedLinear: Float,
-    val speedAngular: Float
+        val attackAmount: IntRange,
+        val attackSpeed: Float,
+        val speedLinear: Float,
+        val speedAngular: Float
 ) : Component {
     companion object {
         val mapper: ComponentMapper<GroundMeleeComponent> = ComponentMapper.getFor(GroundMeleeComponent::class.java)

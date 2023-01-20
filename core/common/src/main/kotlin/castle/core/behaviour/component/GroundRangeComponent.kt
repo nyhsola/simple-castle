@@ -6,8 +6,8 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.ComponentMapper
 
 class GroundRangeComponent(
-    val attackAmount: IntRange,
-    val attackSpeed: Float
+        val attackAmount: IntRange,
+        val attackSpeed: Float
 ) : Component {
     companion object {
         val mapper: ComponentMapper<GroundRangeComponent> = ComponentMapper.getFor(GroundRangeComponent::class.java)

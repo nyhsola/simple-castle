@@ -3,7 +3,7 @@ package castle.core.state
 import com.badlogic.gdx.ai.fsm.State
 import com.badlogic.gdx.ai.msg.Telegram
 
-interface StateDelta<E>: State<E> {
+interface StateDelta<E> : State<E> {
     fun update(entity: E, delta: Float) {}
 
     override fun update(entity: E) {

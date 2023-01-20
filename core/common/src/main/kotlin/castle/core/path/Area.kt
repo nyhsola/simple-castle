@@ -4,9 +4,9 @@ import com.badlogic.gdx.math.Vector2
 import kotlin.math.pow
 
 class Area(
-    val position: Vector2,
-    val x: Int,
-    val y: Int
+        val position: Vector2,
+        val x: Int,
+        val y: Int
 ) {
     constructor(x: Int, y: Int) : this(Vector2(), x, y)
 

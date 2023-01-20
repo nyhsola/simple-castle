@@ -13,14 +13,14 @@ import org.koin.core.annotation.Single
 
 @Single
 class GameManagerSystem(
-    private val environmentService: EnvironmentService,
-    private val gameService: GameService,
-    private val uiService: UIService,
-    private val selectionService: SelectionService,
-    private val cameraService: CameraService,
-    private val mapScanService: MapScanService,
-    private val mapService: MapService,
-    private val eventQueue: EventQueue
+        private val environmentService: EnvironmentService,
+        private val gameService: GameService,
+        private val uiService: UIService,
+        private val selectionService: SelectionService,
+        private val cameraService: CameraService,
+        private val mapScanService: MapScanService,
+        private val mapService: MapService,
+        private val eventQueue: EventQueue
 ) : IntervalSystem(GAME_TICK), KtxInputAdapter, KtxScreen {
     companion object {
         private const val GAME_TICK: Float = 0.1f
@@ -30,9 +30,9 @@ class GameManagerSystem(
     }
 
     private val operations: Map<String, (EventContext) -> Unit> = mapOf(
-        Pair(CHAT_FOCUSED) { cameraService.input = false },
-        Pair(CHAT_UNFOCUSED) { cameraService.input = true },
-        Pair(EXIT_GAME) { Gdx.app.postRunnable(Gdx.app::exit) }
+            Pair(CHAT_FOCUSED) { cameraService.input = false },
+            Pair(CHAT_UNFOCUSED) { cameraService.input = true },
+            Pair(EXIT_GAME) { Gdx.app.postRunnable(Gdx.app::exit) }
     )
 
     private val inputMultiplexer = InputMultiplexer()
