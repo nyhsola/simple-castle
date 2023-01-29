@@ -77,11 +77,10 @@ class GroundMeleeUnitController(
         updateMoveInternal(entity, meleeComponent)
     }
 
-    fun updateAttack(entity: Entity, deltaTime: Float) {
+    fun updateAttack(entity: Entity) {
         val meleeComponent = GroundMeleeComponent.mapper.get(entity)
         val enemyTarget = PositionComponent.mapper.get(meleeComponent.targetEnemy!!.owner).matrix4.getTranslation(tempPosition)
         meleeComponent.targetMove.set(enemyTarget.x, enemyTarget.z)
-        meleeComponent.attackTask.update(deltaTime)
         updateMoveParams(entity, meleeComponent)
     }
 

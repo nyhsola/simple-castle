@@ -91,7 +91,11 @@ class GroundMeleeAttackBehaviour(
 
     private inner class Attack : StateDelta<Entity> {
         override fun enter(entity: Entity) {
-            AnimationRenderComponent.mapper.get(entity).setAnimation("attack", 1.5f)
+            val meleeComponent = GroundMeleeComponent.mapper.get(entity)
+            AnimationRenderComponent.mapper.get(entity).setAnimation(
+                "attack",
+                meleeComponent.attackSpeed,
+                meleeComponent.attackTask)
         }
 
         override fun update(entity: Entity, delta: Float) {
@@ -107,7 +111,7 @@ class GroundMeleeAttackBehaviour(
                     stateComponent.state.changeState(moveRoute)
                 }
 
-                else -> controller.updateAttack(entity, delta)
+                else -> controller.updateAttack(entity)
             }
         }
     }

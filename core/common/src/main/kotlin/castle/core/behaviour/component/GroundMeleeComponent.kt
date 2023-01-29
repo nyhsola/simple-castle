@@ -8,6 +8,8 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.ComponentMapper
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath
 import com.badlogic.gdx.ai.pfa.GraphPath
+import com.badlogic.gdx.graphics.g3d.utils.AnimationController
+import com.badlogic.gdx.graphics.g3d.utils.AnimationController.AnimationListener
 import com.badlogic.gdx.math.Vector2
 
 class GroundMeleeComponent(
@@ -32,8 +34,11 @@ class GroundMeleeComponent(
     val nextArea: Area
         get() = if (mainPath.count <= 0 || nextPath > mainPath.count - 1) Area(0, 0) else mainPath[nextPath]
 
-    val attackTask: Task = object : Task(attackSpeed) {
-        override fun action() {
+    val attackTask: AnimationListener = object : AnimationListener {
+        override fun onEnd(animation: AnimationController.AnimationDesc) {
+        }
+
+        override fun onLoop(animation: AnimationController.AnimationDesc) {
             targetEnemy?.takeDamage(attackAmount.random())
         }
     }
