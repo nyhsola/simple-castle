@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton
 
 class PanelResources(
-        commonResources: CommonResources
+    commonResources: CommonResources
 ) : Table() {
     init {
         val buttonGold = TextButton("Gold: 10 000", commonResources.skin)

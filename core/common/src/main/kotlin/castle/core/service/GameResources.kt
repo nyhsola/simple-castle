@@ -11,17 +11,9 @@ import org.koin.core.annotation.Single
 
 @Single
 class GameResources {
-    val players: Map<String, PlayerJson> = loadPlayers().associateBy { it.playerName }
-    val units: Map<String, UnitJson> = loadUnits().associateBy { it.unitName }
+    val players: Map<String, PlayerJson> = LoadUtils.loadList("player.json", PlayerJson::class.java).associateBy { it.playerName }
+    val units: Map<String, UnitJson> = LoadUtils.loadList("unit.json", UnitJson::class.java).associateBy { it.unitName }
     val bitmapFont: BitmapFont = loadFont()
-
-    private fun loadPlayers(): List<PlayerJson> {
-        return LoadUtils.loadList("/player.json", PlayerJson::class.java)
-    }
-
-    private fun loadUnits(): List<UnitJson> {
-        return LoadUtils.loadList("/unit.json", UnitJson::class.java)
-    }
 
     private fun loadFont(): BitmapFont {
         val generator = FreeTypeFontGenerator(Gdx.files.internal("data/open.ttf"))

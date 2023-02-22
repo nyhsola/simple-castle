@@ -15,8 +15,8 @@ class PanelSkills(commonResources: CommonResources) : Table() {
                 button.color = Color.DARK_GRAY
                 button.color.a = 0.75f
                 add(button)
-                        .pad(2f)
-                        .grow()
+                    .pad(2f)
+                    .grow()
             }
             row()
         }

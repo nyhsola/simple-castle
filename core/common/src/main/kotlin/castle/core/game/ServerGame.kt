@@ -18,7 +18,7 @@ class ServerGame : KtxGame<Screen>(), KoinComponent {
     private val gameScreen: GameScreen by inject()
 
     private val operations: Map<String, (EventContext) -> Unit> = mapOf(
-            Pair(StartScreen.GAME_EVENT) { setScreen<GameScreen>() }
+        Pair(StartScreen.GAME_EVENT) { setScreen<GameScreen>() }
     )
 
     init {

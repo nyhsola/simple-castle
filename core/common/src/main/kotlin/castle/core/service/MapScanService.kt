@@ -7,8 +7,8 @@ import kotlin.math.abs
 
 @Single
 class MapScanService(
-        private val environmentService: EnvironmentService,
-        private val physicService: PhysicService
+    private val environmentService: EnvironmentService,
+    private val physicService: PhysicService
 ) {
     companion object {
         val scanBox = Vector3(1.1f, 1.1f, 1.1f)

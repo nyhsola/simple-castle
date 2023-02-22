@@ -3,7 +3,6 @@ package castle.core.behaviour.component
 import castle.core.behaviour.controller.GroundMeleeUnitController
 import castle.core.component.UnitComponent
 import castle.core.path.Area
-import castle.core.util.Task
 import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.ComponentMapper
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath
@@ -13,10 +12,10 @@ import com.badlogic.gdx.graphics.g3d.utils.AnimationController.AnimationListener
 import com.badlogic.gdx.math.Vector2
 
 class GroundMeleeComponent(
-        val attackAmount: IntRange,
-        val attackSpeed: Float,
-        val speedLinear: Float,
-        val speedAngular: Float
+    val attackAmount: IntRange,
+    val attackSpeed: Float,
+    val speedLinear: Float,
+    val speedAngular: Float
 ) : Component {
     companion object {
         val mapper: ComponentMapper<GroundMeleeComponent> = ComponentMapper.getFor(GroundMeleeComponent::class.java)

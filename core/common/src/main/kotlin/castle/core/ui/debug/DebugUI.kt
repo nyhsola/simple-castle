@@ -27,10 +27,10 @@ import org.koin.core.annotation.Single
 
 @Single
 class DebugUI(
-        spriteBatch: SpriteBatch,
-        viewport: Viewport,
-        private val commonResources: CommonResources,
-        eventQueue: EventQueue
+    spriteBatch: SpriteBatch,
+    viewport: Viewport,
+    private val commonResources: CommonResources,
+    eventQueue: EventQueue
 ) : Entity() {
     private val stageRenderComponent: StageRenderComponent = StageRenderComponent(UIUtils.createStage(viewport, spriteBatch)).also { this.add(it) }
     private val signal = Signal<EventContext>()
@@ -99,8 +99,8 @@ class DebugUI(
         table.add(createButton("Map", listOf(EventContext(MapService.DEBUG_ENABLE)))).width(50f).height(50f)
         table.row()
         val list = listOf(
-                EventContext(GameService.DEBUG_SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 1"))),
-                EventContext(GameService.DEBUG_SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 3")))
+            EventContext(GameService.DEBUG_SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 1"))),
+            EventContext(GameService.DEBUG_SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 3")))
         )
         table.add(createButton("Spawn", list)).width(50f).height(50f)
         container.actor = table

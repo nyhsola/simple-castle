@@ -21,10 +21,10 @@ class CommonResources : Disposable {
     private val loader = G3dModelLoader(JsonReader())
     val model: Map<String, Model> = loadModel()
     val skin: Skin = Skin(Gdx.files.internal("ui/uiskin.json"))
-    val templates: Map<String, TemplateJson> = LoadUtils.loadList("/template.json", TemplateJson::class.java).associateBy { it.templateName }
+    val templates: Map<String, TemplateJson> = LoadUtils.loadList("template.json", TemplateJson::class.java).associateBy { it.templateName }
     val textures: Map<String, Texture> = loadTextures()
-    val environment: List<EnvironmentJson> = LoadUtils.loadList("/environment.json", EnvironmentJson::class.java)
-    val decoration: List<DecorationJson> = LoadUtils.loadList("/decoration.json", DecorationJson::class.java)
+    val environment: List<EnvironmentJson> = LoadUtils.loadList("environment.json", EnvironmentJson::class.java)
+    val decoration: List<DecorationJson> = LoadUtils.loadList("decoration.json", DecorationJson::class.java)
 
     private fun loadModel(): Map<String, Model> {
         val map = HashMap<String, Model>()

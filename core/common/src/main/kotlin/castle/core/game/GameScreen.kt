@@ -12,35 +12,35 @@ import org.koin.core.annotation.Single
 
 @Single
 class GameScreen(
-        private val engine: PooledEngine,
-        stageRenderSystem: StageRenderSystem,
-        animationRenderSystem: AnimationRenderSystem,
-        modelRenderSystem: ModelRenderSystem,
-        lineRenderSystem: LineRenderSystem,
-        circleRenderSystem: CircleRenderSystem,
-        textRenderSystem: TextRenderSystem,
-        hpRenderSystem: HpRenderSystem,
-        stateSystem: StateSystem,
-        physicSystem: PhysicSystem,
-        unitSystem: UnitSystem,
-        mapSystem: MapSystem,
-        removeSystem: RemoveSystem,
-        gameManagerSystem: GameManagerSystem
+    private val engine: PooledEngine,
+    stageRenderSystem: StageRenderSystem,
+    animationRenderSystem: AnimationRenderSystem,
+    modelRenderSystem: ModelRenderSystem,
+    lineRenderSystem: LineRenderSystem,
+    circleRenderSystem: CircleRenderSystem,
+    textRenderSystem: TextRenderSystem,
+    hpRenderSystem: HpRenderSystem,
+    stateSystem: StateSystem,
+    physicSystem: PhysicSystem,
+    unitSystem: UnitSystem,
+    mapSystem: MapSystem,
+    removeSystem: RemoveSystem,
+    gameManagerSystem: GameManagerSystem
 ) : KtxScreen {
     private val entitySystems = linkedSetOf(
-            animationRenderSystem,
-            modelRenderSystem,
-            circleRenderSystem,
-            lineRenderSystem,
-            textRenderSystem,
-            hpRenderSystem,
-            stageRenderSystem,
-            physicSystem,
-            stateSystem,
-            unitSystem,
-            mapSystem,
-            removeSystem,
-            gameManagerSystem
+        animationRenderSystem,
+        modelRenderSystem,
+        circleRenderSystem,
+        lineRenderSystem,
+        textRenderSystem,
+        hpRenderSystem,
+        stageRenderSystem,
+        physicSystem,
+        stateSystem,
+        unitSystem,
+        mapSystem,
+        removeSystem,
+        gameManagerSystem
     )
 
     private val inputMultiplexer = InputMultiplexer()
@@ -49,8 +49,8 @@ class GameScreen(
 
     init {
         entitySystems
-                .filter { it is KtxInputAdapter }
-                .forEach { inputMultiplexer.addProcessor(it as KtxInputAdapter) }
+            .filter { it is KtxInputAdapter }
+            .forEach { inputMultiplexer.addProcessor(it as KtxInputAdapter) }
 
         entitySystems.forEachIndexed { index, entitySystem ->
             entitySystem.priority = index

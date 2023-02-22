@@ -28,12 +28,12 @@ private const val PAD_MAIN = 0.02f
 
 @Single
 class GameUI(
-        spriteBatch: SpriteBatch,
-        viewport: Viewport,
-        mapScanService: MapScanService,
-        private val commonResources: CommonResources,
-        shapeRenderer: ShapeRenderer,
-        eventQueue: EventQueue
+    spriteBatch: SpriteBatch,
+    viewport: Viewport,
+    mapScanService: MapScanService,
+    private val commonResources: CommonResources,
+    shapeRenderer: ShapeRenderer,
+    eventQueue: EventQueue
 ) : Entity() {
     private val stageRenderComponent: StageRenderComponent = StageRenderComponent(UIUtils.createStage(viewport, spriteBatch)).also { this.add(it) }
     private val signal = Signal<EventContext>()
@@ -126,11 +126,11 @@ class GameUI(
         val table = Table()
         val container = Container(table).fill()
         table.add(button)
-                .height(Value.percentHeight(0.05f, container))
-                .width(Value.percentWidth(0.05f, container))
-                .pad(5f)
-                .align(Align.topLeft)
-                .expand()
+            .height(Value.percentHeight(0.05f, container))
+            .width(Value.percentWidth(0.05f, container))
+            .pad(5f)
+            .align(Align.topLeft)
+            .expand()
         return container
     }
 
@@ -138,10 +138,10 @@ class GameUI(
         val table = Table()
         val container = Container(table).fill()
         table.add(minimap)
-                .height(Value.percentHeight(0.25f, container))
-                .width(Value.percentHeight(0.25f, container))
-                .align(Align.bottomLeft)
-                .expand()
+            .height(Value.percentHeight(0.25f, container))
+            .width(Value.percentHeight(0.25f, container))
+            .align(Align.bottomLeft)
+            .expand()
         return container
     }
 
@@ -149,11 +149,11 @@ class GameUI(
         val table = Table()
         val container = Container(table).fill()
         table.add(chat)
-                .height(Value.percentHeight(0.15f, container))
-                .width(Value.percentWidth(0.25f, container))
-                .padBottom(Value.percentHeight(0.25f + PAD_MAIN, container))
-                .align(Align.bottomLeft)
-                .expand()
+            .height(Value.percentHeight(0.15f, container))
+            .width(Value.percentWidth(0.25f, container))
+            .padBottom(Value.percentHeight(0.25f + PAD_MAIN, container))
+            .align(Align.bottomLeft)
+            .expand()
         return container
     }
 
@@ -161,11 +161,11 @@ class GameUI(
         val table = Table()
         val container = Container(table).fill()
         table.add(portraitAndDescriptionConcat())
-                .height(Value.percentHeight(0.25f, container))
-                .width(Value.percentWidth(0.35f, container))
-                .padRight(Value.percentWidth(0.25f + PAD_MAIN, container))
-                .align(Align.bottomRight)
-                .expand()
+            .height(Value.percentHeight(0.25f, container))
+            .width(Value.percentWidth(0.35f, container))
+            .padRight(Value.percentWidth(0.25f + PAD_MAIN, container))
+            .align(Align.bottomRight)
+            .expand()
         return container
     }
 
@@ -173,11 +173,11 @@ class GameUI(
         val table = Table()
         val container = Container(table).fill()
         table.add(description)
-                .width(Value.percentWidth(0.50f, container))
-                .grow()
+            .width(Value.percentWidth(0.50f, container))
+            .grow()
         table.add(portrait)
-                .width(Value.percentWidth(0.50f, container))
-                .grow()
+            .width(Value.percentWidth(0.50f, container))
+            .grow()
         return container
     }
 
@@ -185,10 +185,10 @@ class GameUI(
         val table = Table()
         val container = Container(table).fill()
         table.add(panelSkills)
-                .height(Value.percentHeight(0.25f, container))
-                .width(Value.percentWidth(0.25f, container))
-                .align(Align.bottomRight)
-                .expand()
+            .height(Value.percentHeight(0.25f, container))
+            .width(Value.percentWidth(0.25f, container))
+            .align(Align.bottomRight)
+            .expand()
         return container
     }
 
@@ -196,9 +196,9 @@ class GameUI(
         val table = Table()
         val container = Container(table).fill()
         table.add(panelResources)
-                .width(Value.percentWidth(0.25f, container))
-                .align(Align.topRight)
-                .expand()
+            .width(Value.percentWidth(0.25f, container))
+            .align(Align.topRight)
+            .expand()
         return container
     }
 }

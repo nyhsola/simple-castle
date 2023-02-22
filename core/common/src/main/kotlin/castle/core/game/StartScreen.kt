@@ -13,9 +13,9 @@ import org.koin.core.annotation.Single
 
 @Single
 class StartScreen(
-        private val spriteBatch: SpriteBatch,
-        commonResources: CommonResources,
-        eventQueue: EventQueue
+    private val spriteBatch: SpriteBatch,
+    commonResources: CommonResources,
+    eventQueue: EventQueue
 ) : KtxScreen, KtxInputAdapter {
     companion object {
         const val GAME_EVENT = "GAME_EVENT"

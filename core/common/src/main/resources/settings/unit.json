@@ -27,7 +27,7 @@
     "speedAngular": 3.0,
     "attackFrom": 10,
     "attackTo": 100,
-    "attackSpeed": 1,
+    "attackSpeed": 1.5,
     "visibilityRange": 10.0
   }
 ]

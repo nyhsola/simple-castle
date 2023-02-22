@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Widget
 
 class Minimap(
-        private val shapeRenderer: ShapeRenderer, private val mapScanService: MapScanService
+    private val shapeRenderer: ShapeRenderer, private val mapScanService: MapScanService
 ) : Widget() {
     private val minimap: MutableList<MutableList<MinimapPiece>> = ArrayList()
     private val minimapBuffer: MutableList<MinimapPiece> = ArrayList()
@@ -71,7 +71,7 @@ class Minimap(
         for (minimapPiece in minimap.flatten()) {
             shapeRenderer.color = minimapPiece.color
             shapeRenderer.rect(
-                    minimapPiece.position.x + x, minimapPiece.position.y + y, minimapPiece.width, minimapPiece.height
+                minimapPiece.position.x + x, minimapPiece.position.y + y, minimapPiece.width, minimapPiece.height
             )
         }
         shapeRenderer.end()
@@ -89,7 +89,7 @@ class Minimap(
     }
 
     private class MinimapPiece(
-            private val index: Vector2, private val groundHeight: Int
+        private val index: Vector2, private val groundHeight: Int
     ) {
         var width: Float = 0f
         var height: Float = 0f
@@ -115,7 +115,7 @@ class Minimap(
 
         private fun updatePosition() {
             position.set(
-                    offset.x + index.x * width, offset.y + index.y * height
+                offset.x + index.x * width, offset.y + index.y * height
             )
         }
 

@@ -19,7 +19,8 @@
       4
     ],
     "collisionFlag": [
-      "CF_KINEMATIC_OBJECT", "CF_NO_CONTACT_RESPONSE"
+      "CF_KINEMATIC_OBJECT",
+      "CF_NO_CONTACT_RESPONSE"
     ]
   },
   {

@@ -14,8 +14,8 @@ import org.koin.core.annotation.Single
 
 @Single
 class CircleRenderSystem(
-        private val shapeRenderer: ShapeRenderer,
-        private val cameraService: CameraService
+    private val shapeRenderer: ShapeRenderer,
+    private val cameraService: CameraService
 ) : IteratingSystem(Family.all(CircleRenderComponent::class.java).get()) {
     private val tempVector3 = Vector3()
     private val tempMatrix4 = Matrix4()

@@ -5,7 +5,7 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.ComponentMapper
 
 class RemoveComponent(
-        val removeInSec: Float = 1f
+    val removeInSec: Float = 1f
 ) : Component {
     companion object {
         val mapper: ComponentMapper<RemoveComponent> = ComponentMapper.getFor(RemoveComponent::class.java)

@@ -86,9 +86,9 @@ class Chat(commonResources: CommonResources) : Table() {
         val color = (Math.random() * 0x1000000).toInt().toString(16)
         val fullMessage = "$currentTime: $message"
         fullMessage
-                .split("\n")
-                .flatMap { it.chunked(40) }
-                .forEach { internalTypeMessage("[#$color]$it") }
+            .split("\n")
+            .flatMap { it.chunked(40) }
+            .forEach { internalTypeMessage("[#$color]$it") }
     }
 
     fun pollAllMessages(): Array<String> {
@@ -101,8 +101,8 @@ class Chat(commonResources: CommonResources) : Table() {
         chatHistory.add(message)
         chatPoll.add(message)
         val resultText = chatHistory
-                .takeLast(lines)
-                .joinToString(separator = "\n") { it }
+            .takeLast(lines)
+            .joinToString(separator = "\n") { it }
         text = resultText
     }
 }

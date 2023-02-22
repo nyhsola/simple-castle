@@ -11,8 +11,8 @@ import org.koin.core.annotation.Single
 
 @Single
 class EnvironmentService(
-        private val engine: Engine,
-        private val environmentBuilder: EnvironmentBuilder
+    private val engine: Engine,
+    private val environmentBuilder: EnvironmentBuilder
 ) : Disposable {
     val environmentObjects: MutableMap<String, Entity> = HashMap()
     val aabbMin = Vector3()
@@ -20,8 +20,8 @@ class EnvironmentService(
 
     fun init() {
         environmentBuilder.build()
-                .onEach { engine.addEntity(it) }
-                .onEach { environmentObjects[ModelRenderComponent.mapper.get(it).nodeName] = it }
+            .onEach { engine.addEntity(it) }
+            .onEach { environmentObjects[ModelRenderComponent.mapper.get(it).nodeName] = it }
         val ground = environmentObjects.getValue("ground")
         PhysicComponent.mapper.get(ground).body.getAabb(aabbMin, aabbMax)
     }

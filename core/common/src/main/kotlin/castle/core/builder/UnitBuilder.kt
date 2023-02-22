@@ -14,11 +14,11 @@ import org.koin.core.annotation.Single
 
 @Single
 class UnitBuilder(
-        private val commonResources: CommonResources,
-        private val gameResources: GameResources,
-        private val environmentService: EnvironmentService,
-        private val templateBuilder: TemplateBuilder,
-        private val behaviours: Behaviours
+    private val commonResources: CommonResources,
+    private val gameResources: GameResources,
+    private val environmentService: EnvironmentService,
+    private val templateBuilder: TemplateBuilder,
+    private val behaviours: Behaviours
 ) {
     private companion object {
         private const val defaultHpTexture = "hp.png"
@@ -40,11 +40,11 @@ class UnitBuilder(
     private fun buildInternal(unitJson: UnitJson, unit: Entity): Entity {
         unit.add(UnitComponent(unit, unitJson))
         unit.add(
-                HPRenderComponent(
-                        commonResources.textures.getValue(defaultHpTexture),
-                        PositionComponent.mapper.get(unit).matrix4,
-                        PhysicComponent.mapper.get(unit).body
-                )
+            HPRenderComponent(
+                commonResources.textures.getValue(defaultHpTexture),
+                PositionComponent.mapper.get(unit).matrix4,
+                PhysicComponent.mapper.get(unit).body
+            )
         )
         unit.add(StateComponent(behaviours.behaviors.getValue(unitJson.behaviour), unit))
         unit.add(MapComponent(unitJson.speedAngular != 0f))

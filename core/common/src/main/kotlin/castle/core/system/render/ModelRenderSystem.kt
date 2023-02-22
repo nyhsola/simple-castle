@@ -13,8 +13,8 @@ import org.koin.core.annotation.Single
 
 @Single
 class ModelRenderSystem(
-        private val modelBatch: ModelBatch,
-        private val cameraService: CameraService
+    private val modelBatch: ModelBatch,
+    private val cameraService: CameraService
 ) : IteratingSystem(Family.all(PositionComponent::class.java, ModelRenderComponent::class.java).get()) {
     override fun update(deltaTime: Float) {
         Gdx.gl.apply {

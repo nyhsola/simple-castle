@@ -15,11 +15,11 @@ import org.koin.core.annotation.Single
 
 @Single
 class GameService(
-        private val engine: Engine,
-        private val eventQueue: EventQueue,
-        private val playerBuilder: PlayerBuilder,
-        private val decorationBuilder: DecorationBuilder,
-        private val cameraService: CameraService
+    private val engine: Engine,
+    private val eventQueue: EventQueue,
+    private val playerBuilder: PlayerBuilder,
+    private val decorationBuilder: DecorationBuilder,
+    private val cameraService: CameraService
 ) : KtxInputAdapter, Disposable {
     companion object {
         const val DEBUG_SPAWN: String = "DEBUG_SPAWN"
@@ -27,10 +27,10 @@ class GameService(
     }
 
     private val operations: Map<String, (EventContext) -> Unit> = mapOf(
-            Pair(DEBUG_SPAWN) {
-                val playerName = it.params[PLAYER_NAME] as String
-                players.getValue(playerName).spawnUnits()
-            }
+        Pair(DEBUG_SPAWN) {
+            val playerName = it.params[PLAYER_NAME] as String
+            players.getValue(playerName).spawnUnits()
+        }
     )
 
     private val players: MutableMap<String, Player> = HashMap()

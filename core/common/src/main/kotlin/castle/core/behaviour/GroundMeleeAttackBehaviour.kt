@@ -13,7 +13,7 @@ import org.koin.core.annotation.Single
 
 @Single
 class GroundMeleeAttackBehaviour(
-        private val controller: GroundMeleeUnitController
+    private val controller: GroundMeleeUnitController
 ) {
     private val init = Init()
     private val moveRoute = MoveRoute()
@@ -95,7 +95,8 @@ class GroundMeleeAttackBehaviour(
             AnimationRenderComponent.mapper.get(entity).setAnimation(
                 "attack",
                 meleeComponent.attackSpeed,
-                meleeComponent.attackTask)
+                meleeComponent.attackTask
+            )
         }
 
         override fun update(entity: Entity, delta: Float) {

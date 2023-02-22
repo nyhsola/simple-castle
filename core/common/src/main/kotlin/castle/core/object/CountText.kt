@@ -9,9 +9,9 @@ import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.math.Vector3
 
 class CountText(
-        position: Vector3,
-        lineNumber: Int,
-        eventQueue: EventQueue
+    position: Vector3,
+    lineNumber: Int,
+    eventQueue: EventQueue
 ) : Entity() {
     companion object {
         const val ON_COUNT = "ON_COUNT"
@@ -22,12 +22,12 @@ class CountText(
     private val count: Int = (25..30).random()
     private val signal: Signal<EventContext> = Signal()
     private val task: Task =
-            object : Task(count.toFloat()) {
-                override fun action() {
-                    signal.dispatch(EventContext(ON_COUNT, mapOf(Pair(PARAM_LINE, lineNumber))))
-                    reset()
-                }
+        object : Task(count.toFloat()) {
+            override fun action() {
+                signal.dispatch(EventContext(ON_COUNT, mapOf(Pair(PARAM_LINE, lineNumber))))
+                reset()
             }
+        }
 
     init {
         signal.add(eventQueue)

@@ -6,6 +6,7 @@ import castle.core.path.Area
 import castle.core.ui.debug.DebugUI
 import castle.core.ui.game.GameUI
 import castle.core.ui.menu.MenuUI
+import castle.core.util.GlobalMode
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.signals.Signal
@@ -16,11 +17,11 @@ import org.koin.core.annotation.Single
 
 @Single
 class UIService(
-        private val engine: Engine,
-        private val eventQueue: EventQueue,
-        private val gameUI: GameUI,
-        private val debugUI: DebugUI,
-        private val menuUI: MenuUI
+    private val engine: Engine,
+    private val eventQueue: EventQueue,
+    private val gameUI: GameUI,
+    private val debugUI: DebugUI,
+    private val menuUI: MenuUI
 ) : KtxInputAdapter, Disposable {
     companion object {
         const val DEBUG_UI_ENABLE_1 = "DEBUG_UI_ENABLE_1"
@@ -31,9 +32,9 @@ class UIService(
     private val signal = Signal<EventContext>()
 
     private val operations: Map<String, (EventContext) -> Unit> = mapOf(
-            Pair(DEBUG_UI_ENABLE_1) { gameUI.debugEnabled = !gameUI.debugEnabled },
-            Pair(DEBUG_UI_ENABLE_2) { debugUI.debugEnabled = !debugUI.debugEnabled },
-            Pair(MENU_ENABLE) { menuUI.isVisible = !menuUI.isVisible }
+        Pair(DEBUG_UI_ENABLE_1) { gameUI.debugEnabled = !gameUI.debugEnabled },
+        Pair(DEBUG_UI_ENABLE_2) { debugUI.debugEnabled = !debugUI.debugEnabled },
+        Pair(MENU_ENABLE) { menuUI.isVisible = !menuUI.isVisible }
     )
 
     fun init() {
@@ -43,6 +44,8 @@ class UIService(
         engine.addEntity(debugUI)
 
         gameUI.init()
+
+        debugUI.isVisible = GlobalMode.debugMode
     }
 
     fun update(objectsOnMap: Map<Area, Collection<Entity>>) {

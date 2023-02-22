@@ -7,8 +7,8 @@ import com.badlogic.ashley.core.ComponentMapper
 import com.badlogic.ashley.core.Entity
 
 class UnitComponent(
-        val owner: Entity,
-        val unitJson: UnitJson
+    val owner: Entity,
+    val unitJson: UnitJson
 ) : Component {
     companion object {
         val mapper: ComponentMapper<UnitComponent> = ComponentMapper.getFor(UnitComponent::class.java)

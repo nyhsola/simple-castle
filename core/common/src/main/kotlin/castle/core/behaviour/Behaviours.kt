@@ -6,12 +6,12 @@ import org.koin.core.annotation.Single
 
 @Single
 class Behaviours(
-        groundMeleeAttackBehaviour: GroundMeleeAttackBehaviour,
-        groundRangeAttackBehaviour: GroundRangeAttackBehaviour
+    groundMeleeAttackBehaviour: GroundMeleeAttackBehaviour,
+    groundRangeAttackBehaviour: GroundRangeAttackBehaviour
 ) {
     val behaviors: Map<String, StateDelta<Entity>> = mapOf(
-            "none" to NoneBehavior.INIT,
-            "ground-attack" to groundMeleeAttackBehaviour.initState(),
-            "range-attack" to groundRangeAttackBehaviour.initState(),
+        "none" to NoneBehavior.INIT,
+        "ground-attack" to groundMeleeAttackBehaviour.initState(),
+        "range-attack" to groundRangeAttackBehaviour.initState(),
     )
 }

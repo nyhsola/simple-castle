@@ -12,8 +12,8 @@ import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody
 import com.badlogic.gdx.utils.Disposable
 
 class PhysicComponent(
-        modelInstance: ModelInstance,
-        templateJson: TemplateJson
+    modelInstance: ModelInstance,
+    templateJson: TemplateJson
 ) : Component, Disposable {
     private val motionState = MotionState()
     private val constructionInfo = btRigidBody.btRigidBodyConstructionInfo(templateJson.mass, motionState, templateJson.shape.build(modelInstance))

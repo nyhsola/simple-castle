@@ -13,13 +13,13 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.utils.Disposable
 
 class Player(
-        private val eventQueue: EventQueue,
-        private val engine: Engine,
-        private val playerJson: PlayerJson,
-        private val unitBuilder: UnitBuilder,
-        textBuilder: TextBuilder
+    private val eventQueue: EventQueue,
+    private val engine: Engine,
+    private val playerJson: PlayerJson,
+    private val unitBuilder: UnitBuilder,
+    textBuilder: TextBuilder
 ) : Disposable {
-    private val buildings: List<Entity> = playerJson.units.map { spawnBuilding(playerJson.playerName, it.key, it.value) }.flatten()
+    private val buildings: List<Entity> = playerJson.units.map { createBuilding(it.key, it.value) }.flatten()
     private val effects: List<CountText> = textBuilder.build(playerJson, eventQueue)
     private val units: MutableList<Entity> = ArrayList()
 
@@ -27,9 +27,7 @@ class Player(
         get() = buildings.first { PositionComponent.mapper.get(it).nodeName == "castle" }
 
     private val operations: Map<String, (EventContext) -> Unit> = mapOf(
-            Pair(CountText.ON_COUNT) {
-                spawnUnit(it.params.getValue(CountText.PARAM_LINE) as Int)
-            }
+        Pair(CountText.ON_COUNT) { placeUnit(it.params.getValue(CountText.PARAM_LINE) as Int) }
     )
 
     fun init() {
@@ -43,28 +41,30 @@ class Player(
     }
 
     fun spawnUnits() {
-        List(playerJson.paths.size) { index -> spawnUnit(index) }
+        List(playerJson.paths.size) { index -> placeUnit(index) }
     }
 
-    private fun spawnBuilding(playerName: String, unitStr: String, spawnStr: List<String>): List<Entity> {
-        return spawnStr.map {
-            val unit = unitBuilder.build(unitStr, it)
-            UnitComponent.mapper.get(unit).playerName = playerName
-            unit
-        }
-    }
-
-    private fun spawnUnit(lineNumber: Int): Entity {
-        val path = playerJson.paths[lineNumber]
-        val spawn = path[0]
-        val entity = unitBuilder.build("warrior", spawn)
-        val unitComponent = UnitComponent.mapper.get(entity)
-        unitComponent.playerName = playerJson.playerName
-        unitComponent.params.putAll(mapOf(GroundMeleeUnitController.PATH_PARAM to path))
+    private fun placeUnit(lineNumber: Int): Entity {
+        val entity = createUnit(lineNumber)
         engine.addEntity(entity)
         units.add(entity)
         return entity
     }
+
+    private fun createBuilding(unitName: String, spawnPlace: List<String>): List<Entity> {
+        return spawnPlace.map { unitBuilder.build(unitName, it).applyPlayer() }
+    }
+
+    private fun createUnit(lineNumber: Int) : Entity {
+        val path = playerJson.paths[lineNumber]
+        return unitBuilder.build("warrior", path[0])
+            .applyPlayer()
+            .withUnitComponent { it.params.putAll(mapOf(GroundMeleeUnitController.PATH_PARAM to path)) }
+    }
+
+    private fun Entity.applyPlayer() = apply { UnitComponent.mapper.get(this).apply { playerName = playerJson.playerName } }
+
+    private fun Entity.withUnitComponent(block: (UnitComponent) -> Unit) = apply { block.invoke(UnitComponent.mapper.get(this)) }
 
     override fun dispose() {
         buildings.onEach { engine.removeEntity(it) }

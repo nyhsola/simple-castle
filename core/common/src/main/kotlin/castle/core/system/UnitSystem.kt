@@ -20,8 +20,8 @@ import org.koin.core.annotation.Single
 
 @Single
 class UnitSystem(
-        private val eventQueue: EventQueue,
-        private val physicService: PhysicService
+    private val eventQueue: EventQueue,
+    private val physicService: PhysicService
 ) : IteratingSystem(family), PhysicListener {
     companion object {
         const val DEBUG_ENABLE = "DEBUG_PATH_ENABLE"
@@ -33,16 +33,16 @@ class UnitSystem(
     private val lines: MutableList<Entity> = ArrayList()
 
     private val operations: Map<String, (EventContext) -> Unit> = mapOf(
-            Pair(DEBUG_ENABLE) {
-                debugEnabled = !debugEnabled
-                if (debugEnabled) {
-                    engine.getEntitiesFor(family).onEach { createDebugLines(it, lines) }
-                    lines.onEach { engine.addEntity(it) }
-                } else {
-                    lines.onEach { engine.removeEntity(it) }
-                    lines.clear()
-                }
+        Pair(DEBUG_ENABLE) {
+            debugEnabled = !debugEnabled
+            if (debugEnabled) {
+                engine.getEntitiesFor(family).onEach { createDebugLines(it, lines) }
+                lines.onEach { engine.addEntity(it) }
+            } else {
+                lines.onEach { engine.removeEntity(it) }
+                lines.clear()
             }
+        }
     )
 
     override fun addedToEngine(engine: Engine) {
@@ -75,7 +75,7 @@ class UnitSystem(
                 val area2 = meleeComponent.mainPath.get(j + 1).position
                 val unitPosition = positionComponent.matrix4.getTranslation(temp)
                 val lineRenderComponent = LineRenderComponent(
-                        Vector3(area1.x, unitPosition.y, area1.y), Vector3(area2.x, unitPosition.y, area2.y), Color.GREEN, true
+                    Vector3(area1.x, unitPosition.y, area1.y), Vector3(area2.x, unitPosition.y, area2.y), Color.GREEN, true
                 )
                 val lineEntity = Entity()
                 lineEntity.add(lineRenderComponent)

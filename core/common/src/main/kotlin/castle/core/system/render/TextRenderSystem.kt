@@ -17,9 +17,9 @@ import org.koin.core.annotation.Single
 
 @Single
 class TextRenderSystem(
-        private val spriteBatch: SpriteBatch,
-        gameResources: GameResources,
-        private val cameraService: CameraService
+    private val spriteBatch: SpriteBatch,
+    gameResources: GameResources,
+    private val cameraService: CameraService
 ) : IteratingSystem(Family.all(TextRenderComponent::class.java).get()) {
     private val tempMat = Matrix4()
     private val bitmapFont: BitmapFont = gameResources.bitmapFont

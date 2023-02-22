@@ -14,7 +14,7 @@ import org.koin.core.annotation.Single
 
 @Single
 class MapSystem(
-        private val mapService: MapService
+    private val mapService: MapService
 ) : IteratingSystem(family), EntityListener {
     companion object {
         private val family: Family = Family.all(MapComponent::class.java).get()

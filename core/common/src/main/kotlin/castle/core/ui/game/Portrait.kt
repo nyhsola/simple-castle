@@ -8,12 +8,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable
 
 class Portrait(
-        commonResources: CommonResources
+    commonResources: CommonResources
 ) : Image() {
     private val listDrawables: List<String> = listOf("unit-warrior.png", "castle.png")
     private val drawables: Map<String, TextureRegionDrawable> = commonResources.textures
-            .filter { listDrawables.contains(it.key) }
-            .mapValues { TextureRegionDrawable(TextureRegion(it.value)) }
+        .filter { listDrawables.contains(it.key) }
+        .mapValues { TextureRegionDrawable(TextureRegion(it.value)) }
 
     fun changePortrait(entity: Entity) {
         isVisible = true

@@ -14,7 +14,8 @@ class AnimationRenderComponent(private val modelComponent: ModelRenderComponent)
             modelComponent.formatAnimation(animation),
             -1,
             modelComponent.getAnimation(animation).duration / totalDuration,
-            animationListener)
+            animationListener
+        )
     }
 
     fun setAnimation(animation: String, totalDuration: Float, animationListener: AnimationListener) {
@@ -23,7 +24,8 @@ class AnimationRenderComponent(private val modelComponent: ModelRenderComponent)
             modelComponent.formatAnimation(animation),
             -1,
             modelComponent.getAnimation(animation).duration / totalDuration,
-            animationListener)
+            animationListener
+        )
     }
 
     companion object {
