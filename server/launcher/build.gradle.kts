@@ -1,3 +1,4 @@
+import castle.packr.CastlePackr
 import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.kotlin.util.capitalizeDecapitalize.toLowerCaseAsciiOnly
 
@@ -32,8 +33,8 @@ sourceSets {
 }
 
 tasks.jar {
-    archiveBaseName.set("simple-castle-desktop")
     dependsOn(":core:common:jar")
+    archiveBaseName.set("simple-castle")
     from(configurations.runtimeClasspath.get().map(::zipTree))
 
     manifest.attributes["Main-Class"] = gameClassName
@@ -41,10 +42,12 @@ tasks.jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
+tasks.register<CastlePackr>("distpackr") {
+    dependsOn(":server:launcher:jar")
+}
+
 dependencies {
     implementation(project(":core:common"))
-
-    implementation("com.badlogicgames.packr:packr:3.0.3")
 
     implementation(libs.kstdlib)
     implementation(libs.kapp)

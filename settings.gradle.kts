@@ -6,9 +6,8 @@ include(
 )
 
 pluginManagement {
-    val kspDevtoolsVersion = "1.8.0-1.0.8"
     plugins {
-        id("com.google.devtools.ksp") version kspDevtoolsVersion
+        id("com.google.devtools.ksp") version "1.8.0-1.0.8"
     }
 }
 

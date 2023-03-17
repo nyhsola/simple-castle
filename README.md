@@ -28,6 +28,10 @@ Use `gradlew :server:launcher:run` task to run application
 ### How to pack into jar
 Use `gradlew :server:launcher:jar` task to pack application into jar
 
+### How to dist with JRE 
+Use `gradlew :server:launcher:distpackr` task to distribute  
+Before running, edit jdk.properties to use proper JDK
+
 ### How to pack blender model into the game
 **(No need to do this if you did not change model)**  
 Use task `gradlew :asset:buildModel` to update model. It packs **.blend** files from step4 folder into the assets  
