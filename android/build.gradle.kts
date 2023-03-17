@@ -9,12 +9,11 @@ android {
     sourceSets {
         named("main") {
             res.srcDir("res")
-            assets.srcDir("assets")
             jniLibs.srcDir("libs")
         }
     }
     defaultConfig {
-        val appVersion: String = "1.0.0"
+        val appVersion = "1.0.0"
         applicationId = "com.example.android"
         minSdkVersion(14)
         targetSdkVersion(31)
@@ -28,8 +27,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_6
-        targetCompatibility = JavaVersion.VERSION_1_6
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
@@ -60,9 +59,6 @@ dependencies {
     natives("com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-x86_64")
 }
 
-// Called every time gradle gets executed, takes the native dependencies of
-// the natives configuration, and extracts them to the proper libs/ folders
-// so they get packed with the APK.
 tasks.register("copyAndroidNatives") {
     doFirst {
         natives.files.forEach { jar ->

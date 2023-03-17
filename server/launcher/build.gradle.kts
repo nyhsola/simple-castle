@@ -17,6 +17,12 @@ application {
     }
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of("17"))
+    }
+}
+
 sourceSets {
     main {
         resources {
@@ -27,17 +33,18 @@ sourceSets {
 
 tasks.jar {
     archiveBaseName.set("simple-castle-desktop")
+    dependsOn(":core:common:jar")
+    from(configurations.runtimeClasspath.get().map(::zipTree))
 
     manifest.attributes["Main-Class"] = gameClassName
     manifest.attributes["Class-Path"] = configurations.runtimeClasspath.get().joinToString(separator = " ") { it.name }
-
-    from(configurations.runtimeClasspath.get().map(::zipTree))
-
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 dependencies {
     implementation(project(":core:common"))
+
+    implementation("com.badlogicgames.packr:packr:3.0.3")
 
     implementation(libs.kstdlib)
     implementation(libs.kapp)

@@ -4,14 +4,14 @@ import castle.core.game.ServerGame
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
-import java.util.*
 
 object ServerLauncher {
     @JvmStatic
     fun main(args: Array<String>) {
-        val width = (Lwjgl3ApplicationConfiguration.getDisplayMode().width * 0.999f).toInt()
-        val height = (Lwjgl3ApplicationConfiguration.getDisplayMode().height * 0.9f).toInt()
+        val width = Lwjgl3ApplicationConfiguration.getDisplayMode().width
+        val height = Lwjgl3ApplicationConfiguration.getDisplayMode().height
         Lwjgl3Application(ServerGame(), Lwjgl3ApplicationConfiguration().apply {
+            setDecorated(false)
             setWindowedMode(width, height)
         })
         Runtime.getRuntime().addShutdownHook(object : Thread() {
@@ -19,11 +19,5 @@ object ServerLauncher {
                 Gdx.app.postRunnable(Gdx.app::exit)
             }
         })
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun <T> getProp(key: String): T {
-        val props = javaClass.classLoader.getResourceAsStream("game.properties").use { Properties().apply { load(it) } }
-        return (props.getProperty(key) as T) ?: throw RuntimeException("could not find property $key")
     }
 }
