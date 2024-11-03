@@ -55,16 +55,18 @@ class Player(
         return spawnPlace.map { unitBuilder.build(unitName, it).applyPlayer() }
     }
 
-    private fun createUnit(lineNumber: Int) : Entity {
+    private fun createUnit(lineNumber: Int): Entity {
         val path = playerJson.paths[lineNumber]
-        return unitBuilder.build("warrior", path[0])
+        return unitBuilder.buildWithRotation("warrior", path[0], path[1])
             .applyPlayer()
-            .withUnitComponent { it.params.putAll(mapOf(GroundMeleeUnitController.PATH_PARAM to path)) }
+            .applyPath(mapOf(GroundMeleeUnitController.PATH_PARAM to path))
     }
 
-    private fun Entity.applyPlayer() = apply { UnitComponent.mapper.get(this).apply { playerName = playerJson.playerName } }
+    private fun Entity.applyPlayer() =
+        apply { UnitComponent.mapper.get(this).playerName = playerJson.playerName }
 
-    private fun Entity.withUnitComponent(block: (UnitComponent) -> Unit) = apply { block.invoke(UnitComponent.mapper.get(this)) }
+    private fun Entity.applyPath(params: Map<String, List<String>>) =
+        apply { UnitComponent.mapper.get(this).params.putAll(params) }
 
     override fun dispose() {
         buildings.onEach { engine.removeEntity(it) }

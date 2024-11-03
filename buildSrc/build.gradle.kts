@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.badlogicgames.packr:packr:3.0.3")
+    implementation("com.badlogicgames.packr:packr:4.0.0")
 
     implementation(gradleApi())
     implementation(localGroovy())

@@ -4,6 +4,8 @@ plugins {
 }
 
 android {
+    namespace = "castle.core"
+
     buildToolsVersion("29.0.3")
     compileSdkVersion(31)
     sourceSets {

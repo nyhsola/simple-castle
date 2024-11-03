@@ -7,6 +7,7 @@ import castle.core.component.PositionComponent
 import castle.core.component.UnitComponent
 import castle.core.service.EnvironmentService
 import castle.core.service.MapService
+import castle.core.util.ModelUtils.Companion.DEFAULT_FACE_DIRECTION
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.math.Quaternion
 import com.badlogic.gdx.math.Vector3
@@ -28,7 +29,6 @@ class GroundMeleeUnitController(
     private val right: Vector3 = Vector3(0f, 1f, 0f)
     private val left: Vector3 = Vector3(0f, -1f, 0f)
     private val zero: Vector3 = Vector3(0f, 0f, 0f)
-    private val defaultFaceDirection: Vector3 = Vector3(1f, 0f, 0f)
 
     private val tempDefaultFace: Vector3 = Vector3()
     private val tempTarget: Vector3 = Vector3()
@@ -62,7 +62,7 @@ class GroundMeleeUnitController(
         val meleeComponent = GroundMeleeComponent.mapper.get(entity)
         meleeComponent.targetMove.set(meleeComponent.nextArea.position)
         if (mapService.inRadius(mapComponent.currentArea, meleeComponent.nextArea)) {
-            meleeComponent.nextPath = meleeComponent.nextPath + 1
+            meleeComponent.nextPath += 1
         }
         updateMoveParams(entity, meleeComponent)
         updateMoveInternal(entity, meleeComponent)
@@ -89,7 +89,7 @@ class GroundMeleeUnitController(
         val unitPosition = matrix4.getTranslation(tempPosition)
         val orientation = matrix4.getRotation(tempOrientation)
         val targetLevel = tempTarget.set(meleeComponent.targetMove.x, unitPosition.y, meleeComponent.targetMove.y)
-        val faceDirection = orientation.transform(tempDefaultFace.set(defaultFaceDirection))
+        val faceDirection = orientation.transform(tempDefaultFace.set(DEFAULT_FACE_DIRECTION))
         val directionNew = tempDirection.set(targetLevel).sub(unitPosition).nor()
         val angle = tempAngle.setFromCross(directionNew, faceDirection).angle
         val actualDistance = unitPosition.dst2(targetLevel)

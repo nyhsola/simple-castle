@@ -24,10 +24,21 @@ class UnitBuilder(
         private const val defaultHpTexture = "hp.png"
     }
 
+    fun buildWithRotation(unitStr: String, spawn: String, next: String): Entity {
+        val unit = build(unitStr, spawn)
+        val nextUnit = environmentService.environmentObjects.getValue(next)
+        val unitPosition = PositionComponent.mapper.get(unit)
+        val nextPosition = PositionComponent.mapper.get(nextUnit)
+        unitPosition.rotateTo(nextPosition)
+        return unit
+    }
+
     fun build(unitStr: String, spawn: String): Entity {
         val unit = build(unitStr)
         val spawnUnit = environmentService.environmentObjects.getValue(spawn)
-        PositionComponent.mapper.get(unit).setMatrix(PositionComponent.mapper.get(spawnUnit))
+        val unitPosition = PositionComponent.mapper.get(unit)
+        val spawnPosition = PositionComponent.mapper.get(spawnUnit)
+        unitPosition.setMatrix(spawnPosition)
         return unit
     }
 

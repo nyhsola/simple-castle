@@ -8,8 +8,10 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 object ServerLauncher {
     @JvmStatic
     fun main(args: Array<String>) {
-        val width = Lwjgl3ApplicationConfiguration.getDisplayMode().width
-        val height = Lwjgl3ApplicationConfiguration.getDisplayMode().height
+        val pcWidth = Lwjgl3ApplicationConfiguration.getDisplayMode().width
+        val pcHeight = Lwjgl3ApplicationConfiguration.getDisplayMode().height
+        val width = (pcWidth * 0.95).toInt()
+        val height = (pcHeight * 0.95).toInt()
         Lwjgl3Application(ServerGame(), Lwjgl3ApplicationConfiguration().apply {
             setDecorated(false)
             setWindowedMode(width, height)

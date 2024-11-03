@@ -22,7 +22,7 @@ abstract class CastlePackr : DefaultTask() {
         config.removePlatformLibs = config.classpath
         config.mainClass = "castle.core.app.ServerLauncher"
         config.minimizeJre = "hard"
-        config.vmArgs = listOf();
+        config.vmArgs = listOf()
         config.outDir = File("$buildDir/libs/$windowsPackerFolder")
         config.useZgcIfSupportedOs = true
 
