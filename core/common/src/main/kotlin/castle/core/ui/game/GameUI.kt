@@ -44,6 +44,7 @@ class GameUI(
     val chat = Chat(commonResources)
     val portrait = Portrait(commonResources)
     val description = Description(commonResources)
+    val hpHud = HpHud()
     private val panelResources = PanelResources(commonResources)
     private val panelSkills = PanelSkills(commonResources)
 
@@ -110,6 +111,7 @@ class GameUI(
         stack.add(portraitAndDescription())
         stack.add(panelSkills())
         stack.add(panelResources())
+        stack.add(hpHud())
         return container
     }
 
@@ -199,6 +201,16 @@ class GameUI(
             .width(Value.percentWidth(0.25f, container))
             .align(Align.topRight)
             .expand()
+        return container
+    }
+
+    private fun hpHud(): Container<out Group> {
+        val table = Table()
+        val container = Container(table)
+        container.setFillParent(true)
+        container.fill()
+        container.actor = table
+        table.add(hpHud).grow()
         return container
     }
 }

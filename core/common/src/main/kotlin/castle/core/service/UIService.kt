@@ -5,6 +5,7 @@ import castle.core.event.EventQueue
 import castle.core.path.Area
 import castle.core.ui.debug.DebugUI
 import castle.core.ui.game.GameUI
+import castle.core.ui.game.HpHud.SomeActor
 import castle.core.ui.menu.MenuUI
 import castle.core.util.GlobalMode
 import com.badlogic.ashley.core.Engine
@@ -63,6 +64,14 @@ class UIService(
     fun deactivateSelection() {
         gameUI.portrait.resetPortrait()
         gameUI.description.resetDescription()
+    }
+
+    fun addHp(someActor: SomeActor) {
+        gameUI.hpHud.addHp(someActor)
+    }
+
+    fun removeHp(someActor: SomeActor) {
+        gameUI.hpHud.removeHp(someActor)
     }
 
     override fun keyDown(keycode: Int): Boolean {

@@ -3,7 +3,7 @@ package castle.core.builder
 import castle.core.behaviour.Behaviours
 import castle.core.component.*
 import castle.core.component.render.AnimationRenderComponent
-import castle.core.component.render.HPRenderComponent
+import castle.core.component.render.HpRenderComponent
 import castle.core.component.render.ModelRenderComponent
 import castle.core.json.UnitJson
 import castle.core.service.CommonResources
@@ -51,8 +51,7 @@ class UnitBuilder(
     private fun buildInternal(unitJson: UnitJson, unit: Entity): Entity {
         unit.add(UnitComponent(unit, unitJson))
         unit.add(
-            HPRenderComponent(
-                commonResources.textures.getValue(defaultHpTexture),
+            HpRenderComponent(
                 PositionComponent.mapper.get(unit).matrix4,
                 PhysicComponent.mapper.get(unit).body
             )
