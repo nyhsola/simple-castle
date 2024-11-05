@@ -26,23 +26,21 @@ class HpRenderSystem(
 
     override fun entityAdded(entity: Entity) {
         val hpRenderComponent = HpRenderComponent.mapper.get(entity)
-        uiService.addHp(hpRenderComponent.someActor)
+        uiService.addHp(hpRenderComponent.hpBar)
     }
 
     override fun entityRemoved(entity: Entity) {
         val hpRenderComponent = HpRenderComponent.mapper.get(entity)
-        uiService.removeHp(hpRenderComponent.someActor)
+        uiService.removeHp(hpRenderComponent.hpBar)
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val unitComponent = UnitComponent.mapper.get(entity)
         val hpRenderComponent = HpRenderComponent.mapper.get(entity)
-
         val position = hpRenderComponent.matrix4.getTranslation(tempVector3).add(hpRenderComponent.translation)
-
         val camera = cameraService.currentCamera.camera
         val pos = camera.project(position)
-        val width = hpRenderComponent.someActor.width
-        hpRenderComponent.someActor.setPosition(pos.x - width / 2, pos.y)
+        val width = hpRenderComponent.hpBar.width
+        hpRenderComponent.hpBar.hpBarRender.setPosition(pos.x - width / 2, pos.y)
     }
 }

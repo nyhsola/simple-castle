@@ -1,22 +1,52 @@
 package castle.core.ui.game
 
-import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 
-class HpHud : Table() {
-    class SomeActor(private val texture: Texture) : Actor() {
-        override fun draw(batch: Batch, alpha: Float) {
-            batch.draw(texture, x, y, width, height)
+class HpHud(
+    private val shapeRenderer: ShapeRenderer
+) : Table() {
+    inner class HpBarRender(rectWidth: Float) : Actor() {
+        private var borderThickness: Float = 2f
+
+        init {
+            setPosition(0f, 0f)
+            setSize(rectWidth, 7f)
+        }
+
+        override fun draw(batch: Batch, parentAlpha: Float) {
+            batch.end()
+            shapeRenderer.projectionMatrix = stage.camera.combined
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
+
+            shapeRenderer.color = Color.BLACK
+            shapeRenderer.rect(x, y, width, height)
+
+            shapeRenderer.color = Color.GREEN
+            shapeRenderer.rect(
+                x + borderThickness,
+                y + borderThickness,
+                width - 2 * borderThickness,
+                height - 2 * borderThickness)
+
+            shapeRenderer.end()
+            batch.begin()
         }
     }
 
-    fun addHp(someActor: SomeActor) {
-        addActor(someActor)
+    class HpBar(val width: Float) {
+        lateinit var hpBarRender: HpBarRender
     }
 
-    fun removeHp(someActor: SomeActor) {
-        removeActor(someActor)
+    fun addHp(hpBar: HpBar) {
+        hpBar.hpBarRender = HpBarRender(hpBar.width)
+        addActor(hpBar.hpBarRender)
+    }
+
+    fun removeHp(hpBar: HpBar) {
+        removeActor(hpBar.hpBarRender)
     }
 }

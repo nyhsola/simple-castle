@@ -44,7 +44,7 @@ class GameUI(
     val chat = Chat(commonResources)
     val portrait = Portrait(commonResources)
     val description = Description(commonResources)
-    val hpHud = HpHud()
+    val hpHud = HpHud(shapeRenderer)
     private val panelResources = PanelResources(commonResources)
     private val panelSkills = PanelSkills(commonResources)
 

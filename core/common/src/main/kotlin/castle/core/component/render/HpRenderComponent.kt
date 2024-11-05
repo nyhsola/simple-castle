@@ -3,9 +3,6 @@ package castle.core.component.render
 import castle.core.ui.game.HpHud
 import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.ComponentMapper
-import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.Pixmap
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Matrix4
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.bullet.dynamics.btRigidBody
@@ -27,22 +24,9 @@ class HpRenderComponent(
 
     val translation: Vector3 = Vector3(0f, height, 0.15f)
     val matrix4: Matrix4 = position
-
-    val someActor = HpHud.SomeActor(Texture(createPixmap())).also {
-        it.setPosition(0f, 0f)
-        it.setSize(hpBarWidth, 5f)
-    }
+    val hpBar = HpHud.HpBar(hpBarWidth)
 
     companion object {
         val mapper: ComponentMapper<HpRenderComponent> = ComponentMapper.getFor(HpRenderComponent::class.java)
-
-        private fun createPixmap(): Pixmap {
-            val width = 1
-            val height = 1
-            val pixmap = Pixmap(width, height, Pixmap.Format.RGBA8888)
-            pixmap.setColor(Color.GREEN)
-            pixmap.fillRectangle(0, 0, width, height)
-            return pixmap
-        }
     }
 }

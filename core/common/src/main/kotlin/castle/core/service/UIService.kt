@@ -5,7 +5,7 @@ import castle.core.event.EventQueue
 import castle.core.path.Area
 import castle.core.ui.debug.DebugUI
 import castle.core.ui.game.GameUI
-import castle.core.ui.game.HpHud.SomeActor
+import castle.core.ui.game.HpHud.HpBar
 import castle.core.ui.menu.MenuUI
 import castle.core.util.GlobalMode
 import com.badlogic.ashley.core.Engine
@@ -66,12 +66,12 @@ class UIService(
         gameUI.description.resetDescription()
     }
 
-    fun addHp(someActor: SomeActor) {
-        gameUI.hpHud.addHp(someActor)
+    fun addHp(hpBar: HpBar) {
+        gameUI.hpHud.addHp(hpBar)
     }
 
-    fun removeHp(someActor: SomeActor) {
-        gameUI.hpHud.removeHp(someActor)
+    fun removeHp(hpBar: HpBar) {
+        gameUI.hpHud.removeHp(hpBar)
     }
 
     override fun keyDown(keycode: Int): Boolean {
