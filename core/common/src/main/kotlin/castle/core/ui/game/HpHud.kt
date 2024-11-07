@@ -3,6 +3,7 @@ package castle.core.ui.game
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.scenes.scene2d.Actor
 import com.badlogic.gdx.scenes.scene2d.ui.Table
 
@@ -11,6 +12,7 @@ class HpHud(
 ) : Table() {
     inner class HpBarRender(rectWidth: Float) : Actor() {
         private var borderThickness: Float = 2f
+        var percent: Float = 1f
 
         init {
             setPosition(0f, 0f)
@@ -29,7 +31,7 @@ class HpHud(
             shapeRenderer.rect(
                 x + borderThickness,
                 y + borderThickness,
-                width - 2 * borderThickness,
+                width * percent - 2 * borderThickness,
                 height - 2 * borderThickness)
 
             shapeRenderer.end()
@@ -39,6 +41,14 @@ class HpHud(
 
     class HpBar(val width: Float) {
         lateinit var hpBarRender: HpBarRender
+
+        fun setCameraProject(projected: Vector3) {
+            hpBarRender.setPosition(projected.x - width / 2, projected.y)
+        }
+
+        fun setPercent(percent: Float) {
+            hpBarRender.percent = percent
+        }
     }
 
     fun addHp(hpBar: HpBar) {

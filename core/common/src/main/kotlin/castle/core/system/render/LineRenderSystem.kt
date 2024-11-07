@@ -5,6 +5,8 @@ import castle.core.service.CameraService
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.IteratingSystem
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Matrix4
 import org.koin.core.annotation.Single
@@ -19,9 +21,11 @@ class LineRenderSystem(
     override fun update(deltaTime: Float) {
         shapeRenderer.transformMatrix = transformMatrix4
         shapeRenderer.projectionMatrix = cameraService.currentCamera.camera.combined
+        Gdx.gl.glDisable(GL20.GL_DEPTH_TEST)
         shapeRenderer.begin()
         super.update(deltaTime)
         shapeRenderer.end()
+        Gdx.gl.glEnable(GL20.GL_DEPTH_TEST)
     }
 
     override fun processEntity(entity: Entity, deltaTime: Float) {

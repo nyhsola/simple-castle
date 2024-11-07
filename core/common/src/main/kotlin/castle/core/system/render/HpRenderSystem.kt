@@ -36,11 +36,11 @@ class HpRenderSystem(
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val unitComponent = UnitComponent.mapper.get(entity)
+        val percent = unitComponent.currentHealth.toFloat() / unitComponent.totalHealth.toFloat()
         val hpRenderComponent = HpRenderComponent.mapper.get(entity)
         val position = hpRenderComponent.matrix4.getTranslation(tempVector3).add(hpRenderComponent.translation)
         val camera = cameraService.currentCamera.camera
-        val pos = camera.project(position)
-        val width = hpRenderComponent.hpBar.width
-        hpRenderComponent.hpBar.hpBarRender.setPosition(pos.x - width / 2, pos.y)
+        hpRenderComponent.hpBar.setCameraProject(camera.project(position))
+        hpRenderComponent.hpBar.setPercent(percent)
     }
 }

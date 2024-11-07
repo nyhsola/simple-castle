@@ -98,6 +98,8 @@ class DebugUI(
         table.row()
         table.add(createButton("Map", listOf(EventContext(MapService.DEBUG_ENABLE)))).width(50f).height(50f)
         table.row()
+        table.add(createButton("Grid", listOf(EventContext(MapService.DEBUG_GRID)))).width(50f).height(50f)
+        table.row()
         val list = listOf(
             EventContext(GameService.DEBUG_SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 1"))),
             EventContext(GameService.DEBUG_SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 3")))

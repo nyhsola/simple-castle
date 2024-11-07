@@ -3,14 +3,17 @@ package castle.core.service
 import castle.core.component.PhysicComponent
 import castle.core.component.PositionComponent
 import castle.core.component.render.CircleRenderComponent
+import castle.core.component.render.LineRenderComponent
 import castle.core.event.EventContext
 import castle.core.event.EventQueue
 import castle.core.path.Area
 import castle.core.path.AreaGraph
+import castle.core.util.ColorUtil
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath
 import com.badlogic.gdx.ai.pfa.GraphPath
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
@@ -26,10 +29,14 @@ class MapService(
 ) {
     companion object {
         const val DEBUG_ENABLE = "DEBUG_MAP_ENABLE"
+        const val DEBUG_GRID = "DEBUG_GRID"
     }
 
-    private var debugEnabled: Boolean = false
-    private val circles: MutableList<Entity> = ArrayList()
+    private var debugMapEnabled: Boolean = false
+    private val debugMapEntity: MutableList<Entity> = ArrayList()
+
+    private var debugGridEnabled: Boolean = false
+    private val debugGridEntity: MutableList<Entity> = ArrayList()
 
     private val mapGraph = AreaGraph()
     private val tempVector = Vector3()
@@ -41,16 +48,8 @@ class MapService(
     private val areasInUnit: MutableMap<Entity, MutableSet<Area>> = HashMap()
 
     private val operations: Map<String, (EventContext) -> Unit> = mapOf(
-        Pair(DEBUG_ENABLE) {
-            debugEnabled = !debugEnabled
-            if (debugEnabled) {
-                createDebugCircles(circles)
-                circles.forEach { engine.addEntity(it) }
-            } else {
-                circles.forEach { engine.removeEntity(it) }
-                circles.clear()
-            }
-        }
+        Pair(DEBUG_ENABLE) { createDebugCircles() },
+        Pair(DEBUG_GRID) { createDebugLines() }
     )
 
     fun init() {
@@ -96,8 +95,8 @@ class MapService(
     fun toArea(position: Vector3): Area {
         val width = MapScanService.scanBox.x * 2
         val depth = MapScanService.scanBox.z * 2
-        val posX = abs(environmentService.aabbMin.x + position.x)
-        val poxZ = abs(environmentService.aabbMin.z + position.z)
+        val posX = abs(environmentService.mapAABBMin.x + position.x)
+        val poxZ = abs(environmentService.mapAABBMin.z + position.z)
         val x = posX.div(width).toInt()
         val y = poxZ.div(depth).toInt()
         return toArea(x, y)
@@ -155,12 +154,54 @@ class MapService(
     }
 
     private fun toArea(i: Int, j: Int): Area {
-        val x = environmentService.aabbMax.x - i * MapScanService.scanBox.x * 2 - MapScanService.scanBox.x
-        val z = environmentService.aabbMax.z - j * MapScanService.scanBox.z * 2 - MapScanService.scanBox.z
+        val x = environmentService.mapAABBMax.x - i * MapScanService.scanBox.x * 2 - MapScanService.scanBox.x
+        val z = environmentService.mapAABBMax.z - j * MapScanService.scanBox.z * 2 - MapScanService.scanBox.z
         return Area(Vector2(x, z), i, j)
     }
 
-    private fun createDebugCircles(circlesOut: MutableList<Entity>) {
+    private fun createDebugLines() {
+        debugGridEnabled = !debugGridEnabled
+
+        if (!debugGridEnabled) {
+            debugGridEntity.forEach { engine.removeEntity(it) }
+            debugGridEntity.clear()
+            return
+        }
+
+        val map2D = mapScanService.map
+        map2D.forEachIndexed { i, _ ->
+            val start = toArea(i, 0).position
+            val end = toArea(i, mapScanService.map[i].size).position
+            createLine(start, end)
+        }
+        map2D[0].forEachIndexed {j, _ ->
+            val start = toArea(0, j).position
+            val end = toArea(mapScanService.map.size, j).position
+            createLine(start, end)
+        }
+    }
+
+    private fun createLine(start: Vector2, end: Vector2) {
+        val lineRenderComponent = LineRenderComponent(
+            Vector3(start.x, 0f, start.y),
+            Vector3(end.x, 0f, end.y),
+            ColorUtil.dimmedColor(Color.RED, 0.7f),
+            true
+        )
+        val commonEntity = Entity().apply { add(lineRenderComponent) }
+        engine.addEntity(commonEntity)
+        debugGridEntity.add(commonEntity)
+    }
+
+    private fun createDebugCircles() {
+        debugMapEnabled = !debugMapEnabled
+
+        if (!debugMapEnabled) {
+            debugMapEntity.forEach { engine.removeEntity(it) }
+            debugMapEntity.clear()
+            return
+        }
+
         unitsInArea
             .filter { it.value.isNotEmpty() }
             .keys
@@ -172,7 +213,8 @@ class MapService(
                 circleRenderComponent.radius = 1f
                 circleRenderComponent.shapeType = ShapeRenderer.ShapeType.Filled
                 commonEntity.add(circleRenderComponent)
-                circlesOut.add(commonEntity)
+                debugMapEntity.add(commonEntity)
             }
+        debugMapEntity.forEach { engine.addEntity(it) }
     }
 }

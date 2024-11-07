@@ -10,24 +10,19 @@ class EventQueue : Listener<EventContext> {
     private val eventTypeQueue: PriorityQueue<EventContext> = PriorityQueue()
     private val temp: MutableSet<EventContext> = HashSet()
 
-    fun proceed(map: Map<String, (EventContext) -> Unit>) {
+    fun proceed(operations: Map<String, (EventContext) -> Unit>) {
         if (eventTypeQueue.isNotEmpty()) {
-            temp.clear()
-            for (entry in map) {
-                proceed { eventContext ->
-                    val function = map[eventContext.eventType]
-                    function?.invoke(eventContext)
-                    function != null
+            for (operation in operations) {
+                for (event in eventTypeQueue) {
+                    if (event.eventType == operation.key) {
+                        operation.value.invoke(event)
+                        temp.add(event)
+                    }
                 }
             }
-            eventTypeQueue.removeAll(temp)
-        }
-    }
-
-    private fun proceed(operation: (EventContext) -> Boolean) {
-        for (event in eventTypeQueue) {
-            if (operation.invoke(event)) {
-                temp.add(event)
+            if (temp.isNotEmpty()) {
+                eventTypeQueue.removeAll(temp)
+                temp.clear()
             }
         }
     }

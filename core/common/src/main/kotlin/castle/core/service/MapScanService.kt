@@ -12,8 +12,8 @@ class MapScanService(
 ) {
     companion object {
         val scanBox = Vector3(1.1f, 1.1f, 1.1f)
-        private const val occupied = 1
-        private const val free = 0
+        private const val OCCUPIED = 1
+        private const val FREE = 0
     }
 
     private val tempVector: Vector3 = Vector3()
@@ -24,10 +24,9 @@ class MapScanService(
         get() = map2D
 
     fun init() {
-        map3D.addAll(scanRegion(scanBox, environmentService.aabbMin, environmentService.aabbMax))
+        map3D.addAll(scanRegion(scanBox, environmentService.mapAABBMin, environmentService.mapAABBMax))
         map2D.addAll(mirror(map3D.map { byX -> byX.map { byZ -> byZ.sum() } }))
     }
-
 
     private fun scanRegion(boxScan: Vector3, aabbMin: Vector3, aabbMax: Vector3): MutableList<MutableList<MutableList<Int>>> {
         val width = boxScan.x * 2
@@ -44,7 +43,7 @@ class MapScanService(
                 map[i].add(ArrayList())
                 for (k in 0 until byY) {
                     tempVector.set(aabbMax.x - i * width, aabbMax.y - k * height, aabbMax.z - j * depth)
-                    val indicator = if (physicService.hasCollisions(tempVector, shape)) occupied else free
+                    val indicator = if (physicService.hasCollisions(tempVector, shape)) OCCUPIED else FREE
                     map[i][j].add(indicator)
                 }
             }
