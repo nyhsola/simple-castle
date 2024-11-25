@@ -17,10 +17,8 @@ class ModelRenderSystem(
     private val cameraService: CameraService
 ) : IteratingSystem(Family.all(PositionComponent::class.java, ModelRenderComponent::class.java).get()) {
     override fun update(deltaTime: Float) {
-        Gdx.gl.apply {
-            glClearColor(0.3f, 0.3f, 0.3f, 1f)
-            glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
-        }
+        Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1f)
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
         modelBatch.begin(cameraService.currentCamera.camera)
         super.update(deltaTime)
         modelBatch.end()

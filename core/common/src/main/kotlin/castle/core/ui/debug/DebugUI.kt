@@ -96,8 +96,6 @@ class DebugUI(
         table.row()
         table.add(createButton("Path", listOf(EventContext(UnitSystem.DEBUG_ENABLE)))).width(50f).height(50f)
         table.row()
-        table.add(createButton("Map", listOf(EventContext(MapService.DEBUG_ENABLE)))).width(50f).height(50f)
-        table.row()
         table.add(createButton("Grid", listOf(EventContext(MapService.DEBUG_GRID)))).width(50f).height(50f)
         table.row()
         val list = listOf(

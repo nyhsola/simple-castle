@@ -5,8 +5,8 @@ import kotlin.math.pow
 
 class Area(
     val position: Vector2,
-    val x: Int,
-    val y: Int
+    var x: Int,
+    var y: Int
 ) {
     constructor(x: Int, y: Int) : this(Vector2(), x, y)
 
@@ -27,6 +27,12 @@ class Area(
                 }
             }
         }
+    }
+
+    fun set(x: Int, y: Int, xf: Float, yf: Float) {
+        this.x = x
+        this.y = y
+        position.set(xf, yf)
     }
 
     override fun equals(other: Any?): Boolean {

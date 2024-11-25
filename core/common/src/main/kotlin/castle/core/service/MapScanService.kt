@@ -22,6 +22,10 @@ class MapScanService(
 
     val map: List<List<Int>>
         get() = map2D
+    val width: Int
+        get() = map2D.size
+    val height: Int
+        get() = map2D[0].size
 
     fun init() {
         map3D.addAll(scanRegion(scanBox, environmentService.mapAABBMin, environmentService.mapAABBMax))
