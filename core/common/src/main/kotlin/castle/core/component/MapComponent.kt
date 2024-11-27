@@ -14,6 +14,7 @@ class MapComponent(val isMovable: Boolean) : Component {
     var shouldSearchEntities = false
     val inRadiusEntities: MutableList<Entity> = ArrayList()
     var currentArea: Area = Area(0, 0)
+    val fitAreas = ArrayList<Area>()
 
     val isUnitsAround: Boolean
         get() = inRadiusUnits.isNotEmpty()

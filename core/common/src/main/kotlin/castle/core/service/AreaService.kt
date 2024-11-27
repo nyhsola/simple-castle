@@ -24,7 +24,7 @@ class AreaService(
         return setArea(outArea, x, y)
     }
 
-    private fun setArea(outArea: Area, i: Int, j: Int): Area {
+    fun setArea(outArea: Area, i: Int, j: Int): Area {
         val x = environmentService.mapAABBMax.x - i * MapScanService.scanBox.x * 2 - MapScanService.scanBox.x
         val z = environmentService.mapAABBMax.z - j * MapScanService.scanBox.z * 2 - MapScanService.scanBox.z
         outArea.set(i, j, x, z)

@@ -1,7 +1,6 @@
 package castle.core.service
 
 import castle.core.component.MapComponent
-import castle.core.component.PhysicComponent
 import castle.core.debug.MapDebug
 import castle.core.event.EventContext
 import castle.core.event.EventQueue
@@ -12,7 +11,6 @@ import com.badlogic.gdx.ai.pfa.DefaultGraphPath
 import com.badlogic.gdx.ai.pfa.GraphPath
 import com.badlogic.gdx.math.Vector3
 import org.koin.core.annotation.Single
-import kotlin.math.abs
 
 @Single
 class MapService(
@@ -22,16 +20,11 @@ class MapService(
     private val mapDebug: MapDebug
 ) {
     companion object {
-        const val DEBUG_ENABLE = "DEBUG_MAP_ENABLE"
         const val DEBUG_GRID = "DEBUG_GRID"
     }
 
     private val mapGraph = AreaGraph()
     private val tempArr = HashSet<Entity>()
-    private val tempAABBMin = Vector3()
-    private val tempAABBMax = Vector3()
-    private val tempArea1 = Area(0, 0)
-    private val tempArea2 = Area(0, 0)
 
     val unitsInArea: MutableMap<Area, MutableSet<Entity>> = HashMap()
     private val areasInUnit: MutableMap<Entity, MutableSet<Area>> = HashMap()
@@ -50,13 +43,7 @@ class MapService(
 
     fun updateEntity(entity: Entity) {
         removeFromMap(entity)
-        placeOnMap(entity)
-    }
-
-    fun removeFromMap(entity: Entity) {
-        areasInUnit[entity]?.forEach { mapGraph.restore(it) }
-        areasInUnit[entity]?.forEach { unitsInArea[it]?.remove(entity) }
-        areasInUnit.remove(entity)
+        addOnMap(entity)
     }
 
     fun getNear(area: Area, radius: Float): Collection<Entity> {
@@ -83,26 +70,19 @@ class MapService(
         return inRadius
     }
 
-    private fun placeOnMap(entity: Entity) {
-        PhysicComponent.mapper.get(entity).body.getAabb(tempAABBMin, tempAABBMax)
-        val min = areaService.setArea(tempArea1, tempAABBMin)
-        val max = areaService.setArea(tempArea2, tempAABBMax)
-        val isBiggerThanOneGrid = abs(min.x - max.x) > 1
-        if (isBiggerThanOneGrid) {
-            for (i in max.x until min.x + 1) {
-                for (j in max.y until min.y + 1) {
-                    placeOnMapInternal(areaService.toArea(i, j), entity)
-                }
-            }
-        } else {
-            placeOnMapInternal(MapComponent.mapper.get(entity).currentArea, entity)
-        }
+    fun removeFromMap(entity: Entity) {
+        areasInUnit[entity]?.forEach { mapGraph.restore(it) }
+        areasInUnit[entity]?.forEach { unitsInArea[it]?.remove(entity) }
+        areasInUnit.remove(entity)
     }
 
-    private fun placeOnMapInternal(area: Area, entity: Entity) {
-        mapGraph.disconnect(area)
-        unitsInArea.getOrPut(area) { mutableSetOf() }.add(entity)
-        areasInUnit.getOrPut(entity) { mutableSetOf() }.add(area)
+    private fun addOnMap(entity: Entity) {
+        val mapComponent = MapComponent.mapper.get(entity)
+        mapComponent.fitAreas.forEach {
+            mapGraph.disconnect(it)
+            unitsInArea.getOrPut(it) { mutableSetOf() }.add(entity)
+            areasInUnit.getOrPut(entity) { mutableSetOf() }.add(it)
+        }
     }
 
     private fun initializeGraph(map2D: List<List<Int>>) {
