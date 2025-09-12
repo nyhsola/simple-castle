@@ -7,19 +7,19 @@ include(
 
 pluginManagement {
     plugins {
-        id("com.google.devtools.ksp") version "2.0.21-1.0.26"
+        id("com.google.devtools.ksp") version "2.1.0-1.0.29"
     }
 }
 
 dependencyResolutionManagement {
-    val kotlinVersion = "2.0.21"
-    val ktxVersion = "1.12.1-rc2"
-    val gdxVersion = "1.13.0"
+    val kotlinVersion = "2.1.0"
+    val ktxVersion = "1.13.1-rc1"
+    val gdxVersion = "1.13.5"
     val ashleyVersion = "1.7.4"
     val aiVersion = "1.8.2"
-    val gradleTool = "8.7.2"
-    val koinVersion = "4.0.0"
-    val koinAnnotationVersion = "2.0.0-Beta1"
+    val gradleTool = "8.13.0"
+    val koinVersion = "4.1.1"
+    val koinAnnotationVersion = "2.2.0-RC1"
 
     versionCatalogs {
         create("libs") {
