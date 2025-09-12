@@ -24,7 +24,7 @@ class Player(
     private val units: MutableList<Entity> = ArrayList()
 
     val castle: Entity
-        get() = buildings.first { PositionComponent.mapper.get(it).nodeName == "castle" }
+        get() = buildings.first { PositionComponent.mapper.get(it).nodeName == "castle-war3" }
 
     private val operations: Map<String, (EventContext) -> Unit> = mapOf(
         Pair(CountText.ON_COUNT) { placeUnit(it.params.getValue(CountText.PARAM_LINE) as Int) }

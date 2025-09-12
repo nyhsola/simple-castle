@@ -22,7 +22,6 @@ class MapDebug(
     private val mapScanService: MapScanService,
     private val environmentService: EnvironmentService
 ) {
-
     private var debugGridEnabled: Boolean = false
     private val debugGridEntity: MutableList<Entity> = ArrayList()
     private val debugAreaEntity: MutableList<Entity> = ArrayList()
@@ -55,11 +54,14 @@ class MapDebug(
         val heightAll = abs(environmentService.mapAABBMax.z - environmentService.mapAABBMin.z)
         areas.forEach {
             val position = it.position
-            val squareRenderComponent = SquareRenderComponent(
-                Vector3(position.x, 0.3f, position.y),
-                widthAll / mapScanService.width,
-                heightAll / mapScanService.height
-            )
+            val widthPerArea = widthAll / mapScanService.width
+            val heightPerArea = heightAll / mapScanService.height
+            val actualWidth = widthPerArea * 0.95f
+            val actualHeight = heightPerArea * 0.95f
+            val xOffset = (widthPerArea - actualWidth) / 2f
+            val yOffset = (heightPerArea - actualHeight) / 2f
+            val vector3 = Vector3(position.x + xOffset, 0f, position.y + yOffset)
+            val squareRenderComponent = SquareRenderComponent(vector3, actualWidth, actualHeight)
             val commonEntity = Entity().apply { add(squareRenderComponent) }
             engine.addEntity(commonEntity)
             debugAreaEntity.add(commonEntity)

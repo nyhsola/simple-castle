@@ -37,6 +37,6 @@ class SquareRenderSystem(
         shapeRenderer.transformMatrix = tempMatrix4
         shapeRenderer.color = squareRenderComponent.color
         shapeRenderer.rotate(1f, 0f, 0f, 90f)
-        shapeRenderer.rect(0f, 0f, squareRenderComponent.width * 0.9f, squareRenderComponent.height * 0.9f)
+        shapeRenderer.rect(0f, 0f, squareRenderComponent.width, squareRenderComponent.height)
     }
 }

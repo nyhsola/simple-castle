@@ -1,9 +1,7 @@
 import castle.packr.CastlePackr
 import org.gradle.internal.os.OperatingSystem
-import org.jetbrains.kotlin.util.capitalizeDecapitalize.toLowerCaseAsciiOnly
 
 val assetsPath: String = rootProject.file("android/assets").path
-val os = (System.getProperties()["os.name"] as String).toLowerCaseAsciiOnly()
 val gameClassName: String = "castle.core.app.ServerLauncher"
 
 plugins {
@@ -20,7 +18,7 @@ application {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of("17"))
+        languageVersion.set(JavaLanguageVersion.of("21"))
     }
 }
 

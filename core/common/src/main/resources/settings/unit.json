@@ -2,7 +2,7 @@
   {
     "unitName": "castle",
     "templateName": "BUILDING",
-    "node": "castle",
+    "node": "castle-war3",
     "amount": 10000,
     "visibilityRange": 15.0
   },

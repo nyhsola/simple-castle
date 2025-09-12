@@ -6,7 +6,6 @@ import castle.core.component.render.AnimationRenderComponent
 import castle.core.component.render.HpRenderComponent
 import castle.core.component.render.ModelRenderComponent
 import castle.core.json.UnitJson
-import castle.core.service.CommonResources
 import castle.core.service.EnvironmentService
 import castle.core.service.GameResources
 import com.badlogic.ashley.core.Entity
@@ -14,16 +13,11 @@ import org.koin.core.annotation.Single
 
 @Single
 class UnitBuilder(
-    private val commonResources: CommonResources,
     private val gameResources: GameResources,
     private val environmentService: EnvironmentService,
     private val templateBuilder: TemplateBuilder,
     private val behaviours: Behaviours
 ) {
-    private companion object {
-        private const val defaultHpTexture = "hp.png"
-    }
-
     fun buildWithRotation(unitStr: String, spawn: String, next: String): Entity {
         val unit = build(unitStr, spawn)
         val nextUnit = environmentService.environmentObjects.getValue(next)

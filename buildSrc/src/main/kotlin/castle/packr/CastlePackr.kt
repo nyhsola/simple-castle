@@ -10,7 +10,7 @@ import java.util.*
 abstract class CastlePackr : DefaultTask() {
     @TaskAction
     fun packr() {
-        val buildDir = project.buildDir
+        val buildDir = project.layout.buildDirectory
         val windowsPackerFolder = "win-out"
         File("$buildDir/libs/$windowsPackerFolder").deleteRecursively()
 
