@@ -3,6 +3,7 @@ package castle.core.`object`
 import castle.core.component.render.TextRenderComponent
 import castle.core.event.EventContext
 import castle.core.event.EventQueue
+import castle.core.util.GlobalMode
 import castle.core.util.Task
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.signals.Signal
@@ -31,6 +32,9 @@ class CountText(
 
     init {
         signal.add(eventQueue)
+        if (GlobalMode.disableCounter) {
+            task.disabled = true
+        }
     }
 
     fun update(deltaTime: Float) {

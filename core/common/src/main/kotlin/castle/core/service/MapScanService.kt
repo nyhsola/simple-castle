@@ -1,5 +1,6 @@
 package castle.core.service
 
+import castle.core.service.abs.Service
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.physics.bullet.collision.btBoxShape
 import org.koin.core.annotation.Single
@@ -9,7 +10,7 @@ import kotlin.math.abs
 class MapScanService(
     private val environmentService: EnvironmentService,
     private val physicService: PhysicService
-) {
+) : Service {
     companion object {
         val scanBox = Vector3(1.1f, 1.1f, 1.1f)
         private const val OCCUPIED = 1
@@ -27,7 +28,9 @@ class MapScanService(
     val height: Int
         get() = map2D[0].size
 
-    fun init() {
+    override fun priority() = 1
+
+    override fun init() {
         map3D.addAll(scanRegion(scanBox, environmentService.mapAABBMin, environmentService.mapAABBMax))
         map2D.addAll(mirror(map3D.map { byX -> byX.map { byZ -> byZ.sum() } }))
     }

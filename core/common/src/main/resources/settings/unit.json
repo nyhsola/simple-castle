@@ -23,7 +23,7 @@
     "node": "unit-warrior",
     "amount": 1000,
     "behaviour": "ground-attack",
-    "speedLinear": 8,
+    "speedLinear": 7,
     "speedAngular": 3.0,
     "attackFrom": 10,
     "attackTo": 100,

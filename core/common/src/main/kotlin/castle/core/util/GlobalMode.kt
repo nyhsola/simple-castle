@@ -4,12 +4,14 @@ import java.util.*
 
 interface GlobalMode {
     companion object {
-        val debugMode = getProp().toBoolean()
-        private fun getProp(): String {
+        val debugMode = getProp("debugMode").toBoolean()
+        val disableCounter = getProp("disableCounter").toBoolean()
+
+        private fun getProp(propertyName: String): String {
             val props = GlobalMode::class.java.classLoader.getResourceAsStream("game.properties").use {
                 Properties().apply { load(it) }
             }
-            return (props.getProperty("debugMode") as String)
+            return (props.getProperty(propertyName) as String)
         }
     }
 }

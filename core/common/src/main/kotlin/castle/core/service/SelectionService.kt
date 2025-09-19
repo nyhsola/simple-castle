@@ -4,6 +4,7 @@ import castle.core.component.PositionComponent
 import castle.core.component.UnitComponent
 import castle.core.component.render.CircleRenderComponent
 import castle.core.component.render.ModelRenderComponent
+import castle.core.service.abs.Service
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.graphics.Color
@@ -19,21 +20,22 @@ class SelectionService(
     private val engine: Engine,
     private val uiService: UIService,
     private val rayCastService: RayCastService
-) : KtxInputAdapter, Disposable {
+) : Service, Disposable {
     private val selectionCircle: Entity = Entity().add(CircleRenderComponent())
     private val radiusCircle: Entity = Entity().add(CircleRenderComponent())
     private val boundingBox = BoundingBox()
     private val tempVector3 = Vector3()
     private val color = Color(Color.GREEN).apply { a = 0.3f }
 
-    fun init() {
+    override fun init() {
         engine.addEntity(selectionCircle)
         engine.addEntity(radiusCircle)
     }
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
-        val userPick = rayCastService.rayCast(screenX.toFloat(), screenY.toFloat())?.userData
+        val userPick = rayCastService.rayCastObject(screenX.toFloat(), screenY.toFloat())?.userData
         if (userPick == null) unSelect() else select(userPick as Entity)
+        println(rayCastService.rayCastPosition(screenX.toFloat(), screenY.toFloat())?.toString() ?: "no hit")
         return false
     }
 

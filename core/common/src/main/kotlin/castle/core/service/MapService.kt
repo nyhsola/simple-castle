@@ -6,6 +6,7 @@ import castle.core.event.EventContext
 import castle.core.event.EventQueue
 import castle.core.path.Area
 import castle.core.path.AreaGraph
+import castle.core.service.abs.Service
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.ai.pfa.DefaultGraphPath
 import com.badlogic.gdx.ai.pfa.GraphPath
@@ -15,10 +16,11 @@ import org.koin.core.annotation.Single
 @Single
 class MapService(
     private val eventQueue: EventQueue,
+    private val uiService: UIService,
     private val areaService: AreaService,
     private val mapScanService: MapScanService,
     private val mapDebug: MapDebug
-) {
+) : Service {
     companion object {
         const val DEBUG_GRID = "DEBUG_GRID"
     }
@@ -26,19 +28,25 @@ class MapService(
     private val mapGraph = AreaGraph()
     private val tempArr = HashSet<Entity>()
 
-    val unitsInArea: MutableMap<Area, MutableSet<Entity>> = HashMap()
+    private val unitsInArea: MutableMap<Area, MutableSet<Entity>> = HashMap()
     private val areasInUnit: MutableMap<Entity, MutableSet<Area>> = HashMap()
 
     private val operations: Map<String, (EventContext) -> Unit> = mapOf(
-        Pair(DEBUG_GRID) {  mapDebug.switchDebugGrid(unitsInArea.filter { it.value.isNotEmpty() }.keys) }
+        Pair(DEBUG_GRID) {  mapDebug.switchDebugGrid() }
     )
 
-    fun init() {
+    override fun init() {
+        mapDebug.init()
         initializeGraph(mapScanService.map)
     }
 
-    fun update() {
+    override fun updateTick(deltaTime: Float) {
+        uiService.updateObj(unitsInArea)
         eventQueue.proceed(operations)
+    }
+
+    fun updateBefore() {
+        mapDebug.clear()
     }
 
     fun updateEntity(entity: Entity) {
@@ -82,6 +90,7 @@ class MapService(
             mapGraph.disconnect(it)
             unitsInArea.getOrPut(it) { mutableSetOf() }.add(entity)
             areasInUnit.getOrPut(entity) { mutableSetOf() }.add(it)
+            mapDebug.debugArea(it)
         }
     }
 

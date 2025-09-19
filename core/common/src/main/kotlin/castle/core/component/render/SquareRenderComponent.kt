@@ -14,7 +14,8 @@ class SquareRenderComponent(
     var height: Float = 0.0f,
     var matrix: Matrix4 = Matrix4(),
     var shapeType: ShapeType = ShapeType.Filled,
-    var color: Color = ColorUtil.dimmedColor(Color.GREEN, 0.7f)
+    var color: Color = ColorUtil.dimmedColor(Color.GREEN, 0.7f),
+    var hide : Boolean = false
 ) : Component {
     companion object {
         val mapper: ComponentMapper<SquareRenderComponent> = ComponentMapper.getFor(SquareRenderComponent::class.java)

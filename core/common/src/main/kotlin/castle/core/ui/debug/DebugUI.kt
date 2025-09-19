@@ -103,12 +103,19 @@ class DebugUI(
             EventContext(GameService.DEBUG_SPAWN, mapOf(Pair(GameService.PLAYER_NAME, "Player 3")))
         )
         table.add(createButton("Spawn", list)).width(50f).height(50f)
+        table.row()
+        table.add(createToggleButton(emptyList())).width(50f).height(50f)
         container.actor = table
         return container
     }
 
-    private fun createButton(text: String, events: List<EventContext>): TextButton {
-        val button = TextButton(text, commonResources.skin)
+    private fun createToggleButton(events: List<EventContext>): TextButton {
+        val button = createButton("Create", events, true)
+        return button
+    }
+
+    private fun createButton(text: String, events: List<EventContext>, isToggle: Boolean = false): TextButton {
+        val button = TextButton(text, commonResources.skin, if (isToggle) "toggle" else "default")
         button.color = Color.DARK_GRAY
         button.color.a = 0.5f
         button.addCaptureListener(object : ClickListener() {

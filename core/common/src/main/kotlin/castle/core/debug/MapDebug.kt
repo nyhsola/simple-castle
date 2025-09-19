@@ -24,17 +24,60 @@ class MapDebug(
 ) {
     private var debugGridEnabled: Boolean = false
     private val debugGridEntity: MutableList<Entity> = ArrayList()
-    private val debugAreaEntity: MutableList<Entity> = ArrayList()
+    private val debugAreaEntity: MutableList<MutableList<Entity>> = ArrayList()
 
-    fun switchDebugGrid(areas: Set<Area>) {
+    fun init() {
+        for (i in 0 until mapScanService.width) {
+            debugAreaEntity.add(ArrayList())
+            for (j in 0 until mapScanService.height) {
+                val area = areaService.setArea(Area(0, 0), i, j)
+                val position = area.position
+                val widthAll = abs(environmentService.mapAABBMax.x - environmentService.mapAABBMin.x)
+                val heightAll = abs(environmentService.mapAABBMax.z - environmentService.mapAABBMin.z)
+                val widthPerArea = widthAll / mapScanService.width
+                val heightPerArea = heightAll / mapScanService.height
+                val actualWidth = widthPerArea * 0.95f
+                val actualHeight = heightPerArea * 0.95f
+                val xOffset = (widthPerArea - actualWidth) / 2f
+                val yOffset = (heightPerArea - actualHeight) / 2f
+                val vector3 = Vector3(position.x + xOffset, 0f, position.y + yOffset)
+                val squareRenderComponent = SquareRenderComponent(vector3, actualWidth, actualHeight)
+                squareRenderComponent.hide = true
+                val commonEntity = Entity().apply { add(squareRenderComponent) }
+                engine.addEntity(commonEntity)
+                debugAreaEntity[i].add(commonEntity)
+            }
+        }
+    }
+
+    fun clear() {
+        debugAreaEntity.forEach { list ->
+            list.forEach { entity ->
+                val squareRenderComponent = SquareRenderComponent.mapper.get(entity)
+                squareRenderComponent.hide = true
+            }
+        }
+    }
+
+    fun debugArea(area: Area) {
+        if (!debugGridEnabled) return
+        val squareRenderComponent = SquareRenderComponent.mapper.get(debugAreaEntity[area.x][area.y])
+        squareRenderComponent.hide = false
+    }
+
+    fun switchDebugGrid() {
         debugGridEnabled = !debugGridEnabled
 
         if (!debugGridEnabled) {
-            debugAreaEntity.forEach { engine.removeEntity(it) }
-            debugAreaEntity.clear()
-
             debugGridEntity.forEach { engine.removeEntity(it) }
             debugGridEntity.clear()
+
+            debugAreaEntity.forEach { list ->
+                list.forEach { entity ->
+                    val squareRenderComponent = SquareRenderComponent.mapper.get(entity)
+                    squareRenderComponent.hide = true
+                }
+            }
             return
         }
 
@@ -48,23 +91,6 @@ class MapDebug(
             val start = areaService.toArea(0, j).position
             val end = areaService.toArea(mapScanService.map.size, j).position
             createLine(start, end)
-        }
-
-        val widthAll = abs(environmentService.mapAABBMax.x - environmentService.mapAABBMin.x)
-        val heightAll = abs(environmentService.mapAABBMax.z - environmentService.mapAABBMin.z)
-        areas.forEach {
-            val position = it.position
-            val widthPerArea = widthAll / mapScanService.width
-            val heightPerArea = heightAll / mapScanService.height
-            val actualWidth = widthPerArea * 0.95f
-            val actualHeight = heightPerArea * 0.95f
-            val xOffset = (widthPerArea - actualWidth) / 2f
-            val yOffset = (heightPerArea - actualHeight) / 2f
-            val vector3 = Vector3(position.x + xOffset, 0f, position.y + yOffset)
-            val squareRenderComponent = SquareRenderComponent(vector3, actualWidth, actualHeight)
-            val commonEntity = Entity().apply { add(squareRenderComponent) }
-            engine.addEntity(commonEntity)
-            debugAreaEntity.add(commonEntity)
         }
     }
 

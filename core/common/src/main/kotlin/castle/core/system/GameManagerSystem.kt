@@ -2,7 +2,7 @@ package castle.core.system
 
 import castle.core.event.EventContext
 import castle.core.event.EventQueue
-import castle.core.service.*
+import castle.core.service.abs.Service
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.systems.IntervalSystem
 import com.badlogic.gdx.Gdx
@@ -13,57 +13,38 @@ import org.koin.core.annotation.Single
 
 @Single
 class GameManagerSystem(
-    private val environmentService: EnvironmentService,
-    private val gameService: GameService,
-    private val uiService: UIService,
-    private val selectionService: SelectionService,
-    private val cameraService: CameraService,
-    private val mapScanService: MapScanService,
-    private val mapService: MapService,
+    services: List<Service>,
     private val eventQueue: EventQueue
 ) : IntervalSystem(GAME_TICK), KtxInputAdapter, KtxScreen {
     companion object {
         private const val GAME_TICK: Float = 0.1f
-        const val CHAT_FOCUSED = "CHAT_FOCUSED"
-        const val CHAT_UNFOCUSED = "CHAT_UNFOCUSED"
         const val EXIT_GAME = "EXIT_GAME"
     }
 
     private val operations: Map<String, (EventContext) -> Unit> = mapOf(
-        Pair(CHAT_FOCUSED) { cameraService.input = false },
-        Pair(CHAT_UNFOCUSED) { cameraService.input = true },
         Pair(EXIT_GAME) { Gdx.app.postRunnable(Gdx.app::exit) }
     )
 
     private val inputMultiplexer = InputMultiplexer()
+    private val sortedServices = services.sortedBy { it.priority() }
 
     override fun addedToEngine(engine: Engine) {
-        environmentService.init()
-        mapScanService.init()
-        mapService.init()
-        uiService.init()
-        selectionService.init()
-        gameService.init()
-        inputMultiplexer.addProcessor(cameraService)
-        inputMultiplexer.addProcessor(uiService)
-        inputMultiplexer.addProcessor(gameService)
-        inputMultiplexer.addProcessor(selectionService)
+        sortedServices.forEach { it.init() }
+        sortedServices.forEach { inputMultiplexer.addProcessor(it) }
     }
 
     override fun update(deltaTime: Float) {
-        cameraService.update(deltaTime)
+        sortedServices.forEach { it.update(deltaTime) }
         super.update(deltaTime)
     }
 
     override fun updateInterval() {
-        uiService.update(mapService.unitsInArea)
-        gameService.update(GAME_TICK)
-        mapService.update()
+        sortedServices.forEach { it.updateTick(GAME_TICK) }
         eventQueue.proceed(operations)
     }
 
     override fun resize(width: Int, height: Int) {
-        cameraService.resize(width, height)
+        sortedServices.forEach { it.resize(width, height) }
     }
 
     override fun keyDown(keycode: Int): Boolean {
@@ -107,8 +88,6 @@ class GameManagerSystem(
     }
 
     override fun dispose() {
-        environmentService.dispose()
-        gameService.dispose()
-        uiService.dispose()
+        sortedServices.forEach { it.dispose() }
     }
 }

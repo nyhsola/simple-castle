@@ -12,7 +12,8 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Widget
 
 class Minimap(
-    private val shapeRenderer: ShapeRenderer, private val mapScanService: MapScanService
+    private val shapeRenderer: ShapeRenderer,
+    private val mapScanService: MapScanService
 ) : Widget() {
     private val minimap: MutableList<MutableList<MinimapPiece>> = ArrayList()
     private val minimapBuffer: MutableList<MinimapPiece> = ArrayList()

@@ -3,6 +3,7 @@ package castle.core.service
 import castle.core.event.EventContext
 import castle.core.event.EventQueue
 import castle.core.path.Area
+import castle.core.service.abs.Service
 import castle.core.ui.debug.DebugUI
 import castle.core.ui.game.GameUI
 import castle.core.ui.game.HpHud.HpBar
@@ -23,7 +24,7 @@ class UIService(
     private val gameUI: GameUI,
     private val debugUI: DebugUI,
     private val menuUI: MenuUI
-) : KtxInputAdapter, Disposable {
+) : Service {
     companion object {
         const val DEBUG_UI_ENABLE_1 = "DEBUG_UI_ENABLE_1"
         const val DEBUG_UI_ENABLE_2 = "DEBUG_UI_ENABLE_2"
@@ -38,7 +39,9 @@ class UIService(
         Pair(MENU_ENABLE) { menuUI.isVisible = !menuUI.isVisible }
     )
 
-    fun init() {
+    override fun priority() = 2
+
+    override fun init() {
         signal.add(eventQueue)
         engine.addEntity(gameUI)
         engine.addEntity(menuUI)
@@ -49,11 +52,14 @@ class UIService(
         debugUI.isVisible = GlobalMode.debugMode
     }
 
-    fun update(objectsOnMap: Map<Area, Collection<Entity>>) {
-        gameUI.update(objectsOnMap)
+    override fun updateTick(deltaTime: Float) {
         debugUI.update()
         eventQueue.proceed(operations)
         proceedMessages()
+    }
+
+    fun updateObj(objectsOnMap: Map<Area, Collection<Entity>>) {
+        gameUI.update(objectsOnMap)
     }
 
     fun activateSelection(entity: Entity) {

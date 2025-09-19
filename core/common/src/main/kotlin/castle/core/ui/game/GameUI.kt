@@ -4,10 +4,10 @@ import castle.core.component.render.StageRenderComponent
 import castle.core.event.EventContext
 import castle.core.event.EventQueue
 import castle.core.path.Area
+import castle.core.service.CameraService
 import castle.core.service.CommonResources
 import castle.core.service.MapScanService
 import castle.core.service.UIService.Companion.MENU_ENABLE
-import castle.core.system.GameManagerSystem
 import castle.core.util.UIUtils
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.signals.Signal
@@ -73,7 +73,7 @@ class GameUI(
         stageRenderComponent.stage.addListener(object : InputListener() {
             override fun touchDown(event: InputEvent, x: Float, y: Float, pointer: Int, button: Int): Boolean {
                 if (event.target !is Chat) {
-                    signal.dispatch(EventContext(GameManagerSystem.CHAT_UNFOCUSED))
+                    signal.dispatch(EventContext(CameraService.CHAT_UNFOCUSED))
                     stageRenderComponent.stage.keyboardFocus = null
                 }
                 return super.touchDown(event, x, y, pointer, button)
@@ -81,11 +81,11 @@ class GameUI(
 
             override fun keyDown(event: InputEvent, keycode: Int): Boolean {
                 if (Input.Keys.ENTER == keycode) {
-                    signal.dispatch(EventContext(GameManagerSystem.CHAT_FOCUSED))
+                    signal.dispatch(EventContext(CameraService.CHAT_FOCUSED))
                     stageRenderComponent.stage.keyboardFocus = chat
                 }
                 if (Input.Keys.ESCAPE == keycode) {
-                    signal.dispatch(EventContext(GameManagerSystem.CHAT_UNFOCUSED))
+                    signal.dispatch(EventContext(CameraService.CHAT_UNFOCUSED))
                     stageRenderComponent.stage.keyboardFocus = null
                 }
                 return super.keyDown(event, keycode)

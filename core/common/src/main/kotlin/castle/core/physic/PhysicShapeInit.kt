@@ -11,7 +11,9 @@ import kotlin.math.max
 class PhysicShapeInit {
     companion object {
         private const val SCALAR = 0.5f
-        fun calculateStaticNodeShape(modelInstance: ModelInstance): btCollisionShape = Bullet.obtainStaticNodeShape(modelInstance.nodes[0], false)
+        fun calculateStaticNodeShape(modelInstance: ModelInstance): btCollisionShape {
+            return Bullet.obtainStaticNodeShape(modelInstance.nodes[0], false)
+        }
 
         fun calculateBaseBox(modelInstance: ModelInstance): btBoxShape {
             val dimensions = getDimension(modelInstance)
@@ -19,8 +21,12 @@ class PhysicShapeInit {
             return btBoxShape(Vector3(max, dimensions.y, max).scl(SCALAR))
         }
 
-        fun calculateAdjustedBox(modelInstance: ModelInstance) = btBoxShape(getDimension(modelInstance).scl(SCALAR))
+        fun calculateAdjustedBox(modelInstance: ModelInstance): btBoxShape {
+            return btBoxShape(getDimension(modelInstance).scl(SCALAR))
+        }
 
-        private fun getDimension(modelInstance: ModelInstance) = modelInstance.calculateBoundingBox(BoundingBox()).getDimensions(Vector3())
+        private fun getDimension(modelInstance: ModelInstance): Vector3 {
+            return modelInstance.calculateBoundingBox(BoundingBox()).getDimensions(Vector3())
+        }
     }
 }

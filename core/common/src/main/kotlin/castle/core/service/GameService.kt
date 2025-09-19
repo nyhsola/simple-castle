@@ -5,12 +5,11 @@ import castle.core.builder.PlayerBuilder
 import castle.core.event.EventContext
 import castle.core.event.EventQueue
 import castle.core.`object`.Player
+import castle.core.service.abs.Service
 import castle.core.util.DoubleTap
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.utils.Disposable
-import ktx.app.KtxInputAdapter
 import org.koin.core.annotation.Single
 
 @Single
@@ -20,7 +19,7 @@ class GameService(
     private val playerBuilder: PlayerBuilder,
     private val decorationBuilder: DecorationBuilder,
     private val cameraService: CameraService
-) : KtxInputAdapter, Disposable {
+) : Service {
     companion object {
         const val DEBUG_SPAWN: String = "DEBUG_SPAWN"
         const val PLAYER_NAME: String = "PLAYER_NAME"
@@ -42,7 +41,7 @@ class GameService(
         }
     }
 
-    fun init() {
+    override fun init() {
         players.putAll(playerBuilder.build())
         decorations.addAll(decorationBuilder.build())
 
@@ -50,7 +49,7 @@ class GameService(
         decorations.onEach { engine.addEntity(it) }
     }
 
-    fun update(deltaTime: Float) {
+    override fun updateTick(deltaTime: Float) {
         players.onEach { it.value.update(deltaTime) }
         eventQueue.proceed(operations)
     }

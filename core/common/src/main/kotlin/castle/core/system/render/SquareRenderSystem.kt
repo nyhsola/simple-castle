@@ -31,6 +31,7 @@ class SquareRenderSystem(
 
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val squareRenderComponent = SquareRenderComponent.mapper.get(entity)
+        if (squareRenderComponent.hide) return
         tempMatrix4.setTranslation(squareRenderComponent.matrix.getTranslation(tempVector3))
         tempMatrix4.translate(squareRenderComponent.vector3Offset)
         shapeRenderer.set(squareRenderComponent.shapeType)

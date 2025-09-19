@@ -47,6 +47,11 @@ class MapSystem(
         mapService.removeFromMap(entity)
     }
 
+    override fun update(deltaTime: Float) {
+        mapService.updateBefore()
+        super.update(deltaTime)
+    }
+
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val mapComponent = MapComponent.mapper.get(entity)
         if (mapComponent.isMovable) {
